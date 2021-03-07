@@ -1,0 +1,11 @@
+name: OctoCore
+version: ${project.version}
+main: net.octopvp.octocore.paper.OctoCorePaper
+api-version: 1.8
+authors: [ Badbird5907 ]
+description: OctoCore
+load: STARTUP
+depend:
+  - LuckPerms
+  - Vault
+  - ProtocolLib

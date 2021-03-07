@@ -1,0 +1,9 @@
+database:
+  username: octocore
+  password: octocore
+  db: octocore
+  url: localhost
+  port: 3306
+tab:
+  header: '&a&lPlaying on the OctoPvP Network&r'
+  footer: '&e&lplay.octopvp.net'
