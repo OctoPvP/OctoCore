@@ -87,7 +87,7 @@ public class CommandFramework implements CommandExecutor {
 				Method method = commandMap.get(cmdLabel).getKey();
 				Object methodObject = commandMap.get(cmdLabel).getValue();
 				Command command = method.getAnnotation(Command.class);
-				if (!command.permission().equals("") && !sender.hasPermission(command.permission())) {
+				if (!(command.permission() == net.octopvp.octocore.paper.utils.permission.Permission.NOTHING) && !sender.hasPermission(command.permission().getNode())) {
 					sender.sendMessage(Lang.NO_PERMISSION);
 					return true;
 				}
@@ -188,8 +188,8 @@ public class CommandFramework implements CommandExecutor {
 		if (!command.usage().equalsIgnoreCase("") && cmdLabel.equals(label)) {
 			map.getCommand(cmdLabel).setUsage(command.usage());
 		}
-		if(!(command.permission()==null)&&!(command.permission()=="")){
-		    registerPermission(command.permission(),"Permission of /" + command.name());
+		if(!(command.permission()==null)&&!(command.permission().getNode()=="")&&!(command.permission() == net.octopvp.octocore.paper.utils.permission.Permission.NOTHING)){
+		    registerPermission(command.permission().getNode(),"Permission of /" + command.name());
 			//if(!Bukkit.getPluginManager().getPermissions().contains())
 			//	Bukkit.getPluginManager().addPermission(perm);
 		}

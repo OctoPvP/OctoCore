@@ -44,6 +44,11 @@ public @interface Command {
 	 */
 	public Permission permission() default Permission.NOTHING;
 	/**
+	 * Permissions string
+	 * @return
+	 */
+	public String strPermission() default "";
+	/**
 	 * A list of alternate names that the command is executed under. See
 	 * name() for details on how names work
 	 * 
