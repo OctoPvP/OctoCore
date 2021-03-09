@@ -6,6 +6,7 @@ import net.octopvp.octocore.paper.OctoCorePaper;
 import net.octopvp.octocore.paper.player.OctoPlayerProfile;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.database.DatabaseHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.PreparedStatement;
@@ -29,7 +30,6 @@ public class PlayerManager implements Manager {
     public static void unloadProfile(UUID uuid){
         OctoPlayerProfile profile = playerProfiles.get(uuid);
         playerProfiles.remove(uuid);
-
     }
     public static OctoPlayerProfile loadProfileFromDB(UUID uuid){
         Logger.debug(DatabaseHelper.GET_PROFILE.getSql(uuid.toString()));
@@ -58,6 +58,16 @@ public class PlayerManager implements Manager {
 
     @Override
     public void init(OctoCorePaper plugin) {
-
+        //repeating update player task
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCorePaper.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                for (UUID uuid : playerProfiles.keySet()){
+                    OctoPlayerProfile profile = playerProfiles.get(uuid);
+                    profile.setPrefix(LuckpermsManager.getPrefix(uuid));
+                    profile.setMainColor(LuckpermsManager.getMainColor(uuid));
+                }
+            }
+        },0l,45l);
     }
 }

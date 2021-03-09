@@ -1,8 +1,12 @@
 package net.octopvp.octocore.paper.command.impl.staff;
 
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.manager.NickManager;
+import net.octopvp.octocore.paper.manager.PlayerManager;
+import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
 import net.octopvp.octocore.paper.utils.permission.Permission;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -12,7 +16,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class UnNickCommand implements BaseCommand {
-    @Command(name = "unnick", description = "unnick",usage = "/unnick")
+    @Command(name = "unnick", description = "unnick",usage = "/unnick",permission = Permission.COMMAND_UNNICK)
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 0){
             if(sender.getDisplayName() == sender.getName()){
@@ -20,6 +24,8 @@ public class UnNickCommand implements BaseCommand {
                 return CommandResult.OTHER;
             }
             sender.getPlayer().setDisplayName(sender.getName());
+            NickManager.removeNick(PlayerManager.getProfile(sender.getPlayer().getUniqueId()));
+            NameTagChanger.INSTANCE.resetPlayerName(sender.getPlayer());
         }else if(args.length == 1){
             Player target = null;
             try {
@@ -32,6 +38,8 @@ public class UnNickCommand implements BaseCommand {
                 return CommandResult.OTHER;
             }else{
                 target.setDisplayName(target.getName());
+                NameTagChanger.INSTANCE.resetPlayerName(target);
+                NickManager.removeNick(PlayerManager.getProfile(target.getUniqueId()));
                 target.sendMessage(Lang.NICK_RESET.getMsg());
                 sender.sendMessage(Lang.UNNICK_SUCCESS.getMsg(target.getName()));
                 return CommandResult.SUCCESS;

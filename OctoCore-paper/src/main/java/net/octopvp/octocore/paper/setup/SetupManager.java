@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SetupManager implements Setup {
-    Manager[] manager = new Manager[]{new AuthManager(), new FilterManager(), new NickManager(), new PlayerManager()};
+    Manager[] manager = new Manager[]{new AuthManager(), new FilterManager(), new NickManager(), new PlayerManager(),new TabManager()};
     List<Manager> managers = Arrays.asList(manager);
     @Override
     public void setup(OctoCorePaper plugin) {

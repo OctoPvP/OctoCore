@@ -13,6 +13,7 @@ import net.octopvp.octocore.paper.setup.SetupListeners;
 import net.octopvp.octocore.paper.setup.SetupManager;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.database.DatabaseHelper;
+import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -62,6 +63,7 @@ public final class OctoCorePaper extends JavaPlugin {
         new SetupListeners().setup(this);
         Logger.info("Setting up managers");
         new SetupManager().setup(this);
+        NameTagChanger.INSTANCE.init();
         Logger.info("Hooking into plugins.");
         LuckpermsManager.init();
         this.protocolManager = ProtocolLibrary.getProtocolManager();
@@ -76,6 +78,8 @@ public final class OctoCorePaper extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.kickPlayer(ChatColor.RED + "This server is restarting.");
         });
+        if(NameTagChanger.INSTANCE.isEnabled())
+            NameTagChanger.INSTANCE.disable();
         try {
             connection.close();
             connectionPoolManager.closePool();

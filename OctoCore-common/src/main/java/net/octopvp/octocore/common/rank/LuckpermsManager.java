@@ -28,6 +28,7 @@ public class LuckpermsManager {
         colors.put("dblue", "&1");
         colors.put("blue", "&9");
         colors.put("lpurple", "&d");
+        colors.put("purple", "&5");
         colors.put("dpurple", "&5");
         colors.put("white", "&f");
         colors.put("gray", "&7");

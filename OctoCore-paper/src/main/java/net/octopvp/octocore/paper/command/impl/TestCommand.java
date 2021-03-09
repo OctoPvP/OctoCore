@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TestCommand implements BaseCommand {
     private static final String perm = PermissionUtil.fromEnum(Permission.COMMAND_NICK);
-    @Command(name = "test", description = "test", aliases = {"test1","test2"},usage = "/test")
+    @Command(name = "test", description = "test", aliases = {"test1","test2"},usage = "/test",permission = Permission.NOTHING)
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length > 0){
             return CommandResult.INVALID_ARGS;
@@ -26,6 +26,7 @@ public class TestCommand implements BaseCommand {
         if(sender.hasPermission("a.b.c"))
             sender.sendMessage(CC.AQUA + "works!");
         else sender.sendMessage(CC.RED + "nope");
+        sender.sendMessage(LuckpermsManager.getMainColor(sender.getPlayer().getUniqueId()));
         return CommandResult.SUCCESS;
     }
 

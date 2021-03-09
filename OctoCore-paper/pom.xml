@@ -23,6 +23,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
+                <configuration>
+                    <shadedArtifactId>Nam</shadedArtifactId>
+                </configuration>
             </plugin>
         </plugins>
         <resources>
