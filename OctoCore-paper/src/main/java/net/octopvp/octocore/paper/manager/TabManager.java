@@ -1,11 +1,9 @@
 package net.octopvp.octocore.paper.manager;
 
-import net.octopvp.octocore.common.rank.LuckpermsManager;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCorePaper;
 import net.octopvp.octocore.paper.player.OctoPlayerProfile;
 import net.octopvp.octocore.paper.utils.Logger;
-import net.octopvp.octocore.paper.utils.tab.Tab;
 import net.octopvp.octocore.paper.utils.tab.item.TextTabItem;
 import net.octopvp.octocore.paper.utils.tab.tablist.TableTabList;
 import net.octopvp.octocore.paper.utils.tab.util.Skin;
@@ -14,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 public class TabManager implements Manager{
@@ -23,7 +20,6 @@ public class TabManager implements Manager{
     private static Skin skin = Skins.getDot(ChatColor.GRAY);
     private static String header = "";
     private static String footer = "";
-    private static HashMap<UUID, OctoPlayerProfile> abc = new HashMap<>();
     @Override
     public void init(OctoCorePaper plugin) {
         header = ChatColor.translateAlternateColorCodes('&',OctoCorePaper.getInstance().getConfig().getString("tab.header")).replace("\\n","\n");
@@ -35,27 +31,15 @@ public class TabManager implements Manager{
                     for (UUID uuid : PlayerManager.getPlayerProfiles().keySet()){
                         OctoPlayerProfile profile = PlayerManager.getPlayerProfiles().get(uuid);
                         Player player = profile.getPlayer();
-                        //same profile
-                        OctoPlayerProfile profile1 = abc.get(uuid);
-                        if(profile1.getMainColor() == profile.getMainColor() &&
-                                profile1.getPrefix() == profile.getPrefix() &&
-                                profile1.getCoins() == profile.getCoins() &&
-                                profile1.getXp() == profile.getXp() &&
-                                profile1.getData() == profile.getData()) {
-                            Logger.debug("Not sending tab to " + player.getName() + " because their profile is the same as last time");
-                        }
-                        //no profile / changed profile
-                        else{
-                            Logger.debug("Sending tab to " + player.getName());
-                            abc.put(uuid, profile);
-                            sendTab(player,profile);
-                        }
+                        sendTab(player,profile);
+                        Logger.debug("Sending tab");
                     }
                 }
             }
-        },0l,45l);
+        },0l,OctoCorePaper.getInstance().getConfig().getLong("update-pdata-interval"));
     }
     public static void sendTab(Player p,OctoPlayerProfile profile){
+        long start = System.currentTimeMillis();
         TableTabList tab = profile.getTab();
         if(tab == null){
             tab = OctoCorePaper.getTab().newTableTabList(p);
@@ -88,6 +72,7 @@ public class TabManager implements Manager{
         tab.set(3,0, new TextTabItem(title_color + "Misc", -1,skin));
         tab.set(3,2, new TextTabItem(value_color + "Client: Lunar Client", -1,skin));
         tab.set(3,4, new TextTabItem(value_color + "Ping: 1", -1,skin));
+        Logger.debug("Sending tab took " +  (System.currentTimeMillis() - start) + " ms.");
     }
     public static void sendPing(TableTabList tab){
         int i = 0;

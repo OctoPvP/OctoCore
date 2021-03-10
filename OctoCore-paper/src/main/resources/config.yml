@@ -7,3 +7,5 @@ database:
 tab:
   header: '&a&lPlaying on the OctoPvP Network&r'
   footer: '&e&lplay.octopvp.net'
+update-tab-interval: 45
+update-pdata-interval: 100

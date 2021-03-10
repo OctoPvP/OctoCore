@@ -68,6 +68,6 @@ public class PlayerManager implements Manager {
                     profile.setMainColor(LuckpermsManager.getMainColor(uuid));
                 }
             }
-        },0l,45l);
+        },0l,OctoCorePaper.getInstance().getConfig().getLong("update-tab-interval"));
     }
 }

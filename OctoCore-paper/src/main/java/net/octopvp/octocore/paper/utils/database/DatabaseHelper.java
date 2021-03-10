@@ -2,6 +2,9 @@ package net.octopvp.octocore.paper.utils.database;
 
 import net.octopvp.octocore.paper.utils.Logger;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public enum DatabaseHelper {
     CREATE_PLAYERDATA_TABLE("CREATE TABLE IF NOT EXISTS PlayerData(UUID varchar(36),Name varchar(255),Xp bigint DEFAULT 1, Coins bigint DEFAULT 0,LastLogon bigint,LastLogoff bigint,Frozen bit DEFAULT 0);"),
@@ -22,12 +25,15 @@ public enum DatabaseHelper {
         String returned = sql;
         String finalreturn = returned;
         int i = 0;
+        HashMap<Integer,String> replaced = new HashMap<>();
         for (String value : values) {
             i++;
-            Logger.debug(i + " | " + value);
-            returned.replace("%" + i,value + "");
-            Logger.debug(finalreturn);
+            replaced.put(i, value);
         }
+        replaced.forEach((k,v)->{
+            Logger.debug(k + " | " + v);
+            finalreturn.replace("%" + k, v);
+        });
         return finalreturn;
     }
 }
