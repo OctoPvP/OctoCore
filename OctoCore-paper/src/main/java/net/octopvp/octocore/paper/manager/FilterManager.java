@@ -33,14 +33,13 @@ public class FilterManager implements Manager{
         for (String s : blacklist.keySet()) {
             Logger.debug(" - " + s);
         }
-
     }
     public static String process(String message1, Player player){
         String message = message1;
         String final_message = message;
         for (String blacklist : FilterManager.getBlacklist().keySet()) {
             Logger.debug("Checking for: " + blacklist);
-            if(message.contains(blacklist)){
+            if(message.toLowerCase().contains(blacklist.toLowerCase())){
                 Logger.debug("Message contains " + blacklist);
                 if(getBlacklist().get(blacklist))
                     alertMods(player,message);

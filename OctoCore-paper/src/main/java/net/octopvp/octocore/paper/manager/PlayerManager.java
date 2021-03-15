@@ -2,8 +2,10 @@ package net.octopvp.octocore.paper.manager;
 
 import lombok.Getter;
 import net.octopvp.octocore.common.rank.LuckpermsManager;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCorePaper;
-import net.octopvp.octocore.paper.player.OctoPlayerProfile;
+import net.octopvp.octocore.paper.player.PlayerProfile;
+import net.octopvp.octocore.paper.setup.SetupVault;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.database.DatabaseHelper;
 import org.bukkit.Bukkit;
@@ -16,10 +18,10 @@ import java.util.UUID;
 
 public class PlayerManager implements Manager {
     @Getter
-    private static HashMap<UUID, OctoPlayerProfile> playerProfiles = new HashMap<>();
+    private static HashMap<UUID, PlayerProfile> playerProfiles = new HashMap<>();
     public static void processJoin(UUID uuid){
         //OctoPlayerProfile profile = loadProfileFromDB(uuid);
-        OctoPlayerProfile profile = new OctoPlayerProfile(uuid);
+        PlayerProfile profile = new PlayerProfile(uuid);
         profile.setCoins(0);
         profile.setXp(0);
         playerProfiles.put(uuid, profile);
@@ -28,29 +30,32 @@ public class PlayerManager implements Manager {
         unloadProfile(player.getUniqueId());
     }
     public static void unloadProfile(UUID uuid){
-        OctoPlayerProfile profile = playerProfiles.get(uuid);
+        PlayerProfile profile = playerProfiles.get(uuid);
         playerProfiles.remove(uuid);
     }
-    public static OctoPlayerProfile loadProfileFromDB(UUID uuid){
+    public static PlayerProfile loadProfileFromDB(UUID uuid){
         Logger.debug(DatabaseHelper.GET_PROFILE.getSql(uuid.toString()));
         boolean frozen = false;
         long coins = 0;
         long xp = 0;
         try {
             PreparedStatement ps = OctoCorePaper.getConnection().prepareStatement(DatabaseHelper.GET_PROFILE.getSql(uuid.toString()));
-
         } catch (SQLException throwables) {
+            Logger.error("Could not load player profile!\n" + CC.SEPARATOR);
             throwables.printStackTrace();
+            Logger.error(CC.SEPARATOR);
+            try{
+                Bukkit.getPlayer(uuid).kickPlayer(CC.RED + "Could not load your profile!\nIf this keeps on happening, please open a bug report.");
+            } catch (Exception e) {}
         }
         //TODO load profile stats here
-        OctoPlayerProfile profile = new OctoPlayerProfile(uuid);
+        PlayerProfile profile = new PlayerProfile(uuid);
         profile.setFrozen(frozen);
         profile.setCoins(coins);
         profile.setXp(xp);
         return profile;
     }
-    public static OctoPlayerProfile getProfile(UUID uuid){
-        OctoPlayerProfile returnedprofile = null;
+    public static PlayerProfile getProfile(UUID uuid){
         if(!playerProfiles.containsKey(uuid))
             return null;
         return playerProfiles.get(uuid);
@@ -63,11 +68,16 @@ public class PlayerManager implements Manager {
             @Override
             public void run() {
                 for (UUID uuid : playerProfiles.keySet()){
-                    OctoPlayerProfile profile = playerProfiles.get(uuid);
-                    profile.setPrefix(LuckpermsManager.getPrefix(uuid));
+                    PlayerProfile profile = playerProfiles.get(uuid);
+                    profile.setPrefix(getPrefix(uuid));
                     profile.setMainColor(LuckpermsManager.getMainColor(uuid));
                 }
             }
         },0l,OctoCorePaper.getInstance().getConfig().getLong("update-tab-interval"));
+    }
+    public static String getPrefix(UUID uuid){
+        return (Bukkit.getPluginManager().isPluginEnabled("Vault") && VaultManager.isChatHookEnabled()) ?
+                VaultManager.getChat().getPlayerPrefix(Bukkit.getPlayer(uuid)) :
+                LuckpermsManager.getPrefix(uuid);
     }
 }

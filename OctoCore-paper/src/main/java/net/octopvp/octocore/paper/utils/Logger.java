@@ -21,11 +21,11 @@ public class Logger {
     }
     public static void debug(String str){
         Bukkit.getLogger().info(OctoCorePaper.prefix + " [DEBUG] " + str);
-        debugPlayers.forEach(player -> {
+        for (Player player : debugPlayers) {
             if(!player.isOnline())
                 debugPlayers.remove(player);
             else
                 player.sendMessage(CC.YELLOW + "[DEBUG] " + CC.GRAY + str);
-        });
+        }
     }
 }

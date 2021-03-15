@@ -32,7 +32,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class OctoPlayerProfile {
+public class PlayerProfile {
     private UUID uuid;
     private PlayerData data;
     private boolean frozen;
@@ -43,7 +43,7 @@ public class OctoPlayerProfile {
     private boolean nicked;
     private TableTabList tab;
 
-    public OctoPlayerProfile(UUID uuid) {
+    public PlayerProfile(UUID uuid) {
         this.uuid = uuid;
         this.prefix = LuckpermsManager.getPrefix(uuid);
         this.mainColor = LuckpermsManager.getMainColor(uuid);

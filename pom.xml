@@ -72,5 +72,24 @@
             <artifactId>HikariCP</artifactId>
             <version>3.4.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+            <scope>provided</scope>
+            <!--
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/reflections-0.9.10.jar</systemPath>
+            -->
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>30.1-jre</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/guava-30.1-jre.jar</systemPath>
+        </dependency>
+        -->
     </dependencies>
 </project>

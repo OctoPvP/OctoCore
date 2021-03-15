@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper.utils.database;
 
 import net.octopvp.octocore.paper.utils.Logger;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,6 +23,7 @@ public enum DatabaseHelper {
         this.sql = sql;
     }
     public String getSql(String... values){
+
         String returned = sql;
         String finalreturn = returned;
         int i = 0;
@@ -30,10 +32,12 @@ public enum DatabaseHelper {
             i++;
             replaced.put(i, value);
         }
-        replaced.forEach((k,v)->{
+        for (Integer k : replaced.keySet()) {
+            String v = replaced.get(k);
             Logger.debug(k + " | " + v);
-            finalreturn.replace("%" + k, v);
-        });
+            finalreturn.replaceAll("%" + k, v);
+            Logger.debug("Replacing %" + k + " With: " + v);
+        }
         return finalreturn;
     }
 }

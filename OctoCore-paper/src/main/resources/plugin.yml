@@ -7,5 +7,6 @@ description: OctoCore
 load: STARTUP
 depend:
   - LuckPerms
-  - Vault
   - ProtocolLib
+softdepend:
+  - Vault

@@ -5,13 +5,10 @@ import net.octopvp.octocore.paper.manager.PlayerManager;
 import net.octopvp.octocore.paper.manager.TabManager;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.database.DatabaseHelper;
-import net.octopvp.octocore.paper.utils.tab.util.Skin;
-import net.octopvp.octocore.paper.utils.tab.util.Skins;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -30,7 +27,6 @@ public class JoinLeaveListener implements Listener {
             @Override
             public void run() {
                 PlayerManager.processJoin(e.getPlayer().getUniqueId());
-
                 TabManager.onJoin(e.getPlayer());
             }
         },20l);

@@ -4,6 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import lombok.Getter;
 import net.milkbowl.vault.chat.Chat;
+import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.database.ConnectionPoolManager;
 import net.octopvp.octocore.common.rank.LuckpermsManager;
 import net.octopvp.octocore.paper.command.CommandFramework;
@@ -17,6 +18,7 @@ import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,6 +52,7 @@ public final class OctoCorePaper extends JavaPlugin {
         instance = this;
         commandFramework = new CommandFramework(this);
         tab = new Tab(this);
+        HardwareUtils.init();
         Logger.info("Starting OctoCore");
         if(!getDataFolder().exists())
             getDataFolder().mkdirs();

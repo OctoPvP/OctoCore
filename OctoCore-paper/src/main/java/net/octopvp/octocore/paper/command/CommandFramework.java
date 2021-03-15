@@ -62,7 +62,7 @@ public class CommandFramework implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
-		return handleCommand(new Sender(sender), cmd, label, args);
+		return handleCommand(sender, cmd, label, args);
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public class CommandFramework implements CommandExecutor {
 	 * @param args The arguments parsed from onCommand
 	 * @return Always returns true for simplicity's sake in onCommand
 	 */
-	public boolean handleCommand(Sender sender, org.bukkit.command.Command cmd, String label, String[] args) {
+	public boolean handleCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
 		for (int i = args.length; i >= 0; i--) {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(label.toLowerCase());
@@ -87,13 +87,16 @@ public class CommandFramework implements CommandExecutor {
 				Method method = commandMap.get(cmdLabel).getKey();
 				Object methodObject = commandMap.get(cmdLabel).getValue();
 				Command command = method.getAnnotation(Command.class);
-				if (!(command.permission() == net.octopvp.octocore.paper.utils.permission.Permission.NOTHING) && !sender.hasPermission(command.permission().getNode())) {
-					sender.sendMessage(Lang.NO_PERMISSION);
-					return true;
-				}
-				if (command.playerOnly() && !(sender instanceof Player)) {
-					sender.sendMessage(Lang.PLAYER_ONLY);
-					return true;
+				if (command.permission() != net.octopvp.octocore.paper.utils.permission.Permission.NOTHING)
+					if (!sender.hasPermission(command.permission().getNode())) {
+						sender.sendMessage(Lang.NO_PERMISSION.getMsg());
+						return true;
+					}
+				if (command.playerOnly()) {
+					if(!(sender instanceof Player)){
+						sender.sendMessage(Lang.PLAYER_ONLY.getMsg());
+						return true;
+					}
 				}
 				try {
 					CommandResult result = (CommandResult) method.invoke(methodObject, new Sender(sender), args);
@@ -117,7 +120,7 @@ public class CommandFramework implements CommandExecutor {
 				return true;
 			}
 		}
-		sender.sendMessage(Lang.UNHANDLED_COMMAND);
+		sender.sendMessage(Lang.UNHANDLED_COMMAND.getMsg());
 		return true;
 	}
 	/**
@@ -126,7 +129,7 @@ public class CommandFramework implements CommandExecutor {
 	 * 
 	 * @param obj The object to register the commands of
 	 */
-	public void registerCommands(BaseCommand obj) {
+	public void registerCommands(Object obj) {
 		for (Method m : obj.getClass().getMethods()) {
 			if (m.getAnnotation(Command.class) != null) {
 				Command command = m.getAnnotation(Command.class);

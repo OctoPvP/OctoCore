@@ -2,18 +2,16 @@ package net.octopvp.octocore.paper.manager;
 
 import lombok.Getter;
 import net.octopvp.octocore.paper.OctoCorePaper;
-import net.octopvp.octocore.paper.player.OctoPlayerProfile;
-import org.bukkit.Bukkit;
+import net.octopvp.octocore.paper.player.PlayerProfile;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class NickManager implements Manager{
     @Getter
-    private static HashMap<OctoPlayerProfile, String> nicked = new HashMap<>();
+    private static HashMap<PlayerProfile, String> nicked = new HashMap<>();
     @Override
     public void init(OctoCorePaper plugin) {
 
@@ -26,7 +24,7 @@ public class NickManager implements Manager{
         }
         return false;
     }
-    public static void addNick(OctoPlayerProfile profile, String nick){
+    public static void addNick(PlayerProfile profile, String nick){
         if(!nicked.containsKey(profile))
             nicked.put(profile, nick);
         else{
@@ -34,7 +32,7 @@ public class NickManager implements Manager{
             nicked.put(profile,nick);
         }
     }
-    public static void removeNick(OctoPlayerProfile name){
+    public static void removeNick(PlayerProfile name){
         if(nicked.containsKey(name))
             nicked.remove(name);
     }

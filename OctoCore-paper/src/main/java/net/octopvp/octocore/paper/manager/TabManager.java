@@ -2,7 +2,7 @@ package net.octopvp.octocore.paper.manager;
 
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCorePaper;
-import net.octopvp.octocore.paper.player.OctoPlayerProfile;
+import net.octopvp.octocore.paper.player.PlayerProfile;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.tab.item.TextTabItem;
 import net.octopvp.octocore.paper.utils.tab.tablist.TableTabList;
@@ -29,16 +29,16 @@ public class TabManager implements Manager{
             public void run() {
                 if(!(Bukkit.getOnlinePlayers().toArray().length == 0)){
                     for (UUID uuid : PlayerManager.getPlayerProfiles().keySet()){
-                        OctoPlayerProfile profile = PlayerManager.getPlayerProfiles().get(uuid);
+                        PlayerProfile profile = PlayerManager.getPlayerProfiles().get(uuid);
                         Player player = profile.getPlayer();
-                        sendTab(player,profile);
                         Logger.debug("Sending tab");
+                        sendTab(player,profile);
                     }
                 }
             }
         },0l,OctoCorePaper.getInstance().getConfig().getLong("update-pdata-interval"));
     }
-    public static void sendTab(Player p,OctoPlayerProfile profile){
+    public static void sendTab(Player p, PlayerProfile profile){
         long start = System.currentTimeMillis();
         TableTabList tab = profile.getTab();
         if(tab == null){

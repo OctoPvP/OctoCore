@@ -14,7 +14,7 @@ public class OnlinePlayer {
     private UUID uuid;
     private Player player;
     private PlayerData pdata;
-    private OctoPlayerProfile profile;
+    private PlayerProfile profile;
     public OnlinePlayer(UUID uuid){
         this.uuid = uuid;
         this.player = Bukkit.getPlayer(uuid);

@@ -93,6 +93,17 @@
                         </goals>
                     </execution>
                 </executions>
+                <!--
+                <configuration>
+                    <minimizeJar>true</minimizeJar>
+                    <artifactSet>
+                        <includes>
+                            <include>org.reflections</include>
+
+                        </includes>
+                    </artifactSet>
+                </configuration>
+                -->
             </plugin>
         </plugins>
     </build>
