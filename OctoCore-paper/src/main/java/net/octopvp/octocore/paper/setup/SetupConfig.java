@@ -6,11 +6,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class SetupConfig implements Setup{
     public void setup(OctoCorePaper plugi){
         FileConfiguration config = OctoCorePaper.getInstance().getConfig();
-        config.addDefault("database.username", "");
-        config.addDefault("database.password", "");
-        config.addDefault("database.db", "");
-        config.addDefault("database.url", "");
-        config.addDefault("database.port", 3306);
+        config.addDefault("database.sql.url", "");
+        config.addDefault("database.sql.username", "");
+        config.addDefault("database.sql.password", "");
+        config.addDefault("database.sql.db", "");
+        config.addDefault("database.sql.port", 3306);
+        config.addDefault("database.redis.host","localhost");
+        config.addDefault("database.redis.port",6379);
         config.addDefault("tab.header","&a&lPlaying on the OctoPvP Network&r");
         config.addDefault("tab.footer","\n&a&l&kA &r&6&lplay.octopvp.net&a&l&k A&r\n\n&b&ldiscord.gg/<discord>\n\n&b&loctopvp.net");
         config.addDefault("update-pdata-interval", 100l);

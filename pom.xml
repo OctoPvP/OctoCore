@@ -73,6 +73,11 @@
             <version>3.4.5</version>
         </dependency>
         <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.2.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.10</version>
@@ -81,6 +86,13 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/reflections-0.9.10.jar</systemPath>
             -->
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
+            <type>jar</type>
+            <scope>compile</scope>
         </dependency>
         <!--
         <dependency>

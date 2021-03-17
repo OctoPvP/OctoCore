@@ -93,11 +93,11 @@ public final class OctoCorePaper extends JavaPlugin {
 
     private void initdb(){
         try {
-            connectionPoolManager = new ConnectionPoolManager(getConfig().getString("database.url"),
-                    getConfig().getString("database.port"),
-                    getConfig().getString("database.db"),
-                    getConfig().getString("database.username"),
-                    getConfig().getString("database.password"),
+            connectionPoolManager = new ConnectionPoolManager(getConfig().getString("database.sql.url"),
+                    getConfig().getString("database.sql.port"),
+                    getConfig().getString("database.sql.db"),
+                    getConfig().getString("database.sql.username"),
+                    getConfig().getString("database.sql.password"),
                     10,
                     10,
                     500l,

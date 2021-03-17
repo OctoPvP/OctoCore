@@ -9,11 +9,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import java.util.Arrays;
+
 public class PluginMsgManager implements Manager, PluginMessageListener {
+    String[] pluginMessagesOut = new String[]{PluginMsgChannels.SPIGOT_TO_BUNGEE, PluginMsgChannels.LUNAR_CLIENT};
+    String[] pluginMessagesIn = new String[] {PluginMsgChannels.BUNGEE_TO_SPIGOT};
     @Override
     public void init(OctoCorePaper plugin) {
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(OctoCorePaper.getInstance(), PluginMsgChannels.BUNGEE_TO_SPIGOT,this);
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(OctoCorePaper.getInstance(),PluginMsgChannels.SPIGOT_TO_BUNGEE);
+        Arrays.asList(pluginMessagesOut).forEach(m -> Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(OctoCorePaper.getInstance(),m));
+        Arrays.asList(pluginMessagesIn).forEach(m-> Bukkit.getServer().getMessenger().registerIncomingPluginChannel(OctoCorePaper.getInstance(), m,this));
     }
 
     @Override
