@@ -272,6 +272,7 @@ public class NameTagChanger {
                 }
                 continue;
             }
+
             if (otherPlayer.canSee(player)) {
                 packetHandler.sendTabListRemovePacket(player, otherPlayer);
                 packetHandler.sendTabListAddPacket(player, newProfile, otherPlayer);
@@ -294,6 +295,10 @@ public class NameTagChanger {
                     packetHandler.sendScoreboardAddPacket(newName, p, team.getName());
                 });
             }
+        }
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            p.hidePlayer(player);
+            p.showPlayer(player);
         }
         sendingPackets = false;
     }

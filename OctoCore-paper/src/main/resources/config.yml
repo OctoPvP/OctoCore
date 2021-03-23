@@ -9,8 +9,20 @@ database:
     host: localhost
     port: 6379
     password: 'default'
+  mongo:
+    host: localhost
+    port: 27019
+    auth:
+      enabled: false
+      username: default
+      password: default
+      db: default
 tab:
   header: '&a&lPlaying on the OctoPvP Network&r'
   footer: '&e&lplay.octopvp.net'
 update-tab-interval: 45
 update-pdata-interval: 100
+default-tab: true
+cooldown:
+  pearl:
+    time: 16

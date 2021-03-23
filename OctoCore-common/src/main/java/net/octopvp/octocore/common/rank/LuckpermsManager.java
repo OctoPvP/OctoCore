@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import net.octopvp.octocore.common.util.CC;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -18,22 +19,22 @@ public class LuckpermsManager {
     private static HashMap<String, String> colors = new HashMap<>();
     public static void init(){
         luckPerms = LuckPermsProvider.get();
-        colors.put("red", "&c");
-        colors.put("aqua", "&b");
-        colors.put("yellow", "&e");
-        colors.put("dred", "&4");
-        colors.put("gold", "&6");
-        colors.put("dgreen", "&2");
-        colors.put("daqua", "&3");
-        colors.put("dblue", "&1");
-        colors.put("blue", "&9");
-        colors.put("lpurple", "&d");
-        colors.put("purple", "&5");
-        colors.put("dpurple", "&5");
-        colors.put("white", "&f");
-        colors.put("gray", "&7");
-        colors.put("dgray", "&8");
-        colors.put("black", "&0");
+        colors.put("red", CC.RED);
+        colors.put("aqua", CC.AQUA);
+        colors.put("yellow", CC.YELLOW);
+        colors.put("dred", CC.D_RED);
+        colors.put("gold", CC.GOLD);
+        colors.put("dgreen",CC.D_GREEN);
+        colors.put("daqua", CC.D_AQUA);
+        colors.put("dblue", CC.D_BLUE);
+        colors.put("blue", CC.BLUE);
+        colors.put("lpurple", CC.PINK);
+        colors.put("purple", CC.PURPLE);
+        colors.put("dpurple", CC.PURPLE);
+        colors.put("white", CC.WHITE);
+        colors.put("gray", CC.GRAY);
+        colors.put("dgray", CC.D_GRAY);
+        colors.put("black", CC.BLACK);
     }
     public static User getUser(UUID uuid){
         return getLuckPerms().getUserManager().getUser(uuid);
@@ -51,14 +52,14 @@ public class LuckpermsManager {
     public static String getMainColor(UUID uuid){
         String color = null;
         if(hasPermission(uuid, "color.red"))
-            return "&c";
+            return CC.RED;
         for (String s : colors.keySet()) {
             if(hasPermission(uuid, "color." + s)){
                 color = colors.get(s);
             }
         }
         if(color == null || color == "" || color == "null")
-            return "&7";
+            return CC.GRAY;
         else return color;
     }
     public static boolean hasPermission(User user, String permission) {

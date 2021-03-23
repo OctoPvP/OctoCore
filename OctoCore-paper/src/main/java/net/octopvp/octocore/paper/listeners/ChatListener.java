@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper.listeners;
 
 import net.octopvp.octocore.common.rank.LuckpermsManager;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.paper.manager.ChatManager;
 import net.octopvp.octocore.paper.manager.FilterManager;
 import net.octopvp.octocore.paper.utils.permission.Permission;
 import net.octopvp.octocore.paper.manager.PlayerManager;
@@ -27,7 +28,7 @@ public class ChatListener implements Listener {
         }
         PlayerManager.getProfile(e.getPlayer().getUniqueId()).setLastMessage(e.getMessage());
         if(e.getPlayer().hasPermission(Permission.USE_COLOR_CHAT.getNode()))
-            e.setFormat(PlayerManager.getProfile(e.getPlayer().getUniqueId()).getPrefix() + " " + e.getPlayer().getDisplayName() + CC.R + ": " + ChatColor.translateAlternateColorCodes('&',FilterManager.process(e.getMessage(),e.getPlayer())));
-        else e.setFormat(ChatColor.translateAlternateColorCodes('&',PlayerManager.getProfile(e.getPlayer().getUniqueId()).getPrefix() + LuckpermsManager.getMainColor(e.getPlayer().getUniqueId()) + e.getPlayer().getDisplayName()) + CC.R + ": " + FilterManager.process(e.getMessage(),e.getPlayer()));
+            e.setFormat(ChatManager.formatChat(e.getPlayer().getUniqueId(),e.getPlayer().getDisplayName(),FilterManager.process(e.getMessage(),e.getPlayer()),true));
+        else e.setFormat(ChatManager.formatChat(e.getPlayer().getUniqueId(),e.getPlayer().getDisplayName(),FilterManager.process(e.getMessage(),e.getPlayer()),false));
     }
 }

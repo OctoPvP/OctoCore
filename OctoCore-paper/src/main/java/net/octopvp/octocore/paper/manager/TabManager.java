@@ -1,5 +1,6 @@
 package net.octopvp.octocore.paper.manager;
 
+import com.lunarclient.bukkitapi.LunarClientAPI;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCorePaper;
 import net.octopvp.octocore.paper.player.PlayerProfile;
@@ -24,21 +25,23 @@ public class TabManager implements Manager{
     public void init(OctoCorePaper plugin) {
         header = ChatColor.translateAlternateColorCodes('&',OctoCorePaper.getInstance().getConfig().getString("tab.header")).replace("\\n","\n");
         footer = ChatColor.translateAlternateColorCodes('&',OctoCorePaper.getInstance().getConfig().getString("tab.footer").replace("\\n","\n"));
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCorePaper.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                if(!(Bukkit.getOnlinePlayers().toArray().length == 0)){
-                    for (UUID uuid : PlayerManager.getPlayerProfiles().keySet()){
-                        PlayerProfile profile = PlayerManager.getPlayerProfiles().get(uuid);
-                        Player player = profile.getPlayer();
-                        Logger.debug("Sending tab");
-                        sendTab(player,profile);
+        if(plugin.getConfig().getBoolean("default-tab")){
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCorePaper.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    if(!(Bukkit.getOnlinePlayers().toArray().length == 0)){
+                        for (UUID uuid : PlayerManager.getPlayerProfiles().keySet()){
+                            PlayerProfile profile = PlayerManager.getPlayerProfiles().get(uuid);
+                            Player player = profile.getPlayer();
+                            Logger.debug("Sending tab");
+                            sendTab(player,profile);
+                        }
                     }
                 }
-            }
-        },0l,OctoCorePaper.getInstance().getConfig().getLong("update-pdata-interval"));
+            },0l,OctoCorePaper.getInstance().getConfig().getLong("update-pdata-interval"));
+        }
     }
-    public static void sendTab(Player p, PlayerProfile profile){
+    private static void sendTab(Player p, PlayerProfile profile){
         long start = System.currentTimeMillis();
         TableTabList tab = profile.getTab();
         if(tab == null){
@@ -56,8 +59,8 @@ public class TabManager implements Manager{
 
         tab.set(1,0, new TextTabItem(title_color + "You (" + p.getDisplayName() + ")", -1,skin));
         tab.set(1,2, new TextTabItem(value_color + "Rank: " + PlayerManager.getProfile(p.getUniqueId()).getPrefix(), -1,skin));
-        tab.set(1,4, new TextTabItem(value_color + "Coins: 100", -1,skin));
-        tab.set(1,6, new TextTabItem(value_color + "XP: 100", -1,skin));
+        tab.set(1,4, new TextTabItem(value_color + "Coins: " + profile.getCoins(), -1,skin));
+        tab.set(1,6, new TextTabItem(value_color + "XP: " + profile.getXp(), -1,skin));
         tab.set(1,8, new TextTabItem(value_color + "Last Login: 1/1/2021", -1,skin));
 
 
@@ -70,11 +73,11 @@ public class TabManager implements Manager{
 
 
         tab.set(3,0, new TextTabItem(title_color + "Misc", -1,skin));
-        tab.set(3,2, new TextTabItem(value_color + "Client: Lunar Client", -1,skin));
+        tab.set(3,2, new TextTabItem(value_color + "Client: " + (LunarClientAPI.getInstance().isRunningLunarClient(p) ? "Lunar Client" : "Other"), -1,skin));
         tab.set(3,4, new TextTabItem(value_color + "Ping: 1", -1,skin));
         Logger.debug("Sending tab took " +  (System.currentTimeMillis() - start) + " ms.");
     }
-    public static void sendPing(TableTabList tab){
+    private static void sendPing(TableTabList tab){
         int i = 0;
         while (true){
             i++;
@@ -94,6 +97,7 @@ public class TabManager implements Manager{
         }
     }
     public static void onJoin(Player p){
-        sendTab(p,PlayerManager.getProfile(p.getUniqueId()));
+        if(OctoCorePaper.getInstance().getConfig().getBoolean("default-tab"))
+            sendTab(p,PlayerManager.getProfile(p.getUniqueId()));
     }
 }

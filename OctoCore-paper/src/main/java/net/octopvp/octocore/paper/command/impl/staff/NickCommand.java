@@ -22,10 +22,6 @@ public class NickCommand implements BaseCommand {
             sender.getPlayer().setDisplayName(args[0]);
             sender.getPlayer().setPlayerListName(args[0]);
             NickManager.addNick(PlayerManager.getProfile(sender.getPlayer().getUniqueId()), args[0]);
-            for(Player p : Bukkit.getOnlinePlayers()) {
-                p.hidePlayer(sender.getPlayer());
-                p.showPlayer(sender.getPlayer());
-            }
             sender.sendMessage(Lang.NICK_SUCCESS.getMsg().replaceFirst("%nick%",args[0]));
             return CommandResult.SUCCESS;
         }else if(args.length == 2){
@@ -39,10 +35,6 @@ public class NickCommand implements BaseCommand {
             target.setDisplayName(args[0]);
             target.setPlayerListName(args[0]);
             NickManager.addNick(PlayerManager.getProfile(target.getUniqueId()), args[0]);
-            for(Player p : Bukkit.getOnlinePlayers()) {
-                p.hidePlayer(sender.getPlayer());
-                p.showPlayer(sender.getPlayer());
-            }
             target.sendMessage(Lang.NICK_SUCCESS.getMsg(args[0]));
             sender.sendMessage(Lang.NICK_OTHER_SUCCESS.getMsg(target.getName(),args[0]));
             return CommandResult.SUCCESS;
