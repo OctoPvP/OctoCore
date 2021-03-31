@@ -8,5 +8,6 @@ load: STARTUP
 depend:
   - LuckPerms
   - ProtocolLib
+  - Citizens
 softdepend:
   - Vault

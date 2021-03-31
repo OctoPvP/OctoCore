@@ -3,6 +3,8 @@ package net.octopvp.octocore.paper.manager;
 import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
+import com.nametagedit.plugin.NametagEdit;
 import lombok.Getter;
 import net.octopvp.octocore.common.rank.LuckpermsManager;
 import net.octopvp.octocore.paper.OctoCorePaper;
@@ -16,10 +18,13 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerManager implements Manager {
-    //@Getter
-    //private static MongoCollection<Document> pdataCollection = DatabaseManager.getMongoDatabase().getCollection("pdata");
+    @Getter
+    private static MongoCollection<Document> pdataCollection = null;
     @Getter
     private static HashMap<UUID, PlayerProfile> playerProfiles = new HashMap<>();
+    public static void postDBInit(){
+        pdataCollection = DatabaseManager.getMongoDatabase().getCollection("pdata");
+    }
     public static void processJoin(UUID uuid){
         //OctoPlayerProfile profile = loadProfileFromDB(uuid);
         PlayerProfile profile = new PlayerProfile(uuid);
@@ -27,7 +32,7 @@ public class PlayerManager implements Manager {
         profile.setXp(0);
         playerProfiles.put(uuid, profile);
         profile.getPlayer().setPlayerListName(profile.getMainColor() + profile.getPlayer().getDisplayName());
-        NameTagChanger.INSTANCE.changePlayerName(profile.getPlayer(),profile.getMainColor() + profile.getPlayer().getDisplayName());
+        NametagEdit.getApi().setPrefix(profile.getPlayer(),profile.getMainColor());
     }
     public static void processLeave(Player player){
         unloadProfile(player.getUniqueId());
@@ -38,14 +43,13 @@ public class PlayerManager implements Manager {
     }
     public static PlayerProfile loadProfileFromDB(UUID uuid){
         //TODO load profile stats here
-        //Document doc = pdataCollection.find(Filters.eq("uuid",uuid.toString())).first();
-        //String json = doc.toJson();
-        return deserializeProfile("{\"uuid\": \"null\"}");
+        Document doc = pdataCollection.find(Filters.eq("uuid",uuid.toString())).projection(Projections.excludeId()).first();
+        String json = doc.toJson();
+        return deserializeProfile(json);
     }
     public static void saveProfile(UUID uuid) {
         PlayerProfile profile = getProfile(uuid);
         String json = serializeProfileToJson(profile);
-
     }
     public static String serializeProfileToJson(PlayerProfile profile){
         return new Gson().toJson(profile);

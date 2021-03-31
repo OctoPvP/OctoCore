@@ -12,7 +12,8 @@ public enum Permission implements PermissionString {
     COMMAND_NICK_OTHERS("octocore.command.nick.others"),
     COMMAND_UNNICK_OTHERS("octocore.command.unnick.others"),
     USE_UNICODE_CHAT("octocore.chat.unicode"),
-    USE_COLOR_CHAT("octocore.chat.color")
+    USE_COLOR_CHAT("octocore.chat.color"),
+    TEST("test")
 
     ;
     private final String node;

@@ -19,7 +19,7 @@ public class SetupManager implements Setup {
             new TabManager(),
             new VaultManager(),
             new PluginMsgManager(),
-            new DatabaseManager()};
+            new DatabaseManager(),};
     List<Manager> managers = Arrays.asList(manager);
     @Override
     public void setup(OctoCorePaper plugin) {
@@ -29,4 +29,7 @@ public class SetupManager implements Setup {
             m.init(plugin);
         });
     }
+
+    @Override
+    public void disable(OctoCorePaper plugin) { }
 }

@@ -34,4 +34,9 @@ public class SetupConfig implements Setup{
         config.options().copyDefaults();
         OctoCorePaper.getInstance().saveDefaultConfig();
     }
+
+    @Override
+    public void disable(OctoCorePaper plugin) {
+
+    }
 }

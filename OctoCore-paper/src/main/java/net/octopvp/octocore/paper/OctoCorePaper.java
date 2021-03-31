@@ -8,10 +8,7 @@ import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.database.ConnectionPoolManager;
 import net.octopvp.octocore.common.rank.LuckpermsManager;
 import net.octopvp.octocore.paper.command.CommandFramework;
-import net.octopvp.octocore.paper.setup.SetupCommands;
-import net.octopvp.octocore.paper.setup.SetupConfig;
-import net.octopvp.octocore.paper.setup.SetupListeners;
-import net.octopvp.octocore.paper.setup.SetupManager;
+import net.octopvp.octocore.paper.setup.*;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.database.DatabaseHelper;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
@@ -38,8 +35,7 @@ public final class OctoCorePaper extends JavaPlugin {
     private static OctoCorePaper instance;
     @Getter
     private static CommandFramework commandFramework;
-    @Getter
-    private static ProtocolManager protocolManager;
+
     @Getter
     private static Tab tab;
     @Override
@@ -49,6 +45,8 @@ public final class OctoCorePaper extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if(instance != null)
+            throw new IllegalStateException("OctoCore is already initialized??? Try restarting the server if there is any problems");
         instance = this;
         commandFramework = new CommandFramework(this);
         tab = new Tab(this);
@@ -68,8 +66,7 @@ public final class OctoCorePaper extends JavaPlugin {
         new SetupManager().setup(this);
         NameTagChanger.INSTANCE.init();
         Logger.info("Hooking into plugins.");
-        LuckpermsManager.init();
-        this.protocolManager = ProtocolLibrary.getProtocolManager();
+        new SetupHooks();
         setupChat();
         Logger.info("Setting up commands.");
         new SetupCommands().setup(this);

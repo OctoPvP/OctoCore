@@ -7,12 +7,13 @@ import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
+import net.octopvp.octocore.paper.utils.permission.Permission;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class TrollCommand implements BaseCommand {
-    @Command(name = "Troll", playerOnly = true)
+    @Command(name = "Troll", playerOnly = true,permission = Permission.TEST)
     public CommandResult execute(Sender sender, String[] args) {
         PacketContainer container = new PacketContainer(PacketType.Play.Server.GAME_STATE_CHANGE);
         container.getIntegers().write(0,4);

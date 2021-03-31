@@ -9,6 +9,7 @@ import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.database.DatabaseHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
@@ -55,7 +56,7 @@ public class FilterManager implements Manager{
                     sb.append("*");
                 }
                 Logger.debug(sb.toString());
-                final_message = final_message.replace(blacklist, sb.toString());
+                final_message = final_message.replaceAll("(?i)"+blacklist, sb.toString());
             }
         }
         Logger.debug(final_message);

@@ -30,4 +30,9 @@ public class SetupCommands implements Setup{
         //CommandManager.registerCommand("test", new TestCommand("test", true));
         //setupExecutor(plugin);
     }
+
+    @Override
+    public void disable(OctoCorePaper plugin) {
+
+    }
 }

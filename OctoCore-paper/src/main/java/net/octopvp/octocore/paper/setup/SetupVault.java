@@ -18,6 +18,12 @@ public class SetupVault implements Setup{
             else Logger.info("Couldn't setup vault chat hook. Defaulting to LuckPerms chat hook.");
         }
     }
+
+    @Override
+    public void disable(OctoCorePaper plugin) {
+
+    }
+
     private boolean setupChat(){
         RegisteredServiceProvider<Chat> rsp = Bukkit.getServer().getServicesManager().getRegistration(Chat.class);
         VaultManager.setChat(rsp.getProvider());
