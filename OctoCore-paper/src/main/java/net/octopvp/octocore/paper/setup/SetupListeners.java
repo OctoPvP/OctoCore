@@ -9,11 +9,11 @@ import org.bukkit.plugin.PluginManager;
 
 public class SetupListeners implements Setup{
     private static final Listener[] listeners = new Listener[]{new JoinLeaveListener(),new ChatListener()};
+    @Override
     public void setup(OctoCorePaper plugin){
         PluginManager plm = Bukkit.getPluginManager();
-        for (Listener listener : listeners) {
+        for (Listener listener : listeners)
             plm.registerEvents(listener,plugin);
-        }
         JoinLeaveListener.init();
     }
 

@@ -6,12 +6,15 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import lombok.Getter;
 import net.octopvp.octocore.paper.OctoCorePaper;
 import net.octopvp.octocore.paper.utils.Logger;
 import redis.clients.jedis.Jedis;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class DatabaseManager implements Manager{
     @Getter
@@ -45,5 +48,8 @@ public class DatabaseManager implements Manager{
         Logger.info(mongoDatabase == null ? "Could not connect to mongo!" : "Connected to mongo!");
         PlayerManager.postDBInit();
         //redis = new Jedis(plugin.getConfig().getString("database.redis.host"),OctoCorePaper.getInstance().getConfig().getInt("database.redis.port"));
+    }
+    public static boolean doesDocumentExistByUUID(UUID uuid){
+        return PlayerManager.getPdataCollection().find(Filters.eq("uuid",uuid.toString())).projection(Projections.excludeId()).limit(1).iterator().hasNext();
     }
 }

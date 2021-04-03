@@ -2,6 +2,8 @@ package net.octopvp.octocore.waterfall;
 
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.octopvp.octocore.waterfall.commands.LobbyCommand;
+import net.octopvp.octocore.waterfall.listeners.KickEvent;
 
 public final class OctoCoreWaterfall extends Plugin {
     @Getter
@@ -10,7 +12,8 @@ public final class OctoCoreWaterfall extends Plugin {
     @Override
     public void onEnable() {
         instance = this;
-        getProxy().getPluginManager().registerCommand(this, new GetUuid("guuidbungee"));
+        getProxy().getPluginManager().registerCommand(this,new LobbyCommand());
+        getProxy().getPluginManager().registerListener(this,new KickEvent());
     }
 
     @Override

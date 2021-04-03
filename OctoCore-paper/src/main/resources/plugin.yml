@@ -9,5 +9,6 @@ depend:
   - LuckPerms
   - ProtocolLib
   - Citizens
+  - NametagEdit
 softdepend:
   - Vault

@@ -21,8 +21,6 @@ public class ProfileUtils {
             return false;
         if(profile1.getMainColor() != profile2.getMainColor())
             return false;
-        if(profile1.getData() != profile2.getData())
-            return false;
         if(profile1.getTab() != profile2.getTab())
             return false;
         if(profile1.getNick() != profile2.getNick())
@@ -43,8 +41,6 @@ public class ProfileUtils {
         if(profile1.getPrefix() != profile2.getPrefix())
             return false;
         if(profile1.getMainColor() != profile2.getMainColor())
-            return false;
-        if(profile1.getData() != profile2.getData())
             return false;
         if(profile1.getTab() != profile2.getTab())
             return false;

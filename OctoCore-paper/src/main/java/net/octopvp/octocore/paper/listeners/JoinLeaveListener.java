@@ -41,11 +41,6 @@ public class JoinLeaveListener implements Listener {
     }
     @EventHandler(priority = EventPriority.MONITOR)
     public void onLeave(PlayerQuitEvent e){
-
-        //FIXME
-        e.getPlayer().setLevel(0);
-        e.getPlayer().setExp(0f);
-
         PlayerManager.processLeave(e.getPlayer());
     }
     public static void init(){}
