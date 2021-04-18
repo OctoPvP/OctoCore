@@ -2,8 +2,6 @@ package net.octopvp.octocore.paper.utils.database;
 
 import net.octopvp.octocore.paper.utils.Logger;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 

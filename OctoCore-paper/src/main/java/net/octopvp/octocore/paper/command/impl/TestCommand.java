@@ -8,7 +8,6 @@ import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.command.Completer;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.permission.Permission;
-import net.octopvp.octocore.paper.utils.permission.PermissionAnnotation;
 import net.octopvp.octocore.paper.utils.permission.PermissionUtil;
 
 import java.util.ArrayList;

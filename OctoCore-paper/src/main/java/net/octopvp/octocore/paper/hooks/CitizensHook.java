@@ -1,14 +1,9 @@
 package net.octopvp.octocore.paper.hooks;
 
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import org.bukkit.entity.EntityType;
-
 public class CitizensHook implements Hook{
+    public static String a = "";
     @Override
-    public void onEnable() {
-        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER,"abc");
-    }
+    public void onEnable() { }
     @Override
     public void onDisable() {}
 }

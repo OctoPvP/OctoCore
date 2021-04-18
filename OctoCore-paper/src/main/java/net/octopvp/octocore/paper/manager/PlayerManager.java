@@ -1,36 +1,38 @@
 package net.octopvp.octocore.paper.manager;
 
 import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
-import com.nametagedit.plugin.NametagEdit;
 import lombok.Getter;
 import net.octopvp.octocore.common.rank.LuckpermsManager;
 import net.octopvp.octocore.paper.OctoCorePaper;
-import net.octopvp.octocore.paper.player.PlayerProfile;
+import net.octopvp.octocore.paper.objects.PlayerProfile;
 import net.octopvp.octocore.paper.utils.Logger;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerManager implements Manager {
-    @Getter
     private static MongoCollection<Document> pdataCollection = null;
-    @Getter
     private static MongoCollection<Document> backupCollection = null;
     @Getter
-    private static HashMap<UUID, PlayerProfile> playerProfiles = new HashMap<>();
+    private static ConcurrentHashMap<UUID, PlayerProfile> playerProfiles = new ConcurrentHashMap<>();
 
     /**
-     * After the database is init
+     * After the database is initialized
      */
     public static void postDBInit(){
         pdataCollection = DatabaseManager.getMongoDatabase().getCollection("pdata");
         backupCollection = DatabaseManager.getMongoDatabase().getCollection("backup");
+        Bukkit.getScheduler().scheduleAsyncRepeatingTask(OctoCorePaper.getInstance(), () -> {
+            for (PlayerProfile value : playerProfiles.values()) {
+                value.setPlayTime(value.getPlayTime()+1);
+            }
+        },0l,1200l);
     }
 
     /**
@@ -38,13 +40,15 @@ public class PlayerManager implements Manager {
      * @param uuid
      */
     public static void processJoin(UUID uuid){
-        PlayerProfile profile;
-        if(DatabaseManager.doesDocumentExistByUUID(uuid))
-            profile = loadProfileFromDB(uuid);
-        else profile = createNewProfile(uuid);
-        playerProfiles.put(uuid, profile);
-        profile.getPlayer().setPlayerListName(profile.getMainColor() + profile.getPlayer().getDisplayName());
-        NametagEdit.getApi().setPrefix(profile.getPlayer(),profile.getMainColor());
+        //give a few ticks for profile to save incase
+        //TODO redis cache
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(OctoCorePaper.getInstance(), () -> {
+            PlayerProfile profile;
+            if(DatabaseManager.doesDocumentExistByUUID(uuid))
+                profile = loadProfileFromDB(uuid);
+            else profile = createNewProfile(uuid);
+            playerProfiles.put(uuid, profile);
+        },5l);
     }
     public static void processLeave(Player player){
         unloadProfile(player.getUniqueId());
@@ -56,8 +60,8 @@ public class PlayerManager implements Manager {
      */
     public static void unloadProfile(UUID uuid){
         PlayerProfile profile = playerProfiles.get(uuid);
-        saveProfile(profile);
         playerProfiles.remove(uuid);
+        saveProfile(profile);
     }
 
     /**
@@ -68,12 +72,14 @@ public class PlayerManager implements Manager {
     public static PlayerProfile loadProfileFromDB(UUID uuid) {
         try {
             Logger.debug("Loading profile " + uuid.toString() + " from db.");
-            PlayerProfile p = null;
+            PlayerProfile p;
             Document doc = getProfileDocument(uuid);
             String json = doc.toJson();
-            Logger.debug("Json for profile " + uuid.toString() + " is: \n" + json);
+            Logger.debug("Json for profile " + uuid + " is: \n" + json);
             p = deserializeProfile(json);
             p.setLastLoaded(System.currentTimeMillis());
+            p.setLastLogin(System.currentTimeMillis());
+            p.setDocument(doc);
             return p;
         } catch (Exception e) {
             return null;
@@ -91,6 +97,7 @@ public class PlayerManager implements Manager {
         profile.setCoins(0);
         profile.setXp(0);
         profile.setFrozen(false);
+        profile.setLastLogin(System.currentTimeMillis());
         Logger.debug("Serializing profile");
         String json = serializeProfileToJson(profile);
         Document doc = Document.parse(json);
@@ -106,12 +113,25 @@ public class PlayerManager implements Manager {
     }
 
     /**
-     * saves a profile
+     * saves a profile assuming the profile is <b>already there</b>
      * @param profile
      */
     public static void saveProfile(PlayerProfile profile) {
         String json = serializeProfileToJson(profile);
-        pdataCollection.updateOne(getProfileDocument(profile.getUuid()), Document.parse(json));
+        Logger.debug("Saving profile: \nUUID:" + profile.getUuid() + "\nJSON: " + json);
+        //pdataCollection.updateOne(getProfileDocument(profile.getUuid()),Document.parse(json));
+        pdataCollection.findOneAndUpdate(getProfileDocument(profile.getUuid()),Document.parse(json));
+    }
+
+    /**
+     * get a profile without ctually loading it as a player
+     * @param uuid
+     * @return
+     */
+    public static PlayerProfile getProfileFromDB(UUID uuid){
+        PlayerProfile profile = deserializeProfile(getProfileDocument(uuid).toJson());
+        profile.setLastLoaded(System.currentTimeMillis());
+        return profile;
     }
 
     /**
@@ -149,21 +169,31 @@ public class PlayerManager implements Manager {
      * @return document
      */
     public static Document getProfileDocument(UUID uuid){
-        return pdataCollection.find(Filters.eq("uuid",uuid.toString())).projection(Projections.excludeId()).first();
+        return pdataCollection.find(Filters.eq("_id",uuid.toString())).first();
+    }
+
+    public static MongoCollection<Document> getPdataCollection() {
+        return PlayerManager.pdataCollection;
+    }
+
+    public static MongoCollection<Document> getBackupCollection() {
+        return PlayerManager.backupCollection;
     }
     @Override
     public void init(OctoCorePaper plugin) {
         //repeating update player task
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCorePaper.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                for (UUID uuid : playerProfiles.keySet()){
-                    PlayerProfile profile = playerProfiles.get(uuid);
-                    profile.setPrefix(getPrefix(uuid));
-                    profile.setMainColor(LuckpermsManager.getMainColor(uuid));
-                }
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCorePaper.getInstance(), () -> {
+            for (UUID uuid : playerProfiles.keySet()){
+                PlayerProfile profile = playerProfiles.get(uuid);
+                profile.setPrefix(getPrefix(uuid));
+                profile.setMainColor(LuckpermsManager.getMainColor(uuid));
             }
         },0l,OctoCorePaper.getInstance().getConfig().getLong("update-tab-interval"));
+    }
+
+    @Override
+    public void disable(OctoCorePaper plugin) {
+
     }
 
     /**
@@ -172,6 +202,9 @@ public class PlayerManager implements Manager {
      * @return prefix
      */
     public static String getPrefix(UUID uuid){
+        if(getProfile(uuid).isNicked()){
+            return getProfile(uuid).getNickPrefix();
+        }
         return (Bukkit.getPluginManager().isPluginEnabled("Vault") && VaultManager.isChatHookEnabled()) ?
                 VaultManager.getChat().getPlayerPrefix(Bukkit.getPlayer(uuid)) :
                 LuckpermsManager.getPrefix(uuid);

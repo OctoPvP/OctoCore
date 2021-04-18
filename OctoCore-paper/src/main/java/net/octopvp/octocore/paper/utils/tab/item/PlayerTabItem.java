@@ -3,21 +3,18 @@ package net.octopvp.octocore.paper.utils.tab.item;
 import net.octopvp.octocore.paper.utils.tab.util.Reflection;
 import net.octopvp.octocore.paper.utils.tab.util.Skin;
 import net.octopvp.octocore.paper.utils.tab.util.Skins;
-import lombok.Getter;
-import lombok.ToString;
 import org.bukkit.entity.Player;
 
 /**
  * A tab item that represents a player.
  */
-@ToString
 public class PlayerTabItem implements TabItem {
-    @Getter private final Player player;
-    @Getter private final PlayerProvider<String> textProvider;
-    @Getter private final PlayerProvider<Skin> skinProvider;
-    @Getter private String text;
-    @Getter private int ping;
-    @Getter private Skin skin;
+    private final Player player;
+    private final PlayerProvider<String> textProvider;
+    private final PlayerProvider<Skin> skinProvider;
+    private String text;
+    private int ping;
+    private Skin skin;
 
     public PlayerTabItem(Player player, PlayerProvider<String> textProvider, PlayerProvider<Skin> skinProvider) {
         this.player = player;
@@ -108,6 +105,34 @@ public class PlayerTabItem implements TabItem {
             return Skins.getPlayer(player);
         }
     };
+
+    public String toString() {
+        return "PlayerTabItem(player=" + this.player + ", textProvider=" + this.textProvider + ", skinProvider=" + this.skinProvider + ", text=" + this.text + ", ping=" + this.ping + ", skin=" + this.skin + ")";
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public PlayerProvider<String> getTextProvider() {
+        return this.textProvider;
+    }
+
+    public PlayerProvider<Skin> getSkinProvider() {
+        return this.skinProvider;
+    }
+
+    public String getText() {
+        return this.text;
+    }
+
+    public int getPing() {
+        return this.ping;
+    }
+
+    public Skin getSkin() {
+        return this.skin;
+    }
 
     public interface PlayerProvider<T> {
         T get(Player player);

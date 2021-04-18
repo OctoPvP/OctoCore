@@ -1,15 +1,14 @@
 package net.octopvp.octocore.paper.command.impl.staff;
 
-import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.NickManager;
 import net.octopvp.octocore.paper.manager.PlayerManager;
-import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
-import net.octopvp.octocore.paper.utils.permission.Permission;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
+import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
+import net.octopvp.octocore.paper.utils.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

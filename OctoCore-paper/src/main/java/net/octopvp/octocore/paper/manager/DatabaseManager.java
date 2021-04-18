@@ -17,12 +17,19 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class DatabaseManager implements Manager{
-    @Getter
     private static MongoDatabase mongoDatabase = null;
-    @Getter
     private static MongoClient mongoClient;
-    //@Getter
-    //private static Jedis redis;
+
+    public static MongoDatabase getMongoDatabase() {
+        return DatabaseManager.mongoDatabase;
+    }
+
+    public static MongoClient getMongoClient() {
+        return DatabaseManager.mongoClient;
+    }
+
+    @Getter
+    private static Jedis redis = null;
     @Override
     public void init(OctoCorePaper plugin) {
         MongoCredential credentials;
@@ -47,9 +54,19 @@ public class DatabaseManager implements Manager{
         mongoDatabase = mongoClient.getDatabase("OctoCore");
         Logger.info(mongoDatabase == null ? "Could not connect to mongo!" : "Connected to mongo!");
         PlayerManager.postDBInit();
-        //redis = new Jedis(plugin.getConfig().getString("database.redis.host"),OctoCorePaper.getInstance().getConfig().getInt("database.redis.port"));
+
+        if(OctoCorePaper.getInstance().getConfig().getBoolean("database.redis.enabled")){
+            redis = new Jedis(plugin.getConfig().getString("database.redis.host"),OctoCorePaper.getInstance().getConfig().getInt("database.redis.port"));
+            if(OctoCorePaper.getInstance().getConfig().getBoolean("database.redis.auth"))
+                redis.auth(OctoCorePaper.getInstance().getConfig().getString("database.redis.auth.password"));
+        }
+
     }
+
+    @Override
+    public void disable(OctoCorePaper plugin) {}
+
     public static boolean doesDocumentExistByUUID(UUID uuid){
-        return PlayerManager.getPdataCollection().find(Filters.eq("uuid",uuid.toString())).projection(Projections.excludeId()).limit(1).iterator().hasNext();
+        return PlayerManager.getPdataCollection().find(Filters.eq("_id",uuid.toString() + "")).projection(Projections.excludeId()).limit(1).iterator().hasNext();
     }
 }

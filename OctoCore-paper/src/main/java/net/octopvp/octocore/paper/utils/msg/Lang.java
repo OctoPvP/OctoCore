@@ -1,10 +1,8 @@
 package net.octopvp.octocore.paper.utils.msg;
 
-import lombok.Getter;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.utils.Logger;
 
-@Getter
 public enum Lang {
     NO_PERMISSION(CC.RED + "You have no permission!"),
     PLAYER_ONLY(CC.RED + "This command is player only!"),
@@ -16,9 +14,11 @@ public enum Lang {
     NICK_RESET(CC.GREEN + "Your nick has been successfully reset!"),
     UNNICK_SUCCESS(CC.GREEN + "Successfully unnicked %1"),
     PLEASE_DONT_SPAM(CC.RED + "Please don't spam!"),
-    NOT_ALLOWED_TO_USE_UNICODE(CC.RED + "You are not allowed to use unicode characters.")
+    NOT_ALLOWED_TO_USE_UNICODE(CC.RED + "You are not allowed to use unicode characters."),
+    COMMAND_COOLDOWN(CC.RED + "You can't execute this command for another %1 seconds."),
+    COMMAND_SEEN_NOT_ONLINE(CC.SEPARATOR + CC.NL + CC.NL +  CC.AQUA + "%1 was last seen on" + CC.NL + CC.AQUA + "%2" + CC.NL + CC.NL + CC.SEPARATOR)
     ;
-    private String msg;
+    private final String msg;
     Lang(String msg){
         this.msg = msg;
     }

@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.command;
 
-import jdk.nashorn.internal.objects.annotations.Getter;
+import net.octopvp.octocore.common.cooldown.Cooldown;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -33,7 +33,7 @@ import java.util.Map.Entry;
  */
 public class CommandFramework implements CommandExecutor {
 
-	private Map<String, Entry<Method, Object>> commandMap = new HashMap<String, Entry<Method, Object>>();
+	private Map<String, Entry<Method, Object>> commandMap = new HashMap<>();
 	private CommandMap map;
 	private Plugin plugin;
 
@@ -48,13 +48,7 @@ public class CommandFramework implements CommandExecutor {
 				Field field = SimplePluginManager.class.getDeclaredField("commandMap");
 				field.setAccessible(true);
 				map = (CommandMap) field.get(manager);
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (NoSuchFieldException e) {
+			} catch (IllegalArgumentException | NoSuchFieldException | IllegalAccessException | SecurityException e) {
 				e.printStackTrace();
 			}
 		}
@@ -79,9 +73,7 @@ public class CommandFramework implements CommandExecutor {
 		for (int i = args.length; i >= 0; i--) {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(label.toLowerCase());
-			for (int x = 0; x < i; x++) {
-				buffer.append("." + args[x].toLowerCase());
-			}
+			for (int x = 0; x < i; x++) buffer.append("." + args[x].toLowerCase());
 			String cmdLabel = buffer.toString();
 			if (commandMap.containsKey(cmdLabel)) {
 				Method method = commandMap.get(cmdLabel).getKey();
@@ -98,10 +90,30 @@ public class CommandFramework implements CommandExecutor {
 						return true;
 					}
 				}
+				if(command.cooldown() > 0){
+					if(sender instanceof Player){
+						Player p = (Player) sender;
+						//They are currently on cooldown
+						if(Cooldown.isOnCooldown(command.name() + "|Cmd_Cooldown", p.getUniqueId())){
+							p.sendMessage(Lang.COMMAND_COOLDOWN.getMsg(Cooldown.getCooldownForPlayerInt(command.name() + "|Cmd_Cooldown",p.getUniqueId()) + ""));
+							return true;
+						}
+						//They used to have a cooldown
+						if(Cooldown.wasOnCooldown(command.name() + "|Cmd_Cooldown", p.getUniqueId())){
+							//remove that cooldown
+							Cooldown.removeCooldown(command.name() + "|Cmd_Cooldown",p.getUniqueId());
+						}
+						//Create a new cooldown for that
+						Cooldown.addCooldown(command.name() + "|Cmd_Cooldown",p.getUniqueId(),command.cooldown());
+					}
+				}
 				try {
 					CommandResult result = (CommandResult) method.invoke(methodObject, new Sender(sender), args);
 					if(result == CommandResult.SUCCESS)
 						return true;
+					else if(result == null){
+						return true;
+					}
 					else if(result.getMsg() == ""){
 						return true;
 					}else if(result.getMsg() == null){
@@ -110,11 +122,7 @@ public class CommandFramework implements CommandExecutor {
 						sender.sendMessage(result.getMsg());
 						return true;
 					}
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
+				} catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
 					e.printStackTrace();
 				}
 				return true;
@@ -130,6 +138,7 @@ public class CommandFramework implements CommandExecutor {
 	 * @param obj The object to register the commands of
 	 */
 	public void registerCommands(Object obj) {
+		//TODO cooldown (cooldown for each command with a cooldown eg: /test|cooldown)
 		for (Method m : obj.getClass().getMethods()) {
 			if (m.getAnnotation(Command.class) != null) {
 				Command command = m.getAnnotation(Command.class);
@@ -184,6 +193,9 @@ public class CommandFramework implements CommandExecutor {
 		if (map.getCommand(cmdLabel) == null) {
 			org.bukkit.command.Command cmd = new BukkitCommand(cmdLabel, this, plugin);
 			map.register(plugin.getName(), cmd);
+		}
+		if(!(command.cooldown() == 0)){
+			Cooldown.createCooldown(command.name() + "|Cmd_Cooldown");
 		}
 		if (!command.description().equalsIgnoreCase("") && cmdLabel.equals(label)) {
 			map.getCommand(cmdLabel).setDescription(command.description());

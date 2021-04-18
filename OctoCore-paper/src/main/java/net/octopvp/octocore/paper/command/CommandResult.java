@@ -1,11 +1,9 @@
 package net.octopvp.octocore.paper.command;
 
-import lombok.Getter;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.permission.PermissionString;
 
-@Getter
 public enum CommandResult implements PermissionString {
     SUCCESS(""),
     ERROR(CC.RED + "There was an error while processing that command!"),
@@ -22,5 +20,9 @@ public enum CommandResult implements PermissionString {
     @Override
     public String getNode() {
         return msg;
+    }
+
+    public String getMsg() {
+        return this.msg;
     }
 }

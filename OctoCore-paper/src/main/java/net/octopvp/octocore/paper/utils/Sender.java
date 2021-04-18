@@ -1,7 +1,5 @@
 package net.octopvp.octocore.paper.utils;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.msg.PlaceholderManager;
 import org.bukkit.Bukkit;
@@ -16,8 +14,6 @@ import org.bukkit.plugin.Plugin;
 import java.text.MessageFormat;
 import java.util.Set;
 
-@Getter
-@Setter
 public class Sender implements CommandSender  {
     private CommandSender commandSender;
     public Sender(CommandSender commandSender){
@@ -126,5 +122,13 @@ public class Sender implements CommandSender  {
     }
     public String getDisplayName(){
         return getPlayer() == null ? "CONSOLE" : getPlayer().getDisplayName();
+    }
+
+    public CommandSender getCommandSender() {
+        return this.commandSender;
+    }
+
+    public void setCommandSender(CommandSender commandSender) {
+        this.commandSender = commandSender;
     }
 }

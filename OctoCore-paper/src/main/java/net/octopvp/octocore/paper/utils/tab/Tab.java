@@ -1,8 +1,6 @@
 package net.octopvp.octocore.paper.utils.tab;
 
 import com.google.common.base.Preconditions;
-import lombok.Getter;
-import lombok.Setter;
 import net.octopvp.octocore.paper.utils.tab.tablist.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,9 +15,9 @@ import java.util.logging.Level;
 
 public class Tab implements Listener {
     private static Map<Plugin, Tab> instances = new HashMap<>();
-    @Getter @Setter static Level logLevel = Level.WARNING;
+    static Level logLevel = Level.WARNING;
 
-    @Getter private final Plugin plugin;
+    private final Plugin plugin;
     private final Map<Player, TabList> tabLists;
 
     public Tab(Plugin plugin) {
@@ -41,6 +39,14 @@ public class Tab implements Listener {
      */
     public static Tab getTabbed(Plugin plugin) {
         return instances.get(plugin);
+    }
+
+    public static Level getLogLevel() {
+        return Tab.logLevel;
+    }
+
+    public static void setLogLevel(Level logLevel) {
+        Tab.logLevel = logLevel;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -185,5 +191,9 @@ public class Tab implements Listener {
         Preconditions.checkArgument(!this.tabLists.containsKey(player), "player '" + player.getName() + "' already has a tablist");
         this.tabLists.put(player, tabList);
         return tabList;
+    }
+
+    public Plugin getPlugin() {
+        return this.plugin;
     }
 }

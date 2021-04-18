@@ -11,8 +11,6 @@ import net.octopvp.octocore.paper.utils.tab.Tab;
 import net.octopvp.octocore.paper.utils.tab.item.TabItem;
 import net.octopvp.octocore.paper.utils.tab.util.Packets;
 import net.octopvp.octocore.paper.utils.tab.util.Skin;
-import lombok.Getter;
-import lombok.ToString;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -21,7 +19,6 @@ import java.util.Map.Entry;
 /**
  * A simple implementation of a custom tab list that supports batch updates.
  */
-@ToString(exclude = "tabbed")
 public class SimpleTabList extends TitledTabList implements CustomTabList {
     public static int MAXIMUM_ITEMS = 4 * 20; // client maximum is 4x20 (4 columns, 20 rows)
 
@@ -31,7 +28,7 @@ public class SimpleTabList extends TitledTabList implements CustomTabList {
     private final int minColumnWidth;
     private final int maxColumnWidth;
 
-    @Getter boolean batchEnabled;
+    boolean batchEnabled;
     private final Map<Integer,TabItem> clientItems;
 
     private static final Map<Skin, Map<Integer, WrappedGameProfile>> PROFILE_INDEX_CACHE = new HashMap<>();
@@ -308,5 +305,13 @@ public class SimpleTabList extends TitledTabList implements CustomTabList {
         }
 
         return indexCache.get(index);
+    }
+
+    public String toString() {
+        return "SimpleTabList(items=" + this.items + ", maxItems=" + this.getMaxItems() + ", minColumnWidth=" + this.minColumnWidth + ", maxColumnWidth=" + this.maxColumnWidth + ", batchEnabled=" + this.batchEnabled + ", clientItems=" + this.clientItems + ")";
+    }
+
+    public boolean isBatchEnabled() {
+        return this.batchEnabled;
     }
 }

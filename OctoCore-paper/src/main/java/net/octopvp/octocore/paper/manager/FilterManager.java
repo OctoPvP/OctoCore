@@ -1,28 +1,24 @@
 package net.octopvp.octocore.paper.manager;
 
-import lombok.Getter;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCorePaper;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
-import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Logger;
-import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.database.DatabaseHelper;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FilterManager implements Manager{
-    @Getter
     private static HashMap<String,Boolean> blacklist = new HashMap();
+
+    public static HashMap<String, Boolean> getBlacklist() {
+        return FilterManager.blacklist;
+    }
+
     @Override
     public void init(OctoCorePaper plugin) {
         ResultSet rs = null;
@@ -40,6 +36,12 @@ public class FilterManager implements Manager{
             Logger.debug(" - " + s);
         }
     }
+
+    @Override
+    public void disable(OctoCorePaper plugin) {
+
+    }
+
     public static String process(String message1, Player player){
         String message = message1;
         String final_message = message;

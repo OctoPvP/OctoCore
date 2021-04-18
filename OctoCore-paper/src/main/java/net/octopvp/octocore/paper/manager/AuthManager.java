@@ -6,4 +6,9 @@ public class AuthManager implements Manager{
     @Override
     public void init(OctoCorePaper plugin) {
     }
+
+    @Override
+    public void disable(OctoCorePaper plugin) {
+
+    }
 }

@@ -3,7 +3,6 @@ package net.octopvp.octocore.paper.manager;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import net.octopvp.octocore.common.PluginMsgChannels;
-import net.octopvp.octocore.common.SubChannels;
 import net.octopvp.octocore.paper.OctoCorePaper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,6 +17,11 @@ public class PluginMsgManager implements Manager, PluginMessageListener {
     public void init(OctoCorePaper plugin) {
         Arrays.asList(pluginMessagesOut).forEach(m -> Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(OctoCorePaper.getInstance(),m));
         Arrays.asList(pluginMessagesIn).forEach(m-> Bukkit.getServer().getMessenger().registerIncomingPluginChannel(OctoCorePaper.getInstance(), m,this));
+    }
+
+    @Override
+    public void disable(OctoCorePaper plugin) {
+
     }
 
     @Override

@@ -8,7 +8,6 @@ load: STARTUP
 depend:
   - LuckPerms
   - ProtocolLib
-  - Citizens
-  - NametagEdit
+  - LunarClient-API
 softdepend:
   - Vault

@@ -1,14 +1,11 @@
 package net.octopvp.octocore.paper.listeners;
 
-import net.octopvp.octocore.common.rank.LuckpermsManager;
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.manager.ChatManager;
 import net.octopvp.octocore.paper.manager.FilterManager;
-import net.octopvp.octocore.paper.utils.permission.Permission;
 import net.octopvp.octocore.paper.manager.PlayerManager;
 import net.octopvp.octocore.paper.utils.msg.Chat;
 import net.octopvp.octocore.paper.utils.msg.Lang;
-import org.bukkit.ChatColor;
+import net.octopvp.octocore.paper.utils.permission.Permission;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

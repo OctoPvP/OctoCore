@@ -76,4 +76,10 @@ public @interface Command {
 	 * @return
 	 */
 	public boolean playerOnly() default false;
+
+	/**
+	 * The cooldown in seconds
+	 * @return
+	 */
+	int cooldown() default 0;
 }

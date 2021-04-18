@@ -1,43 +1,81 @@
 package net.octopvp.octocore.paper;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import lombok.Getter;
+import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
 import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.database.ConnectionPoolManager;
-import net.octopvp.octocore.common.rank.LuckpermsManager;
 import net.octopvp.octocore.paper.command.CommandFramework;
+import net.octopvp.octocore.paper.manager.ServerManager;
 import net.octopvp.octocore.paper.setup.*;
 import net.octopvp.octocore.paper.utils.Logger;
-import net.octopvp.octocore.paper.utils.database.DatabaseHelper;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public final class OctoCorePaper extends JavaPlugin {
     public static String prefix = "[OctoCore] ";
-    @Getter
     private static Chat chat;
-    @Getter
     private static ConnectionPoolManager connectionPoolManager;
-    @Getter
     private static Connection connection;
-    @Getter
     private static OctoCorePaper instance;
-    @Getter
     private static CommandFramework commandFramework;
-
+    private static Location spawn;
     @Getter
+    private static final boolean master = OctoCorePaper.getInstance().getConfig().getBoolean("master");
+    @Getter
+    @Setter
+    private static ServerManager serverManager;
+
     private static Tab tab;
+
+    //Setup Start
+    SetupManager setupManager = new SetupManager();
+
+    public static Chat getChat() {
+        return OctoCorePaper.chat;
+    }
+
+    public static ConnectionPoolManager getConnectionPoolManager() {
+        return OctoCorePaper.connectionPoolManager;
+    }
+
+    public static Connection getConnection() {
+        return OctoCorePaper.connection;
+    }
+
+    public static OctoCorePaper getInstance() {
+        return OctoCorePaper.instance;
+    }
+
+    public static CommandFramework getCommandFramework() {
+        return OctoCorePaper.commandFramework;
+    }
+
+    public static Location getSpawn() {
+        return OctoCorePaper.spawn;
+    }
+
+    public static Tab getTab() {
+        return OctoCorePaper.tab;
+    }
+
+    public static void setSpawn(Location spawn) {
+        OctoCorePaper.spawn = spawn;
+    }
+
+    //Setup End
+
+
+
     @Override
     public void onLoad() {
         super.onLoad();
@@ -50,6 +88,11 @@ public final class OctoCorePaper extends JavaPlugin {
         instance = this;
         commandFramework = new CommandFramework(this);
         tab = new Tab(this);
+        spawn = new Location(
+                Bukkit.getServer().getWorld(getConfig().getString("settings.world-name"))
+                ,getConfig().getDouble("settings.spawn.x"),
+                getConfig().getDouble("settings.spawn.y"),
+                getConfig().getDouble("settings.spawn.z"));
         HardwareUtils.init();
         Logger.info("Starting OctoCore");
         if(!getDataFolder().exists())
@@ -63,10 +106,10 @@ public final class OctoCorePaper extends JavaPlugin {
         Logger.info("Setting up listeners");
         new SetupListeners().setup(this);
         Logger.info("Setting up managers");
-        new SetupManager().setup(this);
+        setupManager.setup(this);
         NameTagChanger.INSTANCE.init();
         Logger.info("Hooking into plugins.");
-        new SetupHooks();
+        new SetupHooks().setup(this);
         setupChat();
         Logger.info("Setting up commands.");
         new SetupCommands().setup(this);
@@ -75,9 +118,10 @@ public final class OctoCorePaper extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            player.kickPlayer(ChatColor.RED + "This server is restarting.");
-        });
+        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(ChatColor.RED + "This server is restarting."));
+
+        setupManager.disable(getInstance());
+
         if(NameTagChanger.INSTANCE.isEnabled())
             NameTagChanger.INSTANCE.disable();
         try {
@@ -90,11 +134,13 @@ public final class OctoCorePaper extends JavaPlugin {
 
     private void initdb(){
         try {
-            connectionPoolManager = new ConnectionPoolManager(getConfig().getString("database.sql.url"),
-                    getConfig().getString("database.sql.port"),
-                    getConfig().getString("database.sql.db"),
-                    getConfig().getString("database.sql.username"),
-                    getConfig().getString("database.sql.password"),
+            String url = getConfig().getString("database.sql.url"),
+                    port = getConfig().getString("database.sql.port"),
+                    db = getConfig().getString("database.sql.db"),
+                    username = getConfig().getString("database.sql.username"),
+                    password = getConfig().getString("database.sql.password");
+            Logger.info("Logging into SQL:\nURL: " + url + "\nPort: " + port + "\nDB: " + db + "\nUsername: " + username + "\nPasssword: " + password);
+            connectionPoolManager = new ConnectionPoolManager(url,port,db, username, password,
                     10,
                     10,
                     500l,
@@ -102,12 +148,6 @@ public final class OctoCorePaper extends JavaPlugin {
                     Bukkit.getLogger()
             );
             connection = connectionPoolManager.getConnection();
-            PreparedStatement ps1 = connection.prepareStatement(DatabaseHelper.CREATE_STAFFDATA_TABLE.getSql());
-            ps1.executeUpdate();
-            PreparedStatement ps2 = connection.prepareStatement(DatabaseHelper.CREATE_NICK_TABLE.getSql());
-            ps2.executeUpdate();
-            PreparedStatement ps3 = connection.prepareStatement(DatabaseHelper.CREATE_PLAYERDATA_TABLE.getSql());
-            ps3.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,2 +1,0 @@
-1. Plugin messages Spigot: Done - Bungee: WIP
-2. Register commands in a package 

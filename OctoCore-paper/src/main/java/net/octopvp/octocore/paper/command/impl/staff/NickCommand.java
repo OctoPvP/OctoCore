@@ -1,6 +1,5 @@
 package net.octopvp.octocore.paper.command.impl.staff;
 
-import com.nametagedit.plugin.NametagEdit;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;

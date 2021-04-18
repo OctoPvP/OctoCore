@@ -1,9 +1,7 @@
 package net.octopvp.octocore.paper.utils.trolls;
 
 import net.minecraft.server.v1_8_R3.EntityPlayer;
-import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 /**

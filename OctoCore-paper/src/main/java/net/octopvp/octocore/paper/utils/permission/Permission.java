@@ -1,10 +1,5 @@
 package net.octopvp.octocore.paper.utils.permission;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.experimental.UtilityClass;
-
-@Getter
 public enum Permission implements PermissionString {
     NOTHING(""),
     COMMAND_NICK("octocore.command.nick"),
@@ -13,6 +8,8 @@ public enum Permission implements PermissionString {
     COMMAND_UNNICK_OTHERS("octocore.command.unnick.others"),
     USE_UNICODE_CHAT("octocore.chat.unicode"),
     USE_COLOR_CHAT("octocore.chat.color"),
+    STAFF_MODULES("octocore.lunar.staff"),
+    SEEN("octocore.command.seen"),
     TEST("test")
 
     ;

@@ -1,7 +1,5 @@
 package net.octopvp.octocore.common.rank;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -9,12 +7,8 @@ import net.octopvp.octocore.common.util.CC;
 
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
-@Getter
-@Setter
 public class LuckpermsManager {
-    @Getter
     private static LuckPerms luckPerms;
     private static HashMap<String, String> colors = new HashMap<>();
     public static void init(){
@@ -67,5 +61,9 @@ public class LuckpermsManager {
     }
     public static boolean hasPermission(UUID user, String permission) {
         return getUser(user).getCachedData().getPermissionData().checkPermission(permission).asBoolean();
+    }
+
+    public static LuckPerms getLuckPerms() {
+        return LuckpermsManager.luckPerms;
     }
 }

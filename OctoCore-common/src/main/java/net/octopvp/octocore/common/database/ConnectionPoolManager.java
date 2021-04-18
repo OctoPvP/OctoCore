@@ -2,8 +2,6 @@ package net.octopvp.octocore.common.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -12,11 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-@Getter
-@Setter
 public class ConnectionPoolManager {
-
-
     private HikariDataSource dataSource;
 
     private String hostname;
@@ -87,4 +81,87 @@ public class ConnectionPoolManager {
         }
     }
 
+    public String getHostname() {
+        return this.hostname;
+    }
+
+    public String getPort() {
+        return this.port;
+    }
+
+    public String getDatabase() {
+        return this.database;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public int getMinimumConnections() {
+        return this.minimumConnections;
+    }
+
+    public int getMaximumConnections() {
+        return this.maximumConnections;
+    }
+
+    public long getConnectionTimeout() {
+        return this.connectionTimeout;
+    }
+
+    public String getTestQuery() {
+        return this.testQuery;
+    }
+
+    public Logger getLogger() {
+        return this.logger;
+    }
+
+    public void setDataSource(HikariDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setMinimumConnections(int minimumConnections) {
+        this.minimumConnections = minimumConnections;
+    }
+
+    public void setMaximumConnections(int maximumConnections) {
+        this.maximumConnections = maximumConnections;
+    }
+
+    public void setConnectionTimeout(long connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public void setTestQuery(String testQuery) {
+        this.testQuery = testQuery;
+    }
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
 }

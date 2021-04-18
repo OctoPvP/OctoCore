@@ -8,7 +8,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.octopvp.octocore.common.RNG;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class SendToRandomLobby {

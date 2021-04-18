@@ -1,6 +1,5 @@
 package net.octopvp.octocore.paper.setup;
 
-import lombok.Getter;
 import net.milkbowl.vault.chat.Chat;
 import net.octopvp.octocore.paper.OctoCorePaper;
 import net.octopvp.octocore.paper.manager.VaultManager;

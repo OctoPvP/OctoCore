@@ -4,8 +4,6 @@ import com.comphenix.protocol.PacketType.Play.Server;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import lombok.Getter;
-import lombok.ToString;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -13,11 +11,10 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * A very basic tab list. It doesn't modify the items, only the header/footer.
  */
-@ToString
 public class TitledTabList implements TabList {
-    @Getter protected final Player player;
-    @Getter private String header;
-    @Getter private String footer;
+    protected final Player player;
+    private String header;
+    private String footer;
 
     public TitledTabList(Player player) {
         this.player = player;
@@ -71,5 +68,21 @@ public class TitledTabList implements TabList {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    public String toString() {
+        return "TitledTabList(player=" + this.player + ", header=" + this.header + ", footer=" + this.footer + ")";
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public String getHeader() {
+        return this.header;
+    }
+
+    public String getFooter() {
+        return this.footer;
     }
 }

@@ -1,12 +1,9 @@
 package net.octopvp.octocore.paper.utils.msg;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.octopvp.octocore.paper.utils.Sender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-@Getter
-@Setter
+
 public class Chat {
     private Player player;
     public Chat(Player player) {
@@ -29,5 +26,13 @@ public class Chat {
     }
     public static void sendMessage(Sender player, Lang message){
         player.sendMessage(PlaceholderManager.replacePlaceholders(message));
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

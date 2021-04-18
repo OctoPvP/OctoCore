@@ -1,5 +1,7 @@
 package net.octopvp.octocore.common;
 
+import java.util.UUID;
+
 public class StringUtils {
     public static String arraytoString(String[] args){
         StringBuffer sb = new StringBuffer();
@@ -13,5 +15,8 @@ public class StringUtils {
     }
     public static String replaceIgnoreCase(String what_to_replace,String replace_to,String input){
         return input.replaceAll("(?i)" + what_to_replace,replace_to);
+    }
+    public static boolean isUuid(String s){
+        return UUID.fromString(s).toString() == s;
     }
 }

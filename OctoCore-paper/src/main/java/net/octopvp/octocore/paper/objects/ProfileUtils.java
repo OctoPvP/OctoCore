@@ -1,9 +1,10 @@
-package net.octopvp.octocore.paper.player;
+package net.octopvp.octocore.paper.objects;
 
-import lombok.experimental.UtilityClass;
+public final class ProfileUtils {
+    private ProfileUtils() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
-@UtilityClass
-public class ProfileUtils {
     public static boolean doesProfileEqualsProfile(PlayerProfile profile1, PlayerProfile profile2){
         if(profile1.getPlayer() != profile2.getPlayer())
             return false;

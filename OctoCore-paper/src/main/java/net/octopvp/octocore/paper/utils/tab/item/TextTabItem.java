@@ -2,19 +2,16 @@ package net.octopvp.octocore.paper.utils.tab.item;
 
 import net.octopvp.octocore.paper.utils.tab.util.Skin;
 import net.octopvp.octocore.paper.utils.tab.util.Skins;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.Objects;
 
 /**
  * A tab item with custom text, ping and skin.
  */
-@ToString
 public class TextTabItem implements TabItem {
-    @Getter private String text;
-    @Getter private int ping;
-    @Getter private Skin skin;
+    private String text;
+    private int ping;
+    private Skin skin;
 
     private String newText;
     private int newPing;
@@ -76,5 +73,21 @@ public class TextTabItem implements TabItem {
             return false;
         TextTabItem other = (TextTabItem) object;
         return this.text.equals(other.getText()) && this.skin.equals(other.getSkin()) && this.ping == other.getPing();
+    }
+
+    public String toString() {
+        return "TextTabItem(text=" + this.text + ", ping=" + this.ping + ", skin=" + this.skin + ", newText=" + this.newText + ", newPing=" + this.newPing + ", newSkin=" + this.newSkin + ")";
+    }
+
+    public String getText() {
+        return this.text;
+    }
+
+    public int getPing() {
+        return this.ping;
+    }
+
+    public Skin getSkin() {
+        return this.skin;
     }
 }

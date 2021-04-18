@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.manager;
 import com.lunarclient.bukkitapi.LunarClientAPI;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCorePaper;
-import net.octopvp.octocore.paper.player.PlayerProfile;
+import net.octopvp.octocore.paper.objects.PlayerProfile;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.tab.item.TextTabItem;
 import net.octopvp.octocore.paper.utils.tab.tablist.TableTabList;
@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class TabManager implements Manager{
@@ -21,32 +22,36 @@ public class TabManager implements Manager{
     private static Skin skin = Skins.getDot(ChatColor.GRAY);
     private static String header = "";
     private static String footer = "";
+    private static HashMap<UUID, TableTabList> tablists = new HashMap<>();
     @Override
     public void init(OctoCorePaper plugin) {
         header = ChatColor.translateAlternateColorCodes('&',OctoCorePaper.getInstance().getConfig().getString("tab.header")).replace("\\n","\n");
         footer = ChatColor.translateAlternateColorCodes('&',OctoCorePaper.getInstance().getConfig().getString("tab.footer").replace("\\n","\n"));
         if(plugin.getConfig().getBoolean("default-tab")){
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCorePaper.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-                    if(!(Bukkit.getOnlinePlayers().toArray().length == 0)){
-                        for (UUID uuid : PlayerManager.getPlayerProfiles().keySet()){
-                            PlayerProfile profile = PlayerManager.getPlayerProfiles().get(uuid);
-                            Player player = profile.getPlayer();
-                            Logger.debug("Sending tab");
-                            sendTab(player,profile);
-                        }
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCorePaper.getInstance(), () -> {
+                if(!(Bukkit.getOnlinePlayers().toArray().length == 0)){
+                    for (UUID uuid : PlayerManager.getPlayerProfiles().keySet()){
+                        PlayerProfile profile = PlayerManager.getPlayerProfiles().get(uuid);
+                        Player player = Bukkit.getPlayer(profile.getUuid());
+                        Logger.debug("Sending tab");
+                        sendTab(player,profile);
                     }
                 }
             },0l,OctoCorePaper.getInstance().getConfig().getLong("update-pdata-interval"));
         }
     }
+
+    @Override
+    public void disable(OctoCorePaper plugin) {
+
+    }
+
     private static void sendTab(Player p, PlayerProfile profile){
         long start = System.currentTimeMillis();
-        TableTabList tab = profile.getTab();
+        TableTabList tab = tablists.get(p.getUniqueId());
         if(tab == null){
             tab = OctoCorePaper.getTab().newTableTabList(p);
-            profile.setTab(tab);
+            tablists.put(p.getUniqueId(),tab);
             sendPing(tab);
         }
         tab.setHeaderFooter(header,footer);
@@ -74,7 +79,7 @@ public class TabManager implements Manager{
 
         tab.set(3,0, new TextTabItem(title_color + "Misc", -1,skin));
         tab.set(3,2, new TextTabItem(value_color + "Client: " + (LunarClientAPI.getInstance().isRunningLunarClient(p) ? "Lunar Client" : "Other"), -1,skin));
-        tab.set(3,4, new TextTabItem(value_color + "Ping: 1", -1,skin));
+        tab.set(3,4, new TextTabItem(value_color + "Ping: " + (Bukkit.getPlayer(profile.getUuid()).getPing()), -1,skin));
         Logger.debug("Sending tab took " +  (System.currentTimeMillis() - start) + " ms.");
     }
     private static void sendPing(TableTabList tab){
@@ -97,7 +102,16 @@ public class TabManager implements Manager{
         }
     }
     public static void onJoin(Player p){
-        if(OctoCorePaper.getInstance().getConfig().getBoolean("default-tab"))
-            sendTab(p,PlayerManager.getProfile(p.getUniqueId()));
+        if(OctoCorePaper.getInstance().getConfig().getBoolean("default-tab")) {
+            if(PlayerManager.getPlayerProfiles().containsKey(p.getUniqueId()))
+                sendTab(p, PlayerManager.getProfile(p.getUniqueId()));
+        }
+    }
+    public static void onLeave(Player p) {
+        if (OctoCorePaper.getInstance().getConfig().getBoolean("default-tab")) {
+            if(tablists.containsKey(p.getUniqueId())){
+                tablists.remove(p.getUniqueId());
+            }
+        }
     }
 }

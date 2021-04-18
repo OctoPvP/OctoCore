@@ -2,17 +2,14 @@ package net.octopvp.octocore.paper.utils.tab.util;
 
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 import com.google.common.base.Preconditions;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.Objects;
 
 /**
  * Represents the skin/avatar of a tab item.
  */
-@ToString
 public class Skin {
-    @Getter private final WrappedSignedProperty property;
+    private final WrappedSignedProperty property;
     public static final String TEXTURE_KEY = "textures";
 
     public Skin(String value, String signature) {
@@ -35,5 +32,13 @@ public class Skin {
             return sign && value;
         }
         return false;
+    }
+
+    public String toString() {
+        return "Skin(property=" + this.property + ")";
+    }
+
+    public WrappedSignedProperty getProperty() {
+        return this.property;
     }
 }

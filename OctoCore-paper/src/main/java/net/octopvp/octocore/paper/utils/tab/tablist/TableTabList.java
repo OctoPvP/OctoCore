@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import net.octopvp.octocore.paper.utils.tab.item.BlankTabItem;
 import net.octopvp.octocore.paper.utils.tab.item.TabItem;
-import lombok.*;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -19,11 +18,10 @@ import java.util.logging.Level;
  * It supports some fancy operations like filling a portion of the table
  * in any direction.
  */
-@ToString
 public class TableTabList extends SimpleTabList {
-    @Getter private final int columns;
-    @Getter private final int rows;
-    @Getter private final TableBox box;
+    private final int columns;
+    private final int rows;
+    private final TableBox box;
 
     public TableTabList(Tab tabbed, Player player, int columns, int minColumnWidth, int maxColumnWidth) {
         super(tabbed, player, -1, minColumnWidth, maxColumnWidth);
@@ -287,15 +285,29 @@ public class TableTabList extends SimpleTabList {
             throw new RuntimeException("invalid column count " + columns);
     }
 
+    public String toString() {
+        return "TableTabList(columns=" + this.columns + ", rows=" + this.rows + ", box=" + this.getBox() + ")";
+    }
+
+    public int getColumns() {
+        return this.columns;
+    }
+
+    public int getRows() {
+        return this.rows;
+    }
+
     /**
      * Represents a cell in the table.
      */
-    @Data
-    @AllArgsConstructor
-    @EqualsAndHashCode
     public static class TableCell {
         private int column;
         private int row;
+
+        public TableCell(int column, int row) {
+            this.column = column;
+            this.row = row;
+        }
 
         public TableCell add(int columns, int rows) {
             this.column += columns;
@@ -311,15 +323,51 @@ public class TableTabList extends SimpleTabList {
         public String toString() {
             return column + "," + row;
         }
+
+        public int getColumn() {
+            return this.column;
+        }
+
+        public int getRow() {
+            return this.row;
+        }
+
+        public void setColumn(int column) {
+            this.column = column;
+        }
+
+        public void setRow(int row) {
+            this.row = row;
+        }
+
+        public boolean equals(final Object o) {
+            if (o == this) return true;
+            if (!(o instanceof TableCell)) return false;
+            final TableCell other = (TableCell) o;
+            if (!other.canEqual((Object) this)) return false;
+            if (this.getColumn() != other.getColumn()) return false;
+            if (this.getRow() != other.getRow()) return false;
+            return true;
+        }
+
+        protected boolean canEqual(final Object other) {
+            return other instanceof TableCell;
+        }
+
+        public int hashCode() {
+            final int PRIME = 59;
+            int result = 1;
+            result = result * PRIME + this.getColumn();
+            result = result * PRIME + this.getRow();
+            return result;
+        }
     }
 
     /**
      * Represents an area of the table.
      */
-    @ToString
-    @EqualsAndHashCode
     public static class TableBox {
-        @Getter private final List<TableCell> cells;
+        private final List<TableCell> cells;
 
         public TableBox(TableCell topLeft, TableCell bottomRight) {
             int width = bottomRight.getColumn() - topLeft.getColumn();
@@ -401,6 +449,37 @@ public class TableTabList extends SimpleTabList {
 
         public TableBox clone() {
             return new TableBox(this.getTopLeft().clone(), this.getBottomRight().clone());
+        }
+
+        public boolean equals(final Object o) {
+            if (o == this) return true;
+            if (!(o instanceof TableBox)) return false;
+            final TableBox other = (TableBox) o;
+            if (!other.canEqual((Object) this)) return false;
+            final Object this$cells = this.cells;
+            final Object other$cells = other.cells;
+            if (this$cells == null ? other$cells != null : !this$cells.equals(other$cells)) return false;
+            return true;
+        }
+
+        protected boolean canEqual(final Object other) {
+            return other instanceof TableBox;
+        }
+
+        public int hashCode() {
+            final int PRIME = 59;
+            int result = 1;
+            final Object $cells = this.cells;
+            result = result * PRIME + ($cells == null ? 43 : $cells.hashCode());
+            return result;
+        }
+
+        public String toString() {
+            return "TableTabList.TableBox(cells=" + this.cells + ")";
+        }
+
+        public List<TableCell> getCells() {
+            return this.cells;
         }
     }
 

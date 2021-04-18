@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class Logger {
     public static ArrayList<Player> debugPlayers = new ArrayList<>();

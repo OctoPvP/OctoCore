@@ -1,10 +1,8 @@
 package net.octopvp.octocore.common.util;
 
-import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 
-@UtilityClass
-public class CC {
+public final class CC {
     public static final String WHITE = ChatColor.WHITE.toString();
     public static final String GREEN = ChatColor.GREEN.toString();
     public static final String D_GREEN = ChatColor.DARK_GREEN.toString();
@@ -38,4 +36,10 @@ public class CC {
     public static final String SCOREBOARD_SEPARATOR = GRAY + S + "--------------------";
     public static final String SEPARATOR = GRAY + S + "-------------------------------------";
     public static final String BULLET = "•";
+    public static final String NEWLINE = "\n";
+    public static final String NL = "\n";
+
+    private CC() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 }

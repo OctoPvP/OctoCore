@@ -1,8 +1,8 @@
 package net.octopvp.octocore.paper.utils.tab.tablist;
 
-import net.octopvp.octocore.paper.utils.tab.item.TabItem;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import net.octopvp.octocore.paper.utils.tab.item.PlayerTabItem;
+import net.octopvp.octocore.paper.utils.tab.item.TabItem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
