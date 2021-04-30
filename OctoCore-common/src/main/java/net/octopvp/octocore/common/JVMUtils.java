@@ -10,4 +10,12 @@ public class JVMUtils {
             if(dot != -1) { version = version.substring(0, dot); }
         } return Integer.parseInt(version);
     }
+
+    /**
+     * Get the max memory allocated to the jvm.
+     * @return The max memory allocated to the jvm in mb
+     */
+    public static long getMaxMemoryAllocated(){
+        return Runtime.getRuntime().maxMemory() / 1024L / 1024L;
+    }
 }

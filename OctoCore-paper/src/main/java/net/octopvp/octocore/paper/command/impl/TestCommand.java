@@ -1,17 +1,21 @@
 package net.octopvp.octocore.paper.command.impl;
 
-import net.octopvp.octocore.common.rank.LuckpermsManager;
+import net.luckperms.api.node.Node;
+import net.octopvp.octocore.paper.manager.LuckpermsManager;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.command.Completer;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.objects.PlayerProfile;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.permission.Permission;
 import net.octopvp.octocore.paper.utils.permission.PermissionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class TestCommand implements BaseCommand {
     private static final String perm = PermissionUtil.fromEnum(Permission.COMMAND_NICK);
@@ -25,7 +29,13 @@ public class TestCommand implements BaseCommand {
         if(sender.hasPermission("a.b.c"))
             sender.sendMessage(CC.AQUA + "works!");
         else sender.sendMessage(CC.RED + "nope");
+        for (Node node : LuckpermsManager.getUser(sender.getPlayer().getUniqueId()).getNodes()) {
+            sender.sendMessage(node.getKey());
+        }
         sender.sendMessage(LuckpermsManager.getMainColor(sender.getPlayer().getUniqueId()));
+        PlayerProfile profile = PlayerManager.getProfile(sender.getPlayer().getUniqueId());
+        profile.setFrozen(!profile.isFrozen());
+        sender.sendMessage(CC.GREEN +"Frozen: " + profile.isFrozen());
         return CommandResult.SUCCESS;
     }
 

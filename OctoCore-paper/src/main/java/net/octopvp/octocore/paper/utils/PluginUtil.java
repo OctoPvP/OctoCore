@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.utils;
 
-import net.octopvp.octocore.paper.OctoCorePaper;
+import net.octopvp.octocore.paper.OctoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -20,7 +20,7 @@ public class PluginUtil {
         if(!pluginFile.isFile()){
             for(File f : pluginDir.listFiles()){
                 try {
-                    PluginDescriptionFile desc = OctoCorePaper.getInstance().getPluginLoader().getPluginDescription(f);
+                    PluginDescriptionFile desc = OctoCore.getInstance().getPluginLoader().getPluginDescription(f);
                     if(desc.getName().equalsIgnoreCase(name1)) {
                         pluginFile = f;
                         break;

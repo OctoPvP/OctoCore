@@ -38,6 +38,7 @@ public final class CC {
     public static final String BULLET = "•";
     public static final String NEWLINE = "\n";
     public static final String NL = "\n";
+    public static final String ARROW = "»";
 
     private CC() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");

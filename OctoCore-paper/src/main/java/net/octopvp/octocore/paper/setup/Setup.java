@@ -1,8 +1,8 @@
 package net.octopvp.octocore.paper.setup;
 
-import net.octopvp.octocore.paper.OctoCorePaper;
+import net.octopvp.octocore.paper.OctoCore;
 
 public interface Setup {
-    void setup(OctoCorePaper plugin);
-    void disable(OctoCorePaper plugin);
+    void setup(OctoCore plugin);
+    void disable(OctoCore plugin);
 }

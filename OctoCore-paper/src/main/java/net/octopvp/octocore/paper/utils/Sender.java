@@ -64,6 +64,10 @@ public class Sender implements CommandSender  {
         return commandSender.hasPermission(s);
     }
 
+    public boolean hasPermission(net.octopvp.octocore.paper.utils.permission.Permission permission){
+        return commandSender.hasPermission(permission.getNode());
+    }
+
     @Override
     public boolean hasPermission(Permission permission) {
         return commandSender.hasPermission(permission);

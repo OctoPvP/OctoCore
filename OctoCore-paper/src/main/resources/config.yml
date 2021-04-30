@@ -1,5 +1,13 @@
 #The master server on the network (can only be 1)
-master: false
+server-type: MASTER
+master:
+  discord:
+    token: '-'
+    channels:
+      master-ctrl-status: '834815775046500419'
+      audit: '835393497669828608'
+
+name: lobby
 database:
   sql:
     username: octocore
@@ -25,8 +33,8 @@ database:
       password: default
       db: default
 tab:
-  header: '&a&lPlaying on the OctoPvP Network&r'
-  footer: '&e&lplay.octopvp.net'
+  header: '&a&lYou are playing on the OctoPvP network.&r\n'
+  footer: '\n&a&l&kA &r&6&lplay.octopvp.net&a&l&k A&r\n\n&b&ldiscord.gg/<discord>\n\n&b&loctopvp.net'
 update-tab-interval: 45
 update-pdata-interval: 100
 default-tab: true

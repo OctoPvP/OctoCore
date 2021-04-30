@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.utils.runnable;
 
-import net.octopvp.octocore.paper.OctoCorePaper;
+import net.octopvp.octocore.paper.OctoCore;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -13,7 +13,7 @@ public abstract class Countdown {
     protected final Plugin plugin;
     public Countdown(int time) {
         this.time = time;
-        this.plugin = OctoCorePaper.getInstance();
+        this.plugin = OctoCore.getInstance();
     }
     public abstract void count(int current);
     public final void start() {

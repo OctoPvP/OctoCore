@@ -15,7 +15,6 @@ public class ItemBuilder {
     private ItemBuilder(ItemStack item) {
         this.item = item;
     }
-
     public ItemBuilder(Material material) {
         this(new ItemStack(material));
     }

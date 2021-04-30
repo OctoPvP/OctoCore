@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.command;
 
 import net.octopvp.octocore.common.cooldown.Cooldown;
+import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -74,7 +75,7 @@ public class CommandFramework implements CommandExecutor {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(label.toLowerCase());
 			for (int x = 0; x < i; x++) buffer.append("." + args[x].toLowerCase());
-			String cmdLabel = buffer.toString();
+			String cmdLabel = buffer.toString().replaceFirst(OctoCore.getInstance().getDescription().getName().toLowerCase() + ":","").replaceFirst("/" + OctoCore.getInstance().getDescription().getName().toLowerCase() + ":","");
 			if (commandMap.containsKey(cmdLabel)) {
 				Method method = commandMap.get(cmdLabel).getKey();
 				Object methodObject = commandMap.get(cmdLabel).getValue();

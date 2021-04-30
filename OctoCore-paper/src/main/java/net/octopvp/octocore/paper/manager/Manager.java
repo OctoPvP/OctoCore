@@ -1,8 +1,9 @@
 package net.octopvp.octocore.paper.manager;
 
-import net.octopvp.octocore.paper.OctoCorePaper;
+import net.octopvp.octocore.paper.OctoCore;
 
 public interface Manager {
-    void init(OctoCorePaper plugin);
-    void disable(OctoCorePaper plugin);
+    OctoCore plugin = OctoCore.getInstance();
+    void init(OctoCore plugin);
+    void disable(OctoCore plugin);
 }

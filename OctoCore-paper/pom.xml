@@ -15,6 +15,7 @@
 
     <name>OctoCore Paper</name>
     <build>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
         <plugins>
             <!--
             <plugin>

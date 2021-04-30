@@ -10,6 +10,12 @@ public enum Permission implements PermissionString {
     USE_COLOR_CHAT("octocore.chat.color"),
     STAFF_MODULES("octocore.lunar.staff"),
     SEEN("octocore.command.seen"),
+    CLEAR_CHAT("octocore.command.clearchat"),
+    BYPASS_CLEAR_CHAT("octocore.command.clearchat.bypass"),
+    LOG_WORLDEDIT("octocore.action.logworldedit"),
+    START_RAFFLE("octocore.raffle.start"),
+    END_RAFFLE("octocore.raffle.end"),
+    ENTER_RAFFLE("octocore.raffle.enter"),
     TEST("test")
 
     ;

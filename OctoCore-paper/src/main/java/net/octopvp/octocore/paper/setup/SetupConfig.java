@@ -1,11 +1,11 @@
 package net.octopvp.octocore.paper.setup;
 
-import net.octopvp.octocore.paper.OctoCorePaper;
+import net.octopvp.octocore.paper.OctoCore;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class SetupConfig implements Setup{
-    public void setup(OctoCorePaper plugi){
-        FileConfiguration config = OctoCorePaper.getInstance().getConfig();
+    public void setup(OctoCore plugi){
+        FileConfiguration config = OctoCore.getInstance().getConfig();
         config.addDefault("database.sql.url", "localhost");
         config.addDefault("database.sql.username", "");
         config.addDefault("database.sql.password", "");
@@ -32,11 +32,11 @@ public class SetupConfig implements Setup{
         config.addDefault("cooldown.pearl.time",16);
 
         config.options().copyDefaults();
-        OctoCorePaper.getInstance().saveDefaultConfig();
+        OctoCore.getInstance().saveDefaultConfig();
     }
 
     @Override
-    public void disable(OctoCorePaper plugin) {
+    public void disable(OctoCore plugin) {
 
     }
 }

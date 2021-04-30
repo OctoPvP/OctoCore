@@ -17,7 +17,7 @@ public class ServerData {
     private long lastTick;
     private boolean whitelisted, maintenance;
     private int maxPlayers;
-    private List<PlayerProfile> onlinePlayers = new ArrayList<>();
+    private List<GlobalPlayer> onlinePlayers = new ArrayList<>();
     private List<String> names = new ArrayList<>();
     private double[] recentTps = new double[]{20.0, 20.0, 20.0};
 

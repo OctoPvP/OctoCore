@@ -1,6 +1,6 @@
 name: OctoCore
 version: ${project.version}
-main: net.octopvp.octocore.paper.OctoCorePaper
+main: net.octopvp.octocore.paper.OctoCore
 api-version: 1.8
 authors: [ Badbird5907 ]
 description: OctoCore
