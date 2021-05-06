@@ -11,4 +11,7 @@ public class HardwareUtils {
     public static SystemInfo getSystemInfo() {
         return HardwareUtils.systemInfo;
     }
+    public static long getMaxMemoryAllocated(){
+        return JVMUtils.getMaxMemoryAllocated();
+    }
 }

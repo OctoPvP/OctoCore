@@ -16,6 +16,7 @@ public enum Permission implements PermissionString {
     START_RAFFLE("octocore.raffle.start"),
     END_RAFFLE("octocore.raffle.end"),
     ENTER_RAFFLE("octocore.raffle.enter"),
+    SYS_INFO("octocore.command.sysinfo"),
     TEST("test")
 
     ;

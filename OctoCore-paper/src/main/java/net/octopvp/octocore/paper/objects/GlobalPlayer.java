@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @Setter
 public class GlobalPlayer {
     private UUID uuid;
+
     private String name, server, address, rankName, firstJoined, lastServer;
     private boolean vanished,staffChatAlerts, adminChatAlerts, reportAlerts;
     private long lastSeen, lastActivity = -1L;

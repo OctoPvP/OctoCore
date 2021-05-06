@@ -11,9 +11,7 @@ public class DatabaseConnector {
         this.password = password;
         this.db = db;
     }
-    public void connect(){
-
-    }
+    public void connect() {}
 
     public String getUrl() {
         return this.url;

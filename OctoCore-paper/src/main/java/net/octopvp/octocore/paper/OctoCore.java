@@ -21,6 +21,9 @@ import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -96,7 +99,6 @@ public final class OctoCore extends JavaPlugin {
     //Setup End
 
 
-
     @Override
     public void onLoad() {
         super.onLoad();
@@ -105,7 +107,7 @@ public final class OctoCore extends JavaPlugin {
     @Override
     public void onEnable() {
         if(instance != null)
-            throw new IllegalStateException("OctoCore is already initialized??? Try restarting the server if there is any problems");
+            throw new IllegalStateException("OctoCore is already initialized");
         instance = this;
         commandFramework = new CommandFramework(this);
         tab = new Tab(this);
@@ -116,7 +118,7 @@ public final class OctoCore extends JavaPlugin {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             ErrorData errorData = new ErrorData();
-            errorData.addData("Startup","true");
+            errorData.addDescription("On Startup");
             errorData.addData("ServerType",getConfig().getString("server-type").toUpperCase());
             errorData.addData("Master",master + "");
             errorData.addException(e);
@@ -155,9 +157,7 @@ public final class OctoCore extends JavaPlugin {
     @Override
     public void onDisable() {
         Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(ChatColor.RED + "This server is restarting."));
-
         setupManager.disable(getInstance());
-
         if(NameTagChanger.INSTANCE.isEnabled())
             NameTagChanger.INSTANCE.disable();
         try {
@@ -167,7 +167,6 @@ public final class OctoCore extends JavaPlugin {
             throwables.printStackTrace();
         }
     }
-
     private void initdb(){
         try {
             String url = getConfig().getString("database.sql.url"),
