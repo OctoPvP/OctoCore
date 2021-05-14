@@ -1,16 +1,14 @@
 package net.octopvp.octocore.paper.manager.impl;
 
-import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
-import net.luckperms.api.event.EventBus;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 import net.octopvp.octocore.paper.manager.LuckpermsManager;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
-import net.octopvp.octocore.paper.objects.PlayerProfile;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.HandleError;
 import net.octopvp.octocore.paper.utils.Logger;
 import org.bson.Document;
@@ -19,13 +17,12 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 
 public class PlayerManager implements Manager {
     private static MongoCollection<Document> pdataCollection = null;
     private static MongoCollection<Document> backupCollection = null;
     @Getter
-    private static ConcurrentHashMap<UUID, PlayerProfile> playerProfiles = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<UUID, PlayerData> playerProfiles = new ConcurrentHashMap<>();
 
     /**
      * After the database is initialized
@@ -34,7 +31,7 @@ public class PlayerManager implements Manager {
         pdataCollection = DatabaseManager.getMongoDatabase().getCollection("pdata");
         backupCollection = DatabaseManager.getMongoDatabase().getCollection("backup");
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(OctoCore.getInstance(), () -> {
-            for (PlayerProfile value : playerProfiles.values()) {
+            for (PlayerData value : playerProfiles.values()) {
                 value.setPlayTime(value.getPlayTime()+1);
             }
         },0l,1200l);
@@ -50,7 +47,7 @@ public class PlayerManager implements Manager {
         //TODO redis cache
         Bukkit.getScheduler().scheduleSyncDelayedTask(OctoCore.getInstance(), () -> {
             try{
-                PlayerProfile profile;
+                PlayerData profile;
                 if(doesDocumentExistByUUID(uuid))
                     profile = loadProfileFromDB(uuid);
                 else profile = createNewProfile(uuid);
@@ -73,7 +70,7 @@ public class PlayerManager implements Manager {
      * @param uuid
      */
     public static void unloadProfile(UUID uuid){
-        PlayerProfile profile = playerProfiles.get(uuid);
+        PlayerData profile = playerProfiles.get(uuid);
         playerProfiles.remove(uuid);
         saveProfile(profile);
     }
@@ -83,10 +80,10 @@ public class PlayerManager implements Manager {
      * @param uuid
      * @return
      */
-    public static PlayerProfile loadProfileFromDB(UUID uuid) {
+    public static PlayerData loadProfileFromDB(UUID uuid) {
         try {
             Logger.debug("Loading profile " + uuid.toString() + " from db.");
-            PlayerProfile p;
+            PlayerData p;
             Document doc = getProfileDocument(uuid);
             String json = doc.toJson();
             Logger.debug("Json for profile " + uuid + " is: \n" + json);
@@ -104,9 +101,9 @@ public class PlayerManager implements Manager {
      * @param uuid
      * @return
      */
-    public static PlayerProfile createNewProfile(UUID uuid){
+    public static PlayerData createNewProfile(UUID uuid){
         Logger.debug("Creating new profile for " + uuid.toString());
-        PlayerProfile profile = new PlayerProfile(uuid);
+        PlayerData profile = new PlayerData(uuid);
         profile.setCoins(0);
         profile.setXp(0);
         profile.setFrozen(false);
@@ -129,7 +126,7 @@ public class PlayerManager implements Manager {
      * saves a profile assuming the profile is <b>already there</b>
      * @param profile
      */
-    public static void saveProfile(PlayerProfile profile) {
+    public static void saveProfile(PlayerData profile) {
         String json = serializeProfileToJson(profile);
         Logger.debug("Saving profile: \nUUID:" + profile.getUuid() + "\nJSON: " + json);
         //pdataCollection.updateOne(getProfileDocument(profile.getUuid()),Document.parse(json));
@@ -141,8 +138,8 @@ public class PlayerManager implements Manager {
      * @param uuid
      * @return
      */
-    public static PlayerProfile getProfileFromDB(UUID uuid){
-        PlayerProfile profile = deserializeProfile(getProfileDocument(uuid).toJson());
+    public static PlayerData getProfileFromDB(UUID uuid){
+        PlayerData profile = deserializeProfile(getProfileDocument(uuid).toJson());
         profile.setLastLoaded(System.currentTimeMillis());
         return profile;
     }
@@ -152,7 +149,7 @@ public class PlayerManager implements Manager {
      * @param profile
      * @return
      */
-    public static String serializeProfileToJson(PlayerProfile profile){
+    public static String serializeProfileToJson(PlayerData profile){
         return OctoCore.getGson().toJson(profile);
     }
 
@@ -161,8 +158,8 @@ public class PlayerManager implements Manager {
      * @param json
      * @return
      */
-    public static PlayerProfile deserializeProfile(String json){
-        return OctoCore.getGson().fromJson(json,PlayerProfile.class);
+    public static PlayerData deserializeProfile(String json){
+        return OctoCore.getGson().fromJson(json, PlayerData.class);
     }
 
     /**
@@ -170,7 +167,7 @@ public class PlayerManager implements Manager {
      * @param uuid
      * @return
      */
-    public static PlayerProfile getProfile(UUID uuid) {
+    public static PlayerData getProfile(UUID uuid) {
         if (!playerProfiles.containsKey(uuid))
             return null;
         return playerProfiles.get(uuid);
@@ -200,6 +197,9 @@ public class PlayerManager implements Manager {
 
     @Override
     public void init(OctoCore plugin) {
+        /*
+        TODO check if player has permission to change name color if not, then use thier rank's default color
+         */
         //repeating update player task
         /*
         Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCore.getInstance(), () -> {
@@ -213,16 +213,15 @@ public class PlayerManager implements Manager {
         LuckpermsManager.getLuckPerms().getEventBus().subscribe(OctoCore.getInstance(),UserDataRecalculateEvent.class, this::onLpDataUpdate);
     }
     public void onLpDataUpdate(UserDataRecalculateEvent event){
-        PlayerProfile profile = playerProfiles.get(event.getUser().getUniqueId());
+        PlayerData profile = playerProfiles.get(event.getUser().getUniqueId());
         Logger.debug("Lp data update event: User: " + event.getUser() + " Data: " + event.getData());
         if(profile == null)
             return;
         UUID uuid = event.getUser().getUniqueId();
-        Logger.debug("true");
         profile.setPrefix(getPrefix(uuid));
         profile.setMainColor(LuckpermsManager.getMainColor(uuid));
     }
-    public void refreshProfile(PlayerProfile profile){
+    public void refreshProfile(PlayerData profile){
         UUID uuid = profile.getUuid();
         profile.setPrefix(getPrefix(uuid));
         profile.setMainColor(LuckpermsManager.getMainColor(uuid));

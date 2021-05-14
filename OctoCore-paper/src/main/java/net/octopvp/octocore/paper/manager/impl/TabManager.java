@@ -4,8 +4,7 @@ import com.lunarclient.bukkitapi.LunarClientAPI;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.objects.PlayerProfile;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.tab.item.TextTabItem;
 import net.octopvp.octocore.paper.utils.tab.tablist.TableTabList;
@@ -33,7 +32,7 @@ public class TabManager implements Manager {
             Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCore.getInstance(), () -> {
                 if(!(Bukkit.getOnlinePlayers().toArray().length == 0)){
                     for (UUID uuid : PlayerManager.getPlayerProfiles().keySet()){
-                        PlayerProfile profile = PlayerManager.getPlayerProfiles().get(uuid);
+                        PlayerData profile = PlayerManager.getPlayerProfiles().get(uuid);
                         Player player = Bukkit.getPlayer(profile.getUuid());
                         Logger.debug("Sending tab");
                         sendTab(player,profile);
@@ -48,7 +47,7 @@ public class TabManager implements Manager {
 
     }
 
-    private static void sendTab(Player p, PlayerProfile profile){
+    private static void sendTab(Player p, PlayerData profile){
         long start = System.currentTimeMillis();
         TableTabList tab = tablists.get(p.getUniqueId());
         if(tab == null){

@@ -42,6 +42,7 @@ public class JDAManager extends ListenerAdapter implements Manager {
         if(OctoCore.isMaster()){
             Logger.info("Sending message \"Master control - Stopped\" to discord master server logs id:" + OctoCore.getInstance().getConfig().getString("master.discord.channels.master-ctrl-status"));
             jda.getTextChannelById(OctoCore.getInstance().getConfig().getString("master.discord.channels.master-ctrl-status")).sendMessage(Embed.setTimestamp(Embed.red().setTitle("Master Control - Stopped")).build()).queue();
+            jda.shutdown();
         }
     }
 

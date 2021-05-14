@@ -8,14 +8,14 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.command.Completer;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.objects.PlayerProfile;
+import net.octopvp.octocore.paper.menus.TestMenu;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.permission.Permission;
 import net.octopvp.octocore.paper.utils.permission.PermissionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class TestCommand implements BaseCommand {
     private static final String perm = PermissionUtil.fromEnum(Permission.COMMAND_NICK);
@@ -33,9 +33,10 @@ public class TestCommand implements BaseCommand {
             sender.sendMessage(node.getKey());
         }
         sender.sendMessage(LuckpermsManager.getMainColor(sender.getPlayer().getUniqueId()));
-        PlayerProfile profile = PlayerManager.getProfile(sender.getPlayer().getUniqueId());
+        PlayerData profile = PlayerManager.getProfile(sender.getPlayer().getUniqueId());
         profile.setFrozen(!profile.isFrozen());
         sender.sendMessage(CC.GREEN +"Frozen: " + profile.isFrozen());
+        new TestMenu().openMenu(sender.getPlayer());
         return CommandResult.SUCCESS;
     }
 

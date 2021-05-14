@@ -115,7 +115,7 @@ public class CommandFramework implements CommandExecutor {
 					else if(result == null){
 						return true;
 					}
-					else if(result.getMsg() == ""){
+					else if(result.getMsg() == "" || result.getMsg() == " "){
 						return true;
 					}else if(result.getMsg() == null){
 						return true;
@@ -196,6 +196,7 @@ public class CommandFramework implements CommandExecutor {
 			map.register(plugin.getName(), cmd);
 		}
 		if(!(command.cooldown() == 0)){
+			//FIXME fix cooldowns
 			Cooldown.createCooldown(command.name() + "|Cmd_Cooldown");
 		}
 		if (!command.description().equalsIgnoreCase("") && cmdLabel.equals(label)) {

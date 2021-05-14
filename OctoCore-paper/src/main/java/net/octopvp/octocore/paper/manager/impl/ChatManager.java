@@ -3,10 +3,9 @@ package net.octopvp.octocore.paper.manager.impl;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
-import net.octopvp.octocore.paper.objects.PlayerProfile;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -28,7 +27,7 @@ public class ChatManager implements Manager {
 
     }
     public static String formatChat(UUID uuid, String displayname,String message,boolean translateColor){
-        PlayerProfile profile = PlayerManager.getProfile(uuid);
+        PlayerData profile = PlayerManager.getProfile(uuid);
         if(profile == null)
             return null;
         if(translateColor)

@@ -1,16 +1,14 @@
 package net.octopvp.octocore.paper.setup;
 
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.listeners.ChatListener;
-import net.octopvp.octocore.paper.listeners.CommandProcessEvent;
-import net.octopvp.octocore.paper.listeners.DeathListener;
-import net.octopvp.octocore.paper.listeners.JoinLeaveListener;
+import net.octopvp.octocore.paper.listeners.*;
+import net.octopvp.octocore.paper.utils.menu.MenuListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
 public class SetupListeners implements Setup{
-    private static final Listener[] listeners = new Listener[]{new JoinLeaveListener(),new ChatListener(),new DeathListener(),new CommandProcessEvent()};
+    private static final Listener[] listeners = new Listener[]{new JoinLeaveListener(),new ChatListener(),new DeathListener(),new CommandProcessEvent(),new MenuListener()};
     @Override
     public void setup(OctoCore plugin){
         PluginManager plm = Bukkit.getPluginManager();

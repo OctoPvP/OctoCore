@@ -11,9 +11,30 @@ import java.util.HashMap;
 @Setter
 public class AuditLogEntry {
     private HashMap<String,String> entries;
-    private String type;
+    private String type = "Undefined";
     public AuditLogEntry(HashMap<String,String> entries,AuditLogType type ){
         this.entries = entries;
+        switch (type){
+            case WORLDEDIT_ACTION:
+                this.type = "WorldEdit";
+                break;
+            case BAN:
+                this.type = "Ban";
+                break;
+            case MUTE:
+                this.type = "Mute";
+                break;
+            case KICK:
+                this.type = "Kick";
+                break;
+            default:
+                this.type = "Undefined";
+        }
+    }
+    public AuditLogEntry(String key,String value,AuditLogType type){
+        HashMap<String,String> e = new HashMap<>();
+        e.put(key, value);
+        this.entries = e;
         switch (type){
             case WORLDEDIT_ACTION:
                 this.type = "WorldEdit";

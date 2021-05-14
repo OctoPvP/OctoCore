@@ -2,6 +2,9 @@ package net.octopvp.octocore.common.util;
 
 import net.md_5.bungee.api.ChatColor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public final class CC {
     public static final String WHITE = ChatColor.WHITE.toString();
     public static final String GREEN = ChatColor.GREEN.toString();
@@ -39,6 +42,14 @@ public final class CC {
     public static final String NEWLINE = "\n";
     public static final String NL = "\n";
     public static final String ARROW = "»";
+    public static final String X = "✘";
+
+    public static String translate(String in){
+        return ChatColor.translateAlternateColorCodes('&',in);
+    }
+    public static List<String> translate(List<String> input) {
+        return input.stream().map(CC::translate).collect(Collectors.toList());
+    }
 
     private CC() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");

@@ -1,0 +1,160 @@
+package net.octopvp.octocore.paper.module.impl.auth;
+
+import dev.samstevens.totp.code.*;
+import dev.samstevens.totp.exceptions.QrGenerationException;
+import dev.samstevens.totp.qr.QrData;
+import dev.samstevens.totp.qr.QrGenerator;
+import dev.samstevens.totp.qr.ZxingPngQrGenerator;
+import dev.samstevens.totp.secret.DefaultSecretGenerator;
+import dev.samstevens.totp.secret.SecretGenerator;
+import dev.samstevens.totp.time.SystemTimeProvider;
+import dev.samstevens.totp.time.TimeProvider;
+import lombok.Getter;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.octopvp.octocore.common.object.ServerType;
+import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.command.CommandFramework;
+import net.octopvp.octocore.paper.manager.impl.JDAManager;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.module.Module;
+import net.octopvp.octocore.paper.objects.AuditLogEntry;
+import net.octopvp.octocore.paper.objects.AuditLogType;
+import net.octopvp.octocore.paper.objects.PlayerData;
+import net.octopvp.octocore.paper.utils.HandleError;
+import net.octopvp.octocore.paper.utils.errorhandling.ErrorData;
+import net.octopvp.octocore.paper.utils.msg.Lang;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
+@Getter
+public class AuthModule implements Module {
+    @Getter
+    private static SecretGenerator secretGenerator;
+    @Getter
+    private static TimeProvider timeProvider;
+    @Getter
+    private static CodeGenerator codeGenerator;
+    @Getter
+    private static CodeVerifier verifier;
+    @Getter
+    private static HashMap<UUID, Integer> triesLeft;
+    @Getter
+    private static boolean serverAuthEnabled;
+    @Getter
+    private static HashMap<UUID,String> settingUpAuth = new HashMap<>();
+    @Override
+    public void onEnable(OctoCore plugin) {
+        if(OctoCore.getServerType() == ServerType.HUB || OctoCore.getServerType() == ServerType.MASTER){
+            serverAuthEnabled = true;
+            //save memory :D (dont need those objects if the server isn't hub or master)
+            secretGenerator = new DefaultSecretGenerator();
+            timeProvider  = new SystemTimeProvider();
+            codeGenerator = new DefaultCodeGenerator();
+            verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
+            triesLeft = new HashMap<>();
+            Bukkit.getServer().getPluginManager().registerEvents(new AuthListener(),plugin);
+            OctoCore.getCommandFramework().registerCommands(new AuthCommand());
+        }
+        else serverAuthEnabled = false;
+    }
+
+    @Override
+    public void onDisable(OctoCore plugin) {
+
+    }
+    public static boolean verify(String secret, String code){
+        return verifier.isValidCode(secret,code);
+    }
+    public static boolean isAuthed(Player player){
+        PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
+        if(pdata.isAuthEnabled()){
+            if(pdata.getLastAuthedIp() == player.getAddress().getHostName())
+                return true;
+            return false;
+        }else return true;
+    }
+    public static boolean has2faEnabled(UUID uuid){
+        return PlayerManager.getProfile(uuid).isAuthEnabled();
+    }
+    public static void handle2FARequest(Player player,String code){
+        if(settingUpAuth.containsKey(player.getUniqueId())){
+            if(verify(settingUpAuth.get(player.getUniqueId()),code)){
+                player.sendMessage(Lang.AUTH_SETUP_SUCCESS.getMsg());
+                PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+                playerData.setAuthEnabled(true);
+                playerData.setAuthSecret(settingUpAuth.get(player.getUniqueId()));
+                settingUpAuth.remove(player.getUniqueId());
+                return;
+                //TODO update globalplayer
+            }
+        }
+        if(has2faEnabled(player.getUniqueId()) && !isAuthed(player)){
+            PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
+            if(verify(pdata.getAuthSecret(),code)){
+                pdata.setLastAuthedIp(player.getAddress().getHostString());
+                player.sendMessage(Lang.AUTH_SUCCESS.getMsg());
+                triesLeft.remove(player.getUniqueId());
+            }else{
+                int left = triesLeft.get(player.getUniqueId()) - 1;
+                if(left <= 0){
+                    //TODO admin alert "<staff> failed 2fa"
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"tempban -s " + player.getName() + " 2h Failed 2fa");
+
+                    AuditLogEntry entry = new AuditLogEntry("2fa failed",player.getName(), null );
+                    OctoCore.getInstance().getSetupManager().getJdaManager().sendAuditLogMsg(entry);
+                    return;
+                }
+                player.sendMessage(Lang.AUTH_DENIED.getMsg(left));
+                //im so smart lol (not really)
+                triesLeft.remove(player.getUniqueId());
+                triesLeft.put(player.getUniqueId(),left);
+            }
+        }
+    }
+    public static void sendAuthMessage(Player player){
+        player.sendMessage(Lang.LOGIN_AUTH_MESSAGE.getMsg());
+    }
+    public static void handleJoin(Player player){
+        PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
+        if(!pdata.isAuthEnabled())
+            return;
+        if(pdata.getLastAuthedIp() == player.getAddress().getHostName()){
+            player.sendMessage(Lang.AUTH_NO_NEED_JOIN_SAME_IP.getMsg());
+            return;
+        }else{
+            //TODO admin alert "<staff> joined on new ip"
+            player.sendMessage(Lang.PLEASE_AUTH.getMsg());
+        }
+    }
+    public static void enableAuth(Player player){
+        String secret = secretGenerator.generate();
+        QrData data = new QrData.Builder()
+                .label(player.getName())
+                .secret(secret)
+                .issuer("OctoPvP - OctoCore V" + OctoCore.getInstance().getDescription().getVersion())
+                .algorithm(HashingAlgorithm.SHA1)
+                .digits(6)
+                .period(30)
+                .build();
+        QrGenerator generator = new ZxingPngQrGenerator();
+        try {
+            new AuthMapManager(player,generator.generate(data)).giveMap();
+        } catch (QrGenerationException e) {
+            e.printStackTrace();
+            ErrorData ed = new ErrorData();
+            ed.addDescription("Happened when " + player.getName() + " tried to enable 2fa");
+            HandleError.handlePlayerError(ed,player,e,false);
+            return;
+        }
+        TextComponent textComponent = new TextComponent(Lang.AUTH_WAITING.getMsg());
+        textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new BaseComponent[]{new TextComponent(secret)}));
+        player.sendMessage(textComponent);
+        settingUpAuth.put(player.getUniqueId(),secret);
+    }
+}

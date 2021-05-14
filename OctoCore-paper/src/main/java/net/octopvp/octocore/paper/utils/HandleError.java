@@ -18,18 +18,18 @@ public class HandleError {
             data.addData("","Error adding pdata json. Exception has also been added.");
         }
         String[] a = ErrorHandling.handleError(data);
-        p.sendMessage(Lang.ERROR.getMsg(a[0]));
+        p.sendMessage(Lang.ERROR_LOGGED.getMsg(a[0]));
         if(kick){
-            p.kickPlayer(Lang.ERROR.getMsg(a[0]));
+            p.kickPlayer(Lang.ERROR_LOGGED.getMsg(a[0]));
         }
     }
     public static void handlePlayerErrorNoPdata(ErrorData data, Player p,Exception e,boolean kick){
         data.addException(e);
         data.addData("Player",p.getName());
         String[] a = ErrorHandling.handleError(data);
-        p.sendMessage(Lang.ERROR.getMsg(a[0]));
+        p.sendMessage(Lang.ERROR_LOGGED.getMsg(a[0]));
         if(kick){
-            p.kickPlayer(ChatColor.stripColor(Lang.ERROR.getMsg(a[0])));
+            p.kickPlayer(ChatColor.stripColor(Lang.ERROR_LOGGED.getMsg(a[0])));
         }
     }
 }

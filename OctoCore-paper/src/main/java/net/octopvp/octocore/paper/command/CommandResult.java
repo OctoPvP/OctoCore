@@ -11,6 +11,7 @@ public enum CommandResult implements PermissionString {
     PLAYER_NOT_FOUND(CC.RED + "That player can't be found!"),
     INVALID_PLAYER(PLAYER_NOT_FOUND.getMsg()),
     OTHER(""),
+    PLAYER_ONLY(Lang.PLAYER_ONLY.getMsg()),
     NO_PERMS(Lang.NO_PERMISSION.getMsg());
     private String msg;
     CommandResult(String s){

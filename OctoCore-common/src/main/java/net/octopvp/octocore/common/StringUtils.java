@@ -249,6 +249,6 @@ public class StringUtils {
         return ret;
     }
     public static String[] getRandomChatColors(int howmanyper,int howmanytimes){
-        return (String[]) getRandomChatColorsAsList(howmanyper, howmanytimes).toArray();
+        return getRandomChatColorsAsList(howmanyper, howmanytimes).toArray(new String[0]);
     }
 }

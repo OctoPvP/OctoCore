@@ -5,7 +5,6 @@ import lombok.Setter;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
-import net.octopvp.octocore.paper.objects.PlayerProfile;
 import net.octopvp.octocore.paper.objects.ServerData;
 
 import java.util.ArrayList;

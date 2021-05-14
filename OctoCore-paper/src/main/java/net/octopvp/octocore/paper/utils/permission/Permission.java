@@ -17,11 +17,17 @@ public enum Permission implements PermissionString {
     END_RAFFLE("octocore.raffle.end"),
     ENTER_RAFFLE("octocore.raffle.enter"),
     SYS_INFO("octocore.command.sysinfo"),
+    USE_COLOR_NAME("octocore.usecolorname"),
+    LIST_PLAYERS("octocore.command.list"),
+    PING_COMMAND_OTHER("octocore.command.ping.others"),
+    PUNISH_PLAYER("octocore.command.punish"),
+    SETUP_2FA("octocore.command.2fa.setup"),
+
     TEST("test")
 
     ;
     private final String node;
-    private Permission(String node){
+    Permission(String node){
         this.node = node;
     }
 

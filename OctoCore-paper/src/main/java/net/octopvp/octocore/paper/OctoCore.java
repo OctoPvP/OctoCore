@@ -21,9 +21,6 @@ import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -54,6 +51,7 @@ public final class OctoCore extends JavaPlugin {
     @Getter
     @Setter
     private static ServerType serverType;
+    private static SetupModules setupModules = new SetupModules();
     @Getter
     // https://stackoverflow.com/a/44800004/11588583
     private static Gson gson = new Gson();
@@ -151,6 +149,8 @@ public final class OctoCore extends JavaPlugin {
         new SetupCommands().setup(this);
         Logger.info("Setting up permissions.");
         new SetupPermissions().setup(this);
+        Logger.info("Setting up modules.");
+        setupModules.setup(this);
         Logger.info("Done!");
     }
 
@@ -160,6 +160,7 @@ public final class OctoCore extends JavaPlugin {
         setupManager.disable(getInstance());
         if(NameTagChanger.INSTANCE.isEnabled())
             NameTagChanger.INSTANCE.disable();
+        setupModules.disable(this);
         try {
             connection.close();
             connectionPoolManager.closePool();
@@ -210,7 +211,7 @@ public final class OctoCore extends JavaPlugin {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-            Logger.warn("Unable to load blacklisted words from database!");
+            Logger.warn("Unable to load blacklisted commands from database!");
         }
         return list;
     }

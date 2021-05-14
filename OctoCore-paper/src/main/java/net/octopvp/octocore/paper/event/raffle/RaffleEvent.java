@@ -5,7 +5,7 @@ import net.octopvp.octocore.common.object.ActionResult;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.event.Event;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.objects.PlayerProfile;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -34,7 +34,7 @@ public class RaffleEvent implements Event {
             return ActionResult.OTHER;
         }
         currentRaffle = this;
-        PlayerProfile profile = PlayerManager.getProfile(p.getUniqueId());
+        PlayerData profile = PlayerManager.getProfile(p.getUniqueId());
         final String player1 = profile.getFormattedName(true);
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.sendTitle(title);
@@ -62,7 +62,7 @@ public class RaffleEvent implements Event {
             Bukkit.broadcastMessage(Lang.TOO_MANY_PLAYERS_LEFT_FOR_RAFFLE.getMsg());
             return;
         }
-        PlayerProfile profile = PlayerManager.getProfile(p.getUniqueId());
+        PlayerData profile = PlayerManager.getProfile(p.getUniqueId());
         Bukkit.broadcastMessage(Lang.WON_RAFFLE.getMsg(profile.getFormattedName(true),rafflePlayers.size() + ""));
         rafflePlayers.clear();
     }

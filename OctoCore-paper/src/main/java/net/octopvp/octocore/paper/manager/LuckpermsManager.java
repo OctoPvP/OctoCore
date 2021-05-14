@@ -2,10 +2,12 @@ package net.octopvp.octocore.paper.manager;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.utils.permission.Permission;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 import java.util.HashMap;
@@ -52,20 +54,26 @@ public class LuckpermsManager implements Manager{
      * @return
      */
     public static String getMainColor(UUID uuid){
-        String color = null;
-        /*
-        if(hasPermission(uuid, "color.red"))
-            return CC.RED;
-        for (String s : colors.keySet()) {
-            if(hasPermission(uuid, "color." + s)){
-                color = colors.get(s);
+        String color = CC.GRAY;
+        if(hasPermission(uuid, Permission.USE_COLOR_NAME.getNode())){
+            for (Node node : getUser(uuid).getNodes()) {
+                if(node.getKey().startsWith("color.")){
+                    color = colors.get(node.getKey().replace("color.",""));
+                    break;
+                }
             }
+            if(color == null || color == "" || color == "null")
+                color = CC.GRAY;
+            return color;
+        }else{
+            return getMainColor(getLuckPerms().getGroupManager().getGroup(getUser(uuid).getPrimaryGroup()));
         }
-         */
-        for (Node node : getUser(uuid).getNodes()) {
+    }
+    public static String getMainColor(Group group){
+        String color = CC.GRAY;
+        for(Node node : group.getNodes()){
             if(node.getKey().startsWith("color.")){
                 color = colors.get(node.getKey().replace("color.",""));
-                break;
             }
         }
         if(color == null || color == "" || color == "null")
@@ -84,7 +92,5 @@ public class LuckpermsManager implements Manager{
     }
 
     @Override
-    public void disable(OctoCore plugin) {
-
-    }
+    public void disable(OctoCore plugin) {}
 }

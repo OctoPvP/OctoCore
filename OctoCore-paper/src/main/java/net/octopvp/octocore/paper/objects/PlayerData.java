@@ -18,18 +18,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PlayerProfile {
+public class PlayerData {
     private UUID uuid;
     @SerializedName("_id")
     private String _id; //for mongodb _id field (quick and dirty way)
-    private boolean frozen,nicked = false;
+    private boolean frozen,nicked = false,authEnabled = false;
     private long coins = 0,lastLoaded,lastLogin,xp = 0,/**playtime in minutes*/playTime = 0;
-    private String nick, prefix, mainColor,lastKnownName,nickPrefix,nickColor,name = lastKnownName,server;
+    private String nick, prefix, mainColor,lastKnownName,nickPrefix,nickColor,name = lastKnownName,server,authSecret,lastAuthedIp,lastSeenIp;
     private transient String lastMessage;
     private List<String> metaDataList = new ArrayList<>();
     private ConcurrentHashMap<String,String> metaData = new ConcurrentHashMap<>();
 
-    public PlayerProfile(UUID uuid) {
+    public PlayerData(UUID uuid) {
         this.uuid = uuid;
         if(isNicked()){
             this.prefix = this.nickPrefix;
@@ -45,7 +45,7 @@ public class PlayerProfile {
         this.name = lastKnownName;
         this._id = uuid.toString();
     }
-    public PlayerProfile(){}
+    public PlayerData(){}
     public void loadPlayerData(){
     }
     public String getFormattedName(boolean nicked){

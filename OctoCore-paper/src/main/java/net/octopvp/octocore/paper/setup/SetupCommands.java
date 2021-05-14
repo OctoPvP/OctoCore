@@ -5,6 +5,8 @@ import net.octopvp.octocore.paper.command.CommandFramework;
 import net.octopvp.octocore.paper.command.impl.GetUUID;
 import net.octopvp.octocore.paper.command.impl.IntentionalError;
 import net.octopvp.octocore.paper.command.impl.TestCommand;
+import net.octopvp.octocore.paper.command.impl.essentials.ListCommand;
+import net.octopvp.octocore.paper.command.impl.essentials.PingCommand;
 import net.octopvp.octocore.paper.command.impl.raffle.RaffleCommand;
 import net.octopvp.octocore.paper.command.impl.staff.NickCommand;
 import net.octopvp.octocore.paper.command.impl.staff.UnNickCommand;
@@ -28,6 +30,8 @@ public class SetupCommands implements Setup{
         commands.add(new TrollCommand());
         commands.add(new IntentionalError());
         commands.add(new RaffleCommand());
+        commands.add(new ListCommand());
+        commands.add(new PingCommand());
 
         //ClassUtils.getClassesInPackage(OctoCorePaper.getInstance(),"net.octopvp.octocore.paper.command.impl").forEach(cmd::registerCommands);
         commands.forEach(cmd::registerCommands);
