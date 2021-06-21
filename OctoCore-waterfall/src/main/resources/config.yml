@@ -1,0 +1,4 @@
+motd: ['&bOctoPvP &aNetwork&c [1.8 - 1.16]','&cThis server is currently under maintenance!']
+protocol:
+  enabled: true
+  version: 'OctoBungee 1.8 - 1.16'

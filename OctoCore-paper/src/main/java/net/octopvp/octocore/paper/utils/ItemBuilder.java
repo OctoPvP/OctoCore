@@ -2,10 +2,7 @@ package net.octopvp.octocore.paper.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.gson.Gson;
 
@@ -20,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
+import org.bukkit.util.ChatPaginator;
 
 /**
  * ItemBuilder - An API class to create an
@@ -41,6 +39,8 @@ public class ItemBuilder {
     private String displayname;
     private List<String> lore = new ArrayList<>();
     private List<ItemFlag> flags = new ArrayList<>();
+    private boolean wrapLore = true;
+    private int wrapSize = 30;
 
     private boolean andSymbol = true;
     private boolean unsafeStackSize = false;
@@ -125,6 +125,7 @@ public class ItemBuilder {
     public ItemBuilder(FileConfiguration cfg, String path) {
         this(cfg.getItemStack(path));
     }
+
 
     /**
      * Initalizes the ItemBuilder with an already existing
@@ -261,6 +262,20 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setName(String name){
+        this.name(name);
+        return this;
+    }
+
+    public ItemBuilder wrapLore(boolean wrap){
+        this.wrapLore = wrap;
+        return this;
+    }
+    public ItemBuilder setWrapSize(int size){
+        this.wrapSize = size;
+        return this;
+    }
+
     /**
      * Adds a Line to the Lore of the ItemStack
      *
@@ -283,6 +298,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder addLoreLine(String line){
+        this.lore(line);
+        return this;
+    }
+
     /**
      * Adds one or more Lines to the Lore of the ItemStack
      *
@@ -297,6 +317,28 @@ public class ItemBuilder {
         }
         return this;
     }
+    /*
+    public static Collection splitText(String text, int maxLength){
+        ArrayList messages = new ArrayList();
+        String[] data = text.split(" ");
+        String nextString = "";
+        for(String s : data){
+            if(s.length() > maxLength){
+                continue;
+            }
+
+            if(nextString.chars().count() + s.chars().count() > maxLength){
+                messages.add(nextString);
+                nextString =  ChatColor.GRAY + s + " ";
+            } else{
+                nextString += s + " ";
+            }
+        }
+        messages.add(nextString);
+        return messages;
+    }
+
+     */
 
     /**
      * Adds one or more Lines to the Lore of the ItemStack

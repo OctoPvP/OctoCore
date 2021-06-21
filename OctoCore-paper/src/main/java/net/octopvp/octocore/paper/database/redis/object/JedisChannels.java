@@ -1,7 +1,7 @@
 package net.octopvp.octocore.paper.database.redis.object;
 
 public enum JedisChannels {
-    OCTOCORE("OctoCore");
+    OCTOCORE("octocore");
     private String channel;
     JedisChannels(String channel){
         this.channel = channel;

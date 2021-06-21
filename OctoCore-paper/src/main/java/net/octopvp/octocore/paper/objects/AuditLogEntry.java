@@ -1,9 +1,8 @@
 package net.octopvp.octocore.paper.objects;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.paper.objects.enums.AuditLogType;
 
 import java.util.HashMap;
 
@@ -12,7 +11,7 @@ import java.util.HashMap;
 public class AuditLogEntry {
     private HashMap<String,String> entries;
     private String type = "Undefined";
-    public AuditLogEntry(HashMap<String,String> entries,AuditLogType type ){
+    public AuditLogEntry(HashMap<String,String> entries, AuditLogType type ){
         this.entries = entries;
         switch (type){
             case WORLDEDIT_ACTION:
@@ -42,6 +41,9 @@ public class AuditLogEntry {
             case BAN:
                 this.type = "Ban";
                 break;
+            case AUTH_FAIL:
+                this.type = "Auth Fail";
+                break;
             case MUTE:
                 this.type = "Mute";
                 break;
@@ -51,6 +53,7 @@ public class AuditLogEntry {
             default:
                 this.type = "Undefined";
         }
+        //TODO discord send queue
     }
 
 }

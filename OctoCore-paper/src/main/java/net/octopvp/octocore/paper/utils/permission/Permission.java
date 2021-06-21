@@ -2,6 +2,9 @@ package net.octopvp.octocore.paper.utils.permission;
 
 public enum Permission implements PermissionString {
     NOTHING(""),
+
+    ADMIN("octocore.admin"),
+
     COMMAND_NICK("octocore.command.nick"),
     COMMAND_UNNICK( "octocore.command.unnick"),
     COMMAND_NICK_OTHERS("octocore.command.nick.others"),
@@ -22,10 +25,49 @@ public enum Permission implements PermissionString {
     PING_COMMAND_OTHER("octocore.command.ping.others"),
     PUNISH_PLAYER("octocore.command.punish"),
     SETUP_2FA("octocore.command.2fa.setup"),
+    VIEW_HISTORY("octocore.command.history"),
+    FORCE_AUTH("octocore.command.forceauth"),
+    VANISH("octocore.action.vanish"),
+    TRASH("octocore.command.trash"),
 
-    TEST("test")
+    SEND_JOIN_MESSAGE("octocore.staff.message.send.join"),
+    SEND_LEAVE_MESSAGE("octocore.staff.message.send.leave"),
+    RECEIVE_JOIN_MESSAGE("octocore.staff.message.receive.join"),
+    RECEIVE_LEAVE_MESSAGE("octocore.staff.message.receive.leave"),
+    RECEIVE_SWITCH_MESSAGE("octocore.staff.message.receive.switch"),
+    SEND_SWITCH_MESSAGE("octocore.staff.message.send.switch"),
+    RECEIVE_SERVER_ONLINE_MESSAGE("octocore.staff.message.receive.server.online"),
+    RECEIVE_SERVER_OFFLINE_MESSAGE("octocore.staff.message.receive.server.offline"),
 
-    ;
+    STAFFCHAT("octocore.staff.chat"),
+    ADMINCHAT("octocore.admin.chat"),
+    ADMIN_ALERT("octocore.admin.alert"),
+    STAFF_ALERT("octocore.staff.alert"),
+
+    RECEIVE_AUDIT_WORLDEDIT("octocore.staff.audit.worldedit"),
+    RECEIVE_AUDIT_AUTH_FAIL("octocore.staff.audit.authfail"),
+
+    BYPASS_SPAM_PROT("octocore.bypass.spam"),
+
+    ENCHANT("octocore.command.enchant"),
+    GIVE("octocore.command.give"),
+
+    CREATIVE("octocore.command.gamemode.creative"),
+    SPECTATOR("octocore.command.gamemode.spectator"),
+    ADVENTURE("octocore.command.gamemode.adventure"),
+    SURVIVAL("octocore.command.gamemode.survival"),
+
+    CALL_GC("octocore.command.callgc"),
+    LOOP("octocore.command.loop"),
+
+    KABOOM("octocore.command.fun.kaboom"),
+
+    EXECUTE_ON_ALL_SERVERS("octocore.command.executeall"),
+    CONSOLE_EXECUTE("octocore.command.console"),
+
+    GIVE_TAG("octocore.command.givetag"),
+
+    TEST("test");
     private final String node;
     Permission(String node){
         this.node = node;

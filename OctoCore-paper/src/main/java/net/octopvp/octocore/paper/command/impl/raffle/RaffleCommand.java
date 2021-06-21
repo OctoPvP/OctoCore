@@ -11,7 +11,7 @@ import net.octopvp.octocore.paper.utils.permission.Permission;
 
 import java.util.List;
 
-public class RaffleCommand implements BaseCommand {
+public class RaffleCommand extends BaseCommand {
     @Command(name = "raffle",description = "Start/manage/enter a raffle",cooldown = 10,playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 1){

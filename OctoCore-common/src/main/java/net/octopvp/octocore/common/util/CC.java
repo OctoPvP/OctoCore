@@ -2,6 +2,7 @@ package net.octopvp.octocore.common.util;
 
 import net.md_5.bungee.api.ChatColor;
 
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,18 +38,24 @@ public final class CC {
     public static final String ACCENT = ChatColor.DARK_AQUA.toString();
     public static final String SPLITTER = "┃";
     public static final String SCOREBOARD_SEPARATOR = GRAY + S + "--------------------";
+    public static final String SCOREBOARD_IP_SEPARATOR = GRAY + S + "---";
     public static final String SEPARATOR = GRAY + S + "-------------------------------------";
     public static final String BULLET = "•";
     public static final String NEWLINE = "\n";
     public static final String NL = "\n";
-    public static final String ARROW = "»";
+    public static final String ARROW_RIGHT = "»";
+    public static final String ARROW_LEFT = "«";
     public static final String X = "✘";
+    public static final String CHECK = "\u2714";
 
     public static String translate(String in){
         return ChatColor.translateAlternateColorCodes('&',in);
     }
     public static List<String> translate(List<String> input) {
         return input.stream().map(CC::translate).collect(Collectors.toList());
+    }
+    public static String strip(String in){
+        return ChatColor.stripColor(in);
     }
 
     private CC() {

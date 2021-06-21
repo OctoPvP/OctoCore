@@ -5,6 +5,7 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.NickManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.objects.Disable;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
@@ -13,8 +14,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-
-public class NickCommand implements BaseCommand {
+@Disable
+public class NickCommand extends BaseCommand {
     @Command(name = "nick", description = "nick",usage = "/nick [name]",permission = Permission.COMMAND_NICK)
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 1){

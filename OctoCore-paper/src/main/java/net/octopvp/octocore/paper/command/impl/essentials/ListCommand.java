@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class ListCommand implements BaseCommand {
+public class ListCommand extends BaseCommand {
     @Command(name = "list",aliases = {"players"} ,description = "List all online players (gui)",permission = Permission.LIST_PLAYERS)
     public CommandResult execute(Sender sender, String[] args) {
         if(sender.getCommandSender() instanceof Player){
@@ -35,7 +35,7 @@ public class ListCommand implements BaseCommand {
                 sender.sendMessage(CC.SEPARATOR);
             }
             else{
-                new ListMenu().openMenu(sender.getPlayer());
+                new ListMenu().open(sender.getPlayer());
             }
         } else {
             //console

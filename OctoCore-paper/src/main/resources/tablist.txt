@@ -1,0 +1,36 @@
+ private static void sendTab(Player p, PlayerData profile){
+        long start = System.currentTimeMillis();
+        TableTabList tab = tablists.get(p.getUniqueId());
+        if(tab == null){
+            tab = OctoCore.getTab().newTableTabList(p);
+            tablists.put(p.getUniqueId(),tab);
+            //sendPing(tab);
+        }
+        tab.setHeaderFooter(header,footer);
+
+        tab.set(0,0, new TextTabItem(title_color + "Server Stats", -1,skin));
+        tab.set(0,2, new TextTabItem(value_color + "Online: 100", -1,skin));
+        tab.set(0,4, new TextTabItem(value_color + "KitPvP: 50", -1,skin));
+        tab.set(0,6, new TextTabItem(value_color + "Duels: 50", -1,skin));
+
+
+        tab.set(1,0, new TextTabItem(title_color + "You (" + p.getDisplayName() + ")", -1,skin));
+        tab.set(1,2, new TextTabItem(value_color + "Rank: " + PlayerManager.getProfile(p.getUniqueId()).getPrefix(), -1,skin));
+        tab.set(1,4, new TextTabItem(value_color + "Coins: " + profile.getCoins(), -1,skin));
+        tab.set(1,6, new TextTabItem(value_color + "XP: " + profile.getXp(), -1,skin));
+        tab.set(1,8, new TextTabItem(value_color + "Last Login: 1/1/2021", -1,skin));
+
+
+        tab.set(2,0, new TextTabItem(title_color + "Stats", -1,skin));
+        tab.set(2,2, new TextTabItem(value_color + "Kills: 1000", -1,skin));
+        tab.set(2,4, new TextTabItem(value_color + "Deaths: 0", -1,skin));
+        tab.set(2,6, new TextTabItem(value_color + "Duels Won: 1000", -1,skin));
+        tab.set(2,6, new TextTabItem(value_color + "Duels Lost: 0", -1,skin));
+        tab.set(2,8, new TextTabItem(value_color + "KDR: 1000:0", -1,skin));
+
+
+        tab.set(3,0, new TextTabItem(title_color + "Misc", -1,skin));
+        tab.set(3,2, new TextTabItem(value_color + "Client: " + (LunarClientAPI.getInstance().isRunningLunarClient(p) ? "Lunar Client" : "Other"), -1,skin));
+        tab.set(3,4, new TextTabItem(value_color + "Ping: " + (Bukkit.getPlayer(profile.getUuid()).getPing()), -1,skin));
+
+    }

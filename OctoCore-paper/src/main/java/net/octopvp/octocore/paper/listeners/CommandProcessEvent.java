@@ -1,9 +1,8 @@
 package net.octopvp.octocore.paper.listeners;
 
-import com.google.gson.JsonObject;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.objects.AuditLogEntry;
-import net.octopvp.octocore.paper.objects.AuditLogType;
+import net.octopvp.octocore.paper.objects.enums.AuditLogType;
 import net.octopvp.octocore.paper.utils.permission.Permission;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +19,7 @@ public class CommandProcessEvent implements Listener {
             entries.put("Command",event.getMessage());
             //TODO entries.put("Blocks Affected","Unknown");
             AuditLogEntry entry = new AuditLogEntry(entries,AuditLogType.WORLDEDIT_ACTION);
-            OctoCore.getInstance().getSetupManager().getJdaManager().sendAuditLogMsg(entry);
+            OctoCore.getInstance().getJdaManager().sendAuditLogMsg(entry);
         }
     }
 }

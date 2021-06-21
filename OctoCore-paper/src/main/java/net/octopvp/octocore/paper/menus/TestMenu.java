@@ -1,28 +1,26 @@
 package net.octopvp.octocore.paper.menus;
 
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.utils.menu.Button;
-import net.octopvp.octocore.paper.utils.menu.pagination.PaginatedMenu;
+import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
+import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class TestMenu extends PaginatedMenu {
+
     @Override
-    public String getPrePaginatedTitle(Player player) {
+    public String getPagesTitle(Player player) {
         return CC.GREEN + "Test";
     }
 
     @Override
-    public Map<Integer, Button> getAllPagesButtons(Player player) {
-        HashMap<Integer,Button> buttons = new HashMap<>();
-        return buttons;
+    public List<Button> getPaginatedButtons(Player player) {
+        return null;
     }
 
     @Override
-    public int getMaxItemsPerPage(Player player) {
-        //FIXME fix small menus
-        return 16;
+    public List<Button> getEveryMenuSlots(Player player) {
+        return null;
     }
 }

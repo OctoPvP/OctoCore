@@ -1,5 +1,6 @@
 package net.octopvp.octocore.paper.utils.msg;
 
+import net.octopvp.octocore.paper.manager.impl.PlaceholderManager;
 import net.octopvp.octocore.paper.utils.Sender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

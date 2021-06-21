@@ -10,6 +10,8 @@ import net.octopvp.octocore.paper.database.redis.object.JedisSettings;
 import net.octopvp.octocore.paper.database.redis.payload.GlobalSubscription;
 import net.octopvp.octocore.paper.database.redis.publisher.JedisPublisher;
 import net.octopvp.octocore.paper.database.redis.subscriber.JedisSubscriber;
+import net.octopvp.octocore.paper.utils.Logger;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -26,8 +28,14 @@ public class RedisData {
     private JedisSubscriber subscriber;
     private boolean connected = true;
     private GlobalSubscription globalSuscription;
+    private static RedisData instance = null;
 
     public RedisData(JedisSettings settings) {
+        Logger.debug("new RedisData Instance");
+        if (!(instance == null)){
+            throw new IllegalStateException("RedisData is not null!");
+        }
+        instance = this;
         this.globalSuscription = new GlobalSubscription();
 
         try {
@@ -38,8 +46,10 @@ public class RedisData {
                 if (this.settings.hasPassword()) {
                     jedis.auth(this.settings.getPassword());
                 }
+                Logger.debug("Registering Publisher & Subscriber");
                 this.publisher = new JedisPublisher(this.settings);
-                this.subscriber = new JedisSubscriber(JedisChannels.OCTOCORE.getChannel(), this.settings, new GlobalSubscription());
+                this.subscriber = new JedisSubscriber(JedisChannels.OCTOCORE.getChannel(), this.settings, globalSuscription);
+                //this.subscriber = new JedisSubscriber(JedisChannels.OCTOCORE.getChannel(), this.settings, new GlobalSubscription());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -64,7 +74,7 @@ public class RedisData {
         JsonObject object = new JsonObject();
         object.addProperty("payload", payload.name());
         object.add("data", data == null ? new JsonObject() : data);
-        this.publisher.write("aquacore", object);
+        this.publisher.write(JedisChannels.OCTOCORE.getChannel(), object);
     }
 
     public void sendChannelToBungee(String object) {
@@ -76,6 +86,6 @@ public class RedisData {
         } catch (IOException e) {
 
         }
-        Bukkit.getServer().sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.SPIGOT_TO_BUNGEE, b.toByteArray());
+        Bukkit.getServer().sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.PLUGIN_MSG, b.toByteArray());
     }
 }

@@ -7,11 +7,13 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
 import net.octopvp.octocore.waterfall.listeners.KickEvent;
+import net.octopvp.octocore.waterfall.listeners.PingEvent;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 public final class OctoCoreWaterfall extends Plugin {
     @Getter
@@ -47,6 +49,10 @@ public final class OctoCoreWaterfall extends Plugin {
 
         getProxy().getPluginManager().registerCommand(this,new LobbyCommand());
         getProxy().getPluginManager().registerListener(this,new KickEvent());
+        System.out.println(Arrays.toString(config.getList("motd").toArray()));
+        System.out.println(config.getBoolean("protocol.enabled"));
+        System.out.println(config.getString("protocol.version"));
+        getProxy().getPluginManager().registerListener(this,new PingEvent());
     }
     public Configuration getConfig(){
         return config;

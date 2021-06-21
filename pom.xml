@@ -62,12 +62,6 @@
     <!-- Project-wide dependencies -->
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.5</version>
@@ -114,6 +108,11 @@
             <groupId>net.badbird5907</groupId>
             <artifactId>JDACommand</artifactId>
             <version>1.1-REL</version>
+        </dependency>
+        <dependency>
+            <groupId>club.minnced</groupId>
+            <artifactId>discord-webhooks</artifactId>
+            <version>0.5.7</version>
         </dependency>
         <!--
         <dependency>

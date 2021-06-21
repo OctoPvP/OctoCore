@@ -2,6 +2,6 @@ package net.octopvp.octocore.paper.utils.callback;
 
 public interface ReturnableTypeCallback<T> {
 
-	T call();
+	void call(T type);
 
 }

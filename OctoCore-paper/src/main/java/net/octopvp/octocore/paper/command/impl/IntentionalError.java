@@ -9,7 +9,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 
 import java.util.List;
 
-public class IntentionalError implements BaseCommand {
+public class IntentionalError extends BaseCommand {
     @Command(name = "error",description = "throws a intentional error to test hastebin stuff")
     public CommandResult execute(Sender sender, String[] args) {
         try{

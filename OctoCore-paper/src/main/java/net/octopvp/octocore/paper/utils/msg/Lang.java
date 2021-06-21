@@ -24,13 +24,29 @@ public enum Lang {
     COMMAND_COOLDOWN(CC.RED + "You can't execute this command for another " + CC.GOLD + "%1 " + CC.RED + "seconds."),
     COMMAND_SEEN_NOT_ONLINE(CC.SEPARATOR + CC.NL + CC.NL +  CC.AQUA + "%1 was last seen on" + CC.NL + CC.AQUA + "%2" + CC.NL + CC.NL + CC.SEPARATOR),
     EXECUTING_REQUESTED_COMMAND(CC.AQUA + "Executing command /%1 requested by &2"),
-    STAFF_CHAT_FORMAT(CC.GOLD + CC.B + "StaffChat " + CC.D_GRAY + CC.ARROW + CC.GRAY + " %1 " + CC.GRAY + "(%2)" + CC.WHITE + ": %3"),
+
+    STAFF_CHAT_FORMAT(CC.GOLD + CC.B + "StaffChat " + CC.D_GRAY + CC.ARROW_RIGHT + CC.GRAY + " %1 " + CC.GRAY + "(%2)" + CC.WHITE + ": %3"),
     //StaffChat » [Owner] Badbird5907 (hub1): asdf
-    ADMIN_CHAT_FORMAT(CC.RED + CC.B + "AdminChat " + CC.D_GRAY + CC.ARROW + CC.GRAY + " %1 " + CC.GRAY + "(%2)" + CC.WHITE + ": %3"),
-    ADMIN_ALERTS(CC.RED + CC.B + "Admin " + CC.GRAY + CC.ARROW + CC.WHITE + " %1"),
-    STAFF_ALERTS(CC.GOLD + CC.B + "Staff " + CC.GRAY + CC.ARROW + CC.WHITE + " %1"),
-    PDATA_NOT_LOADING(CC.RED + "Your playerdata hasn't loaded yet (if you recently joined)! " +
-            "this shouldn't be happening, please try relogging! if the problem persists, please open a bug report!"),
+    ADMIN_CHAT_FORMAT(CC.RED + CC.B + "AdminChat " + CC.D_GRAY + CC.ARROW_RIGHT + CC.GRAY + " %1 " + CC.GRAY + "(%2)" + CC.WHITE + ": %3"),
+    DISCORD_STAFF_CHAT_FORMAT(CC.GOLD + CC.B + "DiscordSC " + CC.D_GRAY + CC.ARROW_RIGHT + CC.GRAY + " %1 " + CC.WHITE + ": %2" ),
+    DISCORD_ADMIN_CHAT_FORMAT(CC.RED + CC.B + "DiscordAC " + CC.D_GRAY + CC.ARROW_RIGHT + CC.GRAY + " %1 " + CC.WHITE + ": %2" ),
+    ADMIN_ALERTS(CC.RED + CC.B + "Admin " + CC.GRAY + CC.ARROW_RIGHT + CC.WHITE + " %1"),
+    STAFF_ALERTS(CC.GOLD + CC.B + "Staff " + CC.GRAY + CC.ARROW_RIGHT + CC.WHITE + " %1"),
+    STAFF_JOIN_ALERT_FORMAT(CC.GREEN + "%1 joined the network to %2"),
+    STAFF_LEAVE_ALERT_FORMAT(CC.RED + "%1 disconnected from %2"),
+    STAFF_SWITCH_ALERT_FORMAT(CC.YELLOW + "%1 switched from %2 to %3"),
+    STAFF_CHAT_DISABLED(STAFF_ALERTS.getMsg(CC.GOLD + "StaffChat " + CC.RED + "disabled")),
+    ADMIN_CHAT_DISABLED(ADMIN_ALERTS.getMsg(CC.GOLD + "AdminChat " + CC.RED + "disabled")),
+    STAFF_CHAT_ENABLED(STAFF_ALERTS.getMsg(CC.GOLD + "StaffChat " + CC.GREEN + "enabled")),
+    ADMIN_CHAT_ENABLED(ADMIN_ALERTS.getMsg(CC.GOLD + "AdminChat " + CC.GREEN + "enabled")),
+    ADMIN_ALERT_GLOBAL_EXECUTE(CC.AQUA + "Global command execute requested by %1 | Command: " + CC.GREEN + " %2"),
+
+    SERVER_ONLINE_FORMAT(CC.GREEN + "Server %1 is now online."),
+    SERVER_OFFLINE_FORMAT(CC.RED + "Server %1 is now offline."),
+
+    AUDIT_WORLDEDIT_FORMAT(CC.AQUA + ""),
+
+    PDATA_DID_NOT_LOAD(CC.RED + "Your playerdata did not load! Please try relogging!"),
     NO_RAFFLE_RUNNING(CC.RED + "There is no raffle running currently!"),
     RAFFLE_ALREADY_RUNNING(CC.RED + "There is already a raffle running!"),
     ALREADY_IN_RAFFLE(CC.RED + "You are already in this raffle!"),
@@ -50,7 +66,24 @@ public enum Lang {
     AUTH_SUCCESS(CC.GREEN + "Successfully Authenticated!"),
     AUTH_NO_NEED_JOIN_SAME_IP(CC.GREEN + "You joined on the same IP as your last authenticated ip so you don't need to authenticate!"),
     PLEASE_AUTH(CC.RED + "This account has 2fa enabled. Please do " + CC.GREEN + "/2fa <code>" + CC.RED +" or log out and ask for assistance from your staff manager."),
-    AUTH_SETUP_SUCCESS(CC.GREEN + "2fa successfully setup!")
+    AUTH_SETUP_SUCCESS(CC.GREEN + "2fa successfully setup!"),
+    AUTH_SETUP_WAITING(AUTH_WAITING.msg + "\n" + CC.GREEN + "Type \"to cancel the setup process.\""),
+    AUTH_SETUP_ABORTED(CC.RED + "Auth setup aborted."),
+    AUTH_SETUP_INCORRECT(CC.RED + "That code was incorrect! Please try again!"),
+
+    ARE_YOU_SURE(CC.RED + "Are you sure you want to %1"),
+    CONFIRM_CONVERSATION_UNKNOWN_RESPONSE(CC.RED + "Unknown response! Please type in \"yes\" or \"no\""),
+
+    KABOOM(CC.YELLOW + CC.B + "KABOOM!"),
+
+    GAMEMODE(CC.GREEN + "Set your gamemode to: " + CC.AQUA + "%1"),
+
+    BROADCAST_RESPONSE(CC.GREEN + "Successfully broadcast to " + CC.AQUA + "%1" + CC.GREEN + " players over " + CC.AQUA + "%2" + CC.GREEN + " servers."),
+
+    FEATURE_NOT_IMPLEMENTED(CC.RED + "This feature is not implemented currently!"),
+
+    TAG_GIVE_SUCCESS(CC.GREEN + "Successfully gave %1 tag %2."),
+    TAG_REMOVE_SUCCESS(CC.GREEN + "Successfully removed tag %1 from %2.")
     ;
     private final String msg;
     Lang(String msg){
@@ -65,5 +98,10 @@ public enum Lang {
             a.add(placeholder + "");
         }
         return CC.translate(StringUtils.replacePlaceholders(msg, a.toArray(new String[0])));
+    }
+
+    @Override
+    public String toString() {
+        return getMsg();
     }
 }

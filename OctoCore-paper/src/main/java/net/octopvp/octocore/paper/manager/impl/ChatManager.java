@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class ChatManager implements Manager {
+public class ChatManager extends Manager {
     //TODO emojis (perm for each emoji)
     private static HashMap<String,String> emojis = new HashMap<>();
     static {
@@ -20,7 +20,7 @@ public class ChatManager implements Manager {
     public void init(OctoCore plugin) {}
 
     @Override
-    public void disable(OctoCore plugin) {
+    public void disable() {
 
     }
     public static void sendMessage(Player p){
@@ -31,7 +31,7 @@ public class ChatManager implements Manager {
         if(profile == null)
             return null;
         if(translateColor)
-            return profile.getCurrentPrefix() + " " + profile.getMainColor() + displayname + CC.R + ": " + ChatColor.translateAlternateColorCodes('&',message);
-        else return profile.getCurrentPrefix() + " " + profile.getMainColor() + displayname + CC.R + ": " + message;
+            return profile.getFormattedName(true) + CC.WHITE + ": " + CC.translate(message);
+        else return profile.getFormattedName(true) + CC.WHITE + ": " + message;
     }
 }

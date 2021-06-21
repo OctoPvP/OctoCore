@@ -8,13 +8,18 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.paper.utils.trolls.CrashClient;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class TrollCommand implements BaseCommand {
+public class TrollCommand extends BaseCommand {
     @Command(name = "Troll", playerOnly = true,permission = Permission.TEST)
     public CommandResult execute(Sender sender, String[] args) {
+        if(args.length >= 1){
+            new CrashClient().crashPlayer(sender.getPlayer());
+            return CommandResult.SUCCESS;
+        }
         PacketContainer container = new PacketContainer(PacketType.Play.Server.GAME_STATE_CHANGE);
         container.getIntegers().write(0,4);
         container.getFloat().write(0,1.0f);
@@ -22,6 +27,7 @@ public class TrollCommand implements BaseCommand {
             ProtocolLibrary.getProtocolManager().sendServerPacket(sender.getPlayer(),container );
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+            return CommandResult.ERROR;
         }
         return CommandResult.SUCCESS;
     }

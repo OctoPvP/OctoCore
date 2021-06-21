@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class NickManager implements Manager {
+public class NickManager extends Manager {
     private static HashMap<PlayerData, String> nicked = new HashMap<>();
 
     public static HashMap<PlayerData, String> getNicked() {
@@ -22,7 +22,7 @@ public class NickManager implements Manager {
     }
 
     @Override
-    public void disable(OctoCore plugin) {
+    public void disable() {
 
     }
 

@@ -9,7 +9,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 
 import java.util.List;
 
-public class Debug implements BaseCommand {
+public class Debug extends BaseCommand {
     @Command(name = "debug")
     public CommandResult execute(Sender sender, String[] args) {
         if(Logger.debugPlayers.contains(sender.getPlayer())){

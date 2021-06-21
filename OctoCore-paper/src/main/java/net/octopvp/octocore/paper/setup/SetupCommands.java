@@ -1,19 +1,12 @@
 package net.octopvp.octocore.paper.setup;
 
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.CommandFramework;
-import net.octopvp.octocore.paper.command.impl.GetUUID;
-import net.octopvp.octocore.paper.command.impl.IntentionalError;
-import net.octopvp.octocore.paper.command.impl.TestCommand;
-import net.octopvp.octocore.paper.command.impl.essentials.ListCommand;
-import net.octopvp.octocore.paper.command.impl.essentials.PingCommand;
-import net.octopvp.octocore.paper.command.impl.raffle.RaffleCommand;
-import net.octopvp.octocore.paper.command.impl.staff.NickCommand;
-import net.octopvp.octocore.paper.command.impl.staff.UnNickCommand;
-import net.octopvp.octocore.paper.command.impl.staff.troll.TrollCommand;
-import net.octopvp.octocore.paper.command.impl.utils.Debug;
-import net.octopvp.octocore.paper.command.impl.utils.SysInfo;
+import net.octopvp.octocore.paper.utils.ReflectionUtils;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class SetupCommands implements Setup{
@@ -21,6 +14,7 @@ public class SetupCommands implements Setup{
     public void setup(OctoCore plugin) {
         CommandFramework cmd = OctoCore.getCommandFramework();
 
+        /*
         commands.add(new TestCommand());
         commands.add(new NickCommand());
         commands.add(new UnNickCommand());
@@ -32,11 +26,22 @@ public class SetupCommands implements Setup{
         commands.add(new RaffleCommand());
         commands.add(new ListCommand());
         commands.add(new PingCommand());
-
-        //ClassUtils.getClassesInPackage(OctoCorePaper.getInstance(),"net.octopvp.octocore.paper.command.impl").forEach(cmd::registerCommands);
         commands.forEach(cmd::registerCommands);
-        //CommandManager.registerCommand("test", new TestCommand("test", true));
-        //setupExecutor(plugin);
+        CommandManager.registerCommand("test", new TestCommand("test", true));
+        setupExecutor(plugin);
+         */
+
+        ReflectionUtils.getClassesInPackage(OctoCore.getInstance(),"net.octopvp.octocore.paper.command.impl").forEach(clazz ->{
+            if(BaseCommand.class.isAssignableFrom(clazz) && clazz.getSuperclass() == BaseCommand.class){
+                try {
+                    Constructor constructor = clazz.getDeclaredConstructor();
+                    constructor.newInstance();
+                } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                cmd.registerCommands(clazz);
+            }
+        });
     }
 
     @Override

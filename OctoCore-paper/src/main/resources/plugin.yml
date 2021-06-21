@@ -9,5 +9,6 @@ depend:
   - LuckPerms
   - ProtocolLib
   - LunarClient-API
+  - Citizens
 softdepend:
   - Vault

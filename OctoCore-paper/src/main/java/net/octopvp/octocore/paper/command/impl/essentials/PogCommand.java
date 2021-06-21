@@ -8,15 +8,10 @@ import net.octopvp.octocore.paper.utils.Sender;
 
 import java.util.List;
 
-public class PogCommand implements BaseCommand {
+public class PogCommand extends BaseCommand {
     @Command(name = "pog",aliases = {"poggers"},cooldown = 6969420)
     public CommandResult execute(Sender sender, String[] args) {
         sender.sendMessage(CC.GREEN + "POGGERS");
         return CommandResult.SUCCESS;
-    }
-
-    @Override
-    public List<String> tabComplete(Sender sender, String[] args) {
-        return null;
     }
 }

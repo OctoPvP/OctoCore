@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FilterManager implements Manager {
+public class FilterManager extends Manager {
     private static HashMap<String,Boolean> blacklist = new HashMap();
 
     public static HashMap<String, Boolean> getBlacklist() {
@@ -32,14 +32,10 @@ public class FilterManager implements Manager {
             throwables.printStackTrace();
             Logger.warn("Unable to load blacklisted words from database!");
         }
-        Logger.debug("Blacklist words: " );
-        for (String s : blacklist.keySet()) {
-            Logger.debug(" - " + s);
-        }
     }
 
     @Override
-    public void disable(OctoCore plugin) {
+    public void disable() {
 
     }
 
@@ -47,9 +43,7 @@ public class FilterManager implements Manager {
         String message = message1;
         String final_message = message;
         for (String blacklist : FilterManager.getBlacklist().keySet()) {
-            Logger.debug("Checking for: " + blacklist);
             if(message.toLowerCase().contains(blacklist.toLowerCase())){
-                Logger.debug("Message contains " + blacklist);
                 if(getBlacklist().get(blacklist))
                     alertMods(player,message);
 

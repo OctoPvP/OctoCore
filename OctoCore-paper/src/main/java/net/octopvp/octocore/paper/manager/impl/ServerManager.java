@@ -1,5 +1,6 @@
 package net.octopvp.octocore.paper.manager.impl;
 
+import io.netty.util.internal.ConcurrentSet;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.paper.OctoCore;
@@ -8,14 +9,13 @@ import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.ServerData;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
-public class ServerManager implements Manager {
-    private Set<ServerData> connectedServers = new HashSet<>();
+public class ServerManager extends Manager {
+    private Set<ServerData> connectedServers = new ConcurrentSet<>();
 
     public ServerData createServerData(String name) {
         if (getServerData(name) != null) return null;
@@ -66,7 +66,7 @@ public class ServerManager implements Manager {
     }
 
     @Override
-    public void disable(OctoCore plugin) {
+    public void disable() {
 
     }
 }

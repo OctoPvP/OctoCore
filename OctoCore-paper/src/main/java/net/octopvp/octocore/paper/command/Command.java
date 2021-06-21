@@ -20,7 +20,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @PermissionAnnotation
 public @interface Command {
-
 	/**
 	 * The name of the command. If it is a sub command then its values would be
 	 * separated by periods. ie. a command that would be a subcommand of test
@@ -28,58 +27,47 @@ public @interface Command {
 	 * 
 	 * @return
 	 */
-	public String name();
-
-	/**
-	 * Gets the required permission of the command
-	 * 
-	 * @return
-	 */
-	//public String permission() default "";
-
+	String name();
 	/**
 	 * Gets the required permission of the command
 	 *
 	 * @return
 	 */
-	public Permission permission() default Permission.NOTHING;
+	Permission permission() default Permission.NOTHING;
 	/**
 	 * Permissions string
 	 * @return
 	 */
-	public String strPermission() default "";
+	String strPermission() default "";
 	/**
 	 * A list of alternate names that the command is executed under. See
 	 * name() for details on how names work
 	 * 
 	 * @return
 	 */
-	public String[] aliases() default {};
-
+	String[] aliases() default {};
 	/**
 	 * The description that will appear in /help of the command
 	 * 
 	 * @return
 	 */
-	public String description() default "";
-
+	String description() default "";
 	/**
 	 * The usage that will appear in /help (commandname)
 	 * 
 	 * @return
 	 */
-	public String usage() default "";
-	
+	String usage() default "";
 	/**
 	 * Whether or not the command is available to players only
 	 * 
 	 * @return
 	 */
-	public boolean playerOnly() default false;
-
+	boolean playerOnly() default false;
 	/**
 	 * The cooldown in seconds
 	 * @return
 	 */
 	int cooldown() default 0;
+	boolean disable() default false;
 }

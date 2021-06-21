@@ -1,11 +1,9 @@
 package net.octopvp.octocore.paper.manager.impl;
 
-import com.lunarclient.bukkitapi.LunarClientAPI;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.tab.item.TextTabItem;
 import net.octopvp.octocore.paper.utils.tab.tablist.TableTabList;
 import net.octopvp.octocore.paper.utils.tab.util.Skin;
@@ -16,11 +14,12 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class TabManager implements Manager {
+public class TabManager extends Manager {
     private static String value_color = CC.B + CC.GRAY;
     private static String title_color = CC.B + CC.AQUA;
-    private static Skin skin = Skins.getDot(ChatColor.GRAY);
+    //private static Skin skin = Skins.getDot(ChatColor.GRAY);
     private static String header = "";
     private static String footer = "";
     private static HashMap<UUID, TableTabList> tablists = new HashMap<>();
@@ -34,7 +33,6 @@ public class TabManager implements Manager {
                     for (UUID uuid : PlayerManager.getPlayerProfiles().keySet()){
                         PlayerData profile = PlayerManager.getPlayerProfiles().get(uuid);
                         Player player = Bukkit.getPlayer(profile.getUuid());
-                        Logger.debug("Sending tab");
                         sendTab(player,profile);
                     }
                 }
@@ -43,45 +41,32 @@ public class TabManager implements Manager {
     }
 
     @Override
-    public void disable(OctoCore plugin) {
+    public void disable() {
 
     }
 
-    private static void sendTab(Player p, PlayerData profile){
+    private static void sendTab(Player p, PlayerData p1){
         long start = System.currentTimeMillis();
         TableTabList tab = tablists.get(p.getUniqueId());
         if(tab == null){
             tab = OctoCore.getTab().newTableTabList(p);
             tablists.put(p.getUniqueId(),tab);
-            sendPing(tab);
+            //sendPing(tab);
         }
         tab.setHeaderFooter(header,footer);
+        AtomicInteger collum = new AtomicInteger(-1);
+        AtomicInteger row = new AtomicInteger(-1);
+        TableTabList finalTab = tab;
+        PlayerManager.getPlayerProfiles().forEach((uuid, data) -> {
+            row.getAndIncrement();
+            if (row.get() >= 9){
+                row.set(0);
+                collum.getAndIncrement();
+            }
+            Player player = Bukkit.getPlayer(uuid);
+            finalTab.set(collum.get(),row.get(), new TextTabItem(data.getCurrentColor() + player.getDisplayName(),player.getPing(),Skins.getPlayer(data.getMainSkinUUID())));
+        });
 
-        tab.set(0,0, new TextTabItem(title_color + "Server Stats", -1,skin));
-        tab.set(0,2, new TextTabItem(value_color + "Online: 100", -1,skin));
-        tab.set(0,4, new TextTabItem(value_color + "KitPvP: 50", -1,skin));
-        tab.set(0,6, new TextTabItem(value_color + "Duels: 50", -1,skin));
-
-
-        tab.set(1,0, new TextTabItem(title_color + "You (" + p.getDisplayName() + ")", -1,skin));
-        tab.set(1,2, new TextTabItem(value_color + "Rank: " + PlayerManager.getProfile(p.getUniqueId()).getPrefix(), -1,skin));
-        tab.set(1,4, new TextTabItem(value_color + "Coins: " + profile.getCoins(), -1,skin));
-        tab.set(1,6, new TextTabItem(value_color + "XP: " + profile.getXp(), -1,skin));
-        tab.set(1,8, new TextTabItem(value_color + "Last Login: 1/1/2021", -1,skin));
-
-
-        tab.set(2,0, new TextTabItem(title_color + "Stats", -1,skin));
-        tab.set(2,2, new TextTabItem(value_color + "Kills: 1000", -1,skin));
-        tab.set(2,4, new TextTabItem(value_color + "Deaths: 0", -1,skin));
-        tab.set(2,6, new TextTabItem(value_color + "Duels Won: 1000", -1,skin));
-        tab.set(2,6, new TextTabItem(value_color + "Duels Lost: 0", -1,skin));
-        tab.set(2,8, new TextTabItem(value_color + "KDR: 1000:0", -1,skin));
-
-
-        tab.set(3,0, new TextTabItem(title_color + "Misc", -1,skin));
-        tab.set(3,2, new TextTabItem(value_color + "Client: " + (LunarClientAPI.getInstance().isRunningLunarClient(p) ? "Lunar Client" : "Other"), -1,skin));
-        tab.set(3,4, new TextTabItem(value_color + "Ping: " + (Bukkit.getPlayer(profile.getUuid()).getPing()), -1,skin));
-        Logger.debug("Sending tab took " +  (System.currentTimeMillis() - start) + " ms.");
     }
     private static void sendPing(TableTabList tab){
         int i = 0;
@@ -107,6 +92,10 @@ public class TabManager implements Manager {
             if(PlayerManager.getPlayerProfiles().containsKey(p.getUniqueId()))
                 sendTab(p, PlayerManager.getProfile(p.getUniqueId()));
         }
+        /*
+        if(OctoCore.getInstance().getConfig().getBoolean("health-display"))
+            p.setScoreboard(SetupOther.getScoreboard());
+         */
     }
     public static void onLeave(Player p) {
         if (OctoCore.getInstance().getConfig().getBoolean("default-tab")) {

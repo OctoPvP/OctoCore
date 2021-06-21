@@ -9,9 +9,21 @@ import net.octopvp.octocore.common.RNG;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SendToRandomLobby {
     public static void sendToRandomLobby(ProxiedPlayer player){
+        ServerInfo serverInfo = getRandomlobby();
+        if (serverInfo == null){
+            player.sendMessage(ChatColor.RED + "Could not find a lobby to warp you to! Please try again later!");
+            return;
+        }
+        if(player.getServer().getInfo() == serverInfo)
+            player.sendMessage(new TextComponent(ChatColor.RED + "You are already connected to " + serverInfo.getName() + "! Please relog if this keeps on happening"));
+        else player.connect(serverInfo);
+    }
+    public static ServerInfo getRandomlobby(){
+        AtomicReference<ServerInfo> returnServer = new AtomicReference<>();
         HashMap<String, ServerInfo> hubServers = new HashMap<>();
         ProxyServer.getInstance().getServersCopy().forEach((k,v)->{
             if(StringUtils.containsIgnoreCase(k,"hub"))
@@ -19,8 +31,20 @@ public class SendToRandomLobby {
         });
         int server = RNG.getRandomInt(1,hubServers.size());
         ServerInfo serverInfo = (ServerInfo) hubServers.values().toArray()[server];
-        if(player.getServer().getInfo() == serverInfo)
-            player.sendMessage(new TextComponent(ChatColor.RED + "You are already connected to " + serverInfo.getName() + "! Please relog if this keeps on happening"));
-        else player.connect(serverInfo);
+        //try again if server is offline
+        serverInfo.ping(((result, error) -> {
+            if (error != null) {
+                hubServers.remove(serverInfo.getName());
+                int server1 = RNG.getRandomInt(1,hubServers.size());
+                ServerInfo serverInfo1 = (ServerInfo) hubServers.values().toArray()[server1];
+                serverInfo1.ping((result1,error1)->{
+                    if (error1 != null)
+                        returnServer.set(null);
+                    else returnServer.set(serverInfo1);
+                });
+            }
+            else returnServer.set(serverInfo);
+        }));
+        return returnServer.get();
     }
 }

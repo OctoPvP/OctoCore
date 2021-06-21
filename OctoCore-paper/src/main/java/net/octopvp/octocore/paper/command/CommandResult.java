@@ -1,16 +1,19 @@
 package net.octopvp.octocore.paper.command;
 
+import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.permission.PermissionString;
 
-public enum CommandResult implements PermissionString {
+public enum CommandResult {
     SUCCESS(""),
     ERROR(CC.RED + "There was an error while processing that command!"),
     INVALID_ARGS(CC.RED + "Invalid Arguments!"),
     PLAYER_NOT_FOUND(CC.RED + "That player can't be found!"),
     INVALID_PLAYER(PLAYER_NOT_FOUND.getMsg()),
+    ERROR_FETCHING_FROM_MOJANG(CC.RED + "Could not find that player from the Mojang API!"),
     OTHER(""),
+    MOJANG_ERROR(CC.RED + "Could not contact the Mojang API! Please Try Again Later."),
     PLAYER_ONLY(Lang.PLAYER_ONLY.getMsg()),
     NO_PERMS(Lang.NO_PERMISSION.getMsg());
     private String msg;
@@ -18,12 +21,7 @@ public enum CommandResult implements PermissionString {
         this.msg = s;
     }
 
-    @Override
-    public String getNode() {
-        return msg;
-    }
-
-    public String getMsg() {
-        return this.msg;
+    public String getMsg(String... str) {
+        return StringUtils.replacePlaceholders(msg,str);
     }
 }

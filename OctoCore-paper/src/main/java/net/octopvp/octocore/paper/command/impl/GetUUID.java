@@ -7,7 +7,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 
 import java.util.List;
 
-public class GetUUID implements BaseCommand {
+public class GetUUID extends BaseCommand {
     @Command(name = "getuuid")
     public CommandResult execute(Sender sender, String[] args) {
         sender.sendMessage(sender.getPlayer().getUniqueId().toString());

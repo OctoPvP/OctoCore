@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class PingCommand implements BaseCommand {
+public class PingCommand extends BaseCommand {
     @Command(name = "ping",description = "pong!")
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 1){

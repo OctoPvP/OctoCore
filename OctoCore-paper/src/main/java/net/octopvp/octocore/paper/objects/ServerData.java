@@ -20,5 +20,6 @@ public class ServerData {
     private List<GlobalPlayer> onlinePlayers = new ArrayList<>();
     private List<String> names = new ArrayList<>();
     private double[] recentTps = new double[]{20.0, 20.0, 20.0};
+    boolean safelyStopped;
 
 }

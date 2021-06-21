@@ -8,6 +8,7 @@ public class Tasks {
     public static void run( Runnable callable) {
         Bukkit.getScheduler().runTask(OctoCore.getInstance(), callable);
     }
+    public static void runSync(Runnable callable){run(callable);}
 
     public static void runAsync( Runnable callable) {
         Bukkit.getScheduler().runTaskAsynchronously(OctoCore.getInstance(), callable);

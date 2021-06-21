@@ -49,7 +49,7 @@ public class RaffleEvent implements Event {
             Bukkit.getPlayer(uuid).sendMessage(Lang.ALREADY_IN_RAFFLE.getMsg());
         else{
             if(PlayerManager.getProfile(uuid) == null){
-                Bukkit.getPlayer(uuid).sendMessage(Lang.PDATA_NOT_LOADING.getMsg());
+                Bukkit.getPlayer(uuid).sendMessage(Lang.PDATA_DID_NOT_LOAD.getMsg());
                 return ActionResult.ERROR;
             }
             else rafflePlayers.add(uuid);

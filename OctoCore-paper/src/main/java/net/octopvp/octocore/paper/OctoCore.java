@@ -1,5 +1,7 @@
 package net.octopvp.octocore.paper;
 
+import com.comphenix.protocol.ProtocolLib;
+import com.comphenix.protocol.ProtocolLibrary;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,20 +9,24 @@ import net.milkbowl.vault.chat.Chat;
 import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.database.ConnectionPoolManager;
 import net.octopvp.octocore.common.object.ServerType;
-import net.octopvp.octocore.paper.utils.errorhandling.ErrorData;
-import net.octopvp.octocore.paper.utils.errorhandling.ErrorHandling;
+import net.octopvp.octocore.common.object.Settings;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.CommandFramework;
 import net.octopvp.octocore.paper.database.DatabaseHelper;
 import net.octopvp.octocore.paper.database.redis.RedisData;
-import net.octopvp.octocore.paper.manager.impl.ServerManager;
+import net.octopvp.octocore.paper.manager.impl.*;
 import net.octopvp.octocore.paper.objects.BlackListedCommand;
 import net.octopvp.octocore.paper.setup.*;
 import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.paper.utils.PacketUtil;
+import net.octopvp.octocore.paper.utils.errorhandling.ErrorData;
+import net.octopvp.octocore.paper.utils.errorhandling.ErrorHandling;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +44,13 @@ public final class OctoCore extends JavaPlugin {
     private static OctoCore instance;
     private static CommandFramework commandFramework;
     private static Location spawn;
+
+    @Getter
+    private static Settings settings = new Settings();
+
+    @Getter
+    private ConversationFactory conversationFactory = new ConversationFactory(this);
+
     @Getter
     private static String serverName;
     @Getter
@@ -53,53 +66,73 @@ public final class OctoCore extends JavaPlugin {
     private static ServerType serverType;
     private static SetupModules setupModules = new SetupModules();
     @Getter
-    // https://stackoverflow.com/a/44800004/11588583
-    private static Gson gson = new Gson();
-
+    private static Gson gson = new Gson();    // https://stackoverflow.com/a/44800004/11588583
     private static Tab tab;
-
     //Setup Start
     @Getter
     SetupManager setupManager = new SetupManager();
-
     public static Chat getChat() {
         return OctoCore.chat;
     }
-
     public static ConnectionPoolManager getConnectionPoolManager() {
         return OctoCore.connectionPoolManager;
     }
-
     public static Connection getConnection() {
         return OctoCore.connection;
     }
-
     public static OctoCore getInstance() {
         return OctoCore.instance;
     }
-
     public static CommandFramework getCommandFramework() {
         return OctoCore.commandFramework;
     }
-
     public static Location getSpawn() {
         return OctoCore.spawn;
     }
-
     public static Tab getTab() {
         return OctoCore.tab;
     }
-
     public static void setSpawn(Location spawn) {
         OctoCore.spawn = spawn;
     }
-
     //Setup End
 
+    //they init from up to down
+    @Getter
+    private AuthManager authManager;
+    @Getter
+    private FilterManager filterManager;
+    @Getter
+    private NickManager nickManager;
+    @Getter
+    private LuckpermsManager luckpermsManager;
+    @Getter
+    private PlayerManager playerManager;
+    @Getter
+    private DatabaseManager databaseManager;
+    @Getter
+    private SettingsManager settingsManager;
+    @Getter
+    private TabManager tabManager;
+    @Getter
+    private VaultManager vaultManager;
+    @Getter
+    private PluginMsgManager pluginMsgManager;
+    @Getter
+    private PlaceholderManager placeholderManager;
+    @Getter
+    private JDAManager jdaManager;
+    @Getter
+    private RedisManager redisManager;
+    @Getter
+    private ScoreBoardManager scoreBoardManager;
+    @Getter
+    private TagManager tagManager;
 
     @Override
     public void onLoad() {
         super.onLoad();
+        PacketUtil.setProtocolManager(ProtocolLibrary.getProtocolManager());
     }
 
     @Override
@@ -151,12 +184,14 @@ public final class OctoCore extends JavaPlugin {
         new SetupPermissions().setup(this);
         Logger.info("Setting up modules.");
         setupModules.setup(this);
+        new SetupOther().setup(this);
         Logger.info("Done!");
     }
 
     @Override
     public void onDisable() {
-        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(ChatColor.RED + "This server is restarting."));
+        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(CC.RED + "This server is restarting."));
+        Bukkit.getScheduler().cancelTasks(this);
         setupManager.disable(getInstance());
         if(NameTagChanger.INSTANCE.isEnabled())
             NameTagChanger.INSTANCE.disable();
@@ -190,6 +225,7 @@ public final class OctoCore extends JavaPlugin {
         try {
             connection.prepareStatement(DatabaseHelper.CREATE_BLACKLIST_WORD_TABLE.getSql()).executeUpdate();
             connection.prepareStatement(DatabaseHelper.CREATE_DISABLED_COMMANDS_TABLE.getSql()).executeUpdate();
+            connection.prepareStatement(DatabaseHelper.CREATE_SETTINGS_TABLE.getSql()).executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -216,4 +252,13 @@ public final class OctoCore extends JavaPlugin {
         return list;
     }
 
+    public static boolean isVaultEnabled(){
+        return Bukkit.getPluginManager().isPluginEnabled("Vault");
+    }
+    public static boolean vault(){
+        return isVaultEnabled();
+    }
+    public static ConversationFactory getConversationFactory() {
+        return instance.conversationFactory;
+    }
 }

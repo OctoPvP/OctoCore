@@ -5,6 +5,7 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.NickManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.objects.Disable;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
@@ -13,8 +14,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-
-public class UnNickCommand implements BaseCommand {
+@Disable
+public class UnNickCommand extends BaseCommand {
     @Command(name = "unnick", description = "unnick",usage = "/unnick",permission = Permission.COMMAND_UNNICK)
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 0){
@@ -45,10 +46,5 @@ public class UnNickCommand implements BaseCommand {
             }
         }
         return CommandResult.INVALID_ARGS;
-    }
-
-    @Override
-    public List<String> tabComplete(Sender sender, String[] args) {
-        return null;
     }
 }

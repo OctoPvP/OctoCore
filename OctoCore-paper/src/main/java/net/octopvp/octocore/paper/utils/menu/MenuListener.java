@@ -1,99 +1,42 @@
 package net.octopvp.octocore.paper.utils.menu;
 
-import net.octopvp.octocore.paper.OctoCore;
-import org.bukkit.Bukkit;
+import net.octopvp.octocore.paper.utils.menu.menu.Menu;
+import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 
 public class MenuListener implements Listener {
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onButtonPress(InventoryClickEvent event) {
-		Player player = (Player) event.getWhoClicked();
-		Menu openMenu = Menu.currentlyOpenedMenus.get(player.getName());
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
 
-		if (openMenu != null) {
-			if (event.getSlot() != event.getRawSlot()) {
-				if ((event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)) {
-					event.setCancelled(true);
-				}
-				return;
-			}
-			if(openMenu.cancelAllClicks()) {
-				event.setCancelled(true);
-			}
-			if (openMenu.getButtons().containsKey(event.getSlot())) {
-				Button button = openMenu.getButtons().get(event.getSlot());
-				boolean cancel = button.shouldCancel(player, event.getClick());
+        Menu menu = MenuManager.getOpenedMenus().get(player.getUniqueId());
 
-				if (!cancel && (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)) {
-					event.setCancelled(true);
+        if (menu == null) return;
 
-					if (event.getCurrentItem() != null) {
-						player.getInventory().addItem(event.getCurrentItem());
-					}
-				} else {
-					event.setCancelled(cancel);
-				}
+        event.setCancelled(true);
 
-				button.click(player, event.getClick());
-				button.click(player, event.getSlot(), event.getClick(), event.getHotbarButton());
+        if (event.getSlot() != event.getRawSlot()) return;
+        if (!menu.hasSlot(event.getSlot())) return;
 
-				if (Menu.currentlyOpenedMenus.containsKey(player.getName())) {
-					Menu newMenu = Menu.currentlyOpenedMenus.get(player.getName());
+        Button slot = menu.getSlot(event.getSlot());
+        slot.onClick(player, event.getSlot(), event.getClick());
+    }
 
-					if (newMenu == openMenu) {
-						boolean buttonUpdate = button.shouldUpdate(player, event.getClick());
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onClose(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
 
-						if (buttonUpdate) {
-							openMenu.setClosedByMenu(true);
-							newMenu.openMenu(player);
-						}
-					}
-				} else if (button.shouldUpdate(player, event.getClick())) {
-					openMenu.setClosedByMenu(true);
-					openMenu.openMenu(player);
-				}
+        Menu menu = MenuManager.getOpenedMenus().get(player.getUniqueId());
 
-				if (event.isCancelled()) {
-					Bukkit.getScheduler().runTaskLater(OctoCore.getInstance(), player::updateInventory, 1L);
-				}
-			} else {
-				if (event.getCurrentItem() != null) {
-					event.setCancelled(true);
-				}
+        if (menu == null) return;
 
-				if ((event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT)) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onInventoryClose(InventoryCloseEvent event) {
-		Player player = (Player) event.getPlayer();
-		Menu openMenu = Menu.currentlyOpenedMenus.get(player.getName());
-
-		if (openMenu != null) {
-			openMenu.onClose(player);
-
-			Menu.currentlyOpenedMenus.remove(player.getName());
-		}
-	}
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onDrop(PlayerDropItemEvent event){
-		Menu openMenu = Menu.currentlyOpenedMenus.get(event.getPlayer().getName());
-		if (openMenu != null) {
-			if(openMenu.cancelDrop())
-				event.setCancelled(true);
-		}
-	}
-
+        menu.onClose(player);
+        MenuManager.getOpenedMenus().remove(player.getUniqueId());
+    }
 }

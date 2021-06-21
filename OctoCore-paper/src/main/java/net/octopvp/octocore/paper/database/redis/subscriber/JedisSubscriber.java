@@ -17,8 +17,12 @@ public class JedisSubscriber {
     private Jedis jedis;
     private JedisPubSub pubSub;
     private JedisHandle subscriptionHandler;
+    private static JedisSubscriber instance;
 
     public JedisSubscriber(String channel, JedisSettings settings, JedisHandle subscriptionHandler) {
+        if (instance != null)
+            throw new IllegalStateException("JedisSubscriber is not null!");
+        instance = this;
         this.channel = channel;
         this.subscriptionHandler = subscriptionHandler;
         this.pubSub = new JedisPubSub() {

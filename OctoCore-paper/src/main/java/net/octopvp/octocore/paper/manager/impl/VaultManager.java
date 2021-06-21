@@ -5,7 +5,7 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.setup.SetupVault;
 
-public class VaultManager implements Manager {
+public class VaultManager extends Manager {
     private static boolean isChatHookEnabled;
     private static Chat chat = null;
 
@@ -31,7 +31,7 @@ public class VaultManager implements Manager {
     }
 
     @Override
-    public void disable(OctoCore plugin) {
+    public void disable() {
 
     }
 }

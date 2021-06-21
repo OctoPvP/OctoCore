@@ -6,19 +6,14 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
-import lombok.Getter;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.utils.Logger;
-import org.bson.Document;
 import redis.clients.jedis.Jedis;
 
 import java.util.Arrays;
-import java.util.UUID;
 
-public class DatabaseManager implements Manager {
+public class DatabaseManager extends Manager {
     private static MongoDatabase mongoDatabase = null;
     private static MongoClient mongoClient;
 
@@ -29,9 +24,8 @@ public class DatabaseManager implements Manager {
     public static MongoClient getMongoClient() {
         return DatabaseManager.mongoClient;
     }
+    //private RedisManager redisManager;
 
-    @Getter
-    private static Jedis redis = null;
     @Override
     public void init(OctoCore plugin) {
         MongoCredential credentials;
@@ -55,13 +49,18 @@ public class DatabaseManager implements Manager {
         }
         mongoDatabase = mongoClient.getDatabase("OctoCore");
         Logger.info(mongoDatabase == null ? "Could not connect to mongo!" : "Connected to mongo!");
+        //redisManager = new RedisManager();
         PlayerManager.postDBInit();
-        redis = new Jedis(plugin.getConfig().getString("database.redis.host"), OctoCore.getInstance().getConfig().getInt("database.redis.port"));
-        if(OctoCore.getInstance().getConfig().getBoolean("database.redis.auth"))
-            redis.auth(OctoCore.getInstance().getConfig().getString("database.redis.auth.password"));
     }
 
-    @Override
-    public void disable(OctoCore plugin) {}
+    public static Jedis getJedis(){
+        return OctoCore.getInstance().getRedisData().getPool().getResource();
+    }
 
+
+
+    @Override
+    public void disable() {
+        //redisManager.disable();
+    }
 }

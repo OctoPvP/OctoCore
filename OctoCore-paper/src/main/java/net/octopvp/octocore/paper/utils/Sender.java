@@ -1,7 +1,8 @@
 package net.octopvp.octocore.paper.utils;
 
+import net.md_5.bungee.api.chat.TextComponent;
 import net.octopvp.octocore.paper.utils.msg.Lang;
-import net.octopvp.octocore.paper.utils.msg.PlaceholderManager;
+import net.octopvp.octocore.paper.manager.impl.PlaceholderManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,9 @@ public class Sender implements CommandSender  {
         for (String string : strings) {
             commandSender.sendMessage(PlaceholderManager.replacePlaceholders(string));
         }
+    }
+    public void sendMessage(TextComponent textComponent){
+        getPlayer().sendMessage(textComponent);
     }
     public void sendMessage(Lang lang){
         sendMessage(lang.getMsg());

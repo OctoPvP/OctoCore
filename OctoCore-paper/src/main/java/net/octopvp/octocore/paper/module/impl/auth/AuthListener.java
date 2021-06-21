@@ -8,24 +8,31 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.server.MapInitializeEvent;
 
 public class AuthListener implements Listener {
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onMove(PlayerMoveEvent event){
         if(AuthModule.isAuthed(event.getPlayer()))
             return;
         else event.setCancelled(true);
     }
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event){
-        if(AuthModule.isAuthed(event.getPlayer()))
+        if(AuthModule.isAuthed(event.getPlayer())) {
+            if(event.getMessage().toLowerCase().startsWith("/stop")){
+                //TODO auth again
+                return;
+            }
             return;
+        }
         if(event.getMessage().toLowerCase().startsWith("/2fa")){
         }else {
             event.setCancelled(true);
+            event.getPlayer().sendMessage(Lang.PLEASE_AUTH.toString());
         }
     }
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onMessage(AsyncPlayerChatEvent event){
         if(AuthModule.isAuthed(event.getPlayer()))
             return;
@@ -34,11 +41,18 @@ public class AuthListener implements Listener {
             event.setCancelled(true);
         }
     }
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler
     public void onJoin(PlayerLoginEvent event){
-        if(AuthModule.getTriesLeft().get(event.getPlayer().getUniqueId()) == null && !AuthModule.isAuthed(event.getPlayer())){
+        if(AuthModule.getTriesLeft().containsKey(event.getPlayer().getUniqueId())){
+            AuthModule.handleJoin(event.getPlayer());
+        }
+        else{
             AuthModule.getTriesLeft().put(event.getPlayer().getUniqueId(),5);
             AuthModule.handleJoin(event.getPlayer());
         }
+    }
+    @EventHandler
+    public void onMap(MapInitializeEvent event){
+
     }
 }

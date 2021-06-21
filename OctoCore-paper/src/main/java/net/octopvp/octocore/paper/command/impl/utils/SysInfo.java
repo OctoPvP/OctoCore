@@ -12,7 +12,7 @@ import net.octopvp.octocore.paper.utils.permission.Permission;
 import java.util.Arrays;
 import java.util.List;
 
-public class SysInfo implements BaseCommand {
+public class SysInfo extends BaseCommand {
     @Command(name = "sysinfo",permission = Permission.SYS_INFO,cooldown = 1)
     public CommandResult execute(Sender sender, String[] args) {
         StringBuilder msg = new StringBuilder(CC.SEPARATOR + CC.NL);

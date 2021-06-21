@@ -91,21 +91,21 @@ public class CommandFramework implements CommandExecutor {
 						return true;
 					}
 				}
-				if(command.cooldown() > 0){
+				//if(command.argLength() > args.length){}
+				if(command.cooldown() >= 1){
 					if(sender instanceof Player){
 						Player p = (Player) sender;
 						//They are currently on cooldown
-						if(Cooldown.isOnCooldown(command.name() + "|Cmd_Cooldown", p.getUniqueId())){
-							p.sendMessage(Lang.COMMAND_COOLDOWN.getMsg(Cooldown.getCooldownForPlayerInt(command.name() + "|Cmd_Cooldown",p.getUniqueId()) + ""));
+						if(Cooldown.isOnCooldown(command.name() + "|cmd_cooldown", p.getUniqueId())){
+							p.sendMessage(Lang.COMMAND_COOLDOWN.getMsg(Cooldown.getCooldownForPlayerInt(command.name() + "|cmd_cooldown",p.getUniqueId()) + ""));
 							return true;
 						}
 						//They used to have a cooldown
-						if(Cooldown.wasOnCooldown(command.name() + "|Cmd_Cooldown", p.getUniqueId())){
+						if(Cooldown.wasOnCooldown(command.name() + "|cmd_cooldown", p.getUniqueId())){
 							//remove that cooldown
-							Cooldown.removeCooldown(command.name() + "|Cmd_Cooldown",p.getUniqueId());
+							Cooldown.removeCooldown(command.name() + "|cmd_cooldown",p.getUniqueId());
 						}
 						//Create a new cooldown for that
-						Cooldown.addCooldown(command.name() + "|Cmd_Cooldown",p.getUniqueId(),command.cooldown());
 					}
 				}
 				try {
@@ -139,7 +139,6 @@ public class CommandFramework implements CommandExecutor {
 	 * @param obj The object to register the commands of
 	 */
 	public void registerCommands(Object obj) {
-		//TODO cooldown (cooldown for each command with a cooldown eg: /test|cooldown)
 		for (Method m : obj.getClass().getMethods()) {
 			if (m.getAnnotation(Command.class) != null) {
 				Command command = m.getAnnotation(Command.class);
@@ -188,16 +187,19 @@ public class CommandFramework implements CommandExecutor {
 	}
 
 	public void registerCommand(Command command, String label, Method m, Object obj) {
-		commandMap.put(label.toLowerCase(), new AbstractMap.SimpleEntry<Method, Object>(m, obj));
-		commandMap.put(this.plugin.getName() + ':' + label.toLowerCase(), new AbstractMap.SimpleEntry<Method, Object>(m, obj));
+		if(command.disable())
+			return;
+		commandMap.put(label.toLowerCase(), new AbstractMap.SimpleEntry<>(m, obj));
+		commandMap.put(this.plugin.getName() + ':' + label.toLowerCase(), new AbstractMap.SimpleEntry<>(m, obj));
 		String cmdLabel = label.split("\\.")[0].toLowerCase();
 		if (map.getCommand(cmdLabel) == null) {
 			org.bukkit.command.Command cmd = new BukkitCommand(cmdLabel, this, plugin);
 			map.register(plugin.getName(), cmd);
 		}
-		if(!(command.cooldown() == 0)){
-			//FIXME fix cooldowns
-			Cooldown.createCooldown(command.name() + "|Cmd_Cooldown");
+		if(command.cooldown() >= 1){
+			if(!Cooldown.cooldownExists(command.name() + "|cmd_cooldown")){ //make sure that we're only registering 1 cooldown, use command.name(); and not label because label could be a alias
+				Cooldown.createCooldown(command.name() + "|cmd_cooldown");
+			}
 		}
 		if (!command.description().equalsIgnoreCase("") && cmdLabel.equals(label)) {
 			map.getCommand(cmdLabel).setDescription(command.description());
@@ -256,4 +258,11 @@ public class CommandFramework implements CommandExecutor {
         		Logger.info("Didn't register permission \"" + name + "\" because it already is registered!");
         }
     }
+    public static void registerSubCommand(SubCommand subCommand, BaseCommand base){
+		for (Method method : base.getClass().getMethods()) {
+			if(method.isAnnotationPresent(SubCommand.class)){
+
+			}
+		}
+	}
 }

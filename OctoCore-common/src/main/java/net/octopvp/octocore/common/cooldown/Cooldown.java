@@ -1,14 +1,14 @@
 package net.octopvp.octocore.common.cooldown;
 
-
 import java.util.HashMap;
 import java.util.UUID;
 
 public class Cooldown {
     private static HashMap<String, HashMap<UUID, Long>> cooldown = new HashMap<>();
     public static void createCooldown(String k) {
+        System.out.println("Debug: creating cooldown: " + k);
         if (cooldown.containsKey(k.toLowerCase()))
-            throw new IllegalArgumentException("Cooldown already exists.");
+            throw new IllegalArgumentException("Cooldown already exists. Cooldown: " + k);
         cooldown.put(k.toLowerCase(), new HashMap<>());
     }
 
@@ -50,5 +50,8 @@ public class Cooldown {
         if(!cooldown.containsKey(k.toLowerCase()))
             throw new IllegalArgumentException(k.toLowerCase() + " does not exist");
         return ((HashMap)cooldown.get(k.toLowerCase())).containsKey(p);
+    }
+    public static boolean cooldownExists(String k){
+        return cooldown.containsKey(k);
     }
 }
