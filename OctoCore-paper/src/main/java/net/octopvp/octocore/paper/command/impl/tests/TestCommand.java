@@ -20,9 +20,9 @@ public class TestCommand extends BaseCommand {
     @Command(name = "test", description = "test", aliases = {"test1","test2"},usage = "/test",permission = Permission.NOTHING)
     public CommandResult execute(Sender sender, String[] args) {
         PlayerData data = PlayerManager.getProfile(sender.getPlayer().getUniqueId());
-        for (String allowedTag : data.getAllowedTags()) {
-            PlayerTag tag = TagManager.getTag(allowedTag);
-            sender.sendMessage(" - " + allowedTag + " | " + tag.getName());
+        sender.sendMessage((data.getAllowedTags() == null) ? "Tags List is null" : "Tags list is not null");
+        for (PlayerTag allowedTag : data.getAllowedTags()) {
+            sender.sendMessage(" - " + allowedTag.getName() + " | " + allowedTag.getTag());
         }
         return CommandResult.SUCCESS;
     }

@@ -33,7 +33,6 @@ public class TagManager extends Manager {
     public void init(OctoCore plugin) {
         Logger.debug("Loading Tags");
         tagsCollection = DatabaseManager.getMongoDatabase().getCollection("tags");
-        OctoCore.getInstance().getRedisData().write(JedisAction.RELOAD_TAGS, new JsonChain().addProperty("a","dummy").get());
         loadTags();
     }
 
@@ -50,6 +49,7 @@ public class TagManager extends Manager {
     public static void createTag(PlayerTag tag){
         String json = OctoCore.getGson().toJson(tag);
         tagsCollection.insertOne(Document.parse(json));
+        OctoCore.getInstance().getRedisData().write(JedisAction.RELOAD_TAGS, new JsonChain().addProperty("a","dummy").get());
         reloadTags();
     }
 
@@ -58,7 +58,7 @@ public class TagManager extends Manager {
         if (tag == null)
             return;
         PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
-        pdata.setTag(tag.getId());
+        pdata.setTag(tag);
     }
     public static PlayerTag getTag(String id){
         return tags.stream().filter(tag -> tag.getId() == id).findFirst().orElse(null);

@@ -89,8 +89,7 @@ public class MainTagMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType) {
             PlayerData data = PlayerManager.getProfile(player.getUniqueId());
             List<PlayerTag> tags = new ArrayList<>();
-            data.getAllowedTags().forEach(id ->{
-                PlayerTag tag = TagManager.getTag(id);
+            data.getAllowedTags().forEach(tag ->{
                 if (tag != null)
                     tags.add(tag);
             });

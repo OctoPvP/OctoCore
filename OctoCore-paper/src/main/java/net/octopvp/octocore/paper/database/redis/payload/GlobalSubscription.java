@@ -367,7 +367,7 @@ public class GlobalSubscription implements JedisHandle {
                     String toAdd = data.get("add").getAsString();
                     if (Bukkit.getPlayer(target) != null){
                         PlayerData pdata = PlayerManager.getProfile(Bukkit.getPlayer(target).getUniqueId());
-                        pdata.getAllowedTags().add(TagManager.getTagByName(toAdd).getId()); //maybe get by id
+                        pdata.getAllowedTags().add(TagManager.getTagByName(toAdd)); //maybe get by id
                     }
                     break;
                 case TAGS_UPDATE_REMOVE:

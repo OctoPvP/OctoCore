@@ -38,9 +38,9 @@ public class PlayerData {
     private Map<String,String> metaData = new ConcurrentHashMap<>();
     private RankType rankType = RankType.PLAYER; //player's rank type, defaults to PLAYER (not meant for permission managment)
     private WorldTime worldTime = WorldTime.DAY;
-    private String tag = null,nickTag = null;
+    private PlayerTag tag = null,nickTag = null;
     private int /**playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/playTime = 0;
-    private List<String> allowedTags = new ArrayList<>();
+    private List<PlayerTag> allowedTags = new ArrayList<>();
     private UUID nickUUID;
 
 
@@ -103,15 +103,9 @@ public class PlayerData {
         }
         return CC.D_GRAY + CC.ARROW_LEFT + getTag().getTag() + CC.D_GRAY + CC.ARROW_RIGHT;
     }
-    public PlayerTag getTag(){
-        return TagManager.getTag(tag);
-    }
-    public PlayerTag getNickTag(){
-        return TagManager.getTag(nickTag);
-    }
     public boolean hasTag(String tagName){
         boolean a = false;
-        for (PlayerTag playerTag : TagManager.convertId(allowedTags)) {
+        for (PlayerTag playerTag : allowedTags) {
             if (playerTag.getName().equalsIgnoreCase(tagName)) {
                 a = true;
                 break;

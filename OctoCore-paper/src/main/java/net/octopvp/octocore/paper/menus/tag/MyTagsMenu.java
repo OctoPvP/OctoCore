@@ -38,8 +38,7 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
     public List<Button> getPaginatedButtons(Player player) {
         PlayerData data = PlayerManager.getProfile(player.getUniqueId());
         List<Button> buttons = new ArrayList<>();
-        for (String allowedTag : data.getAllowedTags()) {
-            PlayerTag tag = TagManager.getTag(allowedTag);
+        for (PlayerTag tag : data.getAllowedTags()) {
             if (tag == null)
                 continue;
             buttons.add(new TagButton(tag,player));
@@ -103,7 +102,7 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
                 Logger.debug("a");
             }else {
                 player.sendMessage(CC.GREEN + "Equipped your tag!");
-                PlayerManager.getProfile(player.getUniqueId()).setTag(tag.getId());
+                PlayerManager.getProfile(player.getUniqueId()).setTag(tag);
                 Logger.debug("b");
             }
             update(player);

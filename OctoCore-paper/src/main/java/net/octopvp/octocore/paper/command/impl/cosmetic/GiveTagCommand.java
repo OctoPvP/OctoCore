@@ -37,23 +37,19 @@ public class GiveTagCommand extends BaseCommand {
                 //on this server
                 PlayerData profile = PlayerManager.getProfile(Bukkit.getPlayer(target).getUniqueId());
                 if (tag == ""){
-                    List<PlayerTag> tags = new ArrayList<>();
-                    profile.getAllowedTags().forEach(t ->tags.add(TagManager.getTag(t)));
-                    new GiveTagsMenu(tags,target).open(sender.getPlayer());
+                    new GiveTagsMenu(target, profile.getAllowedTags()).open(sender.getPlayer());
                     return CommandResult.SUCCESS;
                 }
                 PlayerTag tag1 = TagManager.getTagByName(tag);
-                if (!profile.getAllowedTags().contains(tag1.getId()))
-                    profile.getAllowedTags().add(tag1.getId());
-                List<PlayerTag> tags = new ArrayList<>();
-                profile.getAllowedTags().forEach(t ->tags.add(TagManager.getTag(t)));
+                if (!profile.getAllowedTags().contains(tag1))
+                    profile.getAllowedTags().add(tag1);
                 sender.sendMessage(CC.GREEN + "Added tag " + tag1.getName() + " to " + target);
                 return CommandResult.SUCCESS;
             }else{
                 //on some other network server
                 GlobalPlayer gPlayer = OctoCore.getServerManager().getGlobalPlayer(target);
                 if (tag == ""){
-                    new GiveTagsMenu(gPlayer.getAllTags(), target).open(sender.getPlayer());
+                    new GiveTagsMenu(target, gPlayer.getAllTags()).open(sender.getPlayer());
                     return CommandResult.SUCCESS;
                 }
                 JsonObject jsonObject = new JsonChain().addProperty("reason", DataUpdateReason.TAGS_UPDATE_GIVE.name()).addProperty("target",target).addProperty("add",tag).get();
@@ -70,15 +66,13 @@ public class GiveTagCommand extends BaseCommand {
                 return CommandResult.PLAYER_NOT_FOUND;
             sender.sendMessage(CC.GREEN + "Found " + target + "'s data!");
             if (tag == ""){
-                List<PlayerTag> tags = new ArrayList<>();
-                data.getAllowedTags().forEach(t -> tags.add(TagManager.getTag(t)));
                 //new GiveTagsMenu(target,tags).open(sender.getPlayer());
-                new GiveTagsMenu(tags,target).open(sender.getPlayer());
+                new GiveTagsMenu(target, data.getAllowedTags()).open(sender.getPlayer());
                 return CommandResult.SUCCESS;
             }
             PlayerTag tag1 = TagManager.getTagByName(tag);
             if (!data.hasTag(tag1.getName()))
-                data.getAllowedTags().add(tag1.getId());
+                data.getAllowedTags().add(tag1);
             PlayerManager.saveProfile(data);
             sender.sendMessage(CC.GREEN + "Added tag " + tag1.getName() + " to " + target);
             return CommandResult.SUCCESS;
