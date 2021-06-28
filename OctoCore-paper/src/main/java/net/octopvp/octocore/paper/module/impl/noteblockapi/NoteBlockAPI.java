@@ -3,6 +3,7 @@ package net.octopvp.octocore.paper.module.impl.noteblockapi;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.module.Module;
 import net.octopvp.octocore.paper.module.impl.noteblockapi.songplayer.SongPlayer;
+import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
@@ -179,7 +180,7 @@ public class NoteBlockAPI implements Module {
     }
 
     public void doAsync(Runnable runnable) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, runnable);
+        Tasks.runAsync(runnable);
     }
 
     public boolean isDisabling() {

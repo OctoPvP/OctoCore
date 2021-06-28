@@ -37,7 +37,7 @@ public class GiveTagCommand extends BaseCommand {
                 //on this server
                 PlayerData profile = PlayerManager.getProfile(Bukkit.getPlayer(target).getUniqueId());
                 if (tag == ""){
-                    new GiveTagsMenu(target, profile.getAllowedTags()).open(sender.getPlayer());
+                    new GiveTagsMenu(profile).open(sender.getPlayer());
                     return CommandResult.SUCCESS;
                 }
                 PlayerTag tag1 = TagManager.getTagByName(tag);
@@ -49,7 +49,7 @@ public class GiveTagCommand extends BaseCommand {
                 //on some other network server
                 GlobalPlayer gPlayer = OctoCore.getServerManager().getGlobalPlayer(target);
                 if (tag == ""){
-                    new GiveTagsMenu(target, gPlayer.getAllTags()).open(sender.getPlayer());
+                    //new GiveTagsMenu(target, gPlayer.getAllTags()).open(sender.getPlayer());
                     return CommandResult.SUCCESS;
                 }
                 JsonObject jsonObject = new JsonChain().addProperty("reason", DataUpdateReason.TAGS_UPDATE_GIVE.name()).addProperty("target",target).addProperty("add",tag).get();
@@ -67,7 +67,7 @@ public class GiveTagCommand extends BaseCommand {
             sender.sendMessage(CC.GREEN + "Found " + target + "'s data!");
             if (tag == ""){
                 //new GiveTagsMenu(target,tags).open(sender.getPlayer());
-                new GiveTagsMenu(target, data.getAllowedTags()).open(sender.getPlayer());
+                new GiveTagsMenu(data).open(sender.getPlayer());
                 return CommandResult.SUCCESS;
             }
             PlayerTag tag1 = TagManager.getTagByName(tag);

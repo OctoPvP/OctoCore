@@ -8,6 +8,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
+import net.octopvp.octocore.paper.module.impl.punishments.PunishmentModule;
 import net.octopvp.octocore.paper.utils.Logger;
 import redis.clients.jedis.Jedis;
 
@@ -51,6 +52,7 @@ public class DatabaseManager extends Manager {
         Logger.info(mongoDatabase == null ? "Could not connect to mongo!" : "Connected to mongo!");
         //redisManager = new RedisManager();
         PlayerManager.postDBInit();
+        new PunishmentModule().onEnable(plugin);
     }
 
     public static Jedis getJedis(){

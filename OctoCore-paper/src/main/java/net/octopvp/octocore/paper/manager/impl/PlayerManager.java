@@ -45,7 +45,7 @@ public class PlayerManager extends Manager {
      * process player join
      * @param uuid
      */
-    public static void processJoin(UUID uuid,String ip){ //FIXME fix profile being null but obviously loaded in PlayerManager#loadProfileFromDB
+    public static void processJoin(UUID uuid,String ip) {
         Tasks.runAsync(()->{
             PlayerData profile = playerProfiles.get(uuid);
             if(profile == null)
@@ -91,7 +91,7 @@ public class PlayerManager extends Manager {
             if (playerData.isOnline()){
                 sendStaffAlert(AlertType.LEAVE,player.getName(),OctoCore.getServerName());
             }
-        },40l);
+        },45l);
     }
 
     /**

@@ -83,7 +83,13 @@ public enum Lang {
     FEATURE_NOT_IMPLEMENTED(CC.RED + "This feature is not implemented currently!"),
 
     TAG_GIVE_SUCCESS(CC.GREEN + "Successfully gave %1 tag %2."),
-    TAG_REMOVE_SUCCESS(CC.GREEN + "Successfully removed tag %1 from %2.")
+    TAG_REMOVE_SUCCESS(CC.GREEN + "Successfully removed tag %1 from %2."),
+
+    BAN_FORMAT(CC.translate("&cYou are %1 banned from OctoPvP!\n\n%2\n%3")),
+    APPEAL_MESSAGE(CC.AQUA + "Appeal at appeal.octopvp.net"),
+    PERM_BAN(CC.translate("&cBanned On:&e %1\n&cBanned By:&e %2\n&cReason:&e %3")),
+    TEMP_BAN(CC.translate("&cBanned On:&e %1\n&cExpires On:&e %2\n&cBanned By:&e %3\b&cReason:&e %4")),
+    BLACKLISTED(CC.translate("&4This is a permanent blacklist.\nYou may not appeal this.\n\n&cBlacklisted On:&e %1\n&cBlacklisted By:&e %2\n&cReason:&e %3"))
     ;
     private final String msg;
     Lang(String msg){

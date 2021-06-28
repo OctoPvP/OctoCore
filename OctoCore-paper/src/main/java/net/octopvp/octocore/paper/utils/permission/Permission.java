@@ -67,6 +67,8 @@ public enum Permission implements PermissionString {
 
     GIVE_TAG("octocore.command.givetag"),
 
+    TROLL_DEMO_MENU("troll.demomenu"),
+
     TEST("test");
     private final String node;
     Permission(String node){

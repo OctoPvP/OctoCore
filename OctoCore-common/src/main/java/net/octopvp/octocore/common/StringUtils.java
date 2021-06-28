@@ -2,6 +2,7 @@ package net.octopvp.octocore.common;
 
 import net.md_5.bungee.api.ChatColor;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -329,5 +330,39 @@ public class StringUtils {
             closest.put(red + green + blue, color);
         });
         return closest.firstEntry().getValue();
+    }
+    public static String convertMsToReadableDate(long time){
+        if (time == -1){
+            return "null";
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM dd yyyy");
+        return dateFormat.format(time);
+    }
+    public static String intMonthToMonth(int month){
+        switch (month){
+            case 1:
+                return "January";
+            case 2:
+                return "February";
+            case 3:
+                return "March";
+            case 4:
+                return "April";
+            case 5:
+                return "May";
+            case 6:
+                return "June";
+            case 7:
+                return "July";
+            case 8:
+                return "August";
+            case 9:
+                return "September";
+            case 10:
+                return "October";
+            case 11:
+                return "December";
+        }
+        return month + "";
     }
 }

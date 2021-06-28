@@ -11,6 +11,7 @@ import net.octopvp.octocore.paper.manager.impl.LuckpermsManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.manager.impl.VaultManager;
+import net.octopvp.octocore.paper.module.impl.punishments.utilities.punishments.PunishHistory;
 import net.octopvp.octocore.paper.objects.enums.RankType;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
@@ -42,7 +43,7 @@ public class PlayerData {
     private int /**playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/playTime = 0;
     private List<PlayerTag> allowedTags = new ArrayList<>();
     private UUID nickUUID;
-
+    private List<PunishHistory> punishmentsExecuted = new ArrayList<>();
 
     private boolean staffChatAlerts = true, adminChatAlerts = true, reportAlerts = true;
     private boolean staffChat = false,adminChat = false;
