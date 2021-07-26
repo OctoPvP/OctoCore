@@ -11,7 +11,9 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class PaginatedMenu extends Menu {
@@ -27,6 +29,9 @@ public abstract class PaginatedMenu extends Menu {
 
         buttons.add(new NextPageButton(this));
         buttons.add(new PreviousPageButton(this));
+        if (getToolbarButtons() != null){
+            buttons.addAll(getToolbarButtons());
+        }
         if (getPlaceholderButton() != null)
             buttons.add(getPlaceholderButton());
         else buttons.add(new PlaceholderButton(this));
@@ -53,6 +58,7 @@ public abstract class PaginatedMenu extends Menu {
 
         return buttons;
     }
+
 
     private Button getNewSlot(Button button, int s) {
         return new Button() {
@@ -101,6 +107,9 @@ public abstract class PaginatedMenu extends Menu {
     }
     public Button getPlaceholderButton(){
         return null;
+    }
+    public boolean doesButtonExist(List<Button> buttons,int i){
+        return buttons.stream().filter(button -> button.getSlot() == i || Arrays.stream(button.getSlots()).anyMatch(i1 -> i == i1)).findFirst().orElse(null) != null;
     }
 
 }

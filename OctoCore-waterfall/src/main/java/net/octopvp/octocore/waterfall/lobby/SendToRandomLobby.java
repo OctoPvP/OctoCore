@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class SendToRandomLobby {
     public static void sendToRandomLobby(ProxiedPlayer player){
+        if (player.getServer() == null)
+            return;
         ServerInfo serverInfo = getRandomlobby();
         if (serverInfo == null){
             player.sendMessage(ChatColor.RED + "Could not find a lobby to warp you to! Please try again later!");

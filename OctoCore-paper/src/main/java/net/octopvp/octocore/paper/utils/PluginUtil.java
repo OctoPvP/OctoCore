@@ -1,5 +1,6 @@
 package net.octopvp.octocore.paper.utils;
 
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;

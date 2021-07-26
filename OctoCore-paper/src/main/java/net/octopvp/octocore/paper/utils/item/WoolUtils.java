@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class WoolUtils {
     public static final ArrayList<ChatColor> woolColors = new ArrayList<>(Arrays.asList(ChatColor.WHITE, ChatColor.GOLD, ChatColor.LIGHT_PURPLE,
@@ -19,6 +20,16 @@ public class WoolUtils {
         if (color == ChatColor.DARK_BLUE) color = ChatColor.BLUE;
 
         return WoolUtils.woolColors.indexOf(color);
+    }
+    public static int convertStringCCToWoolData(String cc){
+        AtomicReference<ChatColor> color = new AtomicReference<>();
+        if(cc == ChatColor.DARK_RED.toString()) color.set(ChatColor.RED);
+        if (cc == ChatColor.DARK_BLUE.toString()) color.set(ChatColor.BLUE);
+        woolColors.forEach(color1->{
+            if (color1.toString() == cc)
+                color.set(color1);
+        });
+        return WoolUtils.woolColors.indexOf(color.get());
     }
     public static ItemStack chatColorToWoolItem(ChatColor color){
         return new ItemStack(Material.WOOL,1, (short) convertChatColorToWoolData(color));

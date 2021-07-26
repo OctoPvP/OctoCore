@@ -1,9 +1,6 @@
 package net.octopvp.octocore.paper.database;
 
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.paper.utils.Logger;
-
-import java.util.HashMap;
 
 
 public enum DatabaseHelper {

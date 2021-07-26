@@ -9,7 +9,7 @@ import net.octopvp.octocore.paper.command.Completer;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.item.ItemUtils;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

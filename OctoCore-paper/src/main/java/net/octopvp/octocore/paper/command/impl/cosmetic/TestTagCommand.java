@@ -8,7 +8,7 @@ import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 
 public class TestTagCommand extends BaseCommand {
     @Command(name = "testtag",permission = Permission.ADMIN,playerOnly = true)

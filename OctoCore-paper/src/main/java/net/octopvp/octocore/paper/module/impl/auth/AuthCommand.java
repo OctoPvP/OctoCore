@@ -5,9 +5,7 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
-import net.octopvp.octocore.paper.utils.permission.Permission;
-
-import java.util.List;
+import net.octopvp.octocore.common.object.Permission;
 
 public class AuthCommand extends BaseCommand {
     @Command(name = "2fa",playerOnly = true,aliases = {"auth"})

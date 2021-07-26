@@ -4,8 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import lombok.Getter;
-import net.octopvp.octocore.paper.database.redis.object.JedisHandle;
-import net.octopvp.octocore.paper.database.redis.object.JedisSettings;
+import net.octopvp.octocore.common.object.redis.JedisHandle;
+import net.octopvp.octocore.common.object.redis.JedisSettings;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 

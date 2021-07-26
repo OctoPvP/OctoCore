@@ -7,7 +7,7 @@ import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.msg.Chat;
 import net.octopvp.octocore.paper.utils.msg.Lang;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

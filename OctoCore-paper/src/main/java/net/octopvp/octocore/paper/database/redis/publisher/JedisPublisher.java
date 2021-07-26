@@ -3,8 +3,7 @@ package net.octopvp.octocore.paper.database.redis.publisher;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.database.redis.object.JedisSettings;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.object.redis.JedisSettings;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 

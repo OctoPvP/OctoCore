@@ -5,11 +5,10 @@ import net.octopvp.octocore.common.object.Settings;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseHelper;
 import net.octopvp.octocore.paper.manager.Manager;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.util.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 public class SettingsManager extends Manager {
     @Getter private static SettingsManager instance;

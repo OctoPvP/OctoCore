@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.command;
 
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.paper.utils.permission.PermissionAnnotation;
 
 import java.lang.annotation.ElementType;
@@ -33,12 +33,7 @@ public @interface Command {
 	 *
 	 * @return
 	 */
-	Permission permission() default Permission.NOTHING;
-	/**
-	 * Permissions string
-	 * @return
-	 */
-	String strPermission() default "";
+	Permission permission() default Permission.NOTHING; //TODO use string for permission
 	/**
 	 * A list of alternate names that the command is executed under. See
 	 * name() for details on how names work

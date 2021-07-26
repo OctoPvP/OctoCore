@@ -10,10 +10,11 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerCreateEvent;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
-import net.octopvp.octocore.paper.database.redis.object.JedisAction;
-import net.octopvp.octocore.paper.database.redis.object.JedisHandle;
+import net.octopvp.octocore.common.object.redis.JedisAction;
+import net.octopvp.octocore.common.object.redis.JedisHandle;
 import net.octopvp.octocore.paper.manager.impl.JDAManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
@@ -21,9 +22,10 @@ import net.octopvp.octocore.paper.objects.Broadcast;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.ServerData;
 import net.octopvp.octocore.paper.objects.enums.DataUpdateReason;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.utils.msg.Lang;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -136,7 +138,6 @@ public class GlobalSubscription implements JedisHandle {
             globalPlayer.setServer(data.get("server").getAsString());
             globalPlayer.setName(data.get("name").getAsString());
             globalPlayer.setUniqueId(uuid);
-            globalPlayer.setRankName(data.get("rankName").getAsString());
             globalPlayer.setLastSeen(data.get("lastSeen").getAsLong());
             globalPlayer.setFirstJoined(data.get("firstJoined").getAsString());
             globalPlayer.setLastActivity(data.get("lastActivity").getAsLong());
@@ -321,7 +322,7 @@ public class GlobalSubscription implements JedisHandle {
 
                 for (Player p : Bukkit.getOnlinePlayers()){
                     if (p.hasPermission(Permission.RECEIVE_AUDIT_WORLDEDIT.getNode())){
-
+                        //TODO finish audit log
                     }
                 }
                 return;
@@ -379,6 +380,26 @@ public class GlobalSubscription implements JedisHandle {
                     }
                     break;
             }
+        }
+        if (payload == JedisAction.RELOAD_RANKS){
+            RankManager.reloadRanks();
+            return;
+        }
+        if (payload == JedisAction.GRANTS_UPDATE){
+            String name = data.get("name").getAsString();
+            String tochange = data.get("tochange").getAsString();
+            boolean add = data.get("add").getAsBoolean();
+            Player player = Bukkit.getPlayer(name);
+            if (player != null){
+                PlayerData playerData = PlayerManager.getData(player.getUniqueId());
+                Grant grant = OctoCore.getGson().fromJson(tochange,Grant.class);
+                if (add)
+                    playerData.getGrants().add(grant);
+                else playerData.getGrants().remove(grant);
+                playerData.loadAttachments(player);
+                playerData.save();
+            }
+            return;
         }
     }
 }

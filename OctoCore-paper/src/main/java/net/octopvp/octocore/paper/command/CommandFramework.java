@@ -2,7 +2,7 @@ package net.octopvp.octocore.paper.command;
 
 import net.octopvp.octocore.common.cooldown.Cooldown;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
@@ -75,12 +75,12 @@ public class CommandFramework implements CommandExecutor {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(label.toLowerCase());
 			for (int x = 0; x < i; x++) buffer.append("." + args[x].toLowerCase());
-			String cmdLabel = buffer.toString().replaceFirst(OctoCore.getInstance().getDescription().getName().toLowerCase() + ":","").replaceFirst("/" + OctoCore.getInstance().getDescription().getName().toLowerCase() + ":","");
+			String cmdLabel = buffer.toString().replaceFirst(plugin.getDescription().getName().toLowerCase() + ":","").replaceFirst("/" + plugin.getDescription().getName().toLowerCase() + ":","");
 			if (commandMap.containsKey(cmdLabel)) {
 				Method method = commandMap.get(cmdLabel).getKey();
 				Object methodObject = commandMap.get(cmdLabel).getValue();
 				Command command = method.getAnnotation(Command.class);
-				if (command.permission() != net.octopvp.octocore.paper.utils.permission.Permission.NOTHING)
+				if (command.permission() != net.octopvp.octocore.common.object.Permission.NOTHING)
 					if (!sender.hasPermission(command.permission().getNode())) {
 						sender.sendMessage(Lang.NO_PERMISSION.getMsg());
 						return true;
@@ -207,7 +207,7 @@ public class CommandFramework implements CommandExecutor {
 		if (!command.usage().equalsIgnoreCase("") && cmdLabel.equals(label)) {
 			map.getCommand(cmdLabel).setUsage(command.usage());
 		}
-		if(!(command.permission()==null)&&!(command.permission().getNode()=="")&&!(command.permission() == net.octopvp.octocore.paper.utils.permission.Permission.NOTHING)){
+		if(!(command.permission()==null)&&!(command.permission().getNode()=="")&&!(command.permission() == net.octopvp.octocore.common.object.Permission.NOTHING)){
 		    registerPermission(command.permission().getNode(),"Permission of /" + command.name());
 			//if(!Bukkit.getPluginManager().getPermissions().contains())
 			//	Bukkit.getPluginManager().addPermission(perm);

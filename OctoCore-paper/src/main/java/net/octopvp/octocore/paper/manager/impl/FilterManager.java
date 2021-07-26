@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.manager.impl;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.database.DatabaseHelper;
 import org.bukkit.entity.Player;
 
@@ -53,7 +53,7 @@ public class FilterManager extends Manager {
                     sb.append("*");
                 }
                 Logger.debug(sb.toString());
-                final_message = final_message.replaceAll("(?i)"+blacklist, sb.toString());
+                final_message = final_message.replaceAll("(?i)" + blacklist, sb.toString());
             }
         }
         Logger.debug(final_message);
@@ -67,10 +67,6 @@ public class FilterManager extends Manager {
     public static boolean containsUnicode(String message){
         Pattern p = Pattern.compile("[^a-z0-9~!@#$%^&*()_+-={}\\[\\]|:\";'<>?,./\\\\    ]", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(message);
-        boolean b = m.find();
-
-        if (b)
-            return true;
-        else return false;
+        return m.find();
     }
 }

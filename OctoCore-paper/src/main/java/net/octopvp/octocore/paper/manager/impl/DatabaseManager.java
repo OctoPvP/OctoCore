@@ -6,10 +6,12 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import lombok.Getter;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishmentModule;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.util.Logger;
+import org.bson.json.JsonWriterSettings;
 import redis.clients.jedis.Jedis;
 
 import java.util.Arrays;
@@ -17,6 +19,10 @@ import java.util.Arrays;
 public class DatabaseManager extends Manager {
     private static MongoDatabase mongoDatabase = null;
     private static MongoClient mongoClient;
+    @Getter
+    private static JsonWriterSettings jsonWriterSettings = JsonWriterSettings.builder()
+            .int64Converter((value, writer) -> writer.writeNumber(value.toString()))
+            .build();
 
     public static MongoDatabase getMongoDatabase() {
         return DatabaseManager.mongoDatabase;

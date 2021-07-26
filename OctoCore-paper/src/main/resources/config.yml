@@ -42,6 +42,7 @@ update-tab-interval: 45
 update-pdata-interval: 100
 default-tab: true
 health-display: true
+build-prot: true
 settings:
   auto-respawn: true
   world-name: world

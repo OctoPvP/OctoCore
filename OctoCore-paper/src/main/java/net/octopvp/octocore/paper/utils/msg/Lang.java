@@ -10,6 +10,8 @@ public enum Lang {
     ERROR(CC.RED + "An error has occurred! Please try again later."),
     ERROR_LOGGED(CC.RED + "There was an error! Please open a bug report with this id:" + CC.GRAY + " %1"),
     NO_PERMISSION(CC.RED + "You have no permission!"),
+    LOADING_DATA_FROM_DB(CC.D_GRAY + "Loading data from database, please wait..."),
+    COULD_NOT_FIND_DATA(CC.RED + "Could not find that player's data! have they logged in before?"),
     PLAYER_ONLY(CC.RED + "This command is player only!"),
     PLAYER_NOT_FOUND(CC.RED + "%1 was not found! Please check your spelling!"),
     UNHANDLED_COMMAND(CC.RED + "This command is not handled! Please open a bug report!"),
@@ -89,7 +91,29 @@ public enum Lang {
     APPEAL_MESSAGE(CC.AQUA + "Appeal at appeal.octopvp.net"),
     PERM_BAN(CC.translate("&cBanned On:&e %1\n&cBanned By:&e %2\n&cReason:&e %3")),
     TEMP_BAN(CC.translate("&cBanned On:&e %1\n&cExpires On:&e %2\n&cBanned By:&e %3\b&cReason:&e %4")),
-    BLACKLISTED(CC.translate("&4This is a permanent blacklist.\nYou may not appeal this.\n\n&cBlacklisted On:&e %1\n&cBlacklisted By:&e %2\n&cReason:&e %3"))
+    BLACKLISTED(CC.translate("&4This is a permanent blacklist.\nYou may not appeal this.\n\n&cBlacklisted On:&e %1\n&cBlacklisted By:&e %2\n&cReason:&e %3")),
+
+    GRANT_CANT_GRANT_DEFAULT(CC.translate("&cYou can't grant the default rank!")),
+    GRANT_ALREADY_HAS_RANK(CC.translate("&c%1 already has the rank %2!")),
+    GRANT_CANNOT_GRANT_HIGHER_RANK(CC.translate("&cYou can't grant a higher rank than your current rank!")),
+    GRANT_NO_PERMISSION_TO_GRANT_RANK(CC.translate("&cYou don't have permission to grant that rank!")),
+    GRANT_ENTER_DURATION(CC.translate("&aPlease enter the duration that this rank will last for. Eg: perm/permanent or 10d")),
+    GRANT_ENTER_REASON(CC.translate("&aPlease enter a reason")),
+    GRANT_DURATION_SET(CC.translate("&aDuration Set: &e&1")),
+    GRANT_INVALID_TIME(CC.translate("&cInvalid time duration!")),
+    GRANT_SERVER_SET(CC.translate("&aSet server to &b") + "%s"),
+    GRANT_REASON_SET(CC.translate("&aSet reason to &b") + "%s"),
+    GRANT_RANK_NOT_FOUND(CC.RED + "The rank %1 cannot be found!"),
+    GRANT_PERM_GRANTED_TO(CC.GREEN + "You have been " + CC.AQUA + "permanently" + CC.GREEN + " granted %1 "),
+    GRANT_TEMP_GRANTED_TO(CC.GREEN + "You have been " + CC.AQUA + "temporarily" + CC.GREEN + " granted %1 " + CC.GREEN + "for " + CC.YELLOW + "%2"),
+    GRANT_PERM_GRANTED_EXECUTOR(CC.GREEN + "You have " + CC.AQUA + "permanently" + CC.GREEN + " granted %1 " + CC.GREEN + "to %2 for " + CC.YELLOW + "%3"),
+    GRANT_TEMP_GRANTED_EXECUTOR(CC.GREEN + "You have " + CC.AQUA + "temporarily" + CC.GREEN + " granted %1 " + CC.GREEN + "to %2 for " + CC.YELLOW + "%3"),
+    GRANT_ADMIN_ALERT_PERM(CC.AQUA + "%1 has permanently granted %2 %3" + CC.AQUA + " rank. Reason: %4"),
+    GRANT_ADMIN_ALERT_TEMP(CC.AQUA + "%1 has temporarily granted %2 %3" + CC.AQUA + " rank for " + CC.YELLOW + "%4 " + CC.AQUA + ". Reason: %5" ),
+
+    CREATE_RANK_SET_WEIGHT(CC.GREEN + "Please type in the rank weight (integer). Type \"cancel\" to cancel."),
+    CREATE_RANK_SET_NAME(CC.GREEN + "Please type in the rank name. Type \"cancel\" to cancel."),
+    CREATE_RANK_SET_PREFIX(CC.GREEN + "Please type in the rank prefix, use & color codes, and %1 for changeable rank colors. Type in \"cancel\" to cancel.")
     ;
     private final String msg;
     Lang(String msg){

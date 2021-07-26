@@ -7,7 +7,7 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.conversations.ConfirmConversation;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.entity.Player;
 
 public class CallGcCommand extends BaseCommand {

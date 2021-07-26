@@ -1,9 +1,8 @@
 package net.octopvp.octocore.paper.setup;
 
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.utils.Logger;
-import net.octopvp.octocore.paper.utils.permission.Permission;
-import net.octopvp.octocore.common.util.reflection.ReflectUtil;
+import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.Bukkit;
 
 import java.util.List;

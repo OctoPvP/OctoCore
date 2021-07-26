@@ -559,15 +559,18 @@ public final class BookUtil {
         }
     }
     public static void openBook(int slot,ItemStack book,Player player,ItemStack back){
-        player.getInventory().setHeldItemSlot(6);
-        player.getInventory().setItem(6,book);
+        if (slot == -1 || slot >= 10){ //prevent any exploits
+            slot = 6;
+        }
+        player.getInventory().setHeldItemSlot(slot);
+        player.getInventory().setItem(slot,book);
         ByteBuf buf = Unpooled.buffer(256);
         buf.setByte(0, 0);
         buf.writerIndex(1);
         PacketPlayOutCustomPayload packet = new PacketPlayOutCustomPayload("MC|BOpen", new PacketDataSerializer(buf));
         CraftPlayer craftPlayer = (CraftPlayer)player;
         (craftPlayer.getHandle()).playerConnection.sendPacket(packet);
-        player.getInventory().setItem(6,back);
+        player.getInventory().setItem(slot,back);
     }
     public static void openBook(Player player,ItemStack book){
         openBook(player.getInventory().getHeldItemSlot(),book,player,player.getItemInHand());

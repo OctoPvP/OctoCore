@@ -47,6 +47,7 @@ public final class CC {
     public static final String ARROW_LEFT = "«";
     public static final String X = "✘";
     public static final String CHECK = "\u2714";
+    public static final String SELECTOR_ARROW = "\u25b8";
 
     public static String translate(String in){
         return ChatColor.translateAlternateColorCodes('&',in);

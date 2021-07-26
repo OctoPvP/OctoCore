@@ -107,12 +107,17 @@
         <dependency>
             <groupId>net.badbird5907</groupId>
             <artifactId>JDACommand</artifactId>
-            <version>1.1-REL</version>
+            <version>2.0.0-REL</version>
         </dependency>
         <dependency>
             <groupId>club.minnced</groupId>
             <artifactId>discord-webhooks</artifactId>
             <version>0.5.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javatuples</groupId>
+            <artifactId>javatuples</artifactId>
+            <version>1.2</version>
         </dependency>
         <!--
         <dependency>

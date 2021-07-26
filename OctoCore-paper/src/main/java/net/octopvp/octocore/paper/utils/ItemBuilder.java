@@ -1,11 +1,14 @@
 package net.octopvp.octocore.paper.utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 import com.google.gson.Gson;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -192,6 +195,16 @@ public class ItemBuilder {
      */
     public ItemBuilder durability(short damage) {
         this.damage = damage;
+        return this;
+    }
+
+    /**
+     * Sets the Durability (Damage) of the ItemStack
+     *
+     * @param damage Damage for the ItemStack
+     */
+    public ItemBuilder durability(int damage) {
+        this.damage = (short) damage;
         return this;
     }
 
@@ -964,7 +977,8 @@ public class ItemBuilder {
         private ItemBuilder stackBuilder;
 
         // Meta
-        private String owner;
+        private String owner,base64;
+        private UUID ownerUUID = UUID.randomUUID();
 
         private SkullBuilder(ItemBuilder stackBuilder) {
             this.stackBuilder = stackBuilder;
@@ -975,6 +989,16 @@ public class ItemBuilder {
             this.owner = ownerName;
             return this;
         }
+        public SkullBuilder base64Skin(String base64){
+            this.base64 = base64;
+            return this;
+        }
+        public SkullBuilder withOwner(UUID uuid){
+            this.ownerUUID = uuid;
+            return this;
+        }
+
+
 
         /**
          * Builds a skull from a owner
@@ -991,6 +1015,18 @@ public class ItemBuilder {
             // Edit skull meta
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(owner);
+            if (base64 != null && base64 != ""){
+                GameProfile profile = new GameProfile(ownerUUID, "");
+                profile.getProperties().put("textures", new Property("textures", base64));
+                Field profileField = null;
+                try {
+                    profileField = meta.getClass().getDeclaredField("profile");
+                    profileField.setAccessible(true);
+                    profileField.set(meta, profile);
+                } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+                    e.printStackTrace();
+                }
+            }
             skull.setItemMeta(meta);
 
             // Lastly, return the skull

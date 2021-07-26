@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.setup;
 import net.milkbowl.vault.chat.Chat;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.VaultManager;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.util.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 

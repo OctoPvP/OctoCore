@@ -3,27 +3,18 @@ package net.octopvp.octocore.paper.manager.impl;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import lombok.Getter;
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.conversations.ConfirmConversation;
-import net.octopvp.octocore.paper.conversations.tag.SetDescConversation;
-import net.octopvp.octocore.paper.conversations.tag.SetNameConversation;
-import net.octopvp.octocore.paper.conversations.tag.SetTagConversation;
-import net.octopvp.octocore.paper.database.redis.object.JedisAction;
+import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
-import net.octopvp.octocore.paper.objects.PlayerTagBuilder;
-import net.octopvp.octocore.paper.utils.Logger;
-import net.octopvp.octocore.paper.utils.callback.Callback;
-import net.octopvp.octocore.paper.utils.callback.ReturnableTypeCallback;
-import net.octopvp.octocore.paper.utils.json.JsonChain;
+import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.json.JsonChain;
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class TagManager extends Manager {
     @Getter

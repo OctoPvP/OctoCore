@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.command;
 
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.paper.utils.permission.PermissionAnnotation;
 
 import java.lang.annotation.ElementType;

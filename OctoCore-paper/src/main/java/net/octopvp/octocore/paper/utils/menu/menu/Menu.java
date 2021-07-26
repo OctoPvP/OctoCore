@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.menu.MenuManager;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import org.bukkit.Bukkit;
@@ -29,7 +30,9 @@ public abstract class Menu {
     public abstract List<Button> getButtons(Player player);
 
     public abstract String getName(Player player);
-
+    public void open(Sender sender){
+        open(sender.getPlayer());
+    }
     public void open(Player player) {
         Menu previous = MenuManager.getOpenedMenus().get(player.getUniqueId());
         if (previous != null) {
@@ -160,5 +163,9 @@ public abstract class Menu {
     public void onClose(Player player) {
         MenuManager.getLastOpenedMenus().remove(player.getUniqueId());
         MenuManager.getLastOpenedMenus().put(player.getUniqueId(), this);
+    }
+
+    public List<Button> getToolbarButtons(){
+        return null;
     }
 }

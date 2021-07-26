@@ -9,11 +9,12 @@ import net.octopvp.octocore.paper.objects.Disable;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+
 @Disable
 public class NickCommand extends BaseCommand {
     @Command(name = "nick", description = "nick",usage = "/nick [name]",permission = Permission.COMMAND_NICK)

@@ -9,11 +9,10 @@ import net.octopvp.octocore.paper.objects.Disable;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 @Disable
 public class UnNickCommand extends BaseCommand {
     @Command(name = "unnick", description = "unnick",usage = "/unnick",permission = Permission.COMMAND_UNNICK)

@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.listeners;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.objects.AuditLogEntry;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;

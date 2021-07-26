@@ -7,11 +7,11 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.database.redis.object.JedisAction;
+import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.utils.msg.Lang;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 
 public class ExecuteOnAllCommand extends BaseCommand {
     @Command(name = "executeonall",permission = Permission.EXECUTE_ON_ALL_SERVERS,cooldown = 3,aliases = {"globalexecute"})

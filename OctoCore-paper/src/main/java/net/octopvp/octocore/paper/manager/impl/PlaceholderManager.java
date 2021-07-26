@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.manager.impl;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseHelper;
 import net.octopvp.octocore.paper.manager.Manager;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.ChatColor;
 

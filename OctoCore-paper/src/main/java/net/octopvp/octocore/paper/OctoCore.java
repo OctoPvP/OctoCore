@@ -1,44 +1,42 @@
 package net.octopvp.octocore.paper;
 
-import com.comphenix.protocol.ProtocolLib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
 import net.octopvp.octocore.common.HardwareUtils;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.database.ConnectionPoolManager;
 import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.Settings;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.command.CommandFramework;
 import net.octopvp.octocore.paper.database.DatabaseHelper;
 import net.octopvp.octocore.paper.database.redis.RedisData;
 import net.octopvp.octocore.paper.manager.impl.*;
-import net.octopvp.octocore.paper.objects.BlackListedCommand;
 import net.octopvp.octocore.paper.setup.*;
-import net.octopvp.octocore.paper.utils.Logger;
 import net.octopvp.octocore.paper.utils.PacketUtil;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorHandling;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
+import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class OctoCore extends JavaPlugin {
     public static String prefix = "[OctoCore] ";
     private static Chat chat;
+    private static Permission perms = null;
     private static ConnectionPoolManager connectionPoolManager;
     private static Connection connection;
     private static OctoCore instance;
@@ -99,17 +97,17 @@ public final class OctoCore extends JavaPlugin {
 
     //they init from up to down
     @Getter
+    private DatabaseManager databaseManager;
+    @Getter
     private AuthManager authManager;
     @Getter
     private FilterManager filterManager;
     @Getter
     private NickManager nickManager;
     @Getter
-    private LuckpermsManager luckpermsManager;
+    private RankManager rankManager;
     @Getter
     private PlayerManager playerManager;
-    @Getter
-    private DatabaseManager databaseManager;
     @Getter
     private SettingsManager settingsManager;
     @Getter
@@ -137,12 +135,15 @@ public final class OctoCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new Logger(Bukkit.getLogger(),prefix);
         if(instance != null)
             throw new IllegalStateException("OctoCore is already initialized");
         instance = this;
+        new Tasks(this);
         commandFramework = new CommandFramework(this);
         tab = new Tab(this);
         serverName = getInstance().getConfig().getString("name");
+        OctoCoreCommon.setServerName(OctoCore.getServerName());
         try{
             serverType = ServerType.valueOf(getConfig().getString("server-type").toUpperCase());
             master = (serverType == ServerType.MASTER);
@@ -177,7 +178,7 @@ public final class OctoCore extends JavaPlugin {
         NameTagChanger.INSTANCE.init();
         Logger.info("Hooking into plugins.");
         new SetupHooks().setup(this);
-        setupChat();
+        setupVault();
         Logger.info("Setting up commands.");
         new SetupCommands().setup(this);
         Logger.info("Setting up permissions.");
@@ -230,28 +231,6 @@ public final class OctoCore extends JavaPlugin {
             throwables.printStackTrace();
         }
     }
-    private boolean setupChat() {
-        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        chat = rsp.getProvider();
-        return chat != null;
-    }
-    public static List<String> disabledCommands(){
-        //TODO list all disable commands and somehow reload them at interval
-        List<String> list = new ArrayList<>();
-        ResultSet rs = null;
-        try {
-            rs = OctoCore.getConnection().prepareStatement(DatabaseHelper.GET_DISABLED_COMMANDS.getSql()).executeQuery();
-            while(rs.next()){
-                BlackListedCommand cmd = new BlackListedCommand(rs.getString("cmd"));
-                cmd.setDisabledOn(rs.getLong("DisabledOn"));
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            Logger.warn("Unable to load blacklisted commands from database!");
-        }
-        return list;
-    }
-
     public static boolean isVaultEnabled(){
         return Bukkit.getPluginManager().isPluginEnabled("Vault");
     }
@@ -260,5 +239,20 @@ public final class OctoCore extends JavaPlugin {
     }
     public static ConversationFactory getConversationFactory() {
         return instance.conversationFactory;
+    }
+
+    public void setupVault(){
+        Logger.info(setupChat() ? CC.GREEN + "Successfully set up vault chat." : CC.RED + "Could not set up vault chat.");
+        Logger.info(setupPermissions() ? CC.GREEN + "Successfully set up vault permissions." : CC.RED + "Could not set up vault permissions.");
+    }
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
+    }
+    private boolean setupChat() {
+        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+        chat = rsp.getProvider();
+        return chat != null;
     }
 }

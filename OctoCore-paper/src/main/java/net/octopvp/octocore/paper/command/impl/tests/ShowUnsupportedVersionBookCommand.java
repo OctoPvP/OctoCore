@@ -5,7 +5,7 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.autoinit.BookManager;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 
 public class ShowUnsupportedVersionBookCommand extends BaseCommand {
     @Command(name = "showunsupportedversionbook",permission = Permission.ADMIN,playerOnly = true)

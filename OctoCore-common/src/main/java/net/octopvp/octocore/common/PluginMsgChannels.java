@@ -3,6 +3,7 @@ package net.octopvp.octocore.common;
 public class PluginMsgChannels {
     public class SubChannels{
         public static final String SYNC = "SYNC";
+        public static final String PERMISSIONS = "PERM";
     }
     /*
     public static final String SPIGOT_TO_BUNGEE = "OCTO|1";

@@ -2,15 +2,18 @@ package net.octopvp.octocore.paper.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.database.redis.object.JedisAction;
-import net.octopvp.octocore.paper.manager.impl.LuckpermsManager;
-import net.octopvp.octocore.paper.utils.json.JsonChain;
+import net.octopvp.octocore.common.object.redis.JedisAction;
+import net.octopvp.octocore.common.util.json.JsonChain;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Getter
@@ -18,10 +21,12 @@ import java.util.stream.Collectors;
 public class GlobalPlayer {
     private UUID uuid;
 
-    private String name, server, rankName, firstJoined, lastServer;
+    private String name, server, firstJoined, lastServer;
     private boolean vanished,staffChatAlerts, adminChatAlerts, reportAlerts;
     private long lastSeen, lastActivity = -1L;
     private List<PlayerTag> allTags = new ArrayList<>();
+    private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
+    private Map<String, ServerContext> negatedPermissions = new ConcurrentHashMap<>();
 
     public boolean isOnline(){
         return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData ->
@@ -38,12 +43,33 @@ public class GlobalPlayer {
     public void setUniqueId(UUID u){
         uuid = u;
     }
-    public CompletableFuture<Boolean> hasPermission(String node){
-        if (!server.equals(OctoCore.getServerName())) {//not this server
-            return LuckpermsManager.hasPermissionOffline(uuid,node);
+    public boolean hasPermission(String permission) {
+        if (permissionNegated(permission))
+            return false;
+        return hasSetPermission(permission);
+    }
+    public boolean hasPermission(String permission, String server){
+        if (negatedPermissions.containsKey(permission))
+            return negatedPermissions.get(permission).getServer().equalsIgnoreCase(server) || negatedPermissions.get(permission).isGlobal();
+        if (permissions.containsKey(permission)){
+            if (permissions.get(permission).getServer().equalsIgnoreCase(server) || permissions.get(permission).isGlobal())
+                return true;
         }
-        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
-        completableFuture.complete(LuckpermsManager.hasPermission(uuid,node));
-        return completableFuture;
+        return false;
+    }
+    public boolean permissionNegated(String permission){
+        if (negatedPermissions.containsKey(permission)){
+            return negatedPermissions.get(permission).isThisServer();
+        }
+        return false;
+    }
+    public boolean hasSetPermission(String permission){
+        if (permissionNegated(permission))
+            return false;
+        if (permissions.containsKey(permission)) {
+            if (permissions.get(permission).isThisServer())
+                return true;
+        }
+        return false;
     }
 }

@@ -6,16 +6,16 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.database.redis.object.JedisAction;
+import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.objects.enums.DataUpdateReason;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.utils.msg.Lang;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.Bukkit;
 
 public class RemoveTagCommand extends BaseCommand {

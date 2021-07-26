@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.setup;
 import lombok.Getter;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.runnable.runnables.DataUpdateRunnable;
 import net.octopvp.octocore.paper.utils.runnable.runnables.SyncDataUpdateRunnable;
 import org.bukkit.Bukkit;

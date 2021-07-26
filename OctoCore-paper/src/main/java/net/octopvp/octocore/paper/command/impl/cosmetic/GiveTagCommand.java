@@ -6,7 +6,7 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.database.redis.object.JedisAction;
+import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.menus.tag.GiveTagsMenu;
@@ -15,7 +15,7 @@ import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.objects.enums.DataUpdateReason;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonChain;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;

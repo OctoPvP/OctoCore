@@ -3,18 +3,19 @@ package net.octopvp.octocore.paper.manager.impl;
 import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 import net.octopvp.octocore.common.object.AlertType;
 import net.octopvp.octocore.common.object.HashedAddress;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.database.redis.object.JedisAction;
+import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.enums.RankType;
-import net.octopvp.octocore.paper.utils.Logger;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
@@ -33,6 +34,10 @@ public class PlayerManager extends Manager {
             .int64Converter((value, writer) -> writer.writeNumber(value.toString()))
             .build();
 
+    public static PlayerData getPlayerData(String name){
+        return playerProfiles.values().stream().filter(profile -> profile.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+
     /**
      * After the database is initialized
      */
@@ -50,10 +55,9 @@ public class PlayerManager extends Manager {
             PlayerData profile = playerProfiles.get(uuid);
             if(profile == null)
                 Logger.debug("Profile is null!");
-            profile.setRankType(RankType.getRankType(uuid));
+            profile.setRankType(profile.getHighestRank().getRankType());
             profile.setLastSeenServer(OctoCore.getServerName());
             profile.setLastSeenIp(new HashedAddress(ip));
-            profile.reloadLuckPermsThings();
             Player player = Bukkit.getPlayer(uuid);
             if (player == null)
                 return;
@@ -69,12 +73,12 @@ public class PlayerManager extends Manager {
             }
         });
     }
-    public static void loadPData(UUID uuid){
+    public static void loadPData(UUID uuid,String name){
         try{
             PlayerData profile;
             if(doesDocumentExistByUUID(uuid)){
                 profile = loadProfileFromDB(uuid);
-            }else profile = createNewProfile(uuid);
+            }else profile = createNewProfile(uuid,name);
             playerProfiles.put(uuid, profile);
         } catch (Exception e) {
             System.err.println("------------------------------");
@@ -85,7 +89,6 @@ public class PlayerManager extends Manager {
 
     public static void processLeave(Player player){
         PlayerData playerData = getProfile(player.getUniqueId());
-        playerData.reloadLuckPermsThings();
         unloadProfile(player.getUniqueId());
         Tasks.runLater(()->{
             if (playerData.isOnline()){
@@ -119,7 +122,7 @@ public class PlayerManager extends Manager {
             p = deserializeProfile(json);
             p.setLastLoaded(System.currentTimeMillis());
             p.setLastLogin(System.currentTimeMillis());
-            p.setRankName(LuckpermsManager.getUser(uuid).getPrimaryGroup());
+            p.onLoad(doc);
             return p;
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,9 +135,9 @@ public class PlayerManager extends Manager {
      * @param uuid
      * @return
      */
-    public static PlayerData createNewProfile(UUID uuid){
-        Logger.debug("Creating new profile for " + uuid.toString());
-        PlayerData profile = new PlayerData(uuid);
+    public static PlayerData createNewProfile(UUID uuid,String name){
+        Logger.debug("Creating new profile for " + uuid.toString() + " | " + name);
+        PlayerData profile = new PlayerData(uuid,name);
         profile.setCoins(0);
         profile.setXp(0);
         profile.setFrozen(false);
@@ -166,7 +169,7 @@ public class PlayerManager extends Manager {
             return;
         String json = serializeProfileToJson(profile);
         Logger.debug("Saving profile: \nUUID:" + profile.getUuid() + "\nJSON: " + json);
-        pdataCollection.replaceOne(getProfileDocument(profile.getUuid()),Document.parse(json));
+        pdataCollection.replaceOne(getProfileDocument(profile.getUuid()),Document.parse(json), new ReplaceOptions().upsert(true));
     }
 
     /**
@@ -175,17 +178,19 @@ public class PlayerManager extends Manager {
      * @return
      */
     public static PlayerData getProfileFromDB(UUID uuid){
-        PlayerData profile = deserializeProfile(getProfileJson(getProfileDocument(uuid)));
+        Document doc = getProfileDocument(uuid);
+        PlayerData profile = deserializeProfile(getProfileJson(doc));
         if (profile == null)
             return null;
-        profile.setLastLoaded(System.currentTimeMillis());
+        profile.onLoad(doc);
         return profile;
     }
     public static PlayerData getProfileFromDB(String name){
-        PlayerData profile = deserializeProfile(getProfileJson(getProfileDocument(name)));
+        Document doc = getProfileDocument(name);
+        PlayerData profile = deserializeProfile(getProfileJson(doc));
         if (profile == null)
             return null;
-        profile.setLastLoaded(System.currentTimeMillis());
+        profile.onLoad(doc);
         return profile;
     }
 
@@ -195,6 +200,8 @@ public class PlayerManager extends Manager {
      * @return
      */
     public static String serializeProfileToJson(PlayerData profile){
+        if (profile == null)
+            return null;
         return OctoCore.getGson().toJson(profile);
     }
 
@@ -216,6 +223,15 @@ public class PlayerManager extends Manager {
         if (!playerProfiles.containsKey(uuid))
             return null;
         return playerProfiles.get(uuid);
+    }
+    public static PlayerData getData(UUID uuid){
+        return getProfile(uuid);
+    }
+    public static PlayerData getProfile(Player player){
+        return getProfile(player.getUniqueId());
+    }
+    public static PlayerData getData(Player player){
+        return getProfile(player);
     }
 
     /**
@@ -248,11 +264,14 @@ public class PlayerManager extends Manager {
         Document document = getPdataCollection().find(Filters.eq("uuid", uuid.toString())).first();
         return document != null;
     }
-
+    public static boolean doesDocumentExistByName(String name){
+        return getPdataCollection().find(Filters.eq("name",name)).first() != null;
+    }
     @Override
     public void init(OctoCore plugin) {
-        LuckpermsManager.getLuckPerms().getEventBus().subscribe(OctoCore.getInstance(),UserDataRecalculateEvent.class, this::onLpDataUpdate);
+        //LuckpermsManager.getLuckPerms().getEventBus().subscribe(OctoCore.getInstance(),UserDataRecalculateEvent.class, this::onLpDataUpdate);
     }
+    /*
     public void onLpDataUpdate(UserDataRecalculateEvent event){
         PlayerData profile = playerProfiles.get(event.getUser().getUniqueId());
         Logger.debug("Lp data update event: User: " + event.getUser() + " Data: " + event.getData());
@@ -268,6 +287,7 @@ public class PlayerManager extends Manager {
         profile.setPrefix(getPrefix(uuid));
         profile.setMainColor(LuckpermsManager.getMainColor(uuid));
     }
+     */
 
     @Override
     public void disable() {
@@ -285,7 +305,7 @@ public class PlayerManager extends Manager {
         }
         return (Bukkit.getPluginManager().isPluginEnabled("Vault") && VaultManager.isChatHookEnabled()) ?
                 VaultManager.getChat().getPlayerPrefix(Bukkit.getPlayer(uuid)) :
-                LuckpermsManager.getPrefix(uuid);
+                getProfile(uuid).getPrefix();
     }
     public static String getPrefix(PlayerData pdata){
         if(pdata.isNicked()){
@@ -293,7 +313,7 @@ public class PlayerManager extends Manager {
         }
         return (Bukkit.getPluginManager().isPluginEnabled("Vault") && VaultManager.isChatHookEnabled()) ?
                 VaultManager.getChat().getPlayerPrefix(Bukkit.getPlayer(pdata.getUuid())) :
-                LuckpermsManager.getPrefix(pdata.getUuid());
+                pdata.getPrefix();
     }
 
     public static void sendStaffAlert(AlertType type, String... placeholders) {
@@ -356,5 +376,22 @@ public class PlayerManager extends Manager {
             a.add(onlinePlayer.getName());
         }
         return a;
+    }
+    public static String getProfileJsonOnlineorOffline(String name){
+        if (Bukkit.getPlayer(name) != null)
+            return serializeProfileToJson(getProfile(Bukkit.getPlayer(name)));
+        if (doesDocumentExistByName(name))
+            return serializeProfileToJson(getProfileFromDB(name));
+        return null;
+    }
+
+    public static void deleteData(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player != null) return;
+        playerProfiles.remove(uuid);
+    }
+
+    public static void saveAllData(){
+        Tasks.runAsync(()->Bukkit.getOnlinePlayers().forEach(player -> saveProfile(getProfile(player))));
     }
 }

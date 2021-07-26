@@ -8,7 +8,7 @@ import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 
 public class StaffChat extends BaseCommand {
     @Command(name = "staffchat",aliases = {"sc"},permission = Permission.STAFFCHAT,playerOnly = true)

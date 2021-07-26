@@ -3,10 +3,10 @@ package net.octopvp.octocore.paper.manager.impl;
 import com.google.gson.JsonObject;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.RedisData;
-import net.octopvp.octocore.paper.database.redis.object.JedisAction;
-import net.octopvp.octocore.paper.database.redis.object.JedisSettings;
+import net.octopvp.octocore.common.object.redis.JedisAction;
+import net.octopvp.octocore.common.object.redis.JedisSettings;
 import net.octopvp.octocore.paper.manager.Manager;
-import net.octopvp.octocore.paper.utils.Logger;
+import net.octopvp.octocore.common.util.Logger;
 
 public class RedisManager extends Manager {
     //Load after db manager start

@@ -4,7 +4,7 @@ import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 
 public class ViewHistoryCommand extends BaseCommand { //FIXME fix o7
     @Command(name = "viewhistory",aliases = {"vh","h"},permission = Permission.VIEW_HISTORY,playerOnly = true)

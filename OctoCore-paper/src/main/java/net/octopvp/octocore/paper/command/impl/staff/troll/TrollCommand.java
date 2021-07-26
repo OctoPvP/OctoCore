@@ -7,7 +7,7 @@ import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.paper.utils.trolls.CrashClient;
 
 import java.lang.reflect.InvocationTargetException;

@@ -1,6 +1,5 @@
 package net.octopvp.octocore.paper.command.impl.essentials;
 
-import com.google.common.collect.Lists;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.BaseCommand;
@@ -8,11 +7,10 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.command.Completer;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

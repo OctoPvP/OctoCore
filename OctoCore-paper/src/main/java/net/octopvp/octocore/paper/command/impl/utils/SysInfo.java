@@ -1,13 +1,12 @@
 package net.octopvp.octocore.paper.command.impl.utils;
 
-import com.lunarclient.bukkitapi.LunarClientAPI;
 import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.permission.Permission;
+import net.octopvp.octocore.common.object.Permission;
 
 import java.util.Arrays;
 import java.util.List;
