@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.manager.impl;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.InsertOneOptions;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
@@ -114,6 +115,10 @@ public class RankManager extends Manager {
     }
     public static void broadcastReload(){
         OctoCore.getInstance().getRedisData().write(JedisAction.RELOAD_RANKS,new JsonChain().get());
+    }
+    public static void delete(Rank rank){
+        ranksCollection.findOneAndDelete(Filters.eq("rankId",rank.getRankId()));
+        broadcastReload();
     }
 
 }

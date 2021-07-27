@@ -9,6 +9,7 @@ import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
+import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import net.octopvp.octocore.paper.objects.enums.RankType;
 import org.apache.commons.collections4.map.UnmodifiableMap;
 import org.bukkit.ChatColor;
@@ -18,7 +19,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class Rank {
+public class Rank implements Cloneable {
     private String name;
     private UUID rankId = UUID.randomUUID();
     private int weight = 0;
@@ -37,6 +38,11 @@ public class Rank {
 
     public void save() {
         RankManager.save(this);
+    }
+
+    @Override
+    public Rank clone() throws CloneNotSupportedException {
+        return (Rank) super.clone();
     }
 
     public String[] getInheritedRanksName() {
@@ -204,5 +210,8 @@ public class Rank {
                 map.put(node.getPermission(),node.getServer());
         });
         return ImmutableMap.copyOf(map);
+    }
+    public RankBuilder toBuilder(){
+        return new RankBuilder(this);
     }
 }

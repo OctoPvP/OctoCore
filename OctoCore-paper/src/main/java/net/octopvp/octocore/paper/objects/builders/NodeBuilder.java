@@ -5,10 +5,16 @@ import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.paper.objects.permissions.Node;
 
 @Getter
-public class NodeBuilder {
+public class NodeBuilder implements Cloneable{
     private String permission = "Not Set";
     private ServerContext scope = new ServerContext("Global");
     private boolean allowed = true;
+
+    @Override
+    public NodeBuilder clone() throws CloneNotSupportedException {
+        return (NodeBuilder) super.clone();
+    }
+
     public NodeBuilder(Node node){
         permission = node.getPermission();
         scope = node.getScope();

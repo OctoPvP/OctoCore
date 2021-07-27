@@ -1,13 +1,18 @@
-package net.octopvp.octocore.paper.menus.rank;
+package net.octopvp.octocore.paper.menus.rank.edit;
 
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.conversations.QuestionConversation;
 import net.octopvp.octocore.paper.manager.impl.FilterManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
-import net.octopvp.octocore.paper.objects.builders.RankBuilder;
+import net.octopvp.octocore.paper.menus.rank.ServerMenu;
+import net.octopvp.octocore.paper.menus.rank.create.ChooseColorMenu;
+import net.octopvp.octocore.paper.menus.rank.create.ChoosePermissionInheritedMenu;
 import net.octopvp.octocore.paper.objects.enums.RankType;
+import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
@@ -24,44 +29,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class CreateRankMenu extends Menu {
-    private String name;
-    private RankBuilder builder = new RankBuilder(name);
-    public CreateRankMenu(String name){
-        this.name = name;
-    }
-    public CreateRankMenu(RankBuilder rankBuilder){
-        this.builder = rankBuilder;
-        this.name = builder.getRank().getName();
-    }
-
-    @Override
-    public void onOpen(Player player) {
-        if (FilterManager.containsUnicode(name)){
-            player.sendMessage(CC.RED + "You can't use unicode!");
-            SoundUtil.playError(player);
-            player.closeInventory();
-        }
-        if (name.contains(" ")){
-            player.sendMessage(CC.RED + "You can't have spaces in the name!");
-            SoundUtil.playError(player);
-            player.closeInventory();
-        }
-        if (RankManager.getRankByName(name) != null){
-            player.sendMessage(CC.RED + "That rank already exists!");
-            SoundUtil.playError(player);
-            player.closeInventory();
-        }
+public class EditRankMenu extends Menu {
+    private Rank rank;
+    @SneakyThrows
+    public EditRankMenu(Rank r){
+        rank = r.clone();
     }
 
     @Override
     public List<Button> getButtons(Player player) {
-        return Lists.newArrayList(new PlaceholderBtn(),new NameButton(),new PrefixButton(),new ColorButton(),new WeightButton(),new RankTypeButton(),new ServerButton(),new BuildButton());
+        return Lists.newArrayList(new PlaceholderBtn(),new NameButton(),new PrefixButton(),new ColorButton(),new WeightButton(),new RankTypeButton(),new ServerButton(),new BuildButton(),new PermissionsButton());
     }
 
     @Override
     public String getName(Player player) {
-        return CC.AQUA + "Create a new rank";
+        return CC.AQUA + "Edit Rank " + rank.getName();
     }
     private class PlaceholderBtn extends PlaceholderButton {
         @Override
@@ -79,7 +61,7 @@ public class CreateRankMenu extends Menu {
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.NAME_TAG).name(CC.AQUA + "Name").lore(
                     CC.SEPARATOR,
-                    CC.AQUA + "Name: " + name,
+                    CC.AQUA + "Name: " + rank.getName(),
                     CC.SEPARATOR
             ).build();
         }
@@ -117,7 +99,7 @@ public class CreateRankMenu extends Menu {
                     prompt(player);
                     return Prompt.END_OF_CONVERSATION;
                 }
-                builder.setName(s);
+                rank.setName(s);
                 open(player);
                 SoundUtil.playPing(player);
                 return Prompt.END_OF_CONVERSATION;
@@ -127,7 +109,7 @@ public class CreateRankMenu extends Menu {
     private class PrefixButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Prefix").lore(CC.SEPARATOR,CC.AQUA + "Prefix: " + ((builder.getRank().getPrefix() == null || builder.getRank().getPrefix().equalsIgnoreCase("")) ? CC.RED + "Not set" : builder.getRank().getPrefix()),CC.SEPARATOR).build();
+            return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Prefix").lore(CC.SEPARATOR,CC.AQUA + "Prefix: " + ((rank == null || rank.getPrefix().equalsIgnoreCase("")) ? CC.RED + "Not set" : rank.getPrefix()),CC.SEPARATOR).build();
         }
 
         @Override
@@ -143,7 +125,7 @@ public class CreateRankMenu extends Menu {
                     open(player);
                     return Prompt.END_OF_CONVERSATION;
                 }
-                builder.setPrefix(s);
+                rank.setPrefix(s);
                 open(player);
                 SoundUtil.playPing(player);
                 return Prompt.END_OF_CONVERSATION;
@@ -154,7 +136,7 @@ public class CreateRankMenu extends Menu {
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.EMERALD).name(CC.AQUA + "Color").lore(CC.SEPARATOR,CC.AQUA + "Color: " + builder.getRank().getColor() + builder.getRank().getColor().name(),CC.SEPARATOR).build();
+            return new ItemBuilder(Material.EMERALD).name(CC.AQUA + "Color").lore(CC.SEPARATOR,CC.AQUA + "Color: " + rank.getColor() + rank.getColor().name(),CC.SEPARATOR).build();
         }
 
         @Override
@@ -164,13 +146,16 @@ public class CreateRankMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            new ChooseColorMenu(builder).open(player);
+            new ChooseColorMenu(rank.toBuilder(),(b)->{
+                rank = b.build();
+                open(player);
+            }).open(player);
         }
     }
     private class WeightButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.IRON_INGOT).name(CC.AQUA + "Weight").lore(CC.SEPARATOR,CC.AQUA + "Weight: " + CC.YELLOW + builder.getRank().getWeight(),CC.SEPARATOR).build();
+            return new ItemBuilder(Material.IRON_INGOT).name(CC.AQUA + "Weight").lore(CC.SEPARATOR,CC.AQUA + "Weight: " + CC.YELLOW + rank.getWeight(),CC.SEPARATOR).build();
         }
 
         @Override
@@ -197,7 +182,7 @@ public class CreateRankMenu extends Menu {
                     prompt(player);
                     return Prompt.END_OF_CONVERSATION;
                 }
-                builder.setWeight(i);
+                rank.setWeight(i);
                 open(player);
                 return Prompt.END_OF_CONVERSATION;
             })).withLocalEcho(false).buildConversation(player).begin();
@@ -243,7 +228,7 @@ public class CreateRankMenu extends Menu {
     private class ServerButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.ANVIL).name(CC.AQUA + "Server").lore(CC.SEPARATOR,CC.AQUA + "Server: " + CC.YELLOW + builder.getRank().getScope().getServer(),CC.SEPARATOR).build();
+            return new ItemBuilder(Material.ANVIL).name(CC.AQUA + "Server").lore(CC.SEPARATOR,CC.AQUA + "Server: " + CC.YELLOW + rank.getScope().getServer(),CC.SEPARATOR).build();
         }
 
         @Override
@@ -254,13 +239,15 @@ public class CreateRankMenu extends Menu {
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
             SoundUtil.playPing(player);
-            new ServerMenu(builder).open(player);
+            new ServerMenu((context)->{
+                rank.setScope(context);
+            }).open(player);
         }
     }
     private class PermissionsButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.IRON_SWORD).name(CC.AQUA + "Permissions\\Inherited Ranks").lore(CC.SEPARATOR,CC.AQUA + "Total Permissions: " + CC.YELLOW + builder.getRank().getNodes().size(),CC.AQUA + "Total Allowed Permissions: " + CC.YELLOW + builder.getRank().getAllowedPermissions().size(),CC.AQUA + "Total Negated Permissions: " + CC.YELLOW + builder.getRank().getNegatedPermissions().size(),CC.AQUA + "Inherited Ranks: " + CC.YELLOW + builder.getRank().getInheritedRanks().size(),CC.SEPARATOR).build();
+            return new ItemBuilder(Material.IRON_SWORD).name(CC.AQUA + "Permissions \\ Inherited Ranks").lore(CC.SEPARATOR,CC.AQUA + "Total Permissions: " + CC.YELLOW + rank.getNodes().size(),CC.AQUA + "Total Allowed Permissions: " + CC.YELLOW + rank.getAllowedPermissions().size(),CC.AQUA + "Total Negated Permissions: " + CC.YELLOW + rank.getNegatedPermissions().size(),CC.AQUA + "Inherited Ranks: " + CC.YELLOW + rank.getInheritedRanks().size(),CC.SEPARATOR).build();
         }
 
         @Override
@@ -270,13 +257,16 @@ public class CreateRankMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-
+            new ChoosePermissionInheritedMenu(rank.toBuilder(),(b)->{
+                rank = b.build();
+                open(player);
+            }).open(player);
         }
     }
     private class BuildButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.EMERALD_BLOCK).name(CC.GREEN + CC.B + "Create").lore(CC.GREEN + "Creates the rank!").build();
+            return new ItemBuilder(Material.EMERALD_BLOCK).name(CC.GREEN + CC.B + "Save").build();
         }
 
         @Override
@@ -286,10 +276,7 @@ public class CreateRankMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            RankManager.createNewRank(builder);
-            player.closeInventory();
-            player.sendMessage(CC.GREEN + "Success!");
-            SoundUtil.playPing(player);
+
         }
     }
 

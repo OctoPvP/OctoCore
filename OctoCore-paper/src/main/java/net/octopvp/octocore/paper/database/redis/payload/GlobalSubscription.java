@@ -12,10 +12,7 @@ import net.octopvp.octocore.paper.api.events.GlobalPlayerCreateEvent;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.object.redis.JedisHandle;
-import net.octopvp.octocore.paper.manager.impl.JDAManager;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.manager.impl.RankManager;
-import net.octopvp.octocore.paper.manager.impl.TagManager;
+import net.octopvp.octocore.paper.manager.impl.*;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
 import net.octopvp.octocore.paper.objects.Broadcast;
@@ -48,6 +45,7 @@ public class GlobalSubscription implements JedisHandle {
             return;
         }
         JsonObject data = object.get("data").getAsJsonObject();
+        RedisListenerManager.handleMessage(payload,data);
         if (payload == JedisAction.SERVER_DATA) {
             ServerData serverData = plugin.getServerManager().getServerData(data.get("name").getAsString());
             if (serverData == null) {

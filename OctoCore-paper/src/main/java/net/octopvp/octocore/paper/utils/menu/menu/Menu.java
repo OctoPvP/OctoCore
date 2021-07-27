@@ -30,12 +30,16 @@ public abstract class Menu {
     public abstract List<Button> getButtons(Player player);
 
     public abstract String getName(Player player);
+    @Getter
+    @Setter
+    public Menu previous;
     public void open(Sender sender){
         open(sender.getPlayer());
     }
     public void open(Player player) {
         Menu previous = MenuManager.getOpenedMenus().get(player.getUniqueId());
         if (previous != null) {
+            setPrevious(previous);
             previous.onClose(player);
             MenuManager.getOpenedMenus().remove(player.getUniqueId());
         }

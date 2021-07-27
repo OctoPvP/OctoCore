@@ -75,6 +75,8 @@ public enum Permission  {
     GRANT_ALL("octocore.grant.all"),
 
     CREATE_RANK("octocore.command.createrank"),
+    DELETE_RANK("octocore.command.deleterank"),
+    EDIT_RANK("octocore.command.editrank"),
 
     TEST("test");
     private final String node;

@@ -1,20 +1,23 @@
 package net.octopvp.octocore.paper.manager.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
-import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.utils.tab.item.TextTabItem;
+import net.octopvp.octocore.paper.objects.maps.pair.PairMap;
+import net.octopvp.octocore.paper.utils.tab.DefaultTabHandler;
+import net.octopvp.octocore.paper.utils.tab.TabHandler;
+import net.octopvp.octocore.paper.utils.tab.item.TabItem;
 import net.octopvp.octocore.paper.utils.tab.tablist.TableTabList;
-import net.octopvp.octocore.paper.utils.tab.util.Skin;
-import net.octopvp.octocore.paper.utils.tab.util.Skins;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class TabManager extends Manager {
     private static String value_color = CC.B + CC.GRAY;
@@ -23,19 +26,19 @@ public class TabManager extends Manager {
     private static String header = "";
     private static String footer = "";
     private static HashMap<UUID, TableTabList> tablists = new HashMap<>();
+    private static Map<UUID,TabHandler> customHandlers = new HashMap<>();
+    @Getter
+    @Setter
+    private static TabHandler defaultTabHandler = new DefaultTabHandler();
     @Override
     public void init(OctoCore plugin) {
         header = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.header")).replace("\\n","\n");
         footer = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.footer").replace("\\n","\n"));
         if(plugin.getConfig().getBoolean("default-tab")){
             Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCore.getInstance(), () -> {
-                if(!(Bukkit.getOnlinePlayers().toArray().length == 0)){
-                    for (UUID uuid : PlayerManager.getPlayerProfiles().keySet()){
-                        PlayerData profile = PlayerManager.getPlayerProfiles().get(uuid);
-                        Player player = Bukkit.getPlayer(profile.getUuid());
-                        sendTab(player,profile);
-                    }
-                }
+                PlayerManager.getPlayerProfiles().forEach((uuid,profile)->{
+
+                });
             },0l, OctoCore.getInstance().getConfig().getLong("update-tab-interval"));
         }
     }
@@ -45,52 +48,28 @@ public class TabManager extends Manager {
 
     }
 
-    private static void sendTab(Player p, PlayerData p1){
-        long start = System.currentTimeMillis();
-        TableTabList tab = tablists.get(p.getUniqueId());
-        if(tab == null){
-            tab = OctoCore.getTab().newTableTabList(p);
-            tablists.put(p.getUniqueId(),tab);
-            //sendPing(tab);
-        }
-        tab.setHeaderFooter(header,footer);
-        AtomicInteger collum = new AtomicInteger(-1);
-        AtomicInteger row = new AtomicInteger(-1);
-        TableTabList finalTab = tab;
-        PlayerManager.getPlayerProfiles().forEach((uuid, data) -> {
-            row.getAndIncrement();
-            if (row.get() >= 9){
-                row.set(0);
-                collum.getAndIncrement();
+    private static void sendTab(Player p, TabHandler handler) {
+        AtomicReference<TableTabList> tab = new AtomicReference<>(tablists.get(p.getUniqueId()));
+        if (tab.get() == null) {
+            if (OctoCore.getTab().getTabLists().containsKey(p)) {
+                OctoCore.getTab().destroyTabList(p); //destroy any existing tab lists to prevent exception
             }
-            Player player = Bukkit.getPlayer(uuid);
-            finalTab.set(collum.get(),row.get(), new TextTabItem(data.getCurrentColor() + player.getDisplayName(),player.getPing(),Skins.getPlayer(data.getMainSkinUUID())));
-        });
-
-    }
-    private static void sendPing(TableTabList tab){
-        int i = 0;
-        while (true){
-            i++;
-            if(i > 80)
-                break;
-            else{
-                if(i <= 20)
-                    tab.set(0,i-1,new TextTabItem("",-1));
-                else if(i <= 40)
-                    tab.set(1,i-20,new TextTabItem("",-1));
-                else if(i <= 60)
-                    tab.set(2,i-40,new TextTabItem("",-1));
-                else if(i <= 80)
-                    tab.set(3,i-60,new TextTabItem("",-1));
-                else break;
-            }
+            tab.set(OctoCore.getTab().newTableTabList(p));
+            tablists.remove(p.getUniqueId()); //remove any tab
+            tablists.put(p.getUniqueId(), tab.get());
         }
+        PairMap<Integer, Integer, TabItem> map = handler.getTabItems(p);
+        map.forEach((k, v, m) -> tab.get().set(k, v, m));
+        tab.get().setHeaderFooter(handler.getHeader(p), handler.getFooter(p));
     }
     public static void onJoin(Player p){
         if(OctoCore.getInstance().getConfig().getBoolean("default-tab")) {
-            if(PlayerManager.getPlayerProfiles().containsKey(p.getUniqueId()))
-                sendTab(p, PlayerManager.getProfile(p.getUniqueId()));
+            if(PlayerManager.getPlayerProfiles().containsKey(p.getUniqueId())){
+                TabHandler tabHandler = defaultTabHandler;
+                if (customHandlers.get(p.getUniqueId()) != null)
+                    tabHandler = customHandlers.get(p.getUniqueId());
+                sendTab(p,tabHandler);
+            }
         }
         /*
         if(OctoCore.getInstance().getConfig().getBoolean("health-display"))
@@ -103,5 +82,8 @@ public class TabManager extends Manager {
                 tablists.remove(p.getUniqueId());
             }
         }
+    }
+    public static void setCustomTabHandler(Player player,TabHandler tabHandler){
+        customHandlers.put(player.getUniqueId(),tabHandler);
     }
 }

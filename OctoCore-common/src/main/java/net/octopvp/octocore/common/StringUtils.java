@@ -232,13 +232,19 @@ public class StringUtils {
         if (start >= args.length) return "";
         return ChatColor.stripColor(String.join(" ", Arrays.copyOfRange(args, start, args.length)));
     }
-    public static String replacePlaceholders(final String str, final String... replace){
+    public static String replacePlaceholders(final String str, final Object... replace){
+        if (replace == null || replace.length == 0){
+            return str;
+        }
         int i = 0;
         String finalReturn = str;
-        for (String s : replace) {
+        if (replace == null || replace.length == 0){
+            return finalReturn;
+        }
+        for (Object s : replace) {
             i++;
             String toReplace = "%" + i;
-            finalReturn = finalReturn.replace(toReplace,s);
+            finalReturn = finalReturn.replace(toReplace,s.toString());
         }
         return finalReturn;
     }

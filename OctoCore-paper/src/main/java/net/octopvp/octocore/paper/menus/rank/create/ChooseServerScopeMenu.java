@@ -1,23 +1,26 @@
-package net.octopvp.octocore.paper.menus.rank;
+package net.octopvp.octocore.paper.menus.rank.create;
 
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.conversations.QuestionConversation;
-import net.octopvp.octocore.paper.menus.rank.create.ChooseServerScopeMenu;
-import net.octopvp.octocore.paper.menus.rank.create.CreateRankMenu;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.menus.grant.DurationMenu;
+import net.octopvp.octocore.paper.menus.grant.GrantProcedureState;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.ServerData;
-import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.Skulls;
 import net.octopvp.octocore.paper.utils.SoundUtil;
+import net.octopvp.octocore.paper.utils.callback.TypeCallback;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
-import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -28,7 +31,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
-public class ServerMenu extends PaginatedMenu {
+public class ChooseServerScopeMenu extends PaginatedMenu {
     private final Consumer<ServerContext> callback;
     @Override
     public String getPagesTitle(Player player) {

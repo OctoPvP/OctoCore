@@ -1,12 +1,8 @@
-package net.octopvp.octocore.paper.menus.rank;
+package net.octopvp.octocore.paper.menus.rank.create;
 
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.menus.grant.AddGrantMenu;
-import net.octopvp.octocore.paper.menus.grant.GrantsMenu;
-import net.octopvp.octocore.paper.menus.grant.MainGrantMenu;
-import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
@@ -21,14 +17,16 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 public class ChoosePermissionInheritedMenu extends Menu {
     private final RankBuilder rankBuilder;
+    private final Consumer<RankBuilder> callback;
     @Override
     public List<Button> getButtons(Player player) {
-        return Lists.newArrayList(new PlaceHolderButton());
+        return Lists.newArrayList(new PlaceHolderButton(),new PermissionsButton());
     }
 
     public class PermissionsButton extends Button {
@@ -63,6 +61,24 @@ public class ChoosePermissionInheritedMenu extends Menu {
             }
         };
     }
+    public class Donebutton extends Button {
+        @Override
+        public ItemStack getItem(Player player) {
+            return new ItemBuilder(Material.EMERALD_BLOCK).name(CC.GREEN + "Done!").build();
+        }
+
+        @Override
+        public int getSlot() {
+            return 27;
+        }
+
+        @Override
+        public void onClick(Player player, int slot, ClickType clickType) {
+            super.onClick(player, slot, clickType);
+            SoundUtil.playPing(player);
+            callback.accept(rankBuilder);
+        }
+    }
 
     @Override
     public String getName(Player player) {
@@ -72,7 +88,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
         @Override
         public int[] getSlots() {
             List<Integer> a = new ArrayList<>();
-            IntStream.range(0,27).forEach((i)->{
+            IntStream.range(0,26).forEach((i)->{
                 if (!(i == 11 || i == 15))
                     a.add(i);
             });

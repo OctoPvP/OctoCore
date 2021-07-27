@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.objects.builders;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.paper.objects.enums.RankType;
 import net.octopvp.octocore.paper.objects.permissions.Node;
@@ -9,13 +10,23 @@ import org.bukkit.ChatColor;
 
 import java.util.UUID;
 
-public class RankBuilder {
+public class RankBuilder implements Cloneable {
     @Getter
     private Rank rank;
     public RankBuilder(String name){
         rank = new Rank();
         rank.setName(name);
     }
+    public RankBuilder(Rank r){
+        this.rank = r;
+    }
+
+    @SneakyThrows
+    @Override
+    public RankBuilder clone() {
+        return (RankBuilder) super.clone();
+    }
+
     public RankBuilder setName(String name){
         rank.setName(name);
         return this;
@@ -50,6 +61,10 @@ public class RankBuilder {
     }
     public RankBuilder setDefaultRank(boolean defaultRank){
         rank.setDefaultRank(defaultRank);
+        return this;
+    }
+    public RankBuilder addNode(Node node){
+        rank.getNodes().add(node);
         return this;
     }
     public RankBuilder addPermission(String s){

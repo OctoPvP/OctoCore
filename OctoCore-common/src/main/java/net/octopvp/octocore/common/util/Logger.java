@@ -1,5 +1,7 @@
 package net.octopvp.octocore.common.util;
 
+import net.octopvp.octocore.common.StringUtils;
+
 public class Logger {
     private java.util.logging.Logger actualLogger;
     private static Logger instance;
@@ -9,16 +11,16 @@ public class Logger {
         prefix = prefix;
         instance = this;
     }
-    public static void info(Object str){
-        instance.actualLogger.info(prefix + " " + str);
+    public static void info(Object str,Object... placeholders){
+        instance.actualLogger.info(StringUtils.replacePlaceholders(prefix + " " + str,placeholders));
     }
-    public static void warn(Object str){
-        instance.actualLogger.warning(prefix + " " + str);
+    public static void warn(Object str,Object... placeholders){
+        instance.actualLogger.warning(StringUtils.replacePlaceholders(prefix + " " + str,placeholders));
     }
-    public static void error(Object str){
-        instance.actualLogger.severe(prefix + " " + str);
+    public static void error(Object str,Object... placeholders){
+        instance.actualLogger.severe(StringUtils.replacePlaceholders(prefix + " " + str,placeholders));
     }
-    public static void debug(Object str){
-        info("[DEBUG] " + str);
+    public static void debug(Object str,Object... placeholders){
+        info("[DEBUG] " + StringUtils.replacePlaceholders(str.toString(),placeholders));
     }
 }

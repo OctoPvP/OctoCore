@@ -20,4 +20,7 @@ public class ServerContext {
     public boolean isGlobal(){
         return server.equalsIgnoreCase("global");
     }
+    public static ServerContext global(){
+        return new ServerContext("Global");
+    }
 }

@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.utils.tab;
 
 import com.google.common.base.Preconditions;
+import lombok.Getter;
 import net.octopvp.octocore.paper.utils.tab.tablist.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +19,7 @@ public class Tab implements Listener {
     static Level logLevel = Level.WARNING;
 
     private final Plugin plugin;
+    @Getter
     private final Map<Player, TabList> tabLists;
 
     public Tab(Plugin plugin) {

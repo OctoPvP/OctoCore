@@ -12,9 +12,12 @@ public abstract class Manager {
     private static FileConfiguration config = OctoCore.getInstance().getConfig();
     public abstract void init(OctoCore plugin);
     public abstract void disable();
+    boolean disabled = false;
     public Manager(){
-        if (this.getClass().isAnnotationPresent(Disable.class))
+        if (this.getClass().isAnnotationPresent(Disable.class)) {
+            disabled = true;
             return;
+        }
         this.init(plugin);
         //SetupManager.instance.getManagers().add(this);
     }

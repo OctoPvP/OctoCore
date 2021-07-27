@@ -31,4 +31,7 @@ public abstract class BaseCommand {
 
     public void setUsageMessage(String usageMessage) {
     }
+    public void sendUsage(Sender sender){
+        sender.sendMessage(this.getClass().getAnnotation(Command.class).usage());
+    }
 }

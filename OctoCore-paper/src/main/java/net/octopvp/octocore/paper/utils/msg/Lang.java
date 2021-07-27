@@ -113,7 +113,11 @@ public enum Lang {
 
     CREATE_RANK_SET_WEIGHT(CC.GREEN + "Please type in the rank weight (integer). Type \"cancel\" to cancel."),
     CREATE_RANK_SET_NAME(CC.GREEN + "Please type in the rank name. Type \"cancel\" to cancel."),
-    CREATE_RANK_SET_PREFIX(CC.GREEN + "Please type in the rank prefix, use & color codes, and %1 for changeable rank colors. Type in \"cancel\" to cancel.")
+    CREATE_RANK_SET_PREFIX(CC.GREEN + "Please type in the rank prefix, use & color codes, and %1 for changeable rank colors. Type in \"cancel\" to cancel."),
+    CUSTOM_SERVER_SCOPE("Please enter your custom server scope in chat. Type \"Cancel\" to cancel."),
+    EDIT_PERMISSION_PERMISSION_SET_SUCCESS(CC.GREEN + "Successfully set permission %1!"),
+    EDIT_PERMISSION_SET_PERMISSION(CC.GREEN + "Please enter the permission in chat. Type \"Cancel\" to cancel."),
+    EDIT_PERMISSION_SET_ALLOWED(CC.GREEN + "Set permission allowed to: %1"),
     ;
     private final String msg;
     Lang(String msg){
