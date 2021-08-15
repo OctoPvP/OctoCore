@@ -31,7 +31,7 @@ public class SendToRandomLobby {
             if(StringUtils.containsIgnoreCase(k,"hub"))
                 hubServers.put(k,v);
         });
-        int server = RNG.getRandomInt(1,hubServers.size());
+        int server = RNG.getRandomInt(0,hubServers.size()); //FIXME might need to minus 1 from the hub servers size
         ServerInfo serverInfo = (ServerInfo) hubServers.values().toArray()[server];
         //try again if server is offline
         serverInfo.ping(((result, error) -> {

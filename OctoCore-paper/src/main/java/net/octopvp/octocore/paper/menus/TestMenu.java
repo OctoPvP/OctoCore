@@ -44,7 +44,23 @@ public class TestMenu extends Menu {
     }
     @Override
     public List<Button> getButtons(Player player) {
-        return Lists.newArrayList(new UpdateButton(),new PlaceholderButton1());
+        return Lists.newArrayList(new UpdateButton(), new PlaceholderButton1(), new Button() {
+            @Override
+            public ItemStack getItem(Player player) {
+                return new ItemBuilder(Material.NAME_TAG).name(CC.AQUA + "Test").build();
+            }
+
+            @Override
+            public int getSlot() {
+                return 5;
+            }
+
+            @Override
+            public void onClick(Player player, int slot, ClickType clickType) {
+                super.onClick(player, slot, clickType);
+                new TestMenu2().open(player);
+            }
+        });
     }
     public class PlaceholderButton1 extends net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton{
         @Override
@@ -64,7 +80,7 @@ public class TestMenu extends Menu {
 
     @Override
     public String getName(Player player) {
-        return "Test";
+        return "Menu 1";
     }
 
     @Override
@@ -72,7 +88,7 @@ public class TestMenu extends Menu {
         return new BackButton() {
             @Override
             public void clicked(Player player, int slot, ClickType clickType) {
-                player.sendMessage("a");
+                getPrevious().open(player);
             }
 
             @Override
