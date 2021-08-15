@@ -30,7 +30,6 @@ public class AddGrantMenu extends PaginatedMenu {
 
     public AddGrantMenu(PlayerData data) {
         this.data = data;
-        Logger.debug("opening");
     }
 
     @Override
@@ -54,7 +53,6 @@ public class AddGrantMenu extends PaginatedMenu {
 
     @Override
     public void onOpen(Player player) {
-        Logger.debug("Open");
         this.setUpdateInTask(true);
     }
 
@@ -77,8 +75,9 @@ public class AddGrantMenu extends PaginatedMenu {
             item.setName(rankData.getDisplayName());
             item.durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())));
             item.lore(CC.SEPARATOR,CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(),CC.AQUA + "Inherited: " + CC.YELLOW + StringUtils.join(rankData.getInheritedRanksName(),", "),CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
-                    CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(),CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(),CC.AQUA + "Purchaseable: " + CC.YELLOW + rankData.isPurchasable()
-                    );
+                    CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(),CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(),CC.AQUA + "Purchaseable: " + CC.YELLOW + rankData.isPurchasable(),
+                    CC.SEPARATOR
+            );
             return item.build();
         }
 

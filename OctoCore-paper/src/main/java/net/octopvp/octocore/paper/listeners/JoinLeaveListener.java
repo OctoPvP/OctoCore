@@ -40,6 +40,9 @@ public class JoinLeaveListener implements Listener {
         PlayerManager.loadPData(event.getPlayer().getUniqueId(),event.getPlayer().getName());
         PlayerManager.processJoin(event.getPlayer().getUniqueId(),event.getPlayer().getAddress().getHostString());
         Tasks.runAsyncLater(()->{
+            if (event.getPlayer() == null || !event.getPlayer().isOnline()){
+                return;
+            }
             PlayerData profile = PlayerManager.getProfile(event.getPlayer().getUniqueId());
             Player player = event.getPlayer();
             long time = profile.getWorldTime().getTime();

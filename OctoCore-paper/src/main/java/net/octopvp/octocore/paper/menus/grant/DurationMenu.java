@@ -95,7 +95,6 @@ public class DurationMenu extends Menu {
                     if (playerData == null || !playerData.isOnlineThisServer())
                         return Prompt.END_OF_CONVERSATION;
                     if (s.equalsIgnoreCase("perm") || s.equalsIgnoreCase("permanent")) {
-                        Logger.debug("Perm");
                         playerData.getGrantProcedure().setEnteredDuration(-1l);
                         playerData.getGrantProcedure().setPermanent(true);
                         playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
@@ -115,7 +114,6 @@ public class DurationMenu extends Menu {
                     playerData.getGrantProcedure().setEnteredDuration(duration);
                     player.sendMessage(Lang.GRANT_DURATION_SET.getMsg(playerData.getGrantProcedure().getNiceDuration()));
                     playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
-                    Logger.debug("Not-Perm " + duration);
                     new ReasonMenu(data).open(player);
                     return Prompt.END_OF_CONVERSATION;
                 }

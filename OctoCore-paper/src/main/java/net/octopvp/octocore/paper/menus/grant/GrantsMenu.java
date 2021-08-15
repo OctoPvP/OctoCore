@@ -31,7 +31,6 @@ public class GrantsMenu extends PaginatedMenu {
     private final PlayerData targetData;
     public GrantsMenu(PlayerData data){
         this.targetData = data;
-        Logger.debug("eeeeeeee");
     }
     private boolean all = true;
     private Comparator<Grant> GRANT_COMPARATOR = Comparator.comparingLong(Grant::getAddedAt).reversed();

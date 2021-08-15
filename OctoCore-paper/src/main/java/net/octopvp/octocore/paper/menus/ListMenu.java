@@ -7,6 +7,7 @@ import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.common.object.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -32,8 +33,8 @@ public class ListMenu extends PaginatedMenu {
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttonList = new ArrayList<>();
-        for (int j = 0; j < 200; j++) {
-            buttonList.add(new PlayerButton(player));
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            buttonList.add(new PlayerButton(onlinePlayer));
         }
         return buttonList;
     }
@@ -59,7 +60,8 @@ public class ListMenu extends PaginatedMenu {
                 ib.lore(Arrays.asList(CC.SEPARATOR,CC.GREEN + "Client: " + CC.GOLD + "Lunar Client",CC.SEPARATOR,"",CC.YELLOW + CC.B + "Click to punish!"));
             }
             else ib.lore(Arrays.asList(CC.SEPARATOR,CC.GREEN + "Client: " + CC.GOLD + "Lunar Client",CC.SEPARATOR,""));
-            return ib.toSkullBuilder().withOwner(p.getName()).buildSkull();        }
+            return ib.toSkullBuilder().withOwner(p.getName()).buildSkull();
+        }
 
         @Override
         public int getSlot() {

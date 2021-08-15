@@ -36,6 +36,7 @@ public class PlayerData {
     private static transient Plugin plugin = OctoCore.getInstance();
     //TODO set defaults for this so theres no errors when using/loading old data from older updates (idk if this makes sense lol)
     private UUID uuid;
+    private double dataVersion = 0.0;
     @SerializedName("_id")
     private String _id; //for mongodb _id field (quick and dirty way)
     private boolean frozen,nicked = false,authEnabled = false, vanished = false, joinVanished = false,customColorEnabled = false;

@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.menus.rank.create;
 
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.objects.builders.NodeBuilder;
@@ -26,10 +25,12 @@ import java.util.List;
 
 public class CreateRankManagePermissionsMenu extends PaginatedMenu {
     @SneakyThrows
-    public CreateRankManagePermissionsMenu(RankBuilder builder){
+    public CreateRankManagePermissionsMenu(Menu previousMenu, RankBuilder builder){
+        this.previousMenu = previousMenu;
         this.builder = builder;
         this.startBuilder = builder.clone();
     }
+    private final Menu previousMenu;
     private final RankBuilder builder;
     private RankBuilder startBuilder;
     private Menu prev = this;
@@ -50,7 +51,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
         return new BackButton() {
             @Override
             public void clicked(Player player, int slot, ClickType clickType) {
-                getPrevious().open(player);
+                previousMenu.open(player);
             }
 
             @Override
@@ -62,7 +63,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
 
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
-        return Lists.newArrayList(new AddPermissionButton());
+        return Lists.newArrayList(new AddPermissionButton(),new DoneButton());
     }
     private int i = 0;
     @AllArgsConstructor
@@ -102,7 +103,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
 
         @Override
         public int getSlot() {
-            return 9;
+            return 8;
         }
 
         @Override

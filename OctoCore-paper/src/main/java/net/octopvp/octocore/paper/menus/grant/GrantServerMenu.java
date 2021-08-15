@@ -90,7 +90,6 @@ public class GrantServerMenu extends PaginatedMenu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            Logger.debug("Global button pressed.");
             PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
             if (playerData == null){
                 player.closeInventory();

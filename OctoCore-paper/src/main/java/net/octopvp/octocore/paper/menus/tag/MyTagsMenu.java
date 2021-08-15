@@ -22,7 +22,6 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
     private Player player;
     public MyTagsMenu(List<PlayerTag> currentTags, Player player){
         for (PlayerTag currentTag : currentTags) {
-            Logger.debug(" - " + currentTag.getName() + " | " + currentTag.getId());
         }
         this.currentTags = currentTags;
         this.player = player;
@@ -92,16 +91,13 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
             SoundUtil.playPing(player);
-            Logger.debug("Clicked");
             if (a){
                 a = false;
                 player.sendMessage(CC.GREEN + "Unequipped your tag!");
                 PlayerManager.getProfile(player.getUniqueId()).setTag(null);
-                Logger.debug("a");
             }else {
                 player.sendMessage(CC.GREEN + "Equipped your tag!");
                 PlayerManager.getProfile(player.getUniqueId()).setTag(tag);
-                Logger.debug("b");
             }
             update(player);
         }

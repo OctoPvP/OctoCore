@@ -31,10 +31,10 @@ public class Rank implements Cloneable {
     private Set<Node> nodes = new HashSet<>();
     private Set<UUID> inheritedRanks = new HashSet<>();
 
-    private String prefix/*, color = CC.GRAY, chatColor = CC.GRAY*/;
+    private String prefix = ""/*, color = CC.GRAY, chatColor = CC.GRAY*/;
     private ChatColor color = ChatColor.GRAY,chatColor = ChatColor.GRAY;
     private boolean bold = false, italic = false, purchasable = false,changableMainColor = false;
-    private ServerContext scope;
+    private ServerContext scope = ServerContext.global();
 
     public void save() {
         RankManager.save(this);

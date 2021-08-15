@@ -48,6 +48,11 @@ public class EditPermissionMenu extends Menu {
             public void clicked(Player player, int slot, ClickType clickType) {
                 previous.open(player);
             }
+
+            @Override
+            public int getSlot() {
+                return 18;
+            }
         };
     }
 
@@ -80,7 +85,7 @@ public class EditPermissionMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 11;
+            return 12;
         }
 
         @Override
@@ -129,7 +134,7 @@ public class EditPermissionMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 12;
+            return 13;
         }
 
         @Override
@@ -149,7 +154,7 @@ public class EditPermissionMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 13;
+            return 14;
         }
 
         @Override
@@ -170,7 +175,7 @@ public class EditPermissionMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 27;
+            return 26;
         }
 
         @Override
@@ -189,7 +194,7 @@ public class EditPermissionMenu extends Menu {
         public int[] getSlots() {
             List<Integer> a = new ArrayList<>();
             IntStream.range(0,26).forEach((i)->{
-                if (i != 13 && i != 12 && i != 11 && i != 4){
+                if (i != 13 && i != 12 && i != 14 && i != 4){
                     a.add(i);
                 }
             });

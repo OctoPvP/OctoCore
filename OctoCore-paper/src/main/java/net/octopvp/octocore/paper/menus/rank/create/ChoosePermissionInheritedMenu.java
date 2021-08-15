@@ -24,9 +24,10 @@ import java.util.stream.IntStream;
 public class ChoosePermissionInheritedMenu extends Menu {
     private final RankBuilder rankBuilder;
     private final Consumer<RankBuilder> callback;
+    private Menu instance = this;
     @Override
     public List<Button> getButtons(Player player) {
-        return Lists.newArrayList(new PlaceHolderButton(),new PermissionsButton());
+        return Lists.newArrayList(new PlaceHolderButton(),new PermissionsButton(),new Donebutton());
     }
 
     public class PermissionsButton extends Button {
@@ -42,7 +43,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            new CreateRankManagePermissionsMenu(rankBuilder).open(player);
+            new CreateRankManagePermissionsMenu(instance, rankBuilder).open(player);
             SoundUtil.playPing(player);
         }
     }
@@ -52,7 +53,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
         return new BackButton() {
             @Override
             public void clicked(Player player, int slot, ClickType clickType) {
-                new CreateRankMenu(rankBuilder).open(player);
+                callback.accept(rankBuilder);
             }
 
             @Override
@@ -69,7 +70,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 27;
+            return 26;
         }
 
         @Override

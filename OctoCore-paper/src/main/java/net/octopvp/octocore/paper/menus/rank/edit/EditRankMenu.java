@@ -225,6 +225,7 @@ public class EditRankMenu extends Menu {
             update(player);
         }
     }
+    private Menu instance = this;
     private class ServerButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
@@ -240,8 +241,11 @@ public class EditRankMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType) {
             SoundUtil.playPing(player);
             new ServerMenu((context)->{
+                if (context == null)
+                    open(player);
                 rank.setScope(context);
-            }).open(player);
+                open(player);
+            },instance).open(player);
         }
     }
     private class PermissionsButton extends Button {

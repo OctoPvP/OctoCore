@@ -29,6 +29,7 @@ public enum Permission  {
     FORCE_AUTH("octocore.command.forceauth"),
     VANISH("octocore.action.vanish"),
     TRASH("octocore.command.trash"),
+    REFRESH_SKIN("octocore.command.refreshskin"),
 
     SEND_JOIN_MESSAGE("octocore.staff.message.send.join"),
     SEND_LEAVE_MESSAGE("octocore.staff.message.send.leave"),

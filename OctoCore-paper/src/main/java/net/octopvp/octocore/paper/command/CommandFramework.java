@@ -258,11 +258,4 @@ public class CommandFramework implements CommandExecutor {
         		Logger.info("Didn't register permission \"" + name + "\" because it already is registered!");
         }
     }
-    public static void registerSubCommand(SubCommand subCommand, BaseCommand base){
-		for (Method method : base.getClass().getMethods()) {
-			if(method.isAnnotationPresent(SubCommand.class)){
-
-			}
-		}
-	}
 }

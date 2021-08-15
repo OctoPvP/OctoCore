@@ -11,9 +11,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class PaginatedMenu extends Menu {
@@ -34,7 +32,7 @@ public abstract class PaginatedMenu extends Menu {
         }
         if (getPlaceholderButton() != null)
             buttons.add(getPlaceholderButton());
-        else buttons.add(new PlaceholderButton(this));
+        else buttons.add(new PlaceholderButton(this,player));
         buttons.add(new CloseButton());
         if (getFilterButton() != null)
             buttons.add(getFilterButton());
@@ -45,17 +43,14 @@ public abstract class PaginatedMenu extends Menu {
             });
             buttons.addAll(this.getEveryMenuSlots(player));
         }
-
         AtomicInteger index = new AtomicInteger(0);
         this.getPaginatedButtons(player).forEach(slot -> {
             int current = index.getAndIncrement();
             if (current >= minSlot && current < maxSlot) {
                 current -= (int) ((double) (27) * (page - 1)) - 9;
-
                 buttons.add(this.getNewSlot(slot, current));
             }
         });
-
         return buttons;
     }
 
@@ -109,7 +104,15 @@ public abstract class PaginatedMenu extends Menu {
         return null;
     }
     public boolean doesButtonExist(List<Button> buttons,int i){
-        return buttons.stream().filter(button -> button.getSlot() == i || Arrays.stream(button.getSlots()).anyMatch(i1 -> i == i1)).findFirst().orElse(null) != null;
+        return buttons.stream().filter(button ->{
+            if (button.getSlot() == i){
+                return true;
+            }
+            for (int slot : button.getSlots()) {
+                if (slot == i)
+                    return true;
+            }
+            return false;
+        }).findFirst().orElse(null) != null;
     }
-
 }

@@ -15,6 +15,7 @@ import net.octopvp.octocore.paper.utils.Skulls;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
+import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Material;
@@ -30,6 +31,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class ServerMenu extends PaginatedMenu {
     private final Consumer<ServerContext> callback;
+    private final Menu previousMenu;
     @Override
     public String getPagesTitle(Player player) {
         return CC.AQUA + "Choose server scope";
@@ -46,6 +48,16 @@ public class ServerMenu extends PaginatedMenu {
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
         return Lists.newArrayList(new GlobalButton(),new CustomButton());
+    }
+
+    @Override
+    public Button getBackButton(Player player) {
+        return new BackButton() {
+            @Override
+            public void clicked(Player player, int slot, ClickType clickType) {
+
+            }
+        };
     }
 
     private int i = 0;

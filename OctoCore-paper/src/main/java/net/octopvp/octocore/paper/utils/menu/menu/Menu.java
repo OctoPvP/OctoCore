@@ -1,5 +1,6 @@
 package net.octopvp.octocore.paper.utils.menu.menu;
 
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.util.CC;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public abstract class Menu {
@@ -30,6 +32,22 @@ public abstract class Menu {
     public abstract List<Button> getButtons(Player player);
 
     public abstract String getName(Player player);
+
+    public List<Button> getFinalButtons(Player player){
+        List<Button> list = getButtons(player);
+        if (list == null)
+            list = new ArrayList<>();
+        Button backButton = getBackButton(player);
+        if (backButton != null)
+            list.add(backButton);
+        return list;
+    }
+
+    @Getter
+    @Setter
+    private boolean cancel = true;
+
+
     @Getter
     @Setter
     public Menu previous;
@@ -44,7 +62,7 @@ public abstract class Menu {
             MenuManager.getOpenedMenus().remove(player.getUniqueId());
         }
 
-        this.buttons = this.getButtons(player);
+        this.buttons = this.getFinalButtons(player);
         String title = this.getName(player);
 
         if (title.length() > 32) title = title.substring(0, 32);
@@ -56,26 +74,32 @@ public abstract class Menu {
 
         Inventory inventory = Bukkit.createInventory(player, this.getInventorySize(this.buttons), title);
 
-        this.buttons.forEach(slot -> {
-            inventory.setItem(slot.getSlot(), slot.getItem(player));
-
-            if (slot.getSlots() != null) {
-                Arrays.stream(slot.getSlots()).forEach(extra -> {
-                    inventory.setItem(extra, slot.getItem(player));
+        this.buttons.forEach(button -> {
+            inventory.setItem(button.getSlot(), button.getItem(player));
+            if (button.getSlots() != null) {
+                Arrays.stream(button.getSlots()).forEach(extra -> {
+                    if(shouldKeepExtra(extra)) inventory.setItem(extra, button.getItem(player));
                 });
             }
         });
-        if (getBackButton(player) != null)
-            inventory.setItem(getBackButton(player).getSlot(),getBackButton(player).getItem(player));
 
         MenuManager.getOpenedMenus().put(player.getUniqueId(), this);
         player.openInventory(inventory);
 
         this.onOpen(player);
     }
+    private boolean shouldKeepExtra(int slot){
+        for (Button button1 : this.buttons) {
+            if (button1.getSlot() == slot)
+                return false;
+            else if (Lists.newArrayList(button1.getSlots()).contains(slot))
+                return true;
+        }
+        return true;
+    }
 
     public void update(Player player) {
-        this.buttons = this.getButtons(player);
+        this.buttons = this.getFinalButtons(player);
         String title = this.getName(player);
 
         if (title.length() > 32) title = title.substring(0, 32);
@@ -146,14 +170,14 @@ public abstract class Menu {
     public boolean hasSlot(int value) {
         return this.buttons.stream()
                 .filter(slot -> slot.getSlot() == value || slot.getSlots() != null
-                        && Arrays.stream(slot.getSlots()).anyMatch(i -> i == value))
+                        && Arrays.stream(slot.getSlots()).anyMatch(i -> i == value && shouldKeepExtra(i)))
                 .findFirst().orElse(null) != null;
     }
 
     public Button getSlot(int value) {
         return this.buttons.stream()
                 .filter(slot -> slot.getSlot() == value || slot.getSlots() != null
-                        && Arrays.stream(slot.getSlots()).anyMatch(i -> i == value))
+                        && Arrays.stream(slot.getSlots()).anyMatch(i -> i == value && shouldKeepExtra(i)))
                 .findFirst().orElse(null);
     }
     public Button getBackButton(Player player){
@@ -171,5 +195,40 @@ public abstract class Menu {
 
     public List<Button> getToolbarButtons(){
         return null;
+    }
+    public List<Button> getFinalExtraButtons(Player p){
+        List<Button> buttons = new ArrayList<>();
+        if (getToolbarButtons() != null){
+            buttons.addAll(getToolbarButtons());
+        }
+        if (getBackButton(p) != null)
+            buttons.add(getBackButton(p));
+        return buttons;
+    }
+    public boolean doesButtonExist(List<Button> buttons,int i){ //
+        return buttons.stream().filter(button ->{
+            if (button.getSlot() == i){
+                return true;
+            }
+            for (int slot : button.getSlots()) {
+                if (slot == i)
+                    return true;
+            }
+            return false;
+        }).findFirst().orElse(null) != null;
+    }
+    public int[] genPlaceholderSpots(IntStream intStream, int... skipInput){
+        List<Integer> list = new ArrayList<>(),l1 = new ArrayList<>();
+        if (skipInput != null){
+            for (int i : skipInput) {
+                l1.add(i);
+            }
+        }
+        intStream.forEach(i ->{
+            if (!l1.contains(i)){
+                list.add(i);
+            }
+        });
+        return list.stream().mapToInt(i -> i).toArray();
     }
 }
