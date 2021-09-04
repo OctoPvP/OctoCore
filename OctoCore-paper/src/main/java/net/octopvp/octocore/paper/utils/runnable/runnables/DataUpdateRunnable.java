@@ -22,7 +22,9 @@ public class DataUpdateRunnable implements Runnable{
         OctoCore.getInstance().getRedisData().write(JedisAction.SERVER_DATA, jsonChain.get());
         for (PlayerData playerData : PlayerManager.getPlayerProfiles().values()) {
             if (playerData == null) continue;
-            //playerData.reloadLuckPermsThings();
+            playerData.setLastDataSave(playerData.getLastDataSave() + 1);
+            if (playerData.getLastDataSave() > 120) //save every 2 mins
+                playerData.save();
             playerData.setPlayTime(playerData.getPlayTime() + 1); //increment playtime by 1 second
             JsonChain playerDataChain = new JsonChain();
             playerDataChain.addProperty("name", playerData.getName());

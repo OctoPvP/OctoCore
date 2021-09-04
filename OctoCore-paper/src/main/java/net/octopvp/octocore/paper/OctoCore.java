@@ -22,6 +22,7 @@ import net.octopvp.octocore.paper.utils.PacketUtil;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorHandling;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
+import net.octopvp.octocore.paper.utils.runnable.Countdown;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
@@ -132,14 +133,13 @@ public final class OctoCore extends JavaPlugin {
         super.onLoad();
         PacketUtil.setProtocolManager(ProtocolLibrary.getProtocolManager());
     }
-
     @Override
     public void onEnable() {
         new Logger(Bukkit.getLogger(),prefix);
         if(instance != null)
             throw new IllegalStateException("OctoCore is already initialized");
         instance = this;
-        new Tasks(this);
+        Tasks.init(this);
         commandFramework = new CommandFramework(this);
         tab = new Tab(this);
         serverName = getInstance().getConfig().getString("name");

@@ -1,14 +1,11 @@
 package net.octopvp.octocore.paper.menus;
 
 import com.google.common.collect.Lists;
-import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
-import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
+import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
-import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
-import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;

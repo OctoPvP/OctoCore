@@ -50,7 +50,7 @@ public class JDAManager extends Manager {
             super.onMessageReceived(event);
             if(event.isFromGuild()){
                 if(!event.getAuthor().isBot()){
-                    if(event.getMessage().getChannel().getIdLong() == 808700022879289414l) {
+                    if(event.getMessage().getChannel().getIdLong() == 808700022879289414L) {
                         JsonObject jsonObject = new JsonObject();
                         Color color = event.getMember().getColor();
                         jsonObject.addProperty("name", StringUtils.fromRGB(color.getRed(),color.getGreen(),color.getBlue()) + event.getAuthor().getName());

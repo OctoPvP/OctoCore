@@ -42,6 +42,7 @@ public class PlayerData {
     private boolean frozen,nicked = false,authEnabled = false, vanished = false, joinVanished = false,customColorEnabled = false;
     private String customColor;
     private transient boolean fullyJoined = false;
+    private transient int lastDataSave = 0;
     private long coins = 0,lastLoaded,lastLogin,xp = 0,firstJoin = System.currentTimeMillis();
     private String nick,lastKnownName = "<unknown>",nickPrefix,nickColor,name = lastKnownName,server,authSecret,lastSeenServer = "Unknown",rankName = "default";
     private HashedAddress lastAuthedIp = new HashedAddress(""),lastSeenIp = new HashedAddress("");

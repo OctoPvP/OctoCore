@@ -26,5 +26,4 @@ public interface ScoreboardHandler {
      * @return entries
      */
     List<Entry> getEntries(Player player);
-
 }

@@ -21,8 +21,12 @@ public abstract class Countdown {
 
             @Override
             public void run() {
+                time--;
+                if (time <= -1){
+                    cancel();
+                    return;
+                }
                 count(time);
-                if (time-- <= 0) cancel();
             }
 
         }.runTaskTimer(plugin, 0L, 20L);

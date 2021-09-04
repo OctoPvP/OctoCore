@@ -51,10 +51,6 @@ public class GlobalSubscription implements JedisHandle {
             if (serverData == null) {
                 serverData = plugin.getServerManager().createServerData(data.get("name").getAsString());
             }
-            if (serverData == null){
-                Logger.debug("Serverdata is still null!");
-                return;
-            }
             serverData.setWhitelisted(data.get("whitelisted").getAsBoolean());
             serverData.setLastTick(data.get("lastTick").getAsLong());
             serverData.setMaxPlayers(data.get("maxPlayers").getAsInt());

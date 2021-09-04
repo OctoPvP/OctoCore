@@ -35,11 +35,7 @@ public class TabManager extends Manager {
         header = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.header")).replace("\\n","\n");
         footer = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.footer").replace("\\n","\n"));
         if(plugin.getConfig().getBoolean("default-tab")){
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCore.getInstance(), () -> {
-                PlayerManager.getPlayerProfiles().forEach((uuid,profile)->{
-
-                });
-            },0l, OctoCore.getInstance().getConfig().getLong("update-tab-interval"));
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCore.getInstance(), TabManager::update,0L, OctoCore.getInstance().getConfig().getLong("update-tab-interval"));
         }
     }
 
@@ -60,15 +56,24 @@ public class TabManager extends Manager {
         }
         PairMap<Integer, Integer, TabItem> map = handler.getTabItems(p);
         map.forEach((k, v, m) -> tab.get().set(k, v, m));
-        tab.get().setHeaderFooter(handler.getHeader(p), handler.getFooter(p));
+        String header = handler.getHeader(p).replace("\\n","\n"),footer = handler.getFooter(p).replace("\\n","\n");
+        tab.get().setHeaderFooter(header,footer);
+    }
+    public static void update(){
+        PlayerManager.getPlayerProfiles().forEach((uuid,profile)->{
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null)
+                return;
+            TabHandler handler = getTabHandler(player);
+            if (handler == null)
+                return;
+            sendTab(player,handler);
+        });
     }
     public static void onJoin(Player p){
         if(OctoCore.getInstance().getConfig().getBoolean("default-tab")) {
             if(PlayerManager.getPlayerProfiles().containsKey(p.getUniqueId())){
-                TabHandler tabHandler = defaultTabHandler;
-                if (customHandlers.get(p.getUniqueId()) != null)
-                    tabHandler = customHandlers.get(p.getUniqueId());
-                sendTab(p,tabHandler);
+                sendTab(p,getTabHandler(p));
             }
         }
         /*
@@ -76,12 +81,15 @@ public class TabManager extends Manager {
             p.setScoreboard(SetupOther.getScoreboard());
          */
     }
+    public static TabHandler getTabHandler(Player p){
+        TabHandler tabHandler = defaultTabHandler;
+        if (customHandlers.get(p.getUniqueId()) != null)
+            tabHandler = customHandlers.get(p.getUniqueId());
+        return tabHandler;
+    }
     public static void onLeave(Player p) {
-        if (OctoCore.getInstance().getConfig().getBoolean("default-tab")) {
-            if(tablists.containsKey(p.getUniqueId())){
-                tablists.remove(p.getUniqueId());
-            }
-        }
+        tablists.remove(p.getUniqueId());
+        customHandlers.remove(p.getUniqueId());
     }
     public static void setCustomTabHandler(Player player,TabHandler tabHandler){
         customHandlers.put(player.getUniqueId(),tabHandler);

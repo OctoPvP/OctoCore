@@ -170,6 +170,7 @@ public class PlayerManager extends Manager {
         String json = serializeProfileToJson(profile);
         Logger.debug("Saving profile: \nUUID:" + profile.getUuid() + "\nJSON: " + json);
         pdataCollection.replaceOne(getProfileDocument(profile.getUuid()),Document.parse(json), new ReplaceOptions().upsert(true));
+        profile.setLastDataSave(0);
     }
 
     /**

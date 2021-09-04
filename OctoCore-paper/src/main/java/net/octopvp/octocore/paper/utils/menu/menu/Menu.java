@@ -8,6 +8,7 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.menu.MenuManager;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
+import net.octopvp.octocore.paper.utils.menu.buttons.impl.CloseButton;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -87,6 +88,9 @@ public abstract class Menu {
         player.openInventory(inventory);
 
         this.onOpen(player);
+    }
+    public Button getCloseButton(){
+        return new CloseButton();
     }
     private boolean shouldKeepExtra(int slot){
         for (Button button1 : this.buttons) {

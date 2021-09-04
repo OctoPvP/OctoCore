@@ -33,7 +33,7 @@ public abstract class PaginatedMenu extends Menu {
         if (getPlaceholderButton() != null)
             buttons.add(getPlaceholderButton());
         else buttons.add(new PlaceholderButton(this,player));
-        buttons.add(new CloseButton());
+        buttons.add(getCloseButton());
         if (getFilterButton() != null)
             buttons.add(getFilterButton());
 

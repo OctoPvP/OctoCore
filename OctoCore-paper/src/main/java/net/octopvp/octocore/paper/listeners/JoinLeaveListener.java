@@ -3,6 +3,8 @@ package net.octopvp.octocore.paper.listeners;
 import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.ViaAPI;
+import net.octopvp.octocore.common.object.ServerType;
+import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.ScoreBoardManager;
@@ -32,6 +34,7 @@ public class JoinLeaveListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent e){
         PlayerManager.processLeave(e.getPlayer());
+        TabManager.onLeave(e.getPlayer());
     }
     @EventHandler
     public void onGlobalPDestroyEvent(GlobalPlayerDestroyEvent e){}
@@ -50,16 +53,17 @@ public class JoinLeaveListener implements Listener {
                 player.resetPlayerTime();
             else player.setPlayerTime(time, false);
             TabManager.onJoin(player);
-            //TODO remove
             if(player.hasPermission(Permission.STAFF_MODULES.getNode()))
                 LunarClientAPI.getInstance().giveAllStaffModules(player);
             Tasks.run(()-> {
                 ScoreBoardManager.handleJoin(event.getPlayer());
-                ViaAPI viaAPI = Via.getAPI();
-                int version = viaAPI.getPlayerVersion(event.getPlayer());
-                Logger.debug("Player Version: " + version);
-                if (version != 47 && version != -1){
-                    BookManager.showUnsupportedVerBook(event.getPlayer());
+                if (OctoCore.getServerType() == ServerType.HUB || OctoCore.getServerType() == ServerType.MASTER){
+                    ViaAPI viaAPI = Via.getAPI();
+                    int version = viaAPI.getPlayerVersion(event.getPlayer());
+                    Logger.debug("Player Version: " + version);
+                    if (version != 47 && version != -1){
+                        BookManager.showUnsupportedVerBook(event.getPlayer());
+                    }
                 }
 
             });

@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper;
+package net.octopvp.octocore.paper.menus;
 
 import com.google.common.collect.Lists;
 import net.octopvp.octocore.paper.menus.TestMenu;

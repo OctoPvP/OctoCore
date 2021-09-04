@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.scoreboard;
+package net.octopvp.octocore.paper.objects.scoreboard;
 
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;

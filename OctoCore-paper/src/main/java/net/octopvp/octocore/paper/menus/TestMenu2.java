@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.menus;
 
 import com.google.common.collect.Lists;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.TestMenu3;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;

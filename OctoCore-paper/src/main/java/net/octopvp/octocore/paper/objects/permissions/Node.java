@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 
 @Getter
 @Setter
@@ -22,4 +23,5 @@ public class Node {
     public boolean isNegated() {
         return !allowed;
     }
+    public boolean isWildCard(){return PermissionManager.isWildCard(permission);}
 }
