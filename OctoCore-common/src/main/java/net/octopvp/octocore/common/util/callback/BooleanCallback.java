@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.utils.callback;
+package net.octopvp.octocore.common.util.callback;
 
 public interface BooleanCallback {
     void callback(boolean bool);

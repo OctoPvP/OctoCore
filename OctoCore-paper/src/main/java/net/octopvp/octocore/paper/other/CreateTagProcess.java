@@ -8,7 +8,7 @@ import net.octopvp.octocore.paper.conversations.tag.SetNameConversation;
 import net.octopvp.octocore.paper.conversations.tag.SetTagConversation;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerTagBuilder;
-import net.octopvp.octocore.paper.utils.callback.ReturnableTypeCallback;
+import net.octopvp.octocore.common.util.callback.ReturnableTypeCallback;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 

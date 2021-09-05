@@ -23,4 +23,14 @@ public class ServerContext {
     public static ServerContext global(){
         return new ServerContext("Global");
     }
+    public boolean isServer(String in){
+        if (in.equalsIgnoreCase("global"))
+            return true;
+        String[] servers = in.split("\\|");
+        for (String s : servers) {
+            if (isServer(s))
+                return true;
+        }
+        return false;
+    }
 }

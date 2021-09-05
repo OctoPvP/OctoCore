@@ -183,7 +183,7 @@ public class PlayerData {
     }
     public boolean isNon(){
         return this.getActiveGrants().isEmpty();
-    }
+    } //F
     public Rank getHighestRank(){
         return this.getActiveGrants().stream().map(Grant::getRank)
                 .max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getDefaultRank());
@@ -196,6 +196,7 @@ public class PlayerData {
         }
         return getHighestRank().hasPermission(perm);
     }
+
 
     public void loadAttachments(Player player) {
         Map<String,Boolean> bungeePermissions = new HashMap<>();
