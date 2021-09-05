@@ -1,7 +1,7 @@
 package net.octopvp.octocore.paper.conversations;
 
 import lombok.RequiredArgsConstructor;
-import net.octopvp.octocore.paper.utils.callback.TypeCallback;
+import net.octopvp.octocore.common.util.callback.TypeCallback;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;

@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.conversations;
 
-import net.octopvp.octocore.paper.utils.callback.BooleanCallback;
+import net.octopvp.octocore.common.util.callback.BooleanCallback;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;

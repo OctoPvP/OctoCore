@@ -1,7 +1,7 @@
 package net.octopvp.octocore.paper.conversations.tag;
 
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.utils.callback.ReturnableTypeCallback;
+import net.octopvp.octocore.common.util.callback.ReturnableTypeCallback;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;

@@ -7,6 +7,7 @@ import lombok.Setter;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
@@ -60,11 +61,23 @@ public class Rank implements Cloneable {
     public boolean nodeExists(String perm){
         return getNode(perm) != null;
     }
-
+    public Set<Node> getFinalNodes(){
+        Set<Node> nodes = new HashSet<>();
+        for (Node node : this.getNodes()) {
+            if (node.getScope().isThisServer())
+                nodes.add(node);
+            nodes.
+        }
+        for (UUID inheritedRank : inheritedRanks) {
+            Rank rank = RankManager.getRankById(inheritedRank);
+            if (rank == null)
+                continue;
+            nodes.addAll(rank.getFinalNodes());
+        }
+        return nodes;
+    }
     public boolean hasPermission(String permission) {
-        if (permissionNegated(permission))
-            return false;
-        return hasSetPermission(permission) || inheritsPermission(permission);
+        return PermissionManager.hasPermissionResult(permission,getFinalNodes()).allowed();
     }
     public boolean permissionNegated(String permission){
         if (nodeExists(permission)){
@@ -74,9 +87,7 @@ public class Rank implements Cloneable {
     }
 
     public boolean hasPermission(String permission,String server) {
-        if (permissionNegated(permission,server))
-            return false;
-        return hasSetPermission(permission,server) || inheritsPermission(permission,server);
+        return PermissionManager.hasPermissionResult(permission,getFinalNodes()).allowed();
     }
     public boolean permissionNegated(String permission,String server){
         if (nodeExists(permission)){
@@ -106,6 +117,8 @@ public class Rank implements Cloneable {
         boolean inherited = false;
         for (UUID inheritedRank : inheritedRanks) {
             Rank r = RankManager.getRankById(inheritedRank);
+            if (r == null)
+                continue;
             if (r.hasPermission(permission)) {
                 inherited = true;
                 break;

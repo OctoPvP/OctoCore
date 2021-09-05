@@ -1,11 +1,10 @@
 package net.octopvp.octocore.paper.objects;
 
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permissible;
-import org.bukkit.permissions.PermissibleBase;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.ServerOperator;
+import org.bukkit.permissions.*;
+import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
@@ -21,8 +20,10 @@ public class OctoPermissible extends PermissibleBase {
     @Override
     public boolean hasPermission(String inName) {
         PlayerData data = PlayerManager.getData(this.uuid);
-        if (data == null)
+        if (data == null) {
+            Logger.error("PlayerData is null!");
             return false;
+        }
         return data.hasPermission(inName);
     }
 
@@ -30,4 +31,5 @@ public class OctoPermissible extends PermissibleBase {
     public boolean hasPermission(Permission perm) {
         return hasPermission(perm.getName());
     }
+
 }
