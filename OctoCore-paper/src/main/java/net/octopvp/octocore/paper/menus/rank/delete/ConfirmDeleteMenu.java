@@ -9,6 +9,7 @@ import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
+import net.octopvp.octocore.paper.utils.runnable.Countdown;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,18 +31,21 @@ public class ConfirmDeleteMenu extends Menu {
         counter();
     }
     private int counter = 5;
-    public void counter(){
-        Bukkit.getScheduler().runTaskTimer(OctoCore.getInstance(), new BukkitRunnable() {
-            @Override
-            public void run() {
-                counter--;
-                if (counter <= 0){
-                    cancel();
-                }
-            }
-        },20l,20l);
+    public void counter() {
+        new Count(5).start();
     }
 
+    class Count extends Countdown{
+
+        public Count(int time) {
+            super(time);
+        }
+
+        @Override
+        public void count(int current) {
+            counter = current;
+        }
+    }
     @Override
     public List<Button> getButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
@@ -57,7 +61,7 @@ public class ConfirmDeleteMenu extends Menu {
 
     @Override
     public String getName(Player player) {
-        return null;
+        return CC.RED + "Confirm Delete ";
     }
     public class ConfirmButton extends Button {
 

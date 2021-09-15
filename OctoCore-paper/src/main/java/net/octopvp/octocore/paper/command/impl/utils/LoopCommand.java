@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class LoopCommand extends BaseCommand {
-    @Command(name = "loop",permission = Permission.LOOP)
+    @Command(name = "loop",permission = Permission.LOOP,usage = "<times> <ticks delay> <command to execute>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length <= 2){
             sender.sendMessage(CC.RED + "Usage: /loop <times> <ticks delay> <command to execute>" + CC.NL + CC.RED + "Notes: use 0 as the delay to execute instantly" + CC.NL + CC.RED + "Example: /loop 10 1 summon cow");

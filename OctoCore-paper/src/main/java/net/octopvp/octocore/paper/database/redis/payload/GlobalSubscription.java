@@ -12,6 +12,8 @@ import net.octopvp.octocore.paper.api.events.GlobalPlayerCreateEvent;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.object.redis.JedisHandle;
+import net.octopvp.octocore.paper.listeners.JoinLeaveListener;
+import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.paper.manager.impl.*;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
@@ -394,6 +396,22 @@ public class GlobalSubscription implements JedisHandle {
                 playerData.save();
             }
             return;
+        }
+        if (payload == JedisAction.SAVE_REQUEST_SWITCH){
+            String id = data.get("uuid").getAsString();
+            UUID uuid = UUID.fromString(id);
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                MainRedisHandler.getSaving().add(uuid);
+                JoinLeaveListener.freezePlayer(player);
+                Tasks.runAsyncLater(()->{
+                    if (Bukkit.getPlayer(uuid) != null){
+                        JoinLeaveListener.unfreezePlayer(player);
+                        player.sendMessage(CC.RED + "Could not send you to that server!");
+                    }
+                },100);
+                PlayerManager.processLeave(player);
+            }
         }
     }
 }

@@ -65,7 +65,8 @@ public abstract class Menu {
 
         this.buttons = this.getFinalButtons(player);
         String title = this.getName(player);
-
+        if (title == null)
+            title = "";
         if (title.length() > 32) title = title.substring(0, 32);
         title = CC.translate(title);
 
@@ -105,6 +106,8 @@ public abstract class Menu {
     public void update(Player player) {
         this.buttons = this.getFinalButtons(player);
         String title = this.getName(player);
+        if (title == null)
+            title = "";
 
         if (title.length() > 32) title = title.substring(0, 32);
         title = CC.translate(title);

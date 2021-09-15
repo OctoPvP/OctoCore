@@ -1,18 +1,22 @@
 package net.octopvp.octocore.paper.manager.impl;
 
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
+import net.octopvp.octocore.paper.objects.OctoPermissible;
 import net.octopvp.octocore.paper.objects.permissions.Node;
 import net.octopvp.octocore.paper.objects.permissions.PermissionReason;
 import net.octopvp.octocore.paper.objects.permissions.PermissionResult;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissibleBase;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PermissionManager extends Manager {
+    public static final String ROOT_WILDCARD = "*",SUB_WILDCARD = ".*";
     @Override
     public void init(OctoCore plugin) {
 
@@ -36,14 +40,14 @@ public class PermissionManager extends Manager {
                     continue;
             }else if (!permission.getScope().isServer(server))
                 continue;
-            if (perm.equalsIgnoreCase("*") && allPerms)
-                return new PermissionResult("*", "Has wildcard permission", PermissionReason.ALLOWED_WILDCARD);
+            if (perm.equalsIgnoreCase(ROOT_WILDCARD) && allPerms)
+                return new PermissionResult(ROOT_WILDCARD, "Has wildcard permission", PermissionReason.ALLOWED_WILDCARD);
             if (permission.getPermission().equalsIgnoreCase(perm)) { //permission is explicitly set
                 return new PermissionResult(perm, "explicitly set", PermissionReason.fromBoolean(permission.isAllowed()));
-            } else if (permission.getPermission().equalsIgnoreCase("*")) {
+            } else if (permission.getPermission().equalsIgnoreCase(ROOT_WILDCARD)) {
                 allPerms = permission.isAllowed();
                 allPermsNegated = permission.isNegated();
-            } else if (permission.getPermission().endsWith(".*")) {
+            } else if (permission.getPermission().endsWith(SUB_WILDCARD)) {
                 boolean allowed = permission.isAllowed();
                 wildcardPermissions.put(permission.getPermission().substring(0, permission.getPermission().length() - 2), allowed);
             }
@@ -67,11 +71,25 @@ public class PermissionManager extends Manager {
                         return;
                 }
                 if (allowed)
-                    b.set(new PermissionResult(perm, permission + ".*", PermissionReason.ALLOWED_SUB_WILDCARD));
-                else b.set(new PermissionResult(perm, permission + ".*", PermissionReason.NEGATED_SUB_WILDCARD));
+                    b.set(new PermissionResult(perm, permission + SUB_WILDCARD, PermissionReason.ALLOWED_SUB_WILDCARD));
+                else b.set(new PermissionResult(perm, permission + SUB_WILDCARD, PermissionReason.NEGATED_SUB_WILDCARD));
                 lastPassed.set(permission.toLowerCase());
             }
         });
         return b.get();
     }
+    public static void injectPermissible(Player player){
+        PermissibleBase old = player.getPermissibleBase();
+        PermissibleBase newBase = new OctoPermissible(player,old);
+        player.setPermissibleBase(newBase);
+        if (player.getPermissibleBase() instanceof OctoPermissible){
+            Logger.info("Successfully injected permissible!");
+        }else{
+            Logger.error("Could not inject permissible!");
+        }
+    }
+    public static boolean isWildcard(String perm) {
+        return perm.equalsIgnoreCase(ROOT_WILDCARD) || perm.equalsIgnoreCase(SUB_WILDCARD);
+    }
+
 }

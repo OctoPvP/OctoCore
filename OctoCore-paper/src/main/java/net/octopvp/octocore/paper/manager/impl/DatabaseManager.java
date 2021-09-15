@@ -31,7 +31,6 @@ public class DatabaseManager extends Manager {
     public static MongoClient getMongoClient() {
         return DatabaseManager.mongoClient;
     }
-    //private RedisManager redisManager;
 
     @Override
     public void init(OctoCore plugin) {

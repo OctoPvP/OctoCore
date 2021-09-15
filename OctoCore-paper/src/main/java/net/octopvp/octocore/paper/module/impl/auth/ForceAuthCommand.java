@@ -10,7 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class ForceAuthCommand extends BaseCommand {
-    @Command(name = "forceauth", permission = Permission.FORCE_AUTH)
+    @Command(name = "forceauth", permission = Permission.FORCE_AUTH,usage = "<player>")
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 1){
             if(AuthModule.isServerAuthEnabled()){
@@ -21,7 +21,6 @@ public class ForceAuthCommand extends BaseCommand {
             }else sender.sendMessage(CC.RED + "2fa is not enabled on this instance! (try going to hub or master server)!");
             return CommandResult.SUCCESS;
         }
-        sender.sendMessage(CC.RED + "Usage: /forceauth <player>");
         return CommandResult.INVALID_ARGS;
     }
 }

@@ -14,10 +14,9 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.common.object.Permission;
 
 public class ExecuteOnAllCommand extends BaseCommand {
-    @Command(name = "executeonall",permission = Permission.EXECUTE_ON_ALL_SERVERS,cooldown = 3,aliases = {"globalexecute"})
+    @Command(name = "executeonall",permission = Permission.EXECUTE_ON_ALL_SERVERS,cooldown = 3,aliases = {"globalexecute"},usage = "<command>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 0){
-            sender.sendMessage(CC.RED + "Usage: /globalexecute <command>");
             return CommandResult.INVALID_ARGS;
         }
         String command = StringUtils.buildString(args,0);

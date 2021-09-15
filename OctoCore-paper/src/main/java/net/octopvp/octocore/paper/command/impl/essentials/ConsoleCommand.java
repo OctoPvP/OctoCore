@@ -10,10 +10,9 @@ import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.Bukkit;
 
 public class ConsoleCommand extends BaseCommand {
-    @Command(name = "console",cooldown = 3,permission = Permission.CONSOLE_EXECUTE)
+    @Command(name = "console",cooldown = 3,permission = Permission.CONSOLE_EXECUTE,usage = "<command>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 0){
-            sender.sendMessage(CC.RED + "Usage: /console <command>");
             return CommandResult.INVALID_ARGS;
         }
         String command = StringUtils.buildString(args,0);

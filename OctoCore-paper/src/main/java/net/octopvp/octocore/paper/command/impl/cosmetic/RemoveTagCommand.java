@@ -19,10 +19,9 @@ import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.Bukkit;
 
 public class RemoveTagCommand extends BaseCommand {
-    @Command(name = "removetag",permission = Permission.ADMIN,cooldown = 1)
+    @Command(name = "removetag",permission = Permission.ADMIN,cooldown = 1,usage = "<player> [tag]")
     public CommandResult execute(Sender sender, String[] args) {
         if (!(args.length >= 2)){
-            sender.sendMessage(CC.RED + "Usage: /remove <player> [tag]");
             return CommandResult.INVALID_ARGS;
         }
         String target = args[0];

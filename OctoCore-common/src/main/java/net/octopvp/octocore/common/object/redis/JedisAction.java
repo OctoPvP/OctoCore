@@ -2,9 +2,6 @@ package net.octopvp.octocore.common.object.redis;
 
 public enum JedisAction {
     SERVER_DATA, PLAYER_DATA, PLAYER_MESSAGE, REPORT_SAVE,
-    /**
-     * Should be run on master server only (litebans) until we replace litebans
-     */
     EXECUTE_PUNISHMENT
     , SERVER_COMMAND, GRANTS_UPDATE,
     SERVER_ONLINE, SERVER_OFFLINE, GLOBAL_COMMAND,
@@ -20,5 +17,7 @@ public enum JedisAction {
 
     RELOAD_TAGS,RELOAD_RANKS,
     PDATA_UPDATE,
+
+    SAVE_REQUEST_SWITCH
     ;
 }

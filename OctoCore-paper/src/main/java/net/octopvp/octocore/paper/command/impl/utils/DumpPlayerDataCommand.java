@@ -13,7 +13,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.errorhandling.Hastebin;
 
 public class DumpPlayerDataCommand extends BaseCommand {
-    @Command(name = "dumpplayerdata",permission = Permission.ADMIN)
+    @Command(name = "dumpplayerdata",permission = Permission.ADMIN,usage = "<player>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length != 1)
             return CommandResult.INVALID_ARGS;

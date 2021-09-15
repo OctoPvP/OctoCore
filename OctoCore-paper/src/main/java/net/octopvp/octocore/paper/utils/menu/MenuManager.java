@@ -8,13 +8,14 @@ import org.bukkit.Bukkit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class MenuManager {
     @Getter
-    private static Map<UUID, Menu> openedMenus = new HashMap<>();
+    private static Map<UUID, Menu> openedMenus = new ConcurrentHashMap<>();
     @Getter
-    private static Map<UUID, Menu> lastOpenedMenus = new HashMap<>();
+    private static Map<UUID, Menu> lastOpenedMenus = new ConcurrentHashMap<>();
     {
         Tasks.runAsyncTimer(()-> Bukkit.getOnlinePlayers().forEach(player ->{
             Menu menu = getOpenedMenus().get(player.getUniqueId());

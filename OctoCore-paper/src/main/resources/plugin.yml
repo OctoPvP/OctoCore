@@ -6,7 +6,6 @@ authors: [ Badbird5907 ]
 description: OctoCore
 load: STARTUP
 depend:
-  - LuckPerms
   - ProtocolLib
   - LunarClient-API
   - Citizens

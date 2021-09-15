@@ -66,7 +66,6 @@ public class Rank implements Cloneable {
         for (Node node : this.getNodes()) {
             if (node.getScope().isThisServer())
                 nodes.add(node);
-            nodes.
         }
         for (UUID inheritedRank : inheritedRanks) {
             Rank rank = RankManager.getRankById(inheritedRank);

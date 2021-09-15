@@ -10,10 +10,10 @@ public abstract class Countdown {
     private int time;
 
     protected BukkitTask task;
-    protected final Plugin plugin;
+    protected final Plugin plugin = OctoCore.getInstance();
     public Countdown(int time) {
         this.time = time;
-        this.plugin = OctoCore.getInstance();
+        start();
     }
     public abstract void count(int current);
     public final void start() {
