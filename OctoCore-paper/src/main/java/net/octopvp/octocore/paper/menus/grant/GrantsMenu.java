@@ -127,26 +127,46 @@ public class GrantsMenu extends PaginatedMenu {
                                     (!grant.hasExpired() ? CC.GREEN + "Yes" : CC.RED + "No"))
                      */
             Rank rank = grant.getRank();
-            ib.lore( CC.SEPARATOR,
-                    CC.AQUA + "Rank: " + grant.getRank().getDisplayName(),
-                    CC.AQUA + "Added By: " + CC.YELLOW + grant.getAddedBy(),
-                    CC.AQUA + "Added Date: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
-                    CC.AQUA + "Duration: " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
-                    CC.AQUA + "Reason: " + CC.YELLOW + grant.getReason(),
-                    CC.AQUA + "Server: " + CC.YELLOW + grant.getServer().getServer(),
-                    "",
-                    CC.AQUA + "Active: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
-                    CC.AQUA + "Expire: " + CC.YELLOW + grant.getNiceExpire()
-            );
-            if (grant.getRemovedBy() != null){
-                ib.lore(
-                        CC.AQUA + "Removed By: " + CC.YELLOW + grant.getRemovedBy(),
-                        CC.AQUA + "Removed At: " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt()),
-                        CC.SEPARATOR
+            if (rank != null){
+                ib.lore( CC.SEPARATOR,
+                        CC.AQUA + "Rank: " + grant.getRank().getDisplayName(),
+                        CC.AQUA + "Added By: " + CC.YELLOW + grant.getAddedBy(),
+                        CC.AQUA + "Added Date: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
+                        CC.AQUA + "Duration: " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
+                        CC.AQUA + "Reason: " + CC.YELLOW + grant.getReason(),
+                        CC.AQUA + "Server: " + CC.YELLOW + grant.getServer().getServer(),
+                        "",
+                        CC.AQUA + "Active: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
+                        CC.AQUA + "Expire: " + CC.YELLOW + grant.getNiceExpire()
                 );
-            }
-            if (!grant.hasExpired() && rank != null && !rank.isDefaultRank()){
-                ib.lore("",CC.YELLOW + "Click to remove this grant.",CC.SEPARATOR);
+                if (grant.getRemovedBy() != null){
+                    ib.lore(
+                            CC.AQUA + "Removed By: " + CC.YELLOW + grant.getRemovedBy(),
+                            CC.AQUA + "Removed At: " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt()),
+                            CC.SEPARATOR
+                    );
+                }
+                if (!grant.hasExpired() && !rank.isDefaultRank()){
+                    ib.lore("",CC.YELLOW + "Click to remove this grant.",CC.SEPARATOR);
+                }
+            }else{
+                ib.lore(CC.SEPARATOR,CC.RED + "Rank was deleted!",
+                        CC.AQUA + "Rank: " + grant.getRankName(),
+                        CC.AQUA + "Added By: " + CC.YELLOW + grant.getAddedBy(),
+                        CC.AQUA + "Added Date: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
+                        CC.AQUA + "Duration: " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
+                        CC.AQUA + "Reason: " + CC.YELLOW + grant.getReason(),
+                        CC.AQUA + "Server: " + CC.YELLOW + grant.getServer().getServer(),
+                        "",
+                        CC.AQUA + "Active: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
+                        CC.AQUA + "Expire: " + CC.YELLOW + grant.getNiceExpire());
+                if (grant.getRemovedBy() != null){
+                    ib.lore(
+                            CC.AQUA + "Removed By: " + CC.YELLOW + grant.getRemovedBy(),
+                            CC.AQUA + "Removed At: " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt()),
+                            CC.SEPARATOR
+                    );
+                }
             }
             return ib.build();
         }

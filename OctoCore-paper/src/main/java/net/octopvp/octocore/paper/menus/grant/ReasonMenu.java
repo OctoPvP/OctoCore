@@ -43,7 +43,7 @@ public class ReasonMenu extends Menu {
     public String getName(Player player) {
         return CC.GREEN + "Reason";
     }
-    private static int i = 1;
+    private int i = 1;
     @RequiredArgsConstructor
     private class ReasonButton extends Button{
         private final GrantReason grantReason;

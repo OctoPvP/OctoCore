@@ -33,17 +33,16 @@ public class GameModeCommand extends BaseCommand {
         gameModes.put("2",GameMode.ADVENTURE);
         gameModes.put("3",GameMode.SPECTATOR);
     }
-    @Command(name = "gamemode",aliases = {"gm"})
+    @Command(name = "gamemode",aliases = {"gm"},usage = "<gamemode> [player]")
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 0){
-            sender.sendMessage(CC.RED + "Usage: /gm [gamemode]");
-            return CommandResult.SUCCESS;
+            return CommandResult.INVALID_ARGS;
         }
         if (args.length >= 1){
             GameMode gameMode = gameModes.get(args[0]);
             if(gameMode == null){
-                sender.sendMessage(CC.RED + args[0] + " is not a valid gamemode!\n" + CC.RED + "Usage: /gm [gamemode]");
-                return CommandResult.SUCCESS;
+                sender.sendMessage(CC.RED + args[0] + " is not a valid gamemode");
+                return CommandResult.INVALID_ARGS;
             }
             if(!sender.hasPermission("octocore.command.gamemode." + gameMode.name().toLowerCase()))
                 return CommandResult.NO_PERMS;

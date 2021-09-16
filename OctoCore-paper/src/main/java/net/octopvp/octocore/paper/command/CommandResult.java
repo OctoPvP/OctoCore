@@ -8,7 +8,7 @@ import net.octopvp.octocore.paper.utils.permission.PermissionString;
 public enum CommandResult {
     SUCCESS(""),
     ERROR(CC.RED + "There was an error while processing that command!"),
-    INVALID_ARGS(CC.RED + "Invalid Arguments!"),
+    INVALID_ARGS(""),
     PLAYER_NOT_FOUND(CC.RED + "That player can't be found!"),
     INVALID_PLAYER(PLAYER_NOT_FOUND.getMsg()),
     ERROR_FETCHING_FROM_MOJANG(CC.RED + "Could not find that player from the Mojang API!"),

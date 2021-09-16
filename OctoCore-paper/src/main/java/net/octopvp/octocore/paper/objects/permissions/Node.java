@@ -23,5 +23,5 @@ public class Node {
     public boolean isNegated() {
         return !allowed;
     }
-    public boolean isWildCard(){return PermissionManager.isWildCard(permission);}
+    public boolean isWildCard(){return PermissionManager.isWildcard(permission);}
 }

@@ -65,4 +65,5 @@ public @interface Command {
 	 */
 	int cooldown() default 0;
 	boolean disable() default false;
+	boolean test() default false;
 }

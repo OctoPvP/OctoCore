@@ -27,6 +27,8 @@ public class DefaultScoreboardHandler implements ScoreboardHandler {
             a = !a;
         }
         PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+        if (playerData == null)
+            return new EntryBuilder().blank().build();
         return new EntryBuilder()
                 .next(CC.SCOREBOARD_SEPARATOR)
                 .blank()

@@ -11,20 +11,18 @@ import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.menus.grant.GrantProcedure;
 import net.octopvp.octocore.paper.objects.enums.RankType;
-import net.octopvp.octocore.paper.objects.permissions.Grant;
-import net.octopvp.octocore.paper.objects.permissions.Node;
-import net.octopvp.octocore.paper.objects.permissions.Rank;
+import net.octopvp.octocore.paper.objects.permissions.*;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
-import org.javatuples.Pair;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,11 +62,12 @@ public class PlayerData {
     private Set<Grant> grants = new HashSet<>();
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
     private Set<Node> nodes = new HashSet<>();
+    private SaveState saveState = SaveState.SAVED;
+    private String s = "default";
 
     private transient List<String> loadNotes = new ArrayList<>();
-
     private transient GrantProcedure grantProcedure = null;
-
+    private transient Map<String,PermissionResult> cachedPermissions = new ConcurrentHashMap<>();
     public PlayerData(UUID uuid,String name) {
         this.uuid = uuid;
         this.lastLoaded = System.currentTimeMillis();
@@ -188,13 +187,17 @@ public class PlayerData {
         return this.getActiveGrants().stream().map(Grant::getRank)
                 .max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getDefaultRank());
     }
+    public Set<Node> getFinalNodes(){
+        Set<Node> nodes1 = new HashSet<>();
+        nodes1.addAll(this.nodes);
+        nodes1.addAll(getHighestRank().getFinalNodes());
+        return nodes1;
+    }
     public boolean hasPermission(String perm){
-        //set permissions take highest prio
-        if (nodeExists(perm)){
-            if (getNode(perm).getScope().isThisServer())
-                return !getNode(perm).isNegated(); //! is there because isNegated means it is negated lol
-        }
-        return getHighestRank().hasPermission(perm);
+        PermissionResult result = PermissionManager.hasPermissionResult(perm,nodes);
+        if (result.getReason() == PermissionReason.NOT_SET)
+            return getHighestRank().hasPermission(perm);
+        else return result.allowed();
     }
 
 
@@ -363,6 +366,7 @@ public class PlayerData {
         });
         return a;
     }
-
-
+    public static enum SaveState {
+        SAVED,SAVING
+    }
 }

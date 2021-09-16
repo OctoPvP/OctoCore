@@ -22,9 +22,14 @@ public class OctoPermissible extends PermissibleBase {
         PlayerData data = PlayerManager.getData(this.uuid);
         if (data == null) {
             Logger.error("PlayerData is null!");
+            Thread.dumpStack();
             return false;
         }
         return data.hasPermission(inName);
+    }
+
+    public PermissibleBase getOldPermissibleBase() {
+        return oldPermissibleBase;
     }
 
     @Override

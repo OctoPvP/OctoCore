@@ -14,8 +14,8 @@ public class CreateRankCommand extends BaseCommand {
         if (args.length != 1){
             sender.sendMessage(CC.RED + "Usage: /createrank <name>\nNote: You may not use spaces or unicode.");
             return CommandResult.SUCCESS;
-        }
-        new CreateRankMenu(args[0]).open(sender);
+        }else
+            new CreateRankMenu(args[0]).open(sender);
         return CommandResult.SUCCESS;
     }
 }

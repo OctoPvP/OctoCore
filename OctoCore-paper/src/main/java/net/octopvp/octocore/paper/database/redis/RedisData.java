@@ -87,4 +87,15 @@ public class RedisData {
         }
         Bukkit.getServer().sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.PLUGIN_MSG, b.toByteArray());
     }
+    public Jedis getJedis(){
+        Jedis jedis = this.pool.getResource();
+        try {
+            if (this.settings.hasPassword()) {
+                jedis.auth(this.settings.getPassword());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jedis;
+    }
 }

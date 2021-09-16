@@ -117,7 +117,7 @@ public class RankManager extends Manager {
         OctoCore.getInstance().getRedisData().write(JedisAction.RELOAD_RANKS,new JsonChain().get());
     }
     public static void delete(Rank rank){
-        ranksCollection.findOneAndDelete(Filters.eq("rankId",rank.getRankId()));
+        ranksCollection.findOneAndDelete(Filters.eq("rankId",rank.getRankId().toString()));
         broadcastReload();
     }
 

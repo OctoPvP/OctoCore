@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.command;
 
 import net.octopvp.octocore.common.cooldown.Cooldown;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.Sender;
@@ -112,6 +113,10 @@ public class CommandFramework implements CommandExecutor {
 					CommandResult result = (CommandResult) method.invoke(methodObject, new Sender(sender), args);
 					if(result == CommandResult.SUCCESS)
 						return true;
+					else if (result == CommandResult.INVALID_ARGS){
+						sender.sendMessage(CC.RED + "Usage: /" + command.name() + " " + command.usage());
+						return true;
+					}
 					else if(result == null){
 						return true;
 					}

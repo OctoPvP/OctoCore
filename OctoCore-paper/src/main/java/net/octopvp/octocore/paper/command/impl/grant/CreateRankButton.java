@@ -11,10 +11,12 @@ import net.octopvp.octocore.paper.utils.Sender;
 public class CreateRankButton extends BaseCommand {
     @Command(name = "createrank",permission = Permission.CREATE_RANK)
     public CommandResult execute(Sender sender, String[] args) {
-        if (args.length != 1){
+        if (args.length == 0){
             sender.sendMessage(CC.RED + "Usage: /createrank <name>");
+            return CommandResult.SUCCESS;
         }
         new CreateRankMenu(args[0]).open(sender);
+
         return CommandResult.SUCCESS;
     }
 }

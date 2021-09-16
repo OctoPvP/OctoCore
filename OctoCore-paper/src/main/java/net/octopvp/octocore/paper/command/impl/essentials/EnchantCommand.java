@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EnchantCommand extends BaseCommand {
-    @Command(name = "enchant",aliases = {"ench","e"},playerOnly = true,permission = Permission.ENCHANT)
+    @Command(name = "enchant",aliases = {"ench","e"},playerOnly = true,permission = Permission.ENCHANT,usage = "<enchant> [level>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1){
             String ench = StringUtils.getEnchantment(args[0]);
@@ -23,11 +23,11 @@ public class EnchantCommand extends BaseCommand {
             try{
                 enchantment = Enchantment.getByName(ench);
             } catch (Exception e) {
-                sender.sendMessage(CC.RED + "Could not find the enchant \"" + args[0] + "\". Usage: /enchant <enchant> <level>");
+                sender.sendMessage(CC.RED + "Could not find the enchant \"" + args[0] + "\".");
                 return CommandResult.INVALID_ARGS;
             }
             Player target = sender.getPlayer();
-            if(target.getInventory().getItemInHand().getType().toString().toLowerCase().contains("air")){
+            if(target.getInventory().getItemInHand() == null || target.getInventory().getItemInHand().getType().toString().toLowerCase().contains("air")){
                 target.sendMessage(CC.RED + "Please hold something to enchant!");
                 return CommandResult.SUCCESS;
             }
@@ -57,8 +57,7 @@ public class EnchantCommand extends BaseCommand {
             target.getInventory().getItemInHand().addUnsafeEnchantment(enchantment,level);
             return CommandResult.SUCCESS;
         }
-        sender.sendMessage(CC.RED + "Usage: /enchant <enchant> <level>");
-        return CommandResult.SUCCESS;
+        return CommandResult.INVALID_ARGS;
     }
 
     @Completer(name = "enchant",aliases = {"ench","e"})

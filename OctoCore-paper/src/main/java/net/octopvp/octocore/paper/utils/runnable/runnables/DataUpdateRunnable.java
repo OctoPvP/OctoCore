@@ -6,6 +6,7 @@ import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.paper.utils.menu.MenuManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -14,6 +15,10 @@ import java.util.stream.Collectors;
 public class DataUpdateRunnable implements Runnable{
     @Override
     public void run() {
+        MenuManager.getOpenedMenus().forEach((uuid,menu)->{
+            if (Bukkit.getPlayer(uuid) != null)
+                menu.update(Bukkit.getPlayer(uuid));
+        });
         JsonChain jsonChain = new JsonChain().addProperty("maxPlayers", Bukkit.getMaxPlayers()).addProperty("whitelisted", Bukkit.hasWhitelist());
         jsonChain.addProperty("name", OctoCore.getServerName()).addProperty("tps1", Bukkit.getServer().spigot().getTPS()[0]).addProperty("tps2", Bukkit.getServer().spigot().getTPS()[1]);
         jsonChain.addProperty("tps3", Bukkit.getServer().spigot().getTPS()[2]).addProperty("lastTick", System.currentTimeMillis()).addProperty("players", StringUtils.getStringFromList(Bukkit.getOnlinePlayers().stream()

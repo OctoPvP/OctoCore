@@ -35,7 +35,8 @@ public class Grant {
         if (server.isThisServer()) {
             if (!this.isActive()) return true;
             if (RankManager.getRankById(rankId) == null) {
-                Logger.debug("cant find rank by rankid: " + rankId);
+                setActive(false);
+                Logger.debug("cant find rank by rankid: " + rankId); //FIXME - remove on expire
                 return true;
             }
             if (this.isPermanent()) return false;

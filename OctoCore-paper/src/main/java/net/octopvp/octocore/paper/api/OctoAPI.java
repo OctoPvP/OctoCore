@@ -6,5 +6,5 @@ import org.bukkit.Bukkit;
 import java.util.UUID;
 
 public interface OctoAPI {
-    public PlayerData getPlayerData(UUID uuid);
+    PlayerData getPlayerData(UUID uuid);
 }

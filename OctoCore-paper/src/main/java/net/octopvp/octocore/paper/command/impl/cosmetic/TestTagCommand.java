@@ -11,7 +11,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.common.object.Permission;
 
 public class TestTagCommand extends BaseCommand {
-    @Command(name = "testtag",permission = Permission.ADMIN,playerOnly = true)
+    @Command(name = "testtag",permission = Permission.ADMIN,playerOnly = true,usage = "<tag>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length != 1 )
             return CommandResult.INVALID_ARGS;

@@ -101,10 +101,12 @@ public class AddGrantMenu extends PaginatedMenu {
                 player.sendMessage(Lang.GRANT_CANNOT_GRANT_HIGHER_RANK.getMsg());
                 return;
             }
+            /*
             if (player.hasPermission("octocore.grant.disallow." + rankData.getName().toLowerCase())) {
                 player.sendMessage(Lang.GRANT_NO_PERMISSION_TO_GRANT_RANK.getMsg());
                 return;
             }
+             */
             playerData.setGrantProcedure(new GrantProcedure(this.playerData));
             playerData.getGrantProcedure().setRankName(rankData.getName());
             playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.SERVER_CHOOSE);

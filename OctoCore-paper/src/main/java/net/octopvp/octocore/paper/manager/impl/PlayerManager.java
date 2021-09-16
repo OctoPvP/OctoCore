@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.manager.impl;
 
 import com.google.gson.JsonObject;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 import net.octopvp.octocore.common.object.AlertType;
 import net.octopvp.octocore.common.object.HashedAddress;
+import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.manager.Manager;
@@ -38,18 +40,10 @@ public class PlayerManager extends Manager {
         return playerProfiles.values().stream().filter(profile -> profile.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
-    /**
-     * After the database is initialized
-     */
     public static void postDBInit(){
         pdataCollection = DatabaseManager.getMongoDatabase().getCollection("pdata");
         backupCollection = DatabaseManager.getMongoDatabase().getCollection("backup");
     }
-
-    /**
-     * process player join
-     * @param uuid
-     */
     public static void processJoin(UUID uuid,String ip) {
         Tasks.runAsync(()->{
             PlayerData profile = playerProfiles.get(uuid);
@@ -61,6 +55,10 @@ public class PlayerManager extends Manager {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null)
                 return;
+
+            Logger.debug("Injecting custom PermissibleBase");
+            PermissionManager.injectPermissible(player);
+
             GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(player.getName());
             if (globalPlayer != null && globalPlayer.getLastServer() != null && !globalPlayer.getLastServer().equalsIgnoreCase(OctoCore.getServerName())) {
                 if (player.hasPermission(Permission.SEND_SWITCH_MESSAGE.getNode())){
@@ -73,22 +71,53 @@ public class PlayerManager extends Manager {
             }
         });
     }
-    public static void loadPData(UUID uuid,String name){
+    public static void loadPData(UUID uuid,String name,boolean saveState){
         try{
             PlayerData profile;
-            if(doesDocumentExistByUUID(uuid)){
-                profile = loadProfileFromDB(uuid);
-            }else profile = createNewProfile(uuid,name);
+            boolean b = !doesDocumentExistByUUID(uuid);
+            boolean passed = !OctoCore.getServerManager().isPlayerOnline(name),a = false;
+
+            while (!passed){
+                PlayerData data = loadProfileFromDB(uuid,false);
+                if (data == null)
+                    break;
+                if (data.getSaveState() == PlayerData.SaveState.SAVING) {
+                    System.out.println("Waiting 500 millis, then requesting pdata again");
+                    Thread.sleep(500);//oh no
+                    if (!a) {
+                        OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_SWITCH, new JsonChain().addProperty("uuid", uuid.toString()).get());
+                        a = true;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+            if (!b)
+                profile = loadProfileFromDB(uuid,true);
+            else profile = createNewProfile(uuid,name);
             playerProfiles.put(uuid, profile);
+            if (saveState)
+                setSavingState(uuid);
         } catch (Exception e) {
             System.err.println("------------------------------");
             e.printStackTrace();
             System.err.println("------------------------------");
         }
     }
+    public static void setSavingState(UUID uuid){
+        BasicDBObject query = new BasicDBObject(),update = new BasicDBObject(),newDoc = new BasicDBObject();
+        query.put("uuid",uuid.toString());
+        update.put("$set",newDoc);
+        newDoc.put("saveState",PlayerData.SaveState.SAVING.name());
+        getPdataCollection().updateOne(query,update);
+    }
 
     public static void processLeave(Player player){
         PlayerData playerData = getProfile(player.getUniqueId());
+        if (playerData == null)
+            return;
+        playerData.setSaveState(PlayerData.SaveState.SAVED);
         unloadProfile(player.getUniqueId());
         Tasks.runLater(()->{
             if (playerData.isOnline()){
@@ -112,7 +141,7 @@ public class PlayerManager extends Manager {
      * @param uuid
      * @return
      */
-    public static PlayerData loadProfileFromDB(UUID uuid) {
+    public static PlayerData loadProfileFromDB(UUID uuid,boolean saveState) {
         try {
             Logger.debug("Loading profile " + uuid.toString() + " from db.");
             PlayerData p;
@@ -123,6 +152,8 @@ public class PlayerManager extends Manager {
             p.setLastLoaded(System.currentTimeMillis());
             p.setLastLogin(System.currentTimeMillis());
             p.onLoad(doc);
+            if (saveState)
+                setSavingState(uuid);
             return p;
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,7 +273,7 @@ public class PlayerManager extends Manager {
      */
     public static Document getProfileDocument(UUID uuid){
         String a = uuid.toString();
-        return pdataCollection.find(Filters.eq("_id",a)).first();
+        return pdataCollection.find(Filters.eq("uuid",a)).first();
     }
     /**
      * Gets the document of a profile (using name)

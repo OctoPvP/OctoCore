@@ -7,6 +7,7 @@ import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.common.util.Logger;
+import redis.clients.jedis.Jedis;
 
 public class RedisManager extends Manager {
     //Load after db manager start
@@ -37,5 +38,8 @@ public class RedisManager extends Manager {
             jsonObject.addProperty("server",OctoCore.getServerName());
             OctoCore.getInstance().getRedisData().write(JedisAction.SERVER_OFFLINE,jsonObject);
         }
+    }
+    public static Jedis getJedis(){
+        return OctoCore.getInstance().getRedisData().getJedis();
     }
 }

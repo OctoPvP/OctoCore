@@ -118,7 +118,7 @@ public class CreateRankMenu extends Menu {
                     prompt(player);
                     return Prompt.END_OF_CONVERSATION;
                 }
-                builder.setName(s);
+                builder.setName(s); //TODO name is null?!
                 open(player);
                 SoundUtil.playPing(player);
                 return Prompt.END_OF_CONVERSATION;

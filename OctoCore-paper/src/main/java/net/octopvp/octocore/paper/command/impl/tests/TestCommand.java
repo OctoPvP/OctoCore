@@ -17,15 +17,26 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.paper.utils.permission.PermissionUtil;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestCommand extends BaseCommand {
     private static final String perm = PermissionUtil.fromEnum(Permission.COMMAND_NICK);
-    @Command(name = "test", description = "test", aliases = {"test1","test2"},usage = "/test",permission = Permission.NOTHING)
+    @Command(name = "test", description = "test", aliases = {"test1","test2"},usage = "/test",playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        new TestMenu(args.length > 1).open(sender);
+        PlayerData data = PlayerManager.getData(sender.getPlayer().getUniqueId());
+        if (data == null){
+            sender.sendMessage(ChatColor.RED + "Data is null!");
+            return CommandResult.SUCCESS;
+        }
+        if (args.length == 1){
+            data.setS(args[0]);
+            sender.sendMessage(ChatColor.GREEN + "pog");
+        }else{
+            sender.sendMessage(data.getS());
+        }
         return CommandResult.SUCCESS;
     }
 }

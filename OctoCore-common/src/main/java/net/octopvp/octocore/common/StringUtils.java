@@ -16,9 +16,9 @@ public class StringUtils {
     public static String arraytoString(String[] args){
         StringBuffer sb = new StringBuffer();
         for(int i = 0; i < args.length; i++) {
-            sb.append(" " + args[i]);
+            sb.append(args[i] + " ");
         }
-        return sb.toString();
+        return sb.toString().trim();
     }
     public static String[] stringToArray(String input,String delim){
         return input.split(delim);
@@ -218,7 +218,7 @@ public class StringUtils {
             enchant = "ARROW_INFINITE";
         }
 
-        if (name.equalsIgnoreCase("unb") || name.equalsIgnoreCase("unbreaking")) {
+        if (name.equalsIgnoreCase("unb") || name.equalsIgnoreCase("unbreaking") || name.equalsIgnoreCase("ubr") || name.equalsIgnoreCase("unbr")) {
             enchant = "DURABILITY";
         }
 

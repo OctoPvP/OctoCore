@@ -95,7 +95,7 @@ public class GrantConfirmationMenu extends Menu {
                 }else{
                     PlayerData data = PlayerManager.getProfile(grantProcedure.getTargetData().getUuid());
                     if (data == null)
-                        data = PlayerManager.loadProfileFromDB(grantProcedure.getTargetData().getUuid());
+                        data = PlayerManager.loadProfileFromDB(grantProcedure.getTargetData().getUuid(),false);
                     data.getGrants().add(grant);
                     data.save();
                 }
