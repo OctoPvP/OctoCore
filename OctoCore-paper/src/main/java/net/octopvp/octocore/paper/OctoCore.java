@@ -73,9 +73,6 @@ public final class OctoCore extends JavaPlugin {
     public static Chat getChat() {
         return OctoCore.chat;
     }
-    public static ConnectionPoolManager getConnectionPoolManager() {
-        return OctoCore.connectionPoolManager;
-    }
     public static Connection getConnection() {
         return OctoCore.connection;
     }
@@ -85,14 +82,8 @@ public final class OctoCore extends JavaPlugin {
     public static CommandFramework getCommandFramework() {
         return OctoCore.commandFramework;
     }
-    public static Location getSpawn() {
-        return OctoCore.spawn;
-    }
     public static Tab getTab() {
         return OctoCore.tab;
-    }
-    public static void setSpawn(Location spawn) {
-        OctoCore.spawn = spawn;
     }
     //Setup End
 

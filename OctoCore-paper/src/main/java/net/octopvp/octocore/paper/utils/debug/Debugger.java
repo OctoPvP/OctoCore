@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper.utils.debug;
 
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.listeners.JoinLeaveListener;
+import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -98,6 +99,10 @@ public class Debugger {
             JoinLeaveListener.freezePlayer(((Player) sender));
             sender.sendMessage(CC.GREEN + "Done!");
         }
+    }
+    public void createTestRank(){
+        RankBuilder rankBuilder = new RankBuilder("test");
+        rankBuilder.build().save();
     }
 
 }

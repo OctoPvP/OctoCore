@@ -159,7 +159,9 @@ public class GrantsMenu extends PaginatedMenu {
                         CC.AQUA + "Server: " + CC.YELLOW + grant.getServer().getServer(),
                         "",
                         CC.AQUA + "Active: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
-                        CC.AQUA + "Expire: " + CC.YELLOW + grant.getNiceExpire());
+                        CC.AQUA + "Expire: " + CC.YELLOW + grant.getNiceExpire(),
+                        CC.SEPARATOR
+                );
                 if (grant.getRemovedBy() != null){
                     ib.lore(
                             CC.AQUA + "Removed By: " + CC.YELLOW + grant.getRemovedBy(),

@@ -27,9 +27,10 @@ import java.util.stream.IntStream;
 
 public class CreateRankMenu extends Menu {
     private String name;
-    private RankBuilder builder = new RankBuilder(name);
+    private RankBuilder builder;
     public CreateRankMenu(String name){
         this.name = name;
+        builder = new RankBuilder(name);
     }
     public CreateRankMenu(RankBuilder rankBuilder){
         this.builder = rankBuilder;
