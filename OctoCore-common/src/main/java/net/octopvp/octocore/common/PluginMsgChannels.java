@@ -10,6 +10,7 @@ public class PluginMsgChannels {
     public static final String BUNGEE_TO_SPIGOT = "OCTO|2";
      */
     public static final String PLUGIN_MSG = "OCTO";
+    public static final String PERMISSIONS = PLUGIN_MSG;
     public static final String BUNGEE = "BungeeCord";
     public static final String LUNAR_CLIENT = "Lunar-Client";
 }

@@ -6,17 +6,21 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.object.maps.pair.HashPairMap;
+import net.octopvp.octocore.common.object.maps.pair.PairMap;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.permissions.Node;
+import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import net.octopvp.octocore.paper.objects.enums.RankType;
-import org.apache.commons.collections4.map.UnmodifiableMap;
 import org.bukkit.ChatColor;
 import org.javatuples.Pair;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -33,7 +37,7 @@ public class Rank implements Cloneable {
     private Set<UUID> inheritedRanks = new HashSet<>();
 
     private String prefix = ""/*, color = CC.GRAY, chatColor = CC.GRAY*/;
-    private ChatColor color = ChatColor.GRAY,chatColor = ChatColor.GRAY;
+    private String color = ChatColor.GREEN + "",chatColor = ChatColor.WHITE + "";
     private boolean bold = false, italic = false, purchasable = false,changableMainColor = false;
     private ServerContext scope = ServerContext.global();
 
@@ -62,31 +66,52 @@ public class Rank implements Cloneable {
         return getNode(perm) != null;
     }
     public Set<Node> getFinalNodes(){
+        PairMap<String,Node,Boolean> map = new HashPairMap<>();
         Set<Node> nodes = new HashSet<>();
         for (Node node : this.getNodes()) {
             if (node.getScope().isThisServer())
                 nodes.add(node);
         }
-        for (UUID inheritedRank : inheritedRanks) {
-            Rank rank = RankManager.getRankById(inheritedRank);
-            if (rank == null)
-                continue;
-            nodes.addAll(rank.getFinalNodes());
+        for (Rank rank : getOrderedInheritance(OrderedInheritance.SMALL_TO_LARGE)) {
+            for (Node finalNode : rank.getFinalNodes()) {
+                if (map.containsKey(finalNode.getPermission().toLowerCase())){
+                    if(map.get(finalNode.getPermission().toLowerCase()).getValue0().getWeight() < finalNode.getWeight()){ //priorities
+                        map.remove(finalNode.getPermission().toLowerCase());
+                        map.put(finalNode.getPermission().toLowerCase(),finalNode,finalNode.isAllowed());
+                    }
+                    continue;
+                }
+                map.put(finalNode.getPermission().toLowerCase(),finalNode,finalNode.isAllowed());
+            }
         }
+        map.forEach((s,node,b)->nodes.add(node));
         return nodes;
     }
-    public boolean hasPermission(String permission) {
-        return PermissionManager.hasPermissionResult(permission,getFinalNodes()).allowed();
+    private static final Comparator<Rank> inheritanceComparatorLargeToSmall = Comparator.comparingInt(Rank::getWeight).reversed();
+    private static final Comparator<Rank> inheritanceComparatorSmallToLarge = Comparator.comparingInt(Rank::getWeight);
+    public List<Rank> getOrderedInheritance(OrderedInheritance orderedInheritance){
+        if (orderedInheritance == OrderedInheritance.SMALL_TO_LARGE){
+            return this.getInheritedRanksConverted().stream().sorted(inheritanceComparatorSmallToLarge).collect(Collectors.toList());
+        }else
+            return this.getInheritedRanksConverted().stream().sorted(inheritanceComparatorLargeToSmall).collect(Collectors.toList());
     }
-    public boolean permissionNegated(String permission){
-        if (nodeExists(permission)){
-            return getNode(permission).getScope().isThisServer() && getNode(permission).isNegated();
+    public static enum OrderedInheritance {
+        SMALL_TO_LARGE,LARGE_TO_SMALL
+    }
+    public Set<Rank> getInheritedRanksConverted(){
+        Set<Rank> ranks = new HashSet<>();
+        for (UUID inheritedRank : inheritedRanks) {
+            Rank rank = RankManager.getRankById(inheritedRank);
+            if (rank == null) continue;
+            ranks.add(rank);
         }
-        return false;
+        return ranks;
     }
-
+    public boolean hasPermission(String permission) {
+        return PermissionCalculator.hasPermissionResult(permission,getFinalNodes()).allowed();
+    }
     public boolean hasPermission(String permission,String server) {
-        return PermissionManager.hasPermissionResult(permission,getFinalNodes()).allowed();
+        return PermissionCalculator.hasPermissionResult(permission,getFinalNodes(),server).allowed();
     }
     public boolean permissionNegated(String permission,String server){
         if (nodeExists(permission)){
@@ -94,49 +119,6 @@ public class Rank implements Cloneable {
         }
         return false;
     }
-    public boolean hasSetPermission(String permission,String server){
-        if (permissionNegated(permission))
-            return false;
-        if (nodeExists(permission)) {
-            if (getNode(permission).getScope().getServer().equalsIgnoreCase(server))
-                return true;
-        }
-        return false;
-    }public boolean hasSetPermission(String permission){
-        if (permissionNegated(permission))
-            return false;
-        if (nodeExists(permission)) {
-            if (getNode(permission).getScope().isThisServer())
-                return true;
-        }
-        return false;
-    }
-
-    public boolean inheritsPermission(String permission) {
-        boolean inherited = false;
-        for (UUID inheritedRank : inheritedRanks) {
-            Rank r = RankManager.getRankById(inheritedRank);
-            if (r == null)
-                continue;
-            if (r.hasPermission(permission)) {
-                inherited = true;
-                break;
-            }
-        }
-        return inherited;
-    }
-    public boolean inheritsPermission(String permission,String server) {
-        boolean inherited = false;
-        for (UUID inheritedRank : inheritedRanks) {
-            Rank r = RankManager.getRankById(inheritedRank);
-            if (r.hasPermission(permission,server)) {
-                inherited = true;
-                break;
-            }
-        }
-        return inherited;
-    }
-
     public String getDisplayName() {
         if (this.isItalic() && this.isBold()) {
             return this.getColor() + "" + ChatColor.BOLD + ChatColor.ITALIC + this.getName();
@@ -152,15 +134,15 @@ public class Rank implements Cloneable {
 
     public String getDisplayColor() {
         if (this.isItalic() && this.isBold()) {
-            return this.getColor() + "" + ChatColor.BOLD + ChatColor.ITALIC;
+            return this.getColor() + ChatColor.BOLD + ChatColor.ITALIC;
         }
         if (this.isBold()) {
-            return this.getColor() + "" + ChatColor.BOLD;
+            return this.getColor() + ChatColor.BOLD;
         }
         if (this.isItalic()) {
-            return this.getColor() + "" + ChatColor.ITALIC;
+            return this.getColor() + ChatColor.ITALIC;
         }
-        return this.getColor().toString();
+        return this.getColor();
     }
 
     public String getPrefix() {
@@ -174,14 +156,6 @@ public class Rank implements Cloneable {
     public String getActivePrefix(PlayerData data){
         return data.getPrefix();
     }
-    public List<String> getEffectivePermissions(){
-        List<String> a = new ArrayList<>();
-        nodes.forEach(node ->{
-            if (node.getScope().isThisServer() && hasPermission(node.getPermission()))
-                a.add(node.getPermission());
-        });
-        return ImmutableList.copyOf(a);
-    }
     public Map<String,ServerContext> getAllEffectivePermissions(){
         Map<String,ServerContext> a = new HashMap<>();
         nodes.forEach(node ->{
@@ -192,7 +166,7 @@ public class Rank implements Cloneable {
     }
     public Map<String, Boolean> getEffectiveBungeePermissions(){
         Map<String,Boolean> a = new HashMap<>();
-        nodes.forEach(node ->{
+        getFinalNodes().forEach(node ->{
             if (node.getScope().isBungee() || node.getScope().isGlobal())
                 a.put(node.getPermission(),node.getScope().isBungee());
         });

@@ -6,7 +6,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.conversations.QuestionConversation;
 import net.octopvp.octocore.paper.manager.impl.FilterManager;
-import net.octopvp.octocore.paper.objects.builders.NodeBuilder;
+import net.octopvp.octocore.common.util.permissions.NodeBuilder;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;

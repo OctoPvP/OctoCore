@@ -1,14 +1,14 @@
-package net.octopvp.octocore.paper.objects.builders;
+package net.octopvp.octocore.common.util.permissions;
 
 import lombok.Getter;
 import net.octopvp.octocore.common.object.ServerContext;
-import net.octopvp.octocore.paper.objects.permissions.Node;
 
 @Getter
 public class NodeBuilder implements Cloneable{
     private String permission = "Not Set";
     private ServerContext scope = new ServerContext("Global");
     private boolean allowed = true;
+    private int weight = 0;
 
     @Override
     public NodeBuilder clone() throws CloneNotSupportedException {
@@ -37,10 +37,19 @@ public class NodeBuilder implements Cloneable{
         this.allowed = a;
         return this;
     }
+    public NodeBuilder setWeight(int weight){
+        this.weight = weight;
+        return this;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
     public Node build(){
         if (permission.equalsIgnoreCase("Not Set")){
             throw new IllegalArgumentException("Permission is not set");
         }
-        return new Node(permission,scope,allowed);
+        return new Node(permission,scope,allowed,weight);
     }
 }

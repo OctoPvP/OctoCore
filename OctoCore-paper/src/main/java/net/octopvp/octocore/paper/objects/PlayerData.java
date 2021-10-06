@@ -10,6 +10,10 @@ import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.permissions.Node;
+import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
+import net.octopvp.octocore.common.util.permissions.PermissionReason;
+import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -65,9 +69,9 @@ public class PlayerData {
     private SaveState saveState = SaveState.SAVED;
     private String s = "default";
 
-    private transient List<String> loadNotes = new ArrayList<>();
+    private transient List<LoadNote> loadNotes = new ArrayList<>();
     private transient GrantProcedure grantProcedure = null;
-    private transient Map<String,PermissionResult> cachedPermissions = new ConcurrentHashMap<>();
+    private transient Map<String, PermissionResult> cachedPermissions = new ConcurrentHashMap<>();
     public PlayerData(UUID uuid,String name) {
         this.uuid = uuid;
         this.lastLoaded = System.currentTimeMillis();
@@ -98,7 +102,7 @@ public class PlayerData {
             return CC.translate((this.isNicked() ? nickPrefix : getHighestRank().getPrefix()) + (this.isNicked() ? nickColor : getCurrentColor()) + " " + (this.isNicked() ? nick : lastKnownName)) + (tag != null ? " " + getTagString() : "");
         return CC.translate(getHighestRank().getPrefix() + getNameColor() + " " + lastKnownName) + (tag != null ? " " + getTagString() : "");
     }
-    public PlayerData addLoadNote(String note){
+    public PlayerData addLoadNote(LoadNote note){
         this.loadNotes.add(note);
         return this;
     }
@@ -181,110 +185,65 @@ public class PlayerData {
         return false;
     }
     public boolean isNon(){
-        return this.getActiveGrants().isEmpty();
-    } //F
+        return this.getHighestRank().isDefaultRank(); //F
+    }
     public Rank getHighestRank(){
         return this.getActiveGrants().stream().map(Grant::getRank)
                 .max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getDefaultRank());
     }
     public Set<Node> getFinalNodes(){
-        Set<Node> nodes1 = new HashSet<>();
-        nodes1.addAll(this.nodes);
-        nodes1.addAll(getHighestRank().getFinalNodes());
+        Set<Node> nodes1 = new HashSet<>(nodes);
+        for (Node finalNode : getHighestRank().getFinalNodes()) {
+            if (nodes1.stream().filter(node -> node.getPermission().equals(finalNode.getPermission())).findFirst().orElse( null) == null){ //node is not manually set
+                nodes1.add(finalNode);
+            }
+        }
         return nodes1;
     }
+    public boolean hasPermission(Node node){
+        return hasPermission(node.getPermission());
+    }
     public boolean hasPermission(String perm){
-        PermissionResult result = PermissionManager.hasPermissionResult(perm,nodes);
+        PermissionResult result = PermissionCalculator.hasPermissionResult(perm,getFinalNodes());
         if (result.getReason() == PermissionReason.NOT_SET)
             return getHighestRank().hasPermission(perm);
         else return result.allowed();
     }
 
 
-    public void loadAttachments(Player player) {
+    public void loadPerms(Player player) {
         Map<String,Boolean> bungeePermissions = new HashMap<>();
-        try {
-            Set<PermissionAttachmentInfo> currentPermissions = new HashSet<>(player.getEffectivePermissions());
-            for (PermissionAttachmentInfo permissionInfo : currentPermissions) {
-                if (permissionInfo.getAttachment() == null) continue;
-
-                Iterator<String> permissions = permissionInfo.getAttachment().getPermissions().keySet().iterator();
-
-                while (permissions.hasNext()) {
-                    String permission = permissions.next();
-                    permissionInfo.getAttachment().unsetPermission(permission);
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("--------");
-            e.printStackTrace();
-            System.err.println("--------");
-        }
-        PermissionAttachment attachment = player.addAttachment(plugin);
-
-        if (attachment == null) return;
-
-        attachment.getPermissions().keySet().forEach(attachment::unsetPermission);
-
         List<Grant> currentGrants = new ArrayList<>(this.grants);
-        Iterator<Grant> grantIterator = currentGrants.iterator();
-        while (grantIterator.hasNext()) {
-            Grant grant = grantIterator.next();
+        for (Grant grant : currentGrants) {
             if (grant.hasExpired()) continue;
             Rank rankData = grant.getRank();
             if (rankData != null) {
-                rankData.getAllPermissionsPair().forEach((permission,pair) -> {
-                    if (pair.getValue0().isThisServer())
-                        attachment.setPermission(permission, pair.getValue1());
-                });
                 bungeePermissions.putAll(rankData.getEffectiveBungeePermissions());
                 ArrayList<UUID> inheritances = Lists.newArrayList(rankData.getInheritedRanks());
                 inheritances.forEach(inheritance -> {
                     Rank rankInheritance = RankManager.getRankById(inheritance);
-
-                    if (rankInheritance != null) {
-                        rankInheritance.getAllPermissionsPair().forEach((permission,pair) -> {
-                            if (pair.getValue0().isThisServer())
-                                attachment.setPermission(permission, pair.getValue1());
-                        });
-                        bungeePermissions.putAll(rankInheritance.getEffectiveBungeePermissions());
-                    }
+                    bungeePermissions.putAll(rankInheritance.getEffectiveBungeePermissions());
                 });
             }
         }
 
         Rank defaultRank = RankManager.getDefaultRank();
         if (defaultRank != null) {
-            List<String> defaultPermissions = defaultRank.getEffectivePermissions();
-
-            defaultPermissions.forEach(permission -> {
-                attachment.setPermission(permission, true);
-            });
             bungeePermissions.putAll(defaultRank.getEffectiveBungeePermissions());
-
             Set<UUID> inheritances = defaultRank.getInheritedRanks();
             inheritances.forEach(inheritance -> {
                 Rank rankInheritance = RankManager.getRankById(inheritance);
-
                 if (rankInheritance != null) {
-                    List<String> inheritancePermissions = rankInheritance.getEffectivePermissions();
-                    inheritancePermissions.forEach(permission -> attachment.setPermission(permission, true));
                     bungeePermissions.putAll(rankInheritance.getEffectiveBungeePermissions());
                 }
             });
         }
-        nodes.forEach(node ->{
-            if (node.getScope().isThisServer())
-                attachment.setPermission(node.getPermission(),node.isAllowed());
-        });
-        player.recalculatePermissions();
-
         Rank rankData = this.getHighestRank();
         if (!player.getDisplayName().equals(CC.translate(rankData.getPrefix(this.getPrefixColorOrNull()) + rankData.getColor() + (this.nameColor != null ? this.nameColor.toString() : "") + this.getName()) + CC.R)) {
             player.setDisplayName(CC.translate(rankData.getPrefix(getPrefixColorOrNull()) + rankData.getColor() + (this.nameColor != null ? this.nameColor.toString() : "") + this.getName()) + CC.R);
         }
 
-        bungeePermissions.forEach((permission,bool) -> RankManager.sendPermissionToBungee(player, player.getName(), permission, bool));
+        bungeePermissions.forEach((permission,bool) -> RankManager.sendPermissionToBungee(player, player.getName(), permission, bool,"global"));
     }
     public String getPrefix(){
         return CC.translate(getHighestRank().getPrefix(this.getPrefixColorOrNull()));
@@ -292,9 +251,7 @@ public class PlayerData {
     public Map<String,ServerContext> getAllEffectivePermissions(){
         Map<String,ServerContext> permissions = new HashMap<>();
         List<Grant> currentGrants = new ArrayList<>(this.grants);
-        Iterator<Grant> grantIterator = currentGrants.iterator();
-        while (grantIterator.hasNext()) {
-            Grant grant = grantIterator.next();
+        for (Grant grant : currentGrants) {
             if (grant.hasExpired()) continue;
             Rank rankData = grant.getRank();
             if (rankData != null) {
@@ -368,5 +325,8 @@ public class PlayerData {
     }
     public static enum SaveState {
         SAVED,SAVING
+    }
+    public static enum LoadNote {
+
     }
 }

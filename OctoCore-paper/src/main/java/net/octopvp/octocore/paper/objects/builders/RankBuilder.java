@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.paper.objects.enums.RankType;
-import net.octopvp.octocore.paper.objects.permissions.Node;
+import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
 import org.bukkit.ChatColor;
 
@@ -16,6 +16,7 @@ public class RankBuilder implements Cloneable {
     public RankBuilder(String name){
         rank = new Rank();
         rank.setName(name);
+        rank.setDefaultRank(false);
     }
     public RankBuilder(Rank r){
         this.rank = r;
