@@ -78,8 +78,7 @@ public class RankManager extends Manager {
     public void createDefaultRank() {
         Rank defaultRank = getDefaultRank();
         if (defaultRank == null) {
-            RankBuilder rank = new RankBuilder("Default");
-            rank.setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GRAY.toString()).setWeight(1).setRankType(RankType.DEFAULT);
+            RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(1).setRankType(RankType.DEFAULT);
             Rank r = rank.build();
             ranks.add(r);
             r.save();
@@ -89,7 +88,7 @@ public class RankManager extends Manager {
         ranksCollection.insertOne(Document.parse(OctoCore.getGson().toJson(rank)));
         broadcastReload();
     }
-    public static void sendPermissionToBungee(Player player, String name, String permission, boolean set) {
+    public static void sendPermissionToBungee(Player player, String name, String permission, boolean set,String scope) {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
         try {
@@ -97,6 +96,7 @@ public class RankManager extends Manager {
             out.writeUTF(name);
             out.writeUTF(permission);
             out.writeUTF(String.valueOf(set));
+            out.writeUTF(scope);
         } catch (IOException e) {
             Logger.error("Failed to send permission to bungee. for " + player.getName());
         }

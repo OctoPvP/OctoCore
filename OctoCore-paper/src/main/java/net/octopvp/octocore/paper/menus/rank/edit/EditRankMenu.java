@@ -19,6 +19,7 @@ import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;

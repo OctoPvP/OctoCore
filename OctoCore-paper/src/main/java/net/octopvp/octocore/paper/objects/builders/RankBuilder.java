@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.paper.objects.enums.RankType;
-import net.octopvp.octocore.paper.objects.permissions.Node;
+import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
 import org.bukkit.ChatColor;
 
@@ -16,6 +16,7 @@ public class RankBuilder implements Cloneable {
     public RankBuilder(String name){
         rank = new Rank();
         rank.setName(name);
+        rank.setDefaultRank(false);
     }
     public RankBuilder(Rank r){
         this.rank = r;
@@ -68,28 +69,28 @@ public class RankBuilder implements Cloneable {
         return this;
     }
     public RankBuilder addPermission(String s){
-        rank.getNodes().add(new Node(s,new ServerContext("Global"),true));
+        rank.getNodes().add(new Node(s,new ServerContext("Global"),true,rank.getWeight()));
         return this;
     }
     public RankBuilder addPermission(String s, ServerContext context){
-        rank.getNodes().add(new Node(s,context,true));
+        rank.getNodes().add(new Node(s,context,true,rank.getWeight()));
         return this;
     }
     public RankBuilder addPermission(String s, String context){
-        rank.getNodes().add(new Node(s,new ServerContext(context),true));
+        rank.getNodes().add(new Node(s,new ServerContext(context),true,rank.getWeight()));
         return this;
     }
 
     public RankBuilder negatePermission(String s){
-        rank.getNodes().add(new Node(s,new ServerContext("Global"),false));
+        rank.getNodes().add(new Node(s,new ServerContext("Global"),false,rank.getWeight()));
         return this;
     }
     public RankBuilder negatePermission(String s, ServerContext context){
-        rank.getNodes().add(new Node(s,context,false));
+        rank.getNodes().add(new Node(s,context,false,rank.getWeight()));
         return this;
     }
     public RankBuilder negatePermission(String s, String context){
-        rank.getNodes().add(new Node(s,new ServerContext(context),false));
+        rank.getNodes().add(new Node(s,new ServerContext(context),false,rank.getWeight()));
         return this;
     }
     public RankBuilder unsetPermission(String perm){

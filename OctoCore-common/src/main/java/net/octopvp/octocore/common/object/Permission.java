@@ -86,7 +86,7 @@ public enum Permission  {
     }
 
     final public String getNode() {
-        return name();
+        return this.node;
     }
 
     @Override

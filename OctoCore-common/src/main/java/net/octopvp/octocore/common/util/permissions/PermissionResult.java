@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.objects.permissions;
+package net.octopvp.octocore.common.util.permissions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

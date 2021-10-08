@@ -392,7 +392,7 @@ public class GlobalSubscription implements JedisHandle {
                 if (add)
                     playerData.getGrants().add(grant);
                 else playerData.getGrants().remove(grant);
-                playerData.loadAttachments(player);
+                playerData.loadPerms(player);
                 playerData.save();
             }
             return;
