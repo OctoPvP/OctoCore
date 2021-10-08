@@ -3,6 +3,7 @@ package net.octopvp.octocore.waterfall.redis.pubsub;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.waterfall.OctoCoreWaterfall;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -17,6 +18,10 @@ public class JedisPublisher {
     }
 
     public void write(String channel, JsonObject payload) {
+        if (OctoCoreWaterfall.getInstance().getRedisData() == null){
+            Logger.info("RedisData is null");
+            return;
+        }
         JedisPool pool = OctoCoreWaterfall.getInstance().getRedisData().getPool();
         if (pool == null) return;
 

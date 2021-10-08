@@ -2,8 +2,10 @@ package net.octopvp.octocore.waterfall.redis;
 
 import lombok.Getter;
 import net.md_5.bungee.config.Configuration;
+import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.waterfall.OctoCoreWaterfall;
 import redis.clients.jedis.Jedis;
 
@@ -20,5 +22,6 @@ public class BungeeRedisManager {
             settings.setPassword(config.getString("redis.auth.password"));
         }
         OctoCoreWaterfall.getInstance().setRedisData(new BungeeRedisData(settings));
+        OctoCoreWaterfall.getInstance().getRedisData().write(JedisAction.SERVER_ONLINE,new JsonChain().addProperty("server","Bungee #UNKNOWN").get());
     }
 }

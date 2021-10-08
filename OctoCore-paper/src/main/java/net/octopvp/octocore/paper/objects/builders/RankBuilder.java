@@ -69,28 +69,28 @@ public class RankBuilder implements Cloneable {
         return this;
     }
     public RankBuilder addPermission(String s){
-        rank.getNodes().add(new Node(s,new ServerContext("Global"),true));
+        rank.getNodes().add(new Node(s,new ServerContext("Global"),true,rank.getWeight()));
         return this;
     }
     public RankBuilder addPermission(String s, ServerContext context){
-        rank.getNodes().add(new Node(s,context,true));
+        rank.getNodes().add(new Node(s,context,true,rank.getWeight()));
         return this;
     }
     public RankBuilder addPermission(String s, String context){
-        rank.getNodes().add(new Node(s,new ServerContext(context),true));
+        rank.getNodes().add(new Node(s,new ServerContext(context),true,rank.getWeight()));
         return this;
     }
 
     public RankBuilder negatePermission(String s){
-        rank.getNodes().add(new Node(s,new ServerContext("Global"),false));
+        rank.getNodes().add(new Node(s,new ServerContext("Global"),false,rank.getWeight()));
         return this;
     }
     public RankBuilder negatePermission(String s, ServerContext context){
-        rank.getNodes().add(new Node(s,context,false));
+        rank.getNodes().add(new Node(s,context,false,rank.getWeight()));
         return this;
     }
     public RankBuilder negatePermission(String s, String context){
-        rank.getNodes().add(new Node(s,new ServerContext(context),false));
+        rank.getNodes().add(new Node(s,new ServerContext(context),false,rank.getWeight()));
         return this;
     }
     public RankBuilder unsetPermission(String perm){

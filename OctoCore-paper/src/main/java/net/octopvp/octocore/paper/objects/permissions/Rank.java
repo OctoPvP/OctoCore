@@ -37,7 +37,7 @@ public class Rank implements Cloneable {
     private Set<UUID> inheritedRanks = new HashSet<>();
 
     private String prefix = ""/*, color = CC.GRAY, chatColor = CC.GRAY*/;
-    private String color = ChatColor.GREEN + "",chatColor = ChatColor.WHITE + "";
+    private ChatColor color = ChatColor.GREEN,chatColor = ChatColor.WHITE;
     private boolean bold = false, italic = false, purchasable = false,changableMainColor = false;
     private ServerContext scope = ServerContext.global();
 
@@ -134,15 +134,15 @@ public class Rank implements Cloneable {
 
     public String getDisplayColor() {
         if (this.isItalic() && this.isBold()) {
-            return this.getColor() + ChatColor.BOLD + ChatColor.ITALIC;
+            return this.getColor() + "" + ChatColor.BOLD + "" + ChatColor.ITALIC ;
         }
         if (this.isBold()) {
-            return this.getColor() + ChatColor.BOLD;
+            return this.getColor() + "" + ChatColor.BOLD;
         }
         if (this.isItalic()) {
-            return this.getColor() + ChatColor.ITALIC;
+            return this.getColor() + "" + ChatColor.ITALIC;
         }
-        return this.getColor();
+        return this.getColor() + "";
     }
 
     public String getPrefix() {
