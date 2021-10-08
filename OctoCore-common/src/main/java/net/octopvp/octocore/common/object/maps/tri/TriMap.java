@@ -1,7 +1,7 @@
 package net.octopvp.octocore.common.object.maps.tri;
 
-import net.badbird5907.blib.objects.QuadConsumer;
-import net.badbird5907.blib.objects.tuple.Triplet;
+import net.octopvp.octocore.common.object.QuadConsumer;
+import net.octopvp.octocore.common.object.tuple.Triplet;
 
 import java.util.ConcurrentModificationException;
 import java.util.Objects;

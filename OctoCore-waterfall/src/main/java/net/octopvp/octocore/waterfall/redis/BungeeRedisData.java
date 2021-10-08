@@ -40,7 +40,6 @@ public class BungeeRedisData {
                 Logger.debug("Registering pub/sub");
                 this.publisher = new JedisPublisher(settings);
                 Logger.debug("ax");
-                write(JedisAction.SERVER_ONLINE,new JsonChain().addProperty("server","Bungee #UNKNOWN").get());
             } catch (Exception e) {
                 Logger.debug("a3");
                 e.printStackTrace();

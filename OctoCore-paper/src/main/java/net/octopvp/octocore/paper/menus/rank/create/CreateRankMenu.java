@@ -15,6 +15,7 @@ import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
@@ -156,8 +157,8 @@ public class CreateRankMenu extends Menu {
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.EMERALD).name(CC.AQUA + "Color").lore(CC.SEPARATOR,CC.AQUA + "Color: " + builder.getRank().getColor() + builder.getRank().getColor().name(),CC.SEPARATOR).build();
-        }
+                return new ItemBuilder(Material.EMERALD).name(CC.AQUA + "Color").lore(CC.SEPARATOR,CC.AQUA + "Color: " +builder.getRank().getColor() + builder.getRank().getColor().name(),CC.SEPARATOR).build();
+            }
 
         @Override
         public int getSlot() {
