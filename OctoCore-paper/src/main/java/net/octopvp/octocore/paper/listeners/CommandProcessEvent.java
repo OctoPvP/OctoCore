@@ -19,7 +19,7 @@ public class CommandProcessEvent implements Listener {
             entries.put("Command",event.getMessage());
             //TODO entries.put("Blocks Affected","Unknown");
             AuditLogEntry entry = new AuditLogEntry(entries,AuditLogType.WORLDEDIT_ACTION);
-            OctoCore.getInstance().getJdaManager().sendAuditLogMsg(entry);
+            OctoCore.getInstance().getJdaManager().sendAuditLogMsg(entry); //TODO help
         }
     }
 }

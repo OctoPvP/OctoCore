@@ -1,18 +1,22 @@
 package net.octopvp.octocore.paper.manager.impl;
 
 import com.google.gson.JsonObject;
+import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
+import com.viaversion.viaversion.api.Via;
 import lombok.Getter;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 import net.octopvp.octocore.common.object.AlertType;
 import net.octopvp.octocore.common.object.HashedAddress;
+import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.manager.Manager;
+import net.octopvp.octocore.paper.manager.impl.autoinit.BookManager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.enums.RankType;
@@ -49,15 +53,15 @@ public class PlayerManager extends Manager {
             PlayerData profile = playerProfiles.get(uuid);
             if(profile == null)
                 Logger.debug("Profile is null!");
-            profile.setRankType(profile.getHighestRank().getRankType());
-            profile.setLastSeenServer(OctoCore.getServerName());
-            profile.setLastSeenIp(new HashedAddress(ip));
             Player player = Bukkit.getPlayer(uuid);
             if (player == null)
                 return;
-
             Logger.debug("Injecting custom PermissibleBase");
             PermissionManager.injectPermissible(player);
+            profile.loadPerms(player);
+            profile.setRankType(profile.getHighestRank().getRankType());
+            profile.setLastSeenServer(OctoCore.getServerName());
+            profile.setLastSeenIp(new HashedAddress(ip));
 
             GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(player.getName());
             if (globalPlayer != null && globalPlayer.getLastServer() != null && !globalPlayer.getLastServer().equalsIgnoreCase(OctoCore.getServerName())) {
@@ -69,21 +73,38 @@ public class PlayerManager extends Manager {
                     sendStaffAlert(AlertType.JOIN,player.getName(),OctoCore.getServerName());
                 }
             }
+            long time = profile.getWorldTime().getTime();
+            if (time == -1)
+                player.resetPlayerTime();
+            else player.setPlayerTime(time, false);
+            TabManager.onJoin(player);
+            if(player.hasPermission(Permission.STAFF_MODULES.getNode()))
+                LunarClientAPI.getInstance().giveAllStaffModules(player);
+            Tasks.run(()-> {
+                ScoreBoardManager.handleJoin(player);
+                if (OctoCore.getServerType() == ServerType.HUB || OctoCore.getServerType() == ServerType.MASTER){
+                    int version = Via.getAPI().getPlayerVersion(player);
+                    Logger.debug("Player Version: " + version);
+                    if (version != 47 && version != -1){
+                        BookManager.showUnsupportedVerBook(player);
+                    }
+                }
+
+            });
         });
     }
     public static void loadPData(UUID uuid,String name,boolean saveState){
         try{
             PlayerData profile;
-            boolean b = !doesDocumentExistByUUID(uuid);
-            boolean passed = !OctoCore.getServerManager().isPlayerOnline(name),a = false;
+            boolean b = !doesDocumentExistByUUID(uuid),passed = !OctoCore.getServerManager().isPlayerOnline(name),a = false;
 
             while (!passed){
                 PlayerData data = loadProfileFromDB(uuid,false);
                 if (data == null)
                     break;
                 if (data.getSaveState() == PlayerData.SaveState.SAVING) {
-                    System.out.println("Waiting 500 millis, then requesting pdata again");
-                    Thread.sleep(500);//oh no
+                    System.out.println("Waiting 50 millis, then requesting pdata again");
+                    Thread.sleep(50);//oh no
                     if (!a) {
                         OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_SWITCH, new JsonChain().addProperty("uuid", uuid.toString()).get());
                         a = true;

@@ -43,32 +43,10 @@ public class JoinLeaveListener implements Listener {
     public void onGlobalPDestroyEvent(GlobalPlayerDestroyEvent e){}
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event){ //TODO join vanished
+        if (event.getPlayer() == null || !event.getPlayer().isOnline()){
+            return;
+        }
         PlayerManager.processJoin(event.getPlayer().getUniqueId(),event.getPlayer().getAddress().getHostString());
-        Tasks.runAsync(()->{
-            if (event.getPlayer() == null || !event.getPlayer().isOnline()){
-                return;
-            }
-            PlayerData profile = PlayerManager.getProfile(event.getPlayer().getUniqueId());
-            Player player = event.getPlayer();
-            long time = profile.getWorldTime().getTime();
-            if (time == -1)
-                player.resetPlayerTime();
-            else player.setPlayerTime(time, false);
-            TabManager.onJoin(player);
-            if(player.hasPermission(Permission.STAFF_MODULES.getNode()))
-                LunarClientAPI.getInstance().giveAllStaffModules(player);
-            Tasks.run(()-> {
-                ScoreBoardManager.handleJoin(event.getPlayer());
-                if (OctoCore.getServerType() == ServerType.HUB || OctoCore.getServerType() == ServerType.MASTER){
-                    int version = Via.getAPI().getPlayerVersion(event.getPlayer());
-                    Logger.debug("Player Version: " + version);
-                    if (version != 47 && version != -1){
-                        BookManager.showUnsupportedVerBook(event.getPlayer());
-                    }
-                }
-
-            });
-        });
     }
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
