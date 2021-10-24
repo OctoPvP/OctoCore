@@ -197,6 +197,7 @@ public class Rank implements Cloneable {
         });
         return ImmutableMap.copyOf(map);
     }
+
     public RankBuilder toBuilder(){
         return new RankBuilder(this);
     }

@@ -37,4 +37,15 @@ public class OctoPermissible extends PermissibleBase {
         return hasPermission(perm.getName());
     }
 
+    @Override
+    public void recalculatePermissions() {
+        PlayerData data = PlayerManager.getData(this.uuid);
+        if (data == null) {
+            Logger.error("PlayerData is null!");
+            Thread.dumpStack();
+            return;
+        }
+        data.getCachedPermissions().clear();
+    }
+
 }

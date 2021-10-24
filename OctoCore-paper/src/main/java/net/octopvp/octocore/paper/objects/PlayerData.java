@@ -57,7 +57,7 @@ public class PlayerData {
     private int /**playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/playTime = 0;
     private List<PlayerTag> allowedTags = new ArrayList<>();
     private UUID nickUUID;
-    private ChatColor nameColor = ChatColor.GRAY,chatColor = ChatColor.GRAY;
+    private ChatColor nameColor = ChatColor.GREEN,chatColor = ChatColor.GREEN;
     private boolean nameColorBold = false, nameColorItalic = false;
 
     private boolean staffChatAlerts = true, adminChatAlerts = true, reportAlerts = true;

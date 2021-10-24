@@ -371,4 +371,14 @@ public class StringUtils {
         }
         return month + "";
     }
+    public static String capatalizeFirst(String in){
+        return in.substring(0,1).toUpperCase() + in.substring(1).toLowerCase();
+    }
+    public static String capatalizeFirstDeep(String in){
+        StringBuilder sb = new StringBuilder();
+        for (String s : in.split("\\s+")) {
+            sb.append(capatalizeFirst(s)).append(" ");
+        }
+        return sb.toString().trim();
+    }
 }

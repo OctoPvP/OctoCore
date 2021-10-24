@@ -24,13 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class ReasonMenu extends Menu {
+public class GrantReasonMenu extends Menu {
     private final PlayerData playerData;
     @Override
     public List<Button> getButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
         buttons.add(new OtherButton());
         buttons.add(new ReasonButton(GrantReason.FAMOUS));
+        buttons.add(new ReasonButton(GrantReason.DEMOTION));
+        buttons.add(new ReasonButton(GrantReason.PROMOTION));
+        buttons.add(new ReasonButton(GrantReason.STORE));
         /*
         for (GrantReason value : GrantReason.values()) {
             buttons.add(new ReasonButton(value));

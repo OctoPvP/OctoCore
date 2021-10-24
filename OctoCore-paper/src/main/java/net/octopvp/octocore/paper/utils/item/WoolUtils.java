@@ -18,6 +18,7 @@ public class WoolUtils {
     public static int convertChatColorToWoolData(ChatColor color) {
         if(color == ChatColor.DARK_RED) color = ChatColor.RED;
         if (color == ChatColor.DARK_BLUE) color = ChatColor.BLUE;
+        if (color == ChatColor.RESET) color = ChatColor.WHITE;
 
         return WoolUtils.woolColors.indexOf(color);
     }
@@ -25,6 +26,7 @@ public class WoolUtils {
         AtomicReference<ChatColor> color = new AtomicReference<>();
         if(cc == ChatColor.DARK_RED.toString()) color.set(ChatColor.RED);
         if (cc == ChatColor.DARK_BLUE.toString()) color.set(ChatColor.BLUE);
+        if (cc == ChatColor.WHITE.toString()) color.set(ChatColor.WHITE);
         woolColors.forEach(color1->{
             if (color1.toString() == cc)
                 color.set(color1);
