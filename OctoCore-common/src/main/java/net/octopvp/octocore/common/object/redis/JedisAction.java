@@ -17,6 +17,6 @@ public enum JedisAction {
     RELOAD_TAGS,RELOAD_RANKS,
     PDATA_UPDATE,
 
-    SAVE_REQUEST_SWITCH
-    ;
+    SAVE_REQUEST_SWITCH,
+
 }
