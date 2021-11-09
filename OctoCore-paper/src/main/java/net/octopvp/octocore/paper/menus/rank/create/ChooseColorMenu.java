@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.menus.rank.create;
 
 import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
@@ -59,7 +60,7 @@ public class ChooseColorMenu extends PaginatedMenu {
         private final ChatColor chatColor;
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.WOOL).durability(WoolUtils.convertChatColorToWoolData(chatColor)).name(chatColor + chatColor.name()).lore(CC.AQUA + "Click to select this as the color.").build();
+            return new ItemBuilder(Material.WOOL).durability(WoolUtils.convertChatColorToWoolData(chatColor)).name(chatColor + StringUtils.capatalizeFirstDeep(chatColor.name().replace("_"," "))).lore(CC.AQUA + "Click to select this as the color.").build();
         }
 
         @Override

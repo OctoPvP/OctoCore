@@ -49,9 +49,9 @@ public class GlobalSubscription implements JedisHandle {
         JsonObject data = object.get("data").getAsJsonObject();
         RedisListenerManager.handleMessage(payload,data);
         if (payload == JedisAction.SERVER_DATA) {
-            ServerData serverData = plugin.getServerManager().getServerData(data.get("name").getAsString());
+            ServerData serverData = OctoCore.getServerManager().getServerData(data.get("name").getAsString());
             if (serverData == null) {
-                serverData = plugin.getServerManager().createServerData(data.get("name").getAsString());
+                serverData = OctoCore.getServerManager().createServerData(data.get("name").getAsString());
             }
             serverData.setWhitelisted(data.get("whitelisted").getAsBoolean());
             serverData.setLastTick(data.get("lastTick").getAsLong());
@@ -59,9 +59,9 @@ public class GlobalSubscription implements JedisHandle {
             serverData.setRecentTps(new double[]{data.get("tps1").getAsDouble(), data.get("tps2").getAsDouble(), data.get("tps3").getAsDouble()});
             serverData.setNames(StringUtils.getListFromString(data.get("players").getAsString()));
 
-            for (ServerData connectedServer : plugin.getServerManager().getConnectedServers()) {
+            for (ServerData connectedServer : OctoCore.getServerManager().getConnectedServers()) {
                 if (System.currentTimeMillis() - connectedServer.getLastTick() >= 15000L){ //15 seconds
-                    plugin.getServerManager().getConnectedServers().remove(connectedServer);
+                    OctoCore.getServerManager().getConnectedServers().remove(connectedServer);
                     if (!connectedServer.isSafelyStopped()){ //check if the server has safely stopped, if not, broadcast crash message
                         if(OctoCore.isMaster()){ //make sure these kind of broadcasts only happen on master
                             JsonObject jsonObject = new JsonObject();

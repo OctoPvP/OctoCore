@@ -119,7 +119,7 @@ public class GrantsMenu extends PaginatedMenu {
             ItemBuilder ib = new ItemBuilder(Material.WOOL)
                     .durability(grant.isActive() ? 5 : 14)
                     .name(
-                            grant.isActive() ? CC.GREEN : CC.RED +
+                            grant.isActive() ? CC.GREEN + grant.getRankName() : CC.RED +
                                     grant.getRankName());
                     /*.lore(CC.SEPARATOR,CC.AQUA + "Rank: " +
                             grant.getRank().getDisplayName(),

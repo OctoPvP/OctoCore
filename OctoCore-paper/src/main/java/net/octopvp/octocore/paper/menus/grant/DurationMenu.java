@@ -3,9 +3,7 @@ package net.octopvp.octocore.paper.menus.grant;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.conversations.QuestionConversation;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.DateUtils;
@@ -63,7 +61,7 @@ public class DurationMenu extends Menu {
             playerData.getGrantProcedure().setPermanent(true);
             playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
             player.sendMessage(Lang.GRANT_DURATION_SET.getMsg("Permanent"));
-            new ReasonMenu(data).open(player);
+            new GrantReasonMenu(data).open(player);
         }
     }
     private class CustomDurationButton extends Button{
@@ -99,7 +97,7 @@ public class DurationMenu extends Menu {
                         playerData.getGrantProcedure().setPermanent(true);
                         playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
                         player.sendMessage(Lang.GRANT_DURATION_SET.getMsg("Permanent"));
-                        new ReasonMenu(data).open(player);
+                        new GrantReasonMenu(data).open(player);
                         return Prompt.END_OF_CONVERSATION;
                     }
                     long duration;
@@ -114,7 +112,7 @@ public class DurationMenu extends Menu {
                     playerData.getGrantProcedure().setEnteredDuration(duration);
                     player.sendMessage(Lang.GRANT_DURATION_SET.getMsg(playerData.getGrantProcedure().getNiceDuration()));
                     playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
-                    new ReasonMenu(data).open(player);
+                    new GrantReasonMenu(data).open(player);
                     return Prompt.END_OF_CONVERSATION;
                 }
             }).withLocalEcho(false).buildConversation(player).begin();
