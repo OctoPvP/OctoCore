@@ -1,7 +1,7 @@
 package net.octopvp.octocore.paper.command;
 
+import net.octopvp.octocore.common.object.Disable;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.objects.Disable;
 import net.octopvp.octocore.paper.utils.Sender;
 
 import java.util.HashMap;
@@ -23,7 +23,8 @@ public abstract class BaseCommand {
     public void registerSubCommand(String name,SCommand command){
         subCommands.put(name,command);
     }
-    private String usageMessage = "";
+
+    private final String usageMessage = "";
 
     public String getUsageMessage() {
         return usageMessage;

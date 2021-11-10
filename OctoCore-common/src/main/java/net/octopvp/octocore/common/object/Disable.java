@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.objects;
+package net.octopvp.octocore.common.object;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 //@Target(ElementType.)
 @Retention(RetentionPolicy.RUNTIME)
 /**
- * Disabls a command/manager if used
+ * Disables stuff
  */
 public @interface Disable {
     String reason() default "";
