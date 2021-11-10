@@ -29,6 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerManager extends Manager {
@@ -42,6 +43,37 @@ public class PlayerManager extends Manager {
 
     public static PlayerData getPlayerData(String name){
         return playerProfiles.values().stream().filter(profile -> profile.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+    //get the data of a player that is not online
+    public static CompletableFuture<PlayerData> getOfflineData(String name){
+        CompletableFuture<PlayerData> completableFuture = new CompletableFuture<>();
+        if (Bukkit.getPlayer(name) != null)
+             completableFuture.complete(getData(Bukkit.getPlayer(name)));
+        else if (OctoCore.getServerManager().isPlayerOnline(name)){
+            Tasks.runAsync(()->{
+                OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC,new JsonChain().addProperty("name",name).get());
+                PlayerData data = null;
+                int tries = 0;
+                while (data == null){
+                    try {
+                        Thread.sleep(40);
+                        if (tries > 5) //maybe the packet was dropped
+                            OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC,new JsonChain().addProperty("name",name).get());
+                        if (getProfileDocument(name).getLong("lastSave") - System.currentTimeMillis() > 5000){
+                            data = OctoCore.getGson().fromJson(getProfileJsonOnlineorOffline(name),PlayerData.class);
+                            break;
+                        }
+                        tries++;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                completableFuture.complete(data);
+            });
+        }else{
+            completableFuture.complete(OctoCore.getGson().fromJson(getProfileJsonOnlineorOffline(name),PlayerData.class));
+        }
+        return completableFuture;
     }
 
     public static void postDBInit(){
@@ -219,6 +251,7 @@ public class PlayerManager extends Manager {
     public static void saveProfile(PlayerData profile) {
         if(profile == null)
             return;
+        profile.setLastSave(System.currentTimeMillis());
         String json = serializeProfileToJson(profile);
         Logger.debug("Saving profile: \nUUID:" + profile.getUuid() + "\nJSON: " + json);
         pdataCollection.replaceOne(getProfileDocument(profile.getUuid()),Document.parse(json), new ReplaceOptions().upsert(true));

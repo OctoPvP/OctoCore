@@ -7,6 +7,7 @@ import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.menus.grant.AddGrantMenu;
 import net.octopvp.octocore.paper.menus.grant.MainGrantMenu;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 
 public class GrantCommand extends BaseCommand {
@@ -18,8 +19,13 @@ public class GrantCommand extends BaseCommand {
             name = "g1"
     )
     public CommandResult e1(Sender sender,String[] args){
-        sender.sendMessage(CC.GREEN + "Opening menu...");
-        new MainGrantMenu(PlayerManager.getPlayerData(args[0])).open(sender.getPlayer());
+        sender.sendMessage(CC.GREEN + "Getting PlayerData...");
+        PlayerManager.getOfflineData(args[0]).thenAcceptAsync((data)->{
+            new MainGrantMenu(data).open(sender.getPlayer());
+
+        });
         return CommandResult.SUCCESS;
     }
+    //get player data
+
 }

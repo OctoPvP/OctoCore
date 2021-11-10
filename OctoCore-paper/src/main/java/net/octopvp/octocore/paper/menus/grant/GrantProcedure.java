@@ -16,11 +16,12 @@ import java.util.UUID;
 public class GrantProcedure {
     public GrantProcedure(PlayerData data){
         this.uuid = data.getUuid();
+        this.playerName = data.getName();
     }
     private UUID uuid;
     private GrantProcedureState grantProcedureState = GrantProcedureState.START;
     private long enteredDuration;
-    private String enteredReason, rankName, server;
+    private String enteredReason, rankName, server,playerName;
     private boolean permanent = false;
 
     public String getNiceDuration() {
