@@ -1,15 +1,15 @@
 package net.octopvp.octocore.paper.command.impl.staff;
 
+import net.octopvp.octocore.common.object.Disable;
+import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.NickManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.objects.Disable;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
-import net.octopvp.octocore.common.object.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

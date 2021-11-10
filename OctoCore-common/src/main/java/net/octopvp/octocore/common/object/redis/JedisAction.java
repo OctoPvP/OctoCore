@@ -18,6 +18,5 @@ public enum JedisAction {
     PDATA_UPDATE,
 
     SAVE_REQUEST_SWITCH,
-    SAVE_REQUEST_MISC
-    ;
+	SAVE_REQUEST_MISC;
 }
