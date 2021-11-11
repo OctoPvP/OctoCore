@@ -40,7 +40,7 @@ public class SetupManager implements Setup {
         }
         for (Class<?> clazz : ReflectionUtils.getClassesInPackage(plugin, "net.octopvp.octocore.paper.manager.impl.autoinit")) {
             try {
-                Object o = clazz.getDeclaredConstructor().newInstance();
+                Object o = clazz.getConstructor().newInstance();
                 managers.add((Manager) o);
             } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();

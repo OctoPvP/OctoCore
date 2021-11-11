@@ -214,7 +214,12 @@ public class PlayerData {
         else return result.allowed();
     }
 
-
+    public void applyGrant(Grant grant){
+        grants.add(grant);
+        if (Bukkit.getPlayer(uuid) != null)
+            loadPerms(Bukkit.getPlayer(uuid));
+        save();
+    }
     public void loadPerms(Player player) {
         Map<String,Boolean> bungeePermissions = new HashMap<>();
         List<Grant> currentGrants = new ArrayList<>(this.grants);

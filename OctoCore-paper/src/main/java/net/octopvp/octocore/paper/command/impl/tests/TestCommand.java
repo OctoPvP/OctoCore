@@ -1,5 +1,6 @@
 package net.octopvp.octocore.paper.command.impl.tests;
 
+import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
@@ -11,7 +12,9 @@ import net.octopvp.octocore.paper.menus.TestMenu;
 import net.octopvp.octocore.paper.menus.grant.AddGrantMenu;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
+import net.octopvp.octocore.paper.objects.builders.GrantBuilder;
 import net.octopvp.octocore.paper.objects.enums.RankType;
+import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.common.object.Permission;
@@ -31,12 +34,9 @@ public class TestCommand extends BaseCommand {
             sender.sendMessage(ChatColor.RED + "Data is null!");
             return CommandResult.SUCCESS;
         }
-        if (args.length == 1){
-            data.setS(args[0]);
-            sender.sendMessage(ChatColor.GREEN + "pog");
-        }else{
-            sender.sendMessage(data.getS());
-        }
+        Grant grant = new GrantBuilder(RankManager.getRankByName("Owner")).setActive(true).setPerm(true).setReason("lmao").setServer(ServerContext.global()).build();
+        data.applyGrant(grant);
+        sender.sendMessage(ChatColor.GREEN + "Done");
         return CommandResult.SUCCESS;
     }
 }
