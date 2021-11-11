@@ -26,12 +26,12 @@ public class ChatManager extends Manager {
     public static void sendMessage(Player p){
 
     }
-    public static String formatChat(UUID uuid, String displayname,String message,boolean translateColor){
-        PlayerData profile = PlayerManager.getProfile(uuid);
+    public static String formatChat(Player player,String message,boolean translateColor){
+        PlayerData profile = PlayerManager.getProfile(player);
         if(profile == null)
             return null;
         if(translateColor)
-            return profile.getFormattedName(true) + CC.WHITE + ": " + CC.translate(message);
-        else return profile.getFormattedName(true) + CC.WHITE + ": " + message;
+            return profile.getFormattedName(true,player) + CC.WHITE + ": " + CC.translate(message);
+        else return profile.getFormattedName(true,player) + CC.WHITE + ": " + message;
     }
 }

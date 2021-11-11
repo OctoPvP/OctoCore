@@ -9,6 +9,7 @@ public enum Permission  {
     COMMAND_UNNICK( "octocore.command.unnick"),
     COMMAND_NICK_OTHERS("octocore.command.nick.others"),
     COMMAND_UNNICK_OTHERS("octocore.command.unnick.others"),
+    COMMAND_PERMISSION_INFO("octocore.command.perminfo"),
     USE_UNICODE_CHAT("octocore.chat.unicode"),
     USE_COLOR_CHAT("octocore.chat.color"),
     STAFF_MODULES("octocore.lunar.staff"),

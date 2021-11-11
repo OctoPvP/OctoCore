@@ -97,6 +97,7 @@ public enum Lang {
     GRANT_TEMP_GRANTED_EXECUTOR(CC.GREEN + "You have " + CC.AQUA + "temporarily" + CC.GREEN + " granted %1 " + CC.GREEN + "to %2 for " + CC.YELLOW + "%3"),
     GRANT_ADMIN_ALERT_PERM(CC.AQUA + "%1 has permanently granted %2 %3" + CC.AQUA + " rank. Reason: %4"),
     GRANT_ADMIN_ALERT_TEMP(CC.AQUA + "%1 has temporarily granted %2 %3" + CC.AQUA + " rank for " + CC.YELLOW + "%4 " + CC.AQUA + ". Reason: %5" ),
+    GRANT_DATA_COULD_NOT_BE_LOADED(CC.RED + "Could not load the data for %1!"),
     CREATE_RANK_SET_WEIGHT(CC.GREEN + "Please type in the rank weight (integer). Type \"cancel\" to cancel."),
     CREATE_RANK_SET_NAME(CC.GREEN + "Please type in the rank name. Type \"cancel\" to cancel."),
     CREATE_RANK_SET_PREFIX(CC.GREEN + "Please type in the rank prefix, use & color codes, and %1 for changeable rank colors. Type in \"cancel\" to cancel."),

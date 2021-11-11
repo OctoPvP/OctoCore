@@ -27,7 +27,10 @@ import org.bson.json.JsonWriterSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,23 +46,24 @@ public class PlayerManager extends Manager {
     public static PlayerData getPlayerData(String name) {
         return playerProfiles.values().stream().filter(profile -> profile.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
+
     //get the data of a player that is not online
-    public static CompletableFuture<PlayerData> getOfflineData(String name){
+    public static CompletableFuture<PlayerData> getOfflineData(String name) {
         CompletableFuture<PlayerData> completableFuture = new CompletableFuture<>();
         if (Bukkit.getPlayer(name) != null)
-             completableFuture.complete(getData(Bukkit.getPlayer(name)));
-        else if (OctoCore.getServerManager().isPlayerOnline(name)){
-            Tasks.runAsync(()->{
-                OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC,new JsonChain().addProperty("name",name).get());
+            completableFuture.complete(getData(Bukkit.getPlayer(name)));
+        else if (OctoCore.getServerManager().isPlayerOnline(name)) {
+            Tasks.runAsync(() -> {
+                OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonChain().addProperty("name", name).get());
                 PlayerData data = null;
                 int tries = 0;
-                while (data == null){
+                while (data == null) {
                     try {
                         Thread.sleep(40);
                         if (tries > 5) //maybe the packet was dropped
-                            OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC,new JsonChain().addProperty("name",name).get());
-                        if (getProfileDocument(name).getLong("lastSave") - System.currentTimeMillis() > 5000){
-                            data = OctoCore.getGson().fromJson(getProfileJsonOnlineorOffline(name),PlayerData.class);
+                            OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonChain().addProperty("name", name).get());
+                        if (getProfileDocument(name).getLong("lastSave") - System.currentTimeMillis() > 5000) {
+                            data = OctoCore.getGson().fromJson(getProfileJsonOnlineorOffline(name), PlayerData.class);
                             break;
                         }
                         tries++;
@@ -69,8 +73,8 @@ public class PlayerManager extends Manager {
                 }
                 completableFuture.complete(data);
             });
-        }else{
-            completableFuture.complete(OctoCore.getGson().fromJson(getProfileJsonOnlineorOffline(name),PlayerData.class));
+        } else {
+            completableFuture.complete(OctoCore.getGson().fromJson(getProfileJsonOnlineorOffline(name), PlayerData.class));
         }
         return completableFuture;
     }
@@ -86,9 +90,9 @@ public class PlayerManager extends Manager {
             if (profile == null)
                 Logger.debug("Profile is null!");
             Player player = Bukkit.getPlayer(uuid);
-            while (player == null){
+            while (player == null) {
                 try {
-                    Thread.sleep(75);
+                    Thread.sleep(25);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -143,7 +147,7 @@ public class PlayerManager extends Manager {
                 if (state == null)
                     break;
                 if (state == PlayerData.SaveState.SAVING) {
-                    System.out.println("Waiting 50 millis, then requesting pdata again");
+                    System.out.println("Waiting 50 millis, then requesting savestate again");
                     Thread.sleep(50);//oh no
                     if (!a) {
                         OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_SWITCH, new JsonChain().addProperty("uuid", uuid.toString()).get());
@@ -164,6 +168,19 @@ public class PlayerManager extends Manager {
             e.printStackTrace();
             System.err.println("------------------------------");
         }
+    }
+
+    /**
+     * runs asynchronously, blocks the thread untill the data is saved
+     * @param uuid
+     * @return
+     */
+    public static CompletableFuture<PlayerData> waitForData(UUID uuid) {
+        CompletableFuture<PlayerData> future = new CompletableFuture<>();
+        Tasks.runAsync(()->{
+
+        });
+        return future;
     }
 
     public static void setSavingState(UUID uuid) {
@@ -203,6 +220,12 @@ public class PlayerManager extends Manager {
         if (document == null)
             return null;
         return PlayerData.SaveState.valueOf(document.getString("saveState"));
+    }
+    public static long getLastSave(UUID uuid){
+        Document document = getProfileDocument(uuid);
+        if (document == null)
+            return -1;
+        return document.getLong("lastSave");
     }
 
     /**

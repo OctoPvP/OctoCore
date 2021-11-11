@@ -27,7 +27,7 @@ public class ListCommand extends BaseCommand {
                     String msg;
                     if(playerData == null)
                         msg = CC.GRAY + player.getName();
-                    else msg = playerData.getFormattedName(false);
+                    else msg = playerData.getFormattedName(false,player);
                     sender.sendMessage(Lang.LIST_MESSAGE_BODY_ENTRY.getMsg(msg));
                 }
                 sender.sendMessage(CC.SEPARATOR);
@@ -43,7 +43,7 @@ public class ListCommand extends BaseCommand {
                 String msg;
                 if(playerData == null)
                     msg = CC.GRAY + player.getName();
-                else msg = playerData.getFormattedName(false);
+                else msg = playerData.getFormattedName(false,player);
                 sender.sendMessage(Lang.LIST_MESSAGE_BODY_ENTRY.getMsg(msg));
             }
         }

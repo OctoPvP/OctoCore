@@ -50,6 +50,7 @@ public class ChatListener implements Listener {
         }
 
         //spam prot
+        /*
         if (playerData.getLastMessage() == e.getMessage()) {
             if (!e.getPlayer().hasPermission(Permission.BYPASS_SPAM_PROT.getNode())){
                 Chat.sendMessage(e.getPlayer(), Lang.PLEASE_DONT_SPAM);
@@ -57,14 +58,15 @@ public class ChatListener implements Listener {
             }
             return;
         }
+         */
         if (FilterManager.containsUnicode(e.getMessage()) && !e.getPlayer().hasPermission(Permission.USE_UNICODE_CHAT.getNode())) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(Lang.NOT_ALLOWED_TO_USE_UNICODE.getMsg());
             return;
         }
         playerData.setLastMessage(e.getMessage());
-
-        String format = ChatManager.formatChat(e.getPlayer().getUniqueId(),e.getPlayer().getDisplayName(),FilterManager.process(e.getMessage(),e.getPlayer()),e.getPlayer().hasPermission(Permission.USE_COLOR_CHAT.getNode()));
+        //String format = ChatManager.formatChat(e.getPlayer().getUniqueId(),e.getPlayer().getDisplayName(),FilterManager.process(e.getMessage(),e.getPlayer()),e.getPlayer().hasPermission(Permission.USE_COLOR_CHAT.getNode()));
+        String format = ChatManager.formatChat(e.getPlayer(),FilterManager.process(e.getMessage(),e.getPlayer()),e.getPlayer().hasPermission(Permission.USE_COLOR_CHAT.getNode()));
         if(format == null){
             e.setCancelled(true);
             e.getPlayer().sendMessage(Lang.PDATA_DID_NOT_LOAD.getMsg());

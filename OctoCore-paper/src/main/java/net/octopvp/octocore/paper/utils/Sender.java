@@ -128,6 +128,9 @@ public class Sender implements CommandSender  {
             return null;
         }
     }
+    public boolean isPlayer(){
+        return commandSender instanceof Player;
+    }
     public String getDisplayName(){
         return getPlayer() == null ? "CONSOLE" : getPlayer().getDisplayName();
     }

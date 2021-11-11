@@ -3,14 +3,12 @@ package net.octopvp.octocore.paper.objects.permissions;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.minecraft.server.v1_8_R3.Material;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.ServerData;
 import net.octopvp.octocore.paper.utils.DateUtils;
-import org.bukkit.entity.Player;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,13 +22,15 @@ public class Grant {
     private final UUID rankId;
     private long addedAt, duration, removedAt;
     private String addedBy, reason, removedBy;
-    private UUID addedByUUID,removedByUUID;
+    private UUID addedByUUID, removedByUUID;
     private boolean active, permanent;
     private ServerContext server = new ServerContext("Global");
-    public Grant(Rank rank){
+
+    public Grant(Rank rank) {
         this.rankName = rank.getName();
         this.rankId = rank.getRankId();
     }
+
     public boolean hasExpired() {
         if (server.isThisServer()) {
             if (!this.isActive()) return true;
@@ -39,8 +39,7 @@ public class Grant {
                 Logger.debug("cant find rank by rankid: " + rankId); //FIXME - remove on expire
                 return true;
             }
-            if (this.isPermanent()) return false;
-            if (duration == -1) return false;
+            if (this.isPermanent() || duration < 0) return false;
             boolean b = System.currentTimeMillis() >= this.addedAt + this.duration;
             if (!b)
                 active = false;

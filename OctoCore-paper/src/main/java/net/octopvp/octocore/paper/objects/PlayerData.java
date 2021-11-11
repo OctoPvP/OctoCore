@@ -101,10 +101,16 @@ public class PlayerData {
     public void save(){
         PlayerManager.saveProfile(this);
     }
-    public String getFormattedName(boolean nicked){
+    public String getFormattedName(boolean nicked,Player player){
+        String prefix = getHighestRank().getPrefix();
+        if (nicked)
+            return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (tag != null ? " " + getTagString() : "");
+        return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getName() : " " + player.getName())) + (tag != null ? " " + getTagString() : "");
+        /*
         if (nicked)
             return CC.translate((this.isNicked() ? nickPrefix : getHighestRank().getPrefix()) + (this.isNicked() ? nickColor : getCurrentColor()) + " " + (this.isNicked() ? nick : lastKnownName)) + (tag != null ? " " + getTagString() : "");
         return CC.translate(getHighestRank().getPrefix() + getNameColor() + " " + lastKnownName) + (tag != null ? " " + getTagString() : "");
+         */
     }
     public PlayerData addLoadNote(LoadNote note){
         this.loadNotes.add(note);
@@ -212,6 +218,12 @@ public class PlayerData {
         if (result.getReason() == PermissionReason.NOT_SET)
             return getHighestRank().hasPermission(perm);
         else return result.allowed();
+    }
+    public PermissionResult getPermissionResult(String permission,String server){
+        return PermissionCalculator.hasPermissionResult(permission,getFinalNodes(),server);
+    }
+    public PermissionResult getPermissionResult(String permission){
+        return PermissionCalculator.hasPermissionResult(permission,getFinalNodes());
     }
 
     public void applyGrant(Grant grant){
@@ -347,5 +359,10 @@ public class PlayerData {
     }
     public static enum LoadNote {
 
+    }
+
+    @Override
+    public String toString() {
+        return OctoCore.getGson().toJson(this);
     }
 }

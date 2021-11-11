@@ -35,7 +35,7 @@ public class RaffleEvent implements Event {
         }
         currentRaffle = this;
         PlayerData profile = PlayerManager.getProfile(p.getUniqueId());
-        final String player1 = profile.getFormattedName(true);
+        final String player1 = profile.getFormattedName(true,p);
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.sendTitle(title);
             player.sendMessage(Lang.RAFFLE_STARTED.getMsg(reward,player1));
@@ -63,7 +63,7 @@ public class RaffleEvent implements Event {
             return;
         }
         PlayerData profile = PlayerManager.getProfile(p.getUniqueId());
-        Bukkit.broadcastMessage(Lang.WON_RAFFLE.getMsg(profile.getFormattedName(true),rafflePlayers.size() + ""));
+        Bukkit.broadcastMessage(Lang.WON_RAFFLE.getMsg(profile.getFormattedName(true,p),rafflePlayers.size() + ""));
         rafflePlayers.clear();
     }
     private static Player getOnlinePlayerFromList(List<UUID> list){

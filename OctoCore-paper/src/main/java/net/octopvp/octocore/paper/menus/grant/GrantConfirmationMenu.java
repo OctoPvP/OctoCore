@@ -77,34 +77,48 @@ public class GrantConfirmationMenu extends Menu {
             if (event.isCancelled()) return;
             Tasks.runAsync(() -> {
                 AtomicReference<PlayerData> targetData = new AtomicReference<>(grantProcedure.getTargetData());
+                Logger.debug("Applying Grant To: " + targetData.get());
                 if (targetData.get() == null) {
                     try {
-                        PlayerManager.getOfflineData(grantProcedure.getPlayerName()).get();
+                        targetData.set(PlayerManager.getOfflineData(grantProcedure.getPlayerName()).get());
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
-                    GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(grantProcedure.getTargetData().getName());
-                    if (grant.isPermanent()) {
-                        player.sendMessage(Lang.GRANT_PERM_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), grantProcedure.getTargetData().getName(), grantProcedure.getEnteredReason()));
-                        if (globalPlayer != null)
-                            globalPlayer.sendMessage(Lang.GRANT_PERM_GRANTED_TO.getMsg(targetRank.getDisplayName()));
-                        OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_ALERT, new JsonChain().addProperty("message", Lang.GRANT_ADMIN_ALERT_PERM.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getEnteredReason())).get());
-                    } else {
-                        player.sendMessage(Lang.GRANT_TEMP_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), grantProcedure.getTargetData().getName(), grantProcedure.getNiceDuration()));
-                        if (globalPlayer != null) {
-                            globalPlayer.sendMessage(Lang.GRANT_TEMP_GRANTED_TO.getMsg(targetRank.getDisplayName(), grantProcedure.getNiceDuration()));
-                        }
-                        OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_ALERT, new JsonChain().addProperty("message", Lang.GRANT_ADMIN_ALERT_TEMP.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getNiceDuration(), grantProcedure.getEnteredReason())).get());
-                    }
+                }
+                if (targetData.get() == null) {
+                    player.sendMessage(Lang.GRANT_DATA_COULD_NOT_BE_LOADED.getMsg(senderData.getGrantProcedure().getPlayerName()));
+                    return;
+                }
+
+                GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(targetData.get().getName());
+                if (grant.isPermanent()) {
+                    player.sendMessage(Lang.GRANT_PERM_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getEnteredReason()));
+                    if (globalPlayer != null)
+                        globalPlayer.sendMessage(Lang.GRANT_PERM_GRANTED_TO.getMsg(targetRank.getDisplayName()));
+                    OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_ALERT, new JsonChain().addProperty("message", Lang.GRANT_ADMIN_ALERT_PERM.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getEnteredReason())).get());
+                } else {
+                    player.sendMessage(Lang.GRANT_TEMP_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getNiceDuration()));
                     if (globalPlayer != null) {
-                        OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonChain().addProperty("name", targetData.get().getName()).addProperty("add", true).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
-                    } else {
-                        PlayerData data = PlayerManager.getProfile(grantProcedure.getTargetData().getUuid());
-                        if (data == null)
-                            data = PlayerManager.loadProfileFromDB(grantProcedure.getTargetData().getUuid(), false);
-                        data.getGrants().add(grant);
-                        data.save();
+                        globalPlayer.sendMessage(Lang.GRANT_TEMP_GRANTED_TO.getMsg(targetRank.getDisplayName(), grantProcedure.getNiceDuration()));
                     }
+                    OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_ALERT, new JsonChain().addProperty("message", Lang.GRANT_ADMIN_ALERT_TEMP.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getNiceDuration(), grantProcedure.getEnteredReason())).get());
+                }
+                grant.setActive(true);
+                if (Bukkit.getPlayer(targetData.get().getUuid()) != null) {
+                    PlayerData data = targetData.get();
+                    //data.getGrants().add(grant);
+                    data.applyGrant(grant);
+                    data.save();
+                }
+                if (globalPlayer != null) {
+                    OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonChain().addProperty("name", targetData.get().getName()).addProperty("add", true).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
+                } else {
+                    PlayerData data = PlayerManager.getProfile(targetData.get().getUuid());
+                    if (data == null)
+                        data = PlayerManager.loadProfileFromDB(targetData.get().getUuid(), false);
+                    //data.getGrants().add(grant);
+                    data.applyGrant(grant);
+                    data.save();
                 }
             });
         }

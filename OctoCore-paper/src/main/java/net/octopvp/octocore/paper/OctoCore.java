@@ -179,6 +179,7 @@ public final class OctoCore extends JavaPlugin {
         setupModules.setup(this);
         new SetupOther().setup(this);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.SubChannels.PERMISSIONS);
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.PLUGIN_MSG);
         Logger.info("Done!");
     }
 

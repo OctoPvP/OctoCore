@@ -17,7 +17,7 @@ public class TestTagCommand extends BaseCommand {
             return CommandResult.INVALID_ARGS;
         TagManager.setPlayerTag(sender.getPlayer(),args[0]);
         PlayerData pdata  = PlayerManager.getProfile(sender.getPlayer().getUniqueId());
-        sender.sendMessage(CC.GREEN + "Set your tag to: " + pdata.getTagString() + "\n" + CC.GREEN + "Your chat message will now look like: \n" + pdata.getFormattedName(false) + CC.R + ": Hello World");
+        sender.sendMessage(CC.GREEN + "Set your tag to: " + pdata.getTagString() + "\n" + CC.GREEN + "Your chat message will now look like: \n" + pdata.getFormattedName(false, sender.getPlayer()) + CC.R + ": Hello World");
         return CommandResult.SUCCESS;
     }
 }

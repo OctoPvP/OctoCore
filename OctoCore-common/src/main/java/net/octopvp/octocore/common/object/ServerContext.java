@@ -33,4 +33,11 @@ public class ServerContext {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "ServerContext{" +
+                "server='" + server + '\'' +
+                '}';
+    }
 }

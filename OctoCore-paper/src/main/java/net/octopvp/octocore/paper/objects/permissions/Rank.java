@@ -11,6 +11,7 @@ import net.octopvp.octocore.common.object.maps.pair.PairMap;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
+import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -112,6 +113,12 @@ public class Rank implements Cloneable {
     }
     public boolean hasPermission(String permission,String server) {
         return PermissionCalculator.hasPermissionResult(permission,getFinalNodes(),server).allowed();
+    }
+    public PermissionResult getPermissionResult(String permission,String server){
+        return PermissionCalculator.hasPermissionResult(permission,getFinalNodes(),server);
+    }
+    public PermissionResult getPermissionResult(String permission){
+        return PermissionCalculator.hasPermissionResult(permission,getFinalNodes());
     }
     public boolean permissionNegated(String permission,String server){
         if (nodeExists(permission)){
