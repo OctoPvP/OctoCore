@@ -1,7 +1,6 @@
 package net.octopvp.octocore.paper.menus.rank.create;
 
 import com.google.common.collect.Lists;
-import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
@@ -20,11 +19,16 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-@RequiredArgsConstructor
 public class ChoosePermissionInheritedMenu extends Menu {
-    private final RankBuilder rankBuilder;
+    private RankBuilder rankBuilder;
     private final Consumer<RankBuilder> callback;
     private Menu instance = this;
+
+    public ChoosePermissionInheritedMenu(RankBuilder rankBuilder, Consumer<RankBuilder> callback) {
+        this.rankBuilder = rankBuilder;
+        this.callback = callback;
+    }
+
     @Override
     public List<Button> getButtons(Player player) {
         return Lists.newArrayList(new PlaceHolderButton(),new PermissionsButton(),new Donebutton());
@@ -43,7 +47,11 @@ public class ChoosePermissionInheritedMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            new CreateRankManagePermissionsMenu(instance, rankBuilder).open(player);
+            new CreateRankManagePermissionsMenu(instance, rankBuilder,(b)->{
+                rankBuilder = b;
+                open(player);
+                SoundUtil.playPing(player);
+            }).open(player);
             SoundUtil.playPing(player);
         }
     }

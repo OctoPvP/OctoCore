@@ -8,6 +8,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.database.ConnectionPoolManager;
 import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.Settings;
@@ -177,6 +178,7 @@ public final class OctoCore extends JavaPlugin {
         Logger.info("Setting up modules.");
         setupModules.setup(this);
         new SetupOther().setup(this);
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.SubChannels.PERMISSIONS);
         Logger.info("Done!");
     }
 

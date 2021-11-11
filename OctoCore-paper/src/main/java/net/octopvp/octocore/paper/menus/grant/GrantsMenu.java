@@ -49,7 +49,7 @@ public class GrantsMenu extends PaginatedMenu {
             buttons.add(new Button() {
                 @Override
                 public ItemStack getItem(Player player) {
-                    return new ItemBuilder(Material.BEDROCK).name(CC.RED + "No grants!").lore(CC.SEPARATOR,"",CC.RED + "This player does not",CC.RED + " have any grants!").build();
+                    return new ItemBuilder(Material.BEDROCK).name(CC.RED + "No grants!").lore("",CC.RED + "This player does not",CC.RED + " have any grants!").build();
                 }
 
                 @Override
@@ -137,18 +137,18 @@ public class GrantsMenu extends PaginatedMenu {
                         CC.AQUA + "Server: " + CC.YELLOW + grant.getServer().getServer(),
                         "",
                         CC.AQUA + "Active: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
-                        CC.AQUA + "Expire: " + CC.YELLOW + grant.getNiceExpire()
+                        CC.AQUA + "Expires: " + CC.YELLOW + grant.getNiceExpire()
                 );
                 if (grant.getRemovedBy() != null){
                     ib.lore(
                             CC.AQUA + "Removed By: " + CC.YELLOW + grant.getRemovedBy(),
-                            CC.AQUA + "Removed At: " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt()),
-                            CC.SEPARATOR
+                            CC.AQUA + "Removed At: " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt())
                     );
                 }
                 if (!grant.hasExpired() && !rank.isDefaultRank()){
-                    ib.lore("",CC.YELLOW + "Click to remove this grant.",CC.SEPARATOR);
+                    ib.lore("",CC.YELLOW + "Click to remove this grant.");
                 }
+                ib.lore(CC.SEPARATOR);
             }else{
                 ib.lore(CC.SEPARATOR,CC.RED + "Rank was deleted!",
                         CC.AQUA + "Rank: " + grant.getRankName(),
@@ -159,7 +159,7 @@ public class GrantsMenu extends PaginatedMenu {
                         CC.AQUA + "Server: " + CC.YELLOW + grant.getServer().getServer(),
                         "",
                         CC.AQUA + "Active: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
-                        CC.AQUA + "Expire: " + CC.YELLOW + grant.getNiceExpire(),
+                        CC.AQUA + "Expires: " + CC.YELLOW + grant.getNiceExpire(),
                         CC.SEPARATOR
                 );
                 if (grant.getRemovedBy() != null){

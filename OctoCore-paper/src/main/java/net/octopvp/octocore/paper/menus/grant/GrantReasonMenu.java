@@ -30,10 +30,10 @@ public class GrantReasonMenu extends Menu {
     public List<Button> getButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
         buttons.add(new OtherButton());
-        buttons.add(new ReasonButton(GrantReason.FAMOUS));
-        buttons.add(new ReasonButton(GrantReason.DEMOTION));
-        buttons.add(new ReasonButton(GrantReason.PROMOTION));
-        buttons.add(new ReasonButton(GrantReason.STORE));
+        buttons.add(new ReasonButton(1,GrantReason.FAMOUS));
+        buttons.add(new ReasonButton(2,GrantReason.DEMOTION));
+        buttons.add(new ReasonButton(3,GrantReason.PROMOTION));
+        buttons.add(new ReasonButton(4,GrantReason.STORE));
         /*
         for (GrantReason value : GrantReason.values()) {
             buttons.add(new ReasonButton(value));
@@ -46,9 +46,9 @@ public class GrantReasonMenu extends Menu {
     public String getName(Player player) {
         return CC.GREEN + "Reason";
     }
-    private int i = 1;
     @RequiredArgsConstructor
     private class ReasonButton extends Button{
+        private final int i;
         private final GrantReason grantReason;
         @Override
         public ItemStack getItem(Player player) {
@@ -57,7 +57,7 @@ public class GrantReasonMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return i++;
+            return i;
         }
 
         @Override

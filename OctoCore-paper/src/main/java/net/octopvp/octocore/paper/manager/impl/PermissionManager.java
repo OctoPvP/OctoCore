@@ -14,6 +14,7 @@ import org.bukkit.permissions.PermissibleBase;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PermissionManager extends Manager {
@@ -28,6 +29,8 @@ public class PermissionManager extends Manager {
 
     }
     public static void injectPermissible(Player player){
+        UUID uuid = player.getUniqueId();
+        Logger.debug("UUID: %1",uuid);
         PermissibleBase old = player.getPermissibleBase();
         PermissibleBase newBase = new OctoPermissible(player,old);
         player.setPermissibleBase(newBase);

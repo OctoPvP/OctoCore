@@ -1,14 +1,18 @@
-package net.octopvp.octocore.paper.menus.rank.create;
+package net.octopvp.octocore.paper.menus.rank;
 
 import com.google.common.collect.Lists;
+import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.conversations.QuestionConversation;
 import net.octopvp.octocore.paper.manager.impl.FilterManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.menus.rank.ServerMenu;
+import net.octopvp.octocore.paper.menus.rank.create.ChooseColorMenu;
+import net.octopvp.octocore.paper.menus.rank.create.ChoosePermissionInheritedMenu;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import net.octopvp.octocore.paper.objects.enums.RankType;
+import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
@@ -26,34 +30,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class CreateRankMenu extends Menu {
+public class EditRankMenu extends Menu {
     private String name;
     private RankBuilder builder;
-    public CreateRankMenu(String name){
+    private boolean edit;
+    public EditRankMenu(String name){
         this.name = name;
         builder = new RankBuilder(name);
+        edit = false;
     }
-    public CreateRankMenu(RankBuilder rankBuilder){
-        this.builder = rankBuilder;
-        this.name = builder.getRank().getName();
+    public EditRankMenu(Rank rank){
+        name = rank.getName();
+        builder = new RankBuilder(rank);
+        edit = true;
     }
+
 
     @Override
     public void onOpen(Player player) {
-        if (FilterManager.containsUnicode(name)){
-            player.sendMessage(CC.RED + "You can't use unicode!");
-            SoundUtil.playError(player);
-            player.closeInventory();
-        }
-        if (name.contains(" ")){
-            player.sendMessage(CC.RED + "You can't have spaces in the name!");
-            SoundUtil.playError(player);
-            player.closeInventory();
-        }
-        if (RankManager.getRankByName(name) != null){
-            player.sendMessage(CC.RED + "That rank already exists!");
-            SoundUtil.playError(player);
-            player.closeInventory();
+        if (!edit){
+            if (FilterManager.containsUnicode(name)){
+                player.sendMessage(CC.RED + "You can't use unicode!");
+                SoundUtil.playError(player);
+                player.closeInventory();
+            }
+            if (name.contains(" ")){
+                player.sendMessage(CC.RED + "You can't have spaces in the name!");
+                SoundUtil.playError(player);
+                player.closeInventory();
+            }
+            if (RankManager.getRankByName(name) != null){
+                player.sendMessage(CC.RED + "That rank already exists!");
+                SoundUtil.playError(player);
+                player.closeInventory();
+            }
         }
     }
 
@@ -157,7 +167,7 @@ public class CreateRankMenu extends Menu {
 
         @Override
         public ItemStack getItem(Player player) {
-                return new ItemBuilder(Material.EMERALD).name(CC.AQUA + "Color").lore(CC.SEPARATOR,CC.AQUA + "Color: " +builder.getRank().getColor() + builder.getRank().getColor().name(),CC.SEPARATOR).build();
+                return new ItemBuilder(Material.EMERALD).name(CC.AQUA + "Color").lore(CC.SEPARATOR,CC.AQUA + "Color: " + builder.getRank().getColor() + StringUtils.capatalizeFirstDeep(builder.getRank().getColor().name().toLowerCase().replace("_"," ")),CC.SEPARATOR).build();
             }
 
         @Override
@@ -209,14 +219,13 @@ public class CreateRankMenu extends Menu {
             })).withLocalEcho(false).buildConversation(player).begin();
         }
     }
-    private RankType rankType = RankType.DEFAULT;
     private class RankTypeButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.PAPER).name(CC.AQUA + "Rank Type").lore(CC.SEPARATOR,
-                    (rankType == RankType.DEFAULT ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Default",
-                    (rankType == RankType.DONATOR ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Donator",
-                    (rankType == RankType.STAFF ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Staff",
+                    (builder.getRank().getRankType() == RankType.DEFAULT ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Default",
+                    (builder.getRank().getRankType() == RankType.DONATOR ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Donator",
+                    (builder.getRank().getRankType() == RankType.STAFF ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Staff",
                     "",CC.SEPARATOR,CC.YELLOW + "Left-Click to cycle forward!",CC.YELLOW + "Right-Click to cycle backwards!").build();
         }
 
@@ -229,19 +238,19 @@ public class CreateRankMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType) {
             SoundUtil.playPing(player);
             if (clickType == ClickType.LEFT){
-                if (rankType == RankType.DEFAULT) // Default -> Donator -> Staff
-                    rankType = RankType.DONATOR;
-                else if (rankType == RankType.DONATOR)
-                    rankType = RankType.STAFF;
-                else if (rankType == RankType.STAFF)
-                    rankType = RankType.DEFAULT;
+                if (builder.getRank().getRankType() == RankType.DEFAULT) // Default -> Donator -> Staff
+                    builder.getRank().setRankType(RankType.DONATOR);
+                else if (builder.getRank().getRankType() == RankType.DONATOR)
+                    builder.setRankType(RankType.STAFF);
+                else if (builder.getRank().getRankType() == RankType.STAFF)
+                    builder.setRankType(RankType.DEFAULT);
             }else if (clickType == ClickType.RIGHT){
-                if (rankType == RankType.DEFAULT)
-                    rankType = RankType.STAFF;
-                else if (rankType == RankType.DONATOR)
-                    rankType = RankType.DEFAULT;
-                else if (rankType == RankType.STAFF)
-                    rankType = RankType.DONATOR;
+                if (builder.getRank().getRankType() == RankType.DEFAULT)
+                    builder.setRankType(RankType.STAFF);
+                else if (builder.getRank().getRankType() == RankType.DONATOR)
+                    builder.setRankType(RankType.DEFAULT);
+                else if (builder.getRank().getRankType() == RankType.STAFF)
+                    builder.getRank().setRankType(RankType.DONATOR);
             }
             update(player);
         }
@@ -291,7 +300,7 @@ public class CreateRankMenu extends Menu {
     private class BuildButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.EMERALD_BLOCK).name(CC.GREEN + CC.B + "Create").lore(CC.GREEN + "Creates the rank!").build();
+            return new ItemBuilder(Material.EMERALD_BLOCK).name(CC.GREEN + CC.B + (edit ? "Save" : "Create")).lore(CC.YELLOW + "Click to " + (edit ? "save" : "create")).build();
         }
 
         @Override
@@ -301,7 +310,9 @@ public class CreateRankMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            RankManager.createNewRank(builder);
+            if (!edit)
+                RankManager.createNewRank(builder);
+            else builder.build().save();
             player.closeInventory();
             player.sendMessage(CC.GREEN + "Success!");
             SoundUtil.playPing(player);

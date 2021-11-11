@@ -4,9 +4,10 @@ import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.callback.ReturnableTypeCallback;
+import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.NodeBuilder;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
-import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
@@ -25,13 +26,16 @@ import java.util.List;
 
 public class CreateRankManagePermissionsMenu extends PaginatedMenu {
     @SneakyThrows
-    public CreateRankManagePermissionsMenu(Menu previousMenu, RankBuilder builder){
+    public CreateRankManagePermissionsMenu(Menu previousMenu, RankBuilder builder, ReturnableTypeCallback<RankBuilder> callback){
         this.previousMenu = previousMenu;
         this.builder = builder;
+        this.callback = callback;
         this.startBuilder = builder.clone();
     }
     private final Menu previousMenu;
     private final RankBuilder builder;
+    private ReturnableTypeCallback<RankBuilder> callback;
+
     private RankBuilder startBuilder;
     private Menu prev = this;
     @Override
@@ -131,7 +135,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
             super.onClick(player, slot, clickType);
-
+            callback.call(builder);
         }
     }
 }

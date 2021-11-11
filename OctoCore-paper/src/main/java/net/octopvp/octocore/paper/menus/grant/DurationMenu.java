@@ -8,6 +8,7 @@ import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.DateUtils;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
+import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -82,6 +83,8 @@ public class DurationMenu extends Menu {
         }
 
         private void callback(PlayerData playerData, Player player){
+            player.closeInventory();
+            SoundUtil.playPing(player);
             OctoCore.getConversationFactory().withFirstPrompt(new StringPrompt() {
                 @Override
                 public String getPromptText(ConversationContext conversationContext) {

@@ -13,12 +13,17 @@ public class OctoPermissible extends PermissibleBase {
     private PermissibleBase oldPermissibleBase;
     public OctoPermissible(Player player,PermissibleBase old) {
         super(player);
-        this.uuid = player.getUniqueId();
+        uuid = player.getUniqueId();
+        Logger.debug("UUID1: %1",uuid);
         this.oldPermissibleBase = old;
     }
 
     @Override
     public boolean hasPermission(String inName) {
+        if (uuid == null) {
+            Logger.error("Perm check: UUID is null!");
+            return false;
+        }
         PlayerData data = PlayerManager.getData(this.uuid);
         if (data == null) {
             Logger.error("PlayerData is null!");
@@ -39,6 +44,10 @@ public class OctoPermissible extends PermissibleBase {
 
     @Override
     public void recalculatePermissions() {
+        if (uuid == null) {
+            Logger.error("UUID is null!");
+            return;
+        }
         PlayerData data = PlayerManager.getData(this.uuid);
         if (data == null) {
             Logger.error("PlayerData is null!");

@@ -18,4 +18,14 @@ public class UseOldPermissibleCommand extends BaseCommand {
         }
         return CommandResult.SUCCESS;
     }
+    @Command(name = "delpermcache",playerOnly = true)
+    public CommandResult cache(Sender sender, String[] args) {
+        if (sender.getPlayer().getPermissibleBase() instanceof OctoPermissible){
+            sender.getPlayer().getPermissibleBase().recalculatePermissions();
+            sender.sendMessage(CC.GREEN + "Done!");
+        }else{
+            sender.sendMessage(CC.RED + "Permissible isn't an OctoPermissible!");
+        }
+        return CommandResult.SUCCESS;
+    }
 }

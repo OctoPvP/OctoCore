@@ -4,7 +4,9 @@ import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.ViaAPI;
 import jdk.jfr.internal.tool.Main;
+import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.ServerType;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
@@ -30,6 +32,8 @@ public class JoinLeaveListener implements Listener {
     public void onPreLogin(AsyncPlayerPreLoginEvent e) {
         if (e.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED){
             PlayerManager.loadPData(e.getUniqueId(),e.getName(),true);
+            if (PlayerManager.getData(e.getUniqueId()) == null)
+                e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
         }
     }
     @EventHandler(priority = EventPriority.HIGH)

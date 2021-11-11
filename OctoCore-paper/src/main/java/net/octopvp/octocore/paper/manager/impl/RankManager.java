@@ -85,7 +85,9 @@ public class RankManager extends Manager {
         }
     }
     public static void save(Rank rank){
-        ranksCollection.insertOne(Document.parse(OctoCore.getGson().toJson(rank)));
+        if (ranksCollection.find(Filters.eq("rankId",rank.getRankId().toString())).first() != null)
+            ranksCollection.replaceOne(Filters.eq("rankId",rank.getRankId().toString()),Document.parse(OctoCore.getGson().toJson(rank)),new ReplaceOptions().upsert(true));
+        else ranksCollection.insertOne(Document.parse(OctoCore.getGson().toJson(rank)));
         broadcastReload();
     }
     public static void sendPermissionToBungee(Player player, String name, String permission, boolean set,String scope) {

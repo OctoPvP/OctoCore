@@ -86,6 +86,10 @@ public class PlayerData {
     public void onLoad(Document... documents){
         this.grants.removeIf(Objects::isNull);
         this.lastLoaded = System.currentTimeMillis();
+        if (cachedPermissions == null)
+            cachedPermissions = new ConcurrentHashMap<>();
+        if (loadNotes == null)
+            loadNotes = new ArrayList<>();
         Document document = (documents.length == 1 ? documents[0] : PlayerManager.getProfileDocument(uuid));
     }
     public Node getNode(String perm){
@@ -238,10 +242,14 @@ public class PlayerData {
                 }
             });
         }
+        /*
         Rank rankData = this.getHighestRank();
         if (!player.getDisplayName().equals(CC.translate(rankData.getPrefix(this.getPrefixColorOrNull()) + rankData.getColor() + (this.nameColor != null ? this.nameColor.toString() : "") + this.getName()) + CC.R)) {
             player.setDisplayName(CC.translate(rankData.getPrefix(getPrefixColorOrNull()) + rankData.getColor() + (this.nameColor != null ? this.nameColor.toString() : "") + this.getName()) + CC.R);
         }
+         */
+        if (!player.getDisplayName().equals(this.getDisplayName())) //TODO handle nicks
+            player.setDisplayName(this.getDisplayName());
 
         bungeePermissions.forEach((permission,bool) -> RankManager.sendPermissionToBungee(player, player.getName(), permission, bool,"global"));
     }
@@ -278,6 +286,12 @@ public class PlayerData {
         }
         permissions.putAll(this.getAllSetEffectivePermissions());
         return permissions;
+    }
+    public String getDisplayName(){
+        if (nicked)
+            return CC.translate(getCurrentColor() + getNickColor() + CC.R);
+        else
+            return CC.translate(getCurrentColor() + getName() + CC.R);
     }
     public Map<String,ServerContext> getAllNegatedPermissions(){
         Map<String,ServerContext> permissions = new HashMap<>();

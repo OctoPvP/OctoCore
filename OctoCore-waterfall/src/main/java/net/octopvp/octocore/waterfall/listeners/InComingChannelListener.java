@@ -48,12 +48,13 @@ public class InComingChannelListener implements Listener {
     }
     @EventHandler
     public void onPermCheck(PermissionCheckEvent event){
-        if (!(event.getSender() instanceof ProxiedPlayer)) event.setHasPermission(true);
-        ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-        OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
-        if (data == null)
-            return;
-        event.setHasPermission(data.hasPermission(event.getPermission()));
+        if (event.getSender() instanceof ProxiedPlayer){
+            ProxiedPlayer player = (ProxiedPlayer) event.getSender();
+            OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
+            if (data == null)
+                return;
+            event.setHasPermission(data.hasPermission(event.getPermission()));
+        }
     }
 
     @EventHandler

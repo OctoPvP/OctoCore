@@ -87,4 +87,23 @@ public class Grant {
     public Rank getRank() {
         return RankManager.getRankById(rankId);
     }
+
+    @Override
+    public String toString() {
+        return "Grant{" +
+                "rankName='" + rankName + '\'' +
+                ", rankId=" + rankId +
+                ", addedAt=" + addedAt +
+                ", duration=" + duration +
+                ", removedAt=" + removedAt +
+                ", addedBy='" + addedBy + '\'' +
+                ", reason='" + reason + '\'' +
+                ", removedBy='" + removedBy + '\'' +
+                ", addedByUUID=" + addedByUUID +
+                ", removedByUUID=" + removedByUUID +
+                ", active=" + active +
+                ", permanent=" + permanent +
+                ", server=" + server +
+                '}';
+    }
 }

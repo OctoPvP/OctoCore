@@ -6,7 +6,7 @@ import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
-import net.octopvp.octocore.paper.menus.rank.edit.EditRankMenu;
+import net.octopvp.octocore.paper.menus.rank.EditRankMenu;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.Sender;
 

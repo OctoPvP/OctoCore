@@ -6,7 +6,7 @@ import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
-import net.octopvp.octocore.paper.menus.rank.create.CreateRankMenu;
+import net.octopvp.octocore.paper.menus.rank.EditRankMenu;
 import net.octopvp.octocore.paper.utils.Sender;
 
 public class CreateRankCommand extends BaseCommand {
@@ -20,7 +20,7 @@ public class CreateRankCommand extends BaseCommand {
                 sender.sendMessage(CC.RED + "That rank already exists!");
                 return CommandResult.SUCCESS;
             }
-            new CreateRankMenu(args[0]).open(sender);
+            new EditRankMenu(args[0]).open(sender);
         }
         return CommandResult.SUCCESS;
     }

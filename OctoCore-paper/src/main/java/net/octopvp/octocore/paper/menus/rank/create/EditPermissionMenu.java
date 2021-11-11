@@ -149,7 +149,7 @@ public class EditPermissionMenu extends Menu {
     private class ScopeButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Scope").lore(CC.SEPARATOR,CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope(),CC.SEPARATOR,CC.YELLOW + "Click to set scope!").build();
+            return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Scope").lore(CC.SEPARATOR,CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().getServer(),CC.SEPARATOR,CC.YELLOW + "Click to set scope!").build();
         }
 
         @Override

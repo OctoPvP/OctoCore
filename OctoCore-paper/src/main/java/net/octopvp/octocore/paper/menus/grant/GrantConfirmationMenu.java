@@ -3,6 +3,7 @@ package net.octopvp.octocore.paper.menus.grant;
 import com.google.common.collect.Lists;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.PlayerGrantEvent;
@@ -68,6 +69,7 @@ public class GrantConfirmationMenu extends Menu {
                 builder.setPerm(true);
             else builder.setDuration(grantProcedure.getEnteredDuration());
             Grant grant = builder.build();
+            Logger.debug("Grant: " + grant.toString());
             player.closeInventory();
             PlayerGrantEvent event = new PlayerGrantEvent(grant, grantProcedure.getTargetData(), player);
             Bukkit.getPluginManager().callEvent(event);
@@ -112,6 +114,11 @@ public class GrantConfirmationMenu extends Menu {
         @Override
         public int getSlot() {
             return 15;
+        }
+
+        @Override
+        public void onClick(Player player, int slot, ClickType clickType) {
+            player.closeInventory();
         }
     }
     private class InfoButton extends Button{
