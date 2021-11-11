@@ -413,5 +413,22 @@ public class GlobalSubscription implements JedisHandle {
                 PlayerManager.processLeave(player);
             }
         }
+        if (payload == JedisAction.SAVE_REQUEST_MISC){
+            if (data.has("uuid")){
+                String id = data.get("uuid").getAsString();
+
+                UUID uuid = UUID.fromString(id);
+                if (Bukkit.getPlayer(uuid) != null){
+                    PlayerManager.getData(uuid).save();
+                }
+            }
+            else{
+                String name = data.get("name").getAsString();
+                Player player = Bukkit.getPlayer(name);
+                if (player != null){
+                    PlayerManager.getData(player).save();
+                }
+            }
+        }
     }
 }
