@@ -109,16 +109,17 @@ public class GrantConfirmationMenu extends Menu {
                     //data.getGrants().add(grant);
                     data.applyGrant(grant);
                     data.save();
-                }
-                if (globalPlayer != null) {
-                    OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonChain().addProperty("name", targetData.get().getName()).addProperty("add", true).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
-                } else {
-                    PlayerData data = PlayerManager.getProfile(targetData.get().getUuid());
-                    if (data == null)
-                        data = PlayerManager.loadProfileFromDB(targetData.get().getUuid(), false);
-                    //data.getGrants().add(grant);
-                    data.applyGrant(grant);
-                    data.save();
+                }else{
+                    if (globalPlayer != null) {
+                        OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonChain().addProperty("name", targetData.get().getName()).addProperty("add", true).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
+                    } else {
+                        PlayerData data = PlayerManager.getProfile(targetData.get().getUuid());
+                        if (data == null)
+                            data = PlayerManager.loadProfileFromDB(targetData.get().getUuid(), false);
+                        //data.getGrants().add(grant);
+                        data.applyGrant(grant);
+                        data.save();
+                    }
                 }
             });
         }

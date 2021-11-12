@@ -62,6 +62,10 @@ public class PlayerManager extends Manager {
                         Thread.sleep(40);
                         if (tries > 5) //maybe the packet was dropped
                             OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonChain().addProperty("name", name).get());
+                        if (Bukkit.getPlayer(name) != null) {
+                            data = getData(Bukkit.getPlayer(name));
+                            break;
+                        }
                         if (getProfileDocument(name).getLong("lastSave") - System.currentTimeMillis() > 5000) {
                             data = OctoCore.getGson().fromJson(getProfileJsonOnlineorOffline(name), PlayerData.class);
                             break;
@@ -83,7 +87,16 @@ public class PlayerManager extends Manager {
         pdataCollection = DatabaseManager.getMongoDatabase().getCollection("pdata");
         backupCollection = DatabaseManager.getMongoDatabase().getCollection("backup");
     }
-
+    public static void processLogin(Player player,PlayerData profile){
+        Tasks.runAsync(()->{
+            if (!player.isOnline() || profile == null)
+                return;
+            Logger.debug("Injecting custom PermissibleBase");
+            PermissionManager.injectPermissible(player);
+            profile.loadPerms(player);
+            profile.setRankType(profile.getHighestRank().getRankType());
+        });
+    }
     public static void processJoin(UUID uuid, String ip) {
         Tasks.runAsync(() -> {
             PlayerData profile = playerProfiles.get(uuid);
@@ -98,10 +111,7 @@ public class PlayerManager extends Manager {
                 }
                 player = Bukkit.getPlayer(uuid);
             }
-            Logger.debug("Injecting custom PermissibleBase");
-            PermissionManager.injectPermissible(player);
-            profile.loadPerms(player);
-            profile.setRankType(profile.getHighestRank().getRankType());
+
             profile.setLastSeenServer(OctoCore.getServerName());
             profile.setLastSeenIp(new HashedAddress(ip));
 

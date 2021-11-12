@@ -110,6 +110,10 @@ public class RankBuilder implements Cloneable {
         rank.getInheritedRanks().add(rank1);
         return this;
     }
+    public RankBuilder removeInheritedRank(UUID rank1){
+        rank.getInheritedRanks().remove(rank1);
+        return this;
+    }
     public RankBuilder setBold(boolean bold){
         rank.setBold(bold);
         return this;

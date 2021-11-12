@@ -34,7 +34,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
         return Lists.newArrayList(new PlaceHolderButton(),new PermissionsButton(),new Donebutton());
     }
 
-    public class PermissionsButton extends Button {
+    private class PermissionsButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.IRON_INGOT).name(CC.AQUA + "Permissions").lore(CC.SEPARATOR,CC.AQUA + "Total Permissions: " + CC.YELLOW + rankBuilder.getRank().getNodes().size(),CC.AQUA + "Total Allowed Permissions: " + CC.YELLOW + rankBuilder.getRank().getAllowedPermissions().size(),CC.AQUA + "Total Negated Permissions: " + CC.YELLOW + rankBuilder.getRank().getNegatedPermissions().size(),CC.SEPARATOR).build();
@@ -48,6 +48,28 @@ public class ChoosePermissionInheritedMenu extends Menu {
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
             new CreateRankManagePermissionsMenu(instance, rankBuilder,(b)->{
+                rankBuilder = b;
+                open(player);
+                SoundUtil.playPing(player);
+            }).open(player);
+            SoundUtil.playPing(player);
+        }
+    }
+
+    private class InheritedButton extends Button {
+        @Override
+        public ItemStack getItem(Player player) {
+            return new ItemBuilder(Material.IRON_INGOT).name(CC.AQUA + "Inherited").lore(CC.SEPARATOR,CC.AQUA + "Inherited Ranks: " + CC.YELLOW + rankBuilder.getRank().getInheritedRanks().size(),CC.SEPARATOR).build();
+        }
+
+        @Override
+        public int getSlot() {
+            return 15;
+        }
+
+        @Override
+        public void onClick(Player player, int slot, ClickType clickType) {
+            new InheritedRanksMenu(instance, rankBuilder,(b)->{
                 rankBuilder = b;
                 open(player);
                 SoundUtil.playPing(player);
@@ -70,7 +92,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
             }
         };
     }
-    public class Donebutton extends Button {
+    private class Donebutton extends Button {
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.EMERALD_BLOCK).name(CC.GREEN + "Done!").build();
