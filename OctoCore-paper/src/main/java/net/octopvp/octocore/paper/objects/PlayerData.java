@@ -131,7 +131,7 @@ public class PlayerData {
     public String getPrefixColorOrNull(){
         return (customColor != null && isCustomColorEnabled() ? customColor : null);
     }
-    public boolean isOnline(String name) {// FIXME inverted this because its returning false even if they are online
+    public boolean isOnline(String name) { // FIXME inverted this because its returning false even if they are online
         return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData ->
                 serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
                         .contains(name.toLowerCase())).findFirst().orElse(null) == null;
