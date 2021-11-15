@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.command;
 
 import net.octopvp.octocore.common.object.Disable;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.utils.Sender;
 
@@ -33,6 +34,9 @@ public abstract class BaseCommand {
     public void setUsageMessage(String usageMessage) {
     }
     public void sendUsage(Sender sender){
-        sender.sendMessage(this.getClass().getAnnotation(Command.class).usage());
+        sender.sendMessage(CC.RED + "Usage: /" + getAnnotation().name() + " " + getAnnotation().usage());
+    }
+    public Command getAnnotation(){
+        return this.getClass().getAnnotation(Command.class);
     }
 }
