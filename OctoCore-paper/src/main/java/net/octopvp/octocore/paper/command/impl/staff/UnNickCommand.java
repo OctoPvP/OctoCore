@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 @Disable
 public class UnNickCommand extends BaseCommand {
-    @Command(name = "unnick", description = "unnick",usage = "/unnick",permission = Permission.COMMAND_UNNICK)
+    @Command(name = "unnick", description = "unnick",permission = Permission.COMMAND_UNNICK)
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 0){
             if(sender.getDisplayName() == sender.getName()){

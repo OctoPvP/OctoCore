@@ -27,7 +27,7 @@ import java.util.List;
 
 public class TestCommand extends BaseCommand {
     private static final String perm = PermissionUtil.fromEnum(Permission.COMMAND_NICK);
-    @Command(name = "test", description = "test", aliases = {"test1","test2"},usage = "/test",playerOnly = true)
+    @Command(name = "test", description = "test", aliases = {"test1","test2"},playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         PlayerData data = PlayerManager.getData(sender.getPlayer().getUniqueId());
         if (data == null){

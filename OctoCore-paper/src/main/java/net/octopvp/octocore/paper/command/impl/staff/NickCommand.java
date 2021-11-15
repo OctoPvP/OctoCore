@@ -17,7 +17,7 @@ import java.util.List;
 
 @Disable
 public class NickCommand extends BaseCommand {
-    @Command(name = "nick", description = "nick",usage = "/nick [name]",permission = Permission.COMMAND_NICK)
+    @Command(name = "nick", description = "nick",usage = "[name]",permission = Permission.COMMAND_NICK)
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 1){
             NameTagChanger.INSTANCE.changePlayerName(sender.getPlayer(), args[0]);
