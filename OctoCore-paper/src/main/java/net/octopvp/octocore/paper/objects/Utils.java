@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.utils;
+package net.octopvp.octocore.paper.objects;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

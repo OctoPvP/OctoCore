@@ -14,7 +14,6 @@ public class SetupVault implements Setup{
             VaultManager.setChatHookEnabled(setupChat());
             if(VaultManager.isChatHookEnabled())
                 Logger.info("Setup Vault Chat hook");
-            else Logger.info("Couldn't setup vault chat hook. Defaulting to LuckPerms chat hook.");
         }
     }
 
@@ -25,6 +24,9 @@ public class SetupVault implements Setup{
 
     private boolean setupChat(){
         RegisteredServiceProvider<Chat> rsp = Bukkit.getServer().getServicesManager().getRegistration(Chat.class);
+        if (rsp == null)
+            return false;
+
         VaultManager.setChat(rsp.getProvider());
         return VaultManager.getChat() != null;
     }

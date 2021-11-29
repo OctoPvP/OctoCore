@@ -19,10 +19,10 @@ public class SetupPermissions implements Setup{
                 continue;
             }
             if(perms.contains(node)) {
-                Logger.debug("Not registering permission \"" + node + "\" because it already is.");
+                //Logger.debug("Not registering permission \"" + node + "\" because it already is.");
                 continue;
             }
-            Logger.debug("Registering permission \"" + node + "\"");
+            //Logger.debug("Registering permission \"" + node + "\"");
             Bukkit.getPluginManager().getPermissions().add(new org.bukkit.permissions.Permission(node));
         }
     }

@@ -27,7 +27,6 @@ public enum Lang {
     COMMAND_SEEN_NOT_ONLINE(CC.SEPARATOR + CC.NL + CC.NL +  CC.AQUA + "%1 was last seen on" + CC.NL + CC.AQUA + "%2" + CC.NL + CC.NL + CC.SEPARATOR),
     EXECUTING_REQUESTED_COMMAND(CC.AQUA + "Executing command /%1 requested by &2"),
     STAFF_CHAT_FORMAT(CC.GOLD + CC.B + "StaffChat " + CC.D_GRAY + CC.ARROW_RIGHT + CC.GRAY + " %1 " + CC.GRAY + "(%2)" + CC.WHITE + ": %3"),
-    //StaffChat » [Owner] Badbird5907 (hub1): asdf
     ADMIN_CHAT_FORMAT(CC.RED + CC.B + "AdminChat " + CC.D_GRAY + CC.ARROW_RIGHT + CC.GRAY + " %1 " + CC.GRAY + "(%2)" + CC.WHITE + ": %3"),
     DISCORD_STAFF_CHAT_FORMAT(CC.GOLD + CC.B + "DiscordSC " + CC.D_GRAY + CC.ARROW_RIGHT + CC.GRAY + " %1 " + CC.WHITE + ": %2" ),
     DISCORD_ADMIN_CHAT_FORMAT(CC.RED + CC.B + "DiscordAC " + CC.D_GRAY + CC.ARROW_RIGHT + CC.GRAY + " %1 " + CC.WHITE + ": %2" ),

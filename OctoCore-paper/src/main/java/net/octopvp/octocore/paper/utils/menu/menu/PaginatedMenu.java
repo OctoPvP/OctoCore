@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.utils.menu.menu;
 
 import lombok.Getter;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.CloseButton;
@@ -22,8 +23,10 @@ public abstract class PaginatedMenu extends Menu {
     public List<Button> getButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
 
-        int minSlot = (int) ((double) (page - 1) * 27);
-        int maxSlot = (int) ((double) (page) * 27);
+        //int minSlot = (int) ((double) (page - 1) * 27);
+        //int maxSlot = (int) ((double) (page) * 27);
+        int minSlot = (int) ((double) (page - 1) * getMaxPageItems());
+        int maxSlot = (int) ((double) (page) * getMaxPageItems());
 
         buttons.add(new NextPageButton(this));
         buttons.add(new PreviousPageButton(this));
@@ -76,7 +79,9 @@ public abstract class PaginatedMenu extends Menu {
 
     @Override
     public String getName(Player player) {
-        return this.getPagesTitle(player);
+        if (showPageNumbersInTitle()){
+            return this.getPagesTitle(player) + CC.R + " (" + page + "/" + getPages(player) + ")";
+        }else return this.getPagesTitle(player);
     }
 
     public void changePage(Player player, int page) {
@@ -102,6 +107,12 @@ public abstract class PaginatedMenu extends Menu {
     }
     public Button getPlaceholderButton(){
         return null;
+    }
+    public boolean showPageNumbersInTitle(){
+        return true;
+    }
+    public int getMaxPageItems(){
+        return 27;
     }
     public boolean doesButtonExist(List<Button> buttons,int i){
         return buttons.stream().filter(button ->{

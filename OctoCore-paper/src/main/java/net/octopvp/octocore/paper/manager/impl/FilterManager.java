@@ -22,6 +22,7 @@ public class FilterManager extends Manager {
 
     @Override
     public void init(OctoCore plugin) {
+        /*
         ResultSet rs = null;
         try {
             rs = OctoCore.getConnection().prepareStatement(DatabaseHelper.GET_BLAKLIST_WORDS.getSql()).executeQuery();
@@ -32,6 +33,7 @@ public class FilterManager extends Manager {
             throwables.printStackTrace();
             Logger.warn("Unable to load blacklisted words from database!");
         }
+         */
     }
 
     @Override

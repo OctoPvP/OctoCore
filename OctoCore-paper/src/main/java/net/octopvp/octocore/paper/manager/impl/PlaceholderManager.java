@@ -22,6 +22,7 @@ public class PlaceholderManager extends Manager {
 
     @Override
     public void init(OctoCore plugin) {
+        /*
         ResultSet rs;
         try {
             OctoCore.getConnection().prepareStatement(DatabaseHelper.CREATE_PLACEHOLDERS_TABLE.getSql());
@@ -37,6 +38,8 @@ public class PlaceholderManager extends Manager {
         for (String s : placeholders.keySet()) {
             Logger.debug(" - " + s);
         }
+
+         */
     }
 
     @Override

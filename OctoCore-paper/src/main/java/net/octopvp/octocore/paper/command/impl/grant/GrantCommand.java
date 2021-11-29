@@ -22,7 +22,6 @@ public class GrantCommand extends BaseCommand {
         sender.sendMessage(CC.GREEN + "Getting PlayerData...");
         PlayerManager.getOfflineData(args[0]).thenAcceptAsync((data)->{
             new MainGrantMenu(data).open(sender.getPlayer());
-
         });
         return CommandResult.SUCCESS;
     }

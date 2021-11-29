@@ -255,12 +255,12 @@ public class CommandFramework implements CommandExecutor {
 	private static void registerPermission(String name, String desc){
         Permission perm = new Permission(name, desc);
         if(!Bukkit.getPluginManager().getPermissionsString().contains(name)) {
-            Logger.info("Registering permission \"" + name + "\" because it isn't registered.");
+            //Logger.info("Registering permission \"" + name + "\" because it isn't registered.");
             Bukkit.getPluginManager().getPermissions().add(perm);
         }
         else{
-        	if(!(name == ""))
-        		Logger.info("Didn't register permission \"" + name + "\" because it already is registered!");
+        	if(!(name == "")) return;
+        		//Logger.info("Didn't register permission \"" + name + "\" because it already is registered!");
         }
     }
 }

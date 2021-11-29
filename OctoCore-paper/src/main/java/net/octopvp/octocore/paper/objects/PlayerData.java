@@ -213,8 +213,17 @@ public class PlayerData {
     public boolean hasPermission(Node node){
         return hasPermission(node.getPermission());
     }
-    public boolean hasPermission(String perm){
+    public boolean hasPermission(String perm){ //haha this is a laggy mess
+        PermissionResult cachedResult = cachedPermissions.get(perm);
+        if (cachedResult != null){
+            if (cachedResult.getTimestamp() + 600000 < System.currentTimeMillis()){ //10 minutes ttl
+                cachedPermissions.remove(perm);
+            }
+            else
+                return cachedResult.allowed();
+        }
         PermissionResult result = PermissionCalculator.hasPermissionResult(perm,getFinalNodes());
+        cachedPermissions.put(perm,result);
         if (result.getReason() == PermissionReason.NOT_SET)
             return getHighestRank().hasPermission(perm);
         else return result.allowed();

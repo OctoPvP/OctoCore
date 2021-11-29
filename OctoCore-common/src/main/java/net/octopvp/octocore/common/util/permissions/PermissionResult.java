@@ -10,6 +10,7 @@ import lombok.Setter;
 public class PermissionResult {
     private String permission,data;
     private PermissionReason reason;
+    private long timestamp = System.currentTimeMillis();
 
     @Override
     public String toString() {
@@ -18,6 +19,7 @@ public class PermissionResult {
                 ", data:\"" + data + '\"' +
                 ", reason:\"" + reason + '\"' +
                 ", allowed:" + allowed() +
+                ", timestamp:" + timestamp +
                 '}';
     }
     public boolean allowed(){

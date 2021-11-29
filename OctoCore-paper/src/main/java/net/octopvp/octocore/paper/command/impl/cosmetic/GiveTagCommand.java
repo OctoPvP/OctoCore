@@ -73,7 +73,7 @@ public class GiveTagCommand extends BaseCommand {
             PlayerTag tag1 = TagManager.getTagByName(tag);
             if (!data.hasTag(tag1.getName()))
                 data.getAllowedTags().add(tag1);
-            PlayerManager.saveProfile(data);
+            data.save();
             sender.sendMessage(CC.GREEN + "Added tag " + tag1.getName() + " to " + target);
             return CommandResult.SUCCESS;
         }

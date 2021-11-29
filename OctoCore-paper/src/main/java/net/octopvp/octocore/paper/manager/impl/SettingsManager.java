@@ -15,6 +15,7 @@ public class SettingsManager extends Manager {
     @Getter private static Settings settings = OctoCore.getSettings();
     @Override
     public void init(OctoCore plugin) {
+        /*
         this.instance = this;
         ResultSet rs;
         try {
@@ -28,6 +29,8 @@ public class SettingsManager extends Manager {
         }
         Logger.debug("Settings:");
         settings.getSettingsMap().forEach((k,v)-> Logger.debug(" - " + k + " | " + v));
+
+         */
     }
 
     @Override

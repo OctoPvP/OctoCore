@@ -43,8 +43,8 @@ public class ListMenu extends PaginatedMenu {
     public List<Button> getEveryMenuSlots(Player player) {
         return null;
     }
-    private static int i = 0;
-    private static int a = 0;
+    private int i = 0;
+    private int a = 0;
     public class PlayerButton extends Button{
         private Player p;
         public PlayerButton(Player pl){

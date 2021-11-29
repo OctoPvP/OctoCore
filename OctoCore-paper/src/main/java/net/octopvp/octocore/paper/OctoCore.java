@@ -29,11 +29,14 @@ import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.UUID;
 
 public final class OctoCore extends JavaPlugin {
     public static String prefix = "[OctoCore] ";
@@ -127,7 +130,15 @@ public final class OctoCore extends JavaPlugin {
     }
     @Override
     public void onEnable() {
-        new Logger(Bukkit.getLogger(),prefix);
+        long start = System.currentTimeMillis();
+        new Logger(Bukkit.getLogger(), prefix, (message, players) -> {
+            for (UUID uuid : players) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    player.sendMessage(message);
+                }
+            }
+        });
         if(instance != null)
             throw new IllegalStateException("OctoCore is already initialized");
         instance = this;
@@ -157,13 +168,15 @@ public final class OctoCore extends JavaPlugin {
         Logger.info("Starting OctoCore");
         if(!getDataFolder().exists())
             getDataFolder().mkdirs();
+        Logger.info("aaa");
         new SetupConfig().setup(this);
-        Logger.info("Starting ConnectionPoolManager");
-        initdb();
-        if(connection == null)
-            Logger.error("Could not connect to database!");
+        //Logger.info("Starting ConnectionPoolManager");
+        //initdb();
+        //if(connection == null)
+        //    Logger.error("Could not connect to database!");
         Logger.info("Setting up internal files");
         Logger.info("Setting up listeners");
+        Logger.info("lmfao");
         new SetupListeners().setup(this);
         Logger.info("Setting up managers");
         setupManager.setup(this);
@@ -181,6 +194,7 @@ public final class OctoCore extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.SubChannels.PERMISSIONS);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.PLUGIN_MSG);
         Logger.info("Done!");
+        Logger.info("OctoCore took " + (System.currentTimeMillis() - start) + "ms to load.");
     }
 
     @Override

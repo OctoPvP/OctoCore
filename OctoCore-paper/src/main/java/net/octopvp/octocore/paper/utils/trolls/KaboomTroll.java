@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.utils.trolls;
 
-import net.octopvp.octocore.paper.utils.Utils;
+import net.octopvp.octocore.paper.objects.Utils;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
