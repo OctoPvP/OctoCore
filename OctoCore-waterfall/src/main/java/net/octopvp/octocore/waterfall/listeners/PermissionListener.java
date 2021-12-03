@@ -1,5 +1,6 @@
 package net.octopvp.octocore.waterfall.listeners;
 
+import lombok.extern.java.Log;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -15,7 +16,11 @@ import net.octopvp.octocore.waterfall.util.object.OnlinePlayerData;
 
 import java.io.*;
 
-public class InComingChannelListener implements Listener {
+public class PermissionListener implements Listener {
+
+    public PermissionListener() {
+        System.out.println("PermListener Init");
+    }
 
     @EventHandler
     public void onPermissionRequest(PluginMessageEvent event) {
@@ -50,12 +55,16 @@ public class InComingChannelListener implements Listener {
 
     @EventHandler
     public void onPermCheck(PermissionCheckEvent event) {
+        Logger.debug("Permission check: %1" + event.getPermission());
         if (event.getSender() instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) event.getSender();
             OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
+            Logger.debug("Player: %1, Data: %2", player.getName(),data);
             if (data == null)
                 return;
-            event.setHasPermission(data.hasPermission(event.getPermission()));
+            boolean b = data.hasPermission(event.getPermission());
+            Logger.debug(b);
+            event.setHasPermission(b);
         }
     }
 

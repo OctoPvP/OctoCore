@@ -65,12 +65,13 @@ public final class OctoCoreWaterfall extends Plugin {
         getProxy().getPluginManager().registerCommand(this,new LobbyCommand());
         getProxy().getPluginManager().registerListener(this,new KickListener());
         getProxy().getPluginManager().registerListener(this,new StaffListener());
-        getProxy().getPluginManager().registerListener(this,new InComingChannelListener());
+        getProxy().getPluginManager().registerListener(this,new PermissionListener());
         getProxy().getPluginManager().registerListener(this,new PlayerListener());
         Logger.debug(Arrays.toString(config.getList("motd").toArray()));
         Logger.debug(config.getBoolean("protocol.enabled"));
         Logger.debug(config.getString("protocol.version"));
         getProxy().getPluginManager().registerListener(this,new PingEvent());
+        Logger.debug("OctoBungee Started!");
     }
     public Configuration getConfig(){
         return config;

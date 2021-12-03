@@ -29,4 +29,13 @@ public class OnlinePlayerData {
     public void unSetPerm(String perm){
         nodes.removeIf(node -> node.getPermission().equalsIgnoreCase(perm));
     }
+
+    @Override
+    public String toString() {
+        return "OnlinePlayerData{" +
+                "uuid=" + uuid +
+                ", nodes=" + nodes +
+                ", cachedPermResults=" + cachedPermResults +
+                '}';
+    }
 }
