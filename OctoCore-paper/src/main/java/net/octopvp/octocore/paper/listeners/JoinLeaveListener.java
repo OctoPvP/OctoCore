@@ -50,7 +50,6 @@ public class JoinLeaveListener implements Listener {
         PlayerData data = PlayerManager.getData(event.getPlayer());
         if (data == null)
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
-
     }
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event){ //TODO join vanished

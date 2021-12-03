@@ -2,6 +2,7 @@ package net.octopvp.octocore.waterfall;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -10,10 +11,7 @@ import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
-import net.octopvp.octocore.waterfall.listeners.InComingChannelListener;
-import net.octopvp.octocore.waterfall.listeners.KickListener;
-import net.octopvp.octocore.waterfall.listeners.PingEvent;
-import net.octopvp.octocore.waterfall.listeners.StaffListener;
+import net.octopvp.octocore.waterfall.listeners.*;
 import net.octopvp.octocore.waterfall.redis.BungeeRedisData;
 import net.octopvp.octocore.waterfall.redis.BungeeRedisManager;
 
@@ -22,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.UUID;
 
 public final class OctoCoreWaterfall extends Plugin {
     @Getter
@@ -35,7 +35,11 @@ public final class OctoCoreWaterfall extends Plugin {
 
     @Override
     public void onEnable() {
-        new Logger(getLogger(),"[OctoCore] ");
+        new Logger(getLogger(), "[OctoCore] ", (message, players) -> {
+            for (UUID player : players) {
+                ProxyServer.getInstance().getPlayer(player).sendMessage(message);
+            }
+        });
         instance = this;
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
@@ -57,10 +61,12 @@ public final class OctoCoreWaterfall extends Plugin {
         }
         new BungeeRedisManager();
         getProxy().registerChannel(PluginMsgChannels.PLUGIN_MSG);
+        getProxy().registerChannel(PluginMsgChannels.PERMISSIONS);
         getProxy().getPluginManager().registerCommand(this,new LobbyCommand());
         getProxy().getPluginManager().registerListener(this,new KickListener());
         getProxy().getPluginManager().registerListener(this,new StaffListener());
         getProxy().getPluginManager().registerListener(this,new InComingChannelListener());
+        getProxy().getPluginManager().registerListener(this,new PlayerListener());
         Logger.debug(Arrays.toString(config.getList("motd").toArray()));
         Logger.debug(config.getBoolean("protocol.enabled"));
         Logger.debug(config.getString("protocol.version"));

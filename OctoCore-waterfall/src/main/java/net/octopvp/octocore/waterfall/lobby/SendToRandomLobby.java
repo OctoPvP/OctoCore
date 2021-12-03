@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.octopvp.octocore.common.RNG;
+import net.octopvp.octocore.common.util.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -31,8 +32,14 @@ public class SendToRandomLobby {
             if(StringUtils.containsIgnoreCase(k,"hub"))
                 hubServers.put(k,v);
         });
-        int server = RNG.getRandomInt(0,hubServers.size()); //FIXME might need to minus 1 from the hub servers size
-        ServerInfo serverInfo = (ServerInfo) hubServers.values().toArray()[server];
+        int server = RNG.getRandomInt(0,hubServers.size()); //FIXME might need to minus 1 from the hub servers siz
+        ServerInfo serverInfo;
+        try {
+            serverInfo = (ServerInfo) hubServers.values().toArray()[server];
+        } catch (Exception e) {
+            Logger.error("Could not find a hub server!");
+            return null;
+        }
         //try again if server is offline
         serverInfo.ping(((result, error) -> {
             if (error != null) {

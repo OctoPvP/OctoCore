@@ -9,11 +9,9 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.NodeBuilder;
 import net.octopvp.octocore.waterfall.manager.OnlinePlayersManager;
 import net.octopvp.octocore.waterfall.util.object.OnlinePlayerData;
-import org.apache.commons.compress.parallel.ScatterGatherBackingStore;
 
 import java.io.*;
 
@@ -23,32 +21,36 @@ public class InComingChannelListener implements Listener {
     public void onPermissionRequest(PluginMessageEvent event) {
         try {
             String tag = event.getTag();
-            if (tag.equalsIgnoreCase(PluginMsgChannels.SubChannels.PERMISSIONS)) {
+            Logger.debug("Tag: %1\nLooking For: %2", tag, PluginMsgChannels.PLUGIN_MSG);
+            if (tag.equalsIgnoreCase(PluginMsgChannels.PLUGIN_MSG)) {
                 DataInputStream in = new DataInputStream(new ByteArrayInputStream(event.getData()));
                 String channel = in.readUTF();
+                Logger.debug("is permissions tag\nChannel: %1", channel);
 
-                if (!channel.equals(PluginMsgChannels.PLUGIN_MSG)) {
+                if (!channel.equalsIgnoreCase(PluginMsgChannels.SubChannels.PERMISSIONS)) {
                     return;
                 }
                 ProxiedPlayer player = ProxyServer.getInstance().getPlayer(in.readUTF());
                 NodeBuilder nodeBuilder = new NodeBuilder();
-                nodeBuilder.setPermission(in.readUTF());
-                nodeBuilder.setAllowed(Boolean.parseBoolean(in.readUTF()));
-                nodeBuilder.setScope(in.readUTF());
+                nodeBuilder.setPermission(in.readUTF()).setAllowed(Boolean.parseBoolean(in.readUTF())).setScope(in.readUTF());
 
                 Logger.debug("Permission update: " + nodeBuilder.getPermission() + " | " + nodeBuilder.isAllowed());
 
                 if (player != null) {
-                    OnlinePlayersManager.getDataMap().get(player.getUniqueId()).getNodes().add(nodeBuilder.build());
+                    OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
+                    if (data.isPermSet(nodeBuilder.getPermission()))
+                        data.unSetPerm(nodeBuilder.getPermission());
+                    data.getNodes().add(nodeBuilder.build());
                 }
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+
     @EventHandler
-    public void onPermCheck(PermissionCheckEvent event){
-        if (event.getSender() instanceof ProxiedPlayer){
+    public void onPermCheck(PermissionCheckEvent event) {
+        if (event.getSender() instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) event.getSender();
             OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
             if (data == null)

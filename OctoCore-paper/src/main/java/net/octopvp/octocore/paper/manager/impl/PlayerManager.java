@@ -87,6 +87,7 @@ public class PlayerManager extends Manager {
         pdataCollection = DatabaseManager.getMongoDatabase().getCollection("pdata");
         backupCollection = DatabaseManager.getMongoDatabase().getCollection("backup");
     }
+
     public static void processJoin(UUID uuid, String ip) {
         Tasks.runAsync(() -> {
             PlayerData profile = playerProfiles.get(uuid);
@@ -102,8 +103,7 @@ public class PlayerManager extends Manager {
                 player = Bukkit.getPlayer(uuid);
             }
             Logger.debug("Injecting custom PermissibleBase");
-            PermissionManager.injectPermissible(player);
-            profile.loadPerms(player);
+            PermissionManager.injectPermissible(player, profile);
             profile.setRankType(profile.getHighestRank().getRankType());
 
             profile.setLastSeenServer(OctoCore.getServerName());
@@ -176,12 +176,13 @@ public class PlayerManager extends Manager {
 
     /**
      * runs asynchronously, blocks the thread untill the data is saved
+     *
      * @param uuid
      * @return
      */
     public static CompletableFuture<PlayerData> waitForData(UUID uuid) {
         CompletableFuture<PlayerData> future = new CompletableFuture<>();
-        Tasks.runAsync(()->{
+        Tasks.runAsync(() -> {
 
         });
         return future;
@@ -225,7 +226,8 @@ public class PlayerManager extends Manager {
             return null;
         return PlayerData.SaveState.valueOf(document.getString("saveState"));
     }
-    public static long getLastSave(UUID uuid){
+
+    public static long getLastSave(UUID uuid) {
         Document document = getProfileDocument(uuid);
         if (document == null)
             return -1;

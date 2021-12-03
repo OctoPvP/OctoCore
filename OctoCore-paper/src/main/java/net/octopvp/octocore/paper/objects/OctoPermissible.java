@@ -44,7 +44,7 @@ public class OctoPermissible extends PermissibleBase {
 
     @Override
     public void recalculatePermissions() {
-        if (uuid == null) {
+        if (this.uuid == null) {
             Logger.error("UUID is null!");
             return;
         }

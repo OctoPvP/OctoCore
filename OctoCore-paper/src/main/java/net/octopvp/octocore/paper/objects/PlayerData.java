@@ -4,12 +4,14 @@ import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.object.HashedAddress;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
@@ -246,9 +248,11 @@ public class PlayerData {
         List<Grant> currentGrants = new ArrayList<>(this.grants);
         for (Grant grant : currentGrants) {
             if (grant.hasExpired()) continue;
+            Logger.debug("Loading Grant: " + grant);
             Rank rankData = grant.getRank();
             if (rankData != null) {
                 bungeePermissions.putAll(rankData.getEffectiveBungeePermissions());
+                Logger.debug("%1 bungee perms", bungeePermissions.size());
                 ArrayList<UUID> inheritances = Lists.newArrayList(rankData.getInheritedRanks());
                 inheritances.forEach(inheritance -> {
                     Rank rankInheritance = RankManager.getRankById(inheritance);
@@ -265,6 +269,7 @@ public class PlayerData {
                 Rank rankInheritance = RankManager.getRankById(inheritance);
                 if (rankInheritance != null) {
                     bungeePermissions.putAll(rankInheritance.getEffectiveBungeePermissions());
+                    Logger.debug("%1 bungee perms now", bungeePermissions.size());
                 }
             });
         }
@@ -276,8 +281,9 @@ public class PlayerData {
          */
         if (!player.getDisplayName().equals(this.getDisplayName())) //TODO handle nicks
             player.setDisplayName(this.getDisplayName());
-
-        bungeePermissions.forEach((permission,bool) -> RankManager.sendPermissionToBungee(player, player.getName(), permission, bool,"global"));
+        Logger.debug("Final Bungee Perms: " + bungeePermissions.size());
+        bungeePermissions.forEach((permission,bool) -> RankManager.sendPermissionToBungee(player, player.getName(), permission, bool,
+                "global")); //TODO use nodes
     }
     public String getPrefix(){
         return CC.translate(getHighestRank().getPrefix(this.getPrefixColorOrNull()));

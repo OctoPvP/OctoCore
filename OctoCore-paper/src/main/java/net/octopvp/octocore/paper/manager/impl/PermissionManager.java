@@ -8,6 +8,7 @@ import net.octopvp.octocore.paper.objects.OctoPermissible;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 
@@ -28,7 +29,7 @@ public class PermissionManager extends Manager {
     public void disable() {
 
     }
-    public static void injectPermissible(Player player){
+    public static void injectPermissible(Player player, PlayerData data){
         UUID uuid = player.getUniqueId();
         Logger.debug("UUID: %1",uuid);
         PermissibleBase old = player.getPermissibleBase();
@@ -36,6 +37,7 @@ public class PermissionManager extends Manager {
         player.setPermissibleBase(newBase);
         if (player.getPermissibleBase() instanceof OctoPermissible){
             Logger.info("Successfully injected permissible!");
+            data.loadPerms(player);
         }else{
             Logger.error("Could not inject permissible!");
         }

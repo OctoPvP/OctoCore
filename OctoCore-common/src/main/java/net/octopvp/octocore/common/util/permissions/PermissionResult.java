@@ -1,14 +1,14 @@
 package net.octopvp.octocore.common.util.permissions;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 public class PermissionResult {
+    @NonNull
     private String permission,data;
+    @NonNull
     private PermissionReason reason;
     private long timestamp = System.currentTimeMillis();
 

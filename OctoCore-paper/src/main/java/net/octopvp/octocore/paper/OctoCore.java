@@ -193,6 +193,8 @@ public final class OctoCore extends JavaPlugin {
         new SetupOther().setup(this);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.SubChannels.PERMISSIONS);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.PLUGIN_MSG);
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.BUNGEE);
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "test");
         Logger.info("Done!");
         Logger.info("OctoCore took " + (System.currentTimeMillis() - start) + "ms to load.");
     }

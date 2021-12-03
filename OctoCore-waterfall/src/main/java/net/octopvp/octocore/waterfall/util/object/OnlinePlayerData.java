@@ -23,4 +23,10 @@ public class OnlinePlayerData {
         cachedPermResults.put(perm.toLowerCase(),result);
         return result;
     }
+    public boolean isPermSet(String perm){
+        return nodes.stream().anyMatch(node -> node.getPermission().equalsIgnoreCase(perm));
+    }
+    public void unSetPerm(String perm){
+        nodes.removeIf(node -> node.getPermission().equalsIgnoreCase(perm));
+    }
 }
