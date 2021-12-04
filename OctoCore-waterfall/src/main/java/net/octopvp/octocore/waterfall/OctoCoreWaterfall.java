@@ -10,6 +10,8 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
+import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
 import net.octopvp.octocore.waterfall.listeners.*;
 import net.octopvp.octocore.waterfall.redis.BungeeRedisData;
@@ -63,6 +65,8 @@ public final class OctoCoreWaterfall extends Plugin {
         getProxy().registerChannel(PluginMsgChannels.PLUGIN_MSG);
         getProxy().registerChannel(PluginMsgChannels.PERMISSIONS);
         getProxy().getPluginManager().registerCommand(this,new LobbyCommand());
+        getProxy().getPluginManager().registerCommand(this,new BungeeHasPermissionCommand());
+        getProxy().getPluginManager().registerCommand(this,new BungeeDataCommand("bungeedata"));
         getProxy().getPluginManager().registerListener(this,new KickListener());
         getProxy().getPluginManager().registerListener(this,new StaffListener());
         getProxy().getPluginManager().registerListener(this,new PermissionListener());

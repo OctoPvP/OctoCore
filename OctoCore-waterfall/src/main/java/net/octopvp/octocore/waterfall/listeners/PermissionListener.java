@@ -9,6 +9,7 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.octopvp.octocore.common.PluginMsgChannels;
+import net.octopvp.octocore.common.object.PermUpdateType;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.permissions.NodeBuilder;
 import net.octopvp.octocore.waterfall.manager.OnlinePlayersManager;
@@ -31,10 +32,10 @@ public class PermissionListener implements Listener {
                 DataInputStream in = new DataInputStream(new ByteArrayInputStream(event.getData()));
                 String channel = in.readUTF();
                 Logger.debug("is permissions tag\nChannel: %1", channel);
-
                 if (!channel.equalsIgnoreCase(PluginMsgChannels.SubChannels.PERMISSIONS)) {
                     return;
                 }
+                PermUpdateType type = PermUpdateType.valueOf(in.readUTF());
                 ProxiedPlayer player = ProxyServer.getInstance().getPlayer(in.readUTF());
                 NodeBuilder nodeBuilder = new NodeBuilder();
                 nodeBuilder.setPermission(in.readUTF()).setAllowed(Boolean.parseBoolean(in.readUTF())).setScope(in.readUTF());
@@ -55,7 +56,7 @@ public class PermissionListener implements Listener {
 
     @EventHandler
     public void onPermCheck(PermissionCheckEvent event) {
-        Logger.debug("Permission check: %1" + event.getPermission());
+        Logger.debug("Permission check: %1", event.getPermission());
         if (event.getSender() instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) event.getSender();
             OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());

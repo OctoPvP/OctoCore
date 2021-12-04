@@ -16,13 +16,7 @@ public class SendPermToBungeeCommand extends BaseCommand {
     @Command(name = "sendpermtobungee",playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1){
-            RankManager.sendPermissionToBungee(
-                    sender.getPlayer(),
-                    sender.getName(),
-                    args[0],
-                    true,
-                    "global"
-            );
+
             sender.sendMessage("&aSent permission to BungeeCord!");
             return CommandResult.SUCCESS;
         }

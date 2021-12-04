@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.java.Log;
 import net.md_5.bungee.api.ChatColor;
-import net.octopvp.octocore.common.object.HashedAddress;
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.common.object.ServerContext;
-import net.octopvp.octocore.common.object.WorldTime;
+import net.octopvp.octocore.common.PluginMsgChannels;
+import net.octopvp.octocore.common.object.*;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.permissions.Node;
@@ -30,6 +28,9 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -244,31 +245,32 @@ public class PlayerData {
         save();
     }
     public void loadPerms(Player player) {
-        Map<String,Boolean> bungeePermissions = new HashMap<>();
+        //Map<String,Boolean> bungeePermissions = new HashMap<>();
+        Set<Node> bungeePermissions = new HashSet<>();
         List<Grant> currentGrants = new ArrayList<>(this.grants);
         for (Grant grant : currentGrants) {
             if (grant.hasExpired()) continue;
             Logger.debug("Loading Grant: " + grant);
             Rank rankData = grant.getRank();
             if (rankData != null) {
-                bungeePermissions.putAll(rankData.getEffectiveBungeePermissions());
+                bungeePermissions.addAll(rankData.getEffectiveBungeePermissions());
                 Logger.debug("%1 bungee perms", bungeePermissions.size());
                 ArrayList<UUID> inheritances = Lists.newArrayList(rankData.getInheritedRanks());
                 inheritances.forEach(inheritance -> {
                     Rank rankInheritance = RankManager.getRankById(inheritance);
-                    bungeePermissions.putAll(rankInheritance.getEffectiveBungeePermissions());
+                    bungeePermissions.addAll(rankInheritance.getEffectiveBungeePermissions());
                 });
             }
         }
 
         Rank defaultRank = RankManager.getDefaultRank();
         if (defaultRank != null) {
-            bungeePermissions.putAll(defaultRank.getEffectiveBungeePermissions());
+            bungeePermissions.addAll(defaultRank.getEffectiveBungeePermissions());
             Set<UUID> inheritances = defaultRank.getInheritedRanks();
             inheritances.forEach(inheritance -> {
                 Rank rankInheritance = RankManager.getRankById(inheritance);
                 if (rankInheritance != null) {
-                    bungeePermissions.putAll(rankInheritance.getEffectiveBungeePermissions());
+                    bungeePermissions.addAll(rankInheritance.getEffectiveBungeePermissions());
                     Logger.debug("%1 bungee perms now", bungeePermissions.size());
                 }
             });
@@ -282,8 +284,9 @@ public class PlayerData {
         if (!player.getDisplayName().equals(this.getDisplayName())) //TODO handle nicks
             player.setDisplayName(this.getDisplayName());
         Logger.debug("Final Bungee Perms: " + bungeePermissions.size());
-        bungeePermissions.forEach((permission,bool) -> RankManager.sendPermissionToBungee(player, player.getName(), permission, bool,
-                "global")); //TODO use nodes
+        //bungeePermissions.forEach((permission,bool) -> RankManager.sendPermissionToBungee(player, player.getName(), permission, bool,
+        //        "global")); //TODO use nodes
+        bungeePermissions.forEach(node -> RankManager.sendPermissionToBungee(player, player.getName(), node));
     }
     public String getPrefix(){
         return CC.translate(getHighestRank().getPrefix(this.getPrefixColorOrNull()));
@@ -368,6 +371,25 @@ public class PlayerData {
                 a.put(node.getPermission(),node.getServer());
         });
         return a;
+    }
+    public void clearPermCache(){
+        cachedPermissions.clear();
+        if (Bukkit.getPlayer(uuid) != null){
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(b);
+            try {
+                out.writeUTF(PluginMsgChannels.SubChannels.PERMISSIONS);
+                out.writeUTF(PermUpdateType.CLEAR_CACHE.name());
+                out.writeUTF(getName());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Bukkit.getPlayer(uuid).sendPluginMessage(
+                    OctoCore.getInstance(),
+                    PluginMsgChannels.PLUGIN_MSG,
+                    b.toByteArray()
+            );
+        }
     }
     public static enum SaveState {
         SAVED,SAVING

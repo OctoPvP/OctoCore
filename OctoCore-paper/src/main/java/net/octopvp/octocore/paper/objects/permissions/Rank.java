@@ -171,13 +171,13 @@ public class Rank implements Cloneable {
         });
         return ImmutableMap.copyOf(a);
     }
-    public Map<String, Boolean> getEffectiveBungeePermissions(){
-        Map<String,Boolean> a = new HashMap<>();
+    public Collection<Node> getEffectiveBungeePermissions(){
+        Set<Node> a = new HashSet<>();
         getFinalNodes().forEach(node ->{
             if (node.getScope().isBungee() || node.getScope().isGlobal())
-                a.put(node.getPermission(),node.getScope().isBungee());
+                a.add(node);
         });
-        return ImmutableMap.copyOf(a);
+        return a;
     }
     public Map<String, Pair<ServerContext,Boolean>> getAllPermissionsPair(){
         Map<String,Pair<ServerContext,Boolean>> map = new HashMap<>();

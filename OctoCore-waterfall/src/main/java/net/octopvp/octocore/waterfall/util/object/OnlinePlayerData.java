@@ -1,5 +1,6 @@
 package net.octopvp.octocore.waterfall.util.object;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -34,7 +35,7 @@ public class OnlinePlayerData {
     public String toString() {
         return "OnlinePlayerData{" +
                 "uuid=" + uuid +
-                ", nodes=" + nodes +
+                ", nodes=" + new Gson().toJson(nodes) +
                 ", cachedPermResults=" + cachedPermResults +
                 '}';
     }

@@ -244,6 +244,8 @@ public class StringUtils {
         for (Object s : replace) {
             i++;
             String toReplace = "%" + i;
+            if (s == null)
+                continue;
             finalReturn = finalReturn.replace(toReplace,s.toString());
         }
         return finalReturn;

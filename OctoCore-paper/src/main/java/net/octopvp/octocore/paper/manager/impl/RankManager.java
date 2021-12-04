@@ -5,9 +5,11 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import net.octopvp.octocore.common.PluginMsgChannels;
+import net.octopvp.octocore.common.object.PermUpdateType;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -94,16 +96,17 @@ public class RankManager extends Manager {
         broadcastReload();
     }
 
-    public static void sendPermissionToBungee(Player player, String name, String permission, boolean set, String scope) {
-        Logger.debug("Sending Permission To Bungee:\nName: %1,\nPerm: %2\nAllowed: %3\nScope: %4\nPlayer: %5", name, permission, set, scope, player.getName());
+    public static void sendPermissionToBungee(Player player, String name, Node node) {
+        Logger.debug("Sending Permission To Bungee:\nName: %1,\nPerm: %2\nAllowed: %3\nScope: %4\nPlayer: %5", name, node.getPermission(), node.isAllowed() &&  node.getServer().isBungee(), node.getServer(), player.getName());
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
         try {
             out.writeUTF(PluginMsgChannels.SubChannels.PERMISSIONS);
+            out.writeUTF(PermUpdateType.ADD.name());
             out.writeUTF(name);
-            out.writeUTF(permission);
-            out.writeUTF(String.valueOf(set));
-            out.writeUTF(scope);
+            out.writeUTF(node.getPermission());
+            out.writeUTF(String.valueOf(node.isAllowed() && node.getServer().isBungee()));
+            out.writeUTF(node.getScope().getServer());
         } catch (IOException e) {
             Logger.error("Failed to send permission to bungee. for " + player.getName());
         }

@@ -60,10 +60,14 @@ public class PlayerManager extends Manager {
                 while (data == null) {
                     try {
                         Thread.sleep(40);
-                        if (tries > 5) //maybe the packet was dropped
+                        if (tries == 5) //maybe the packet was dropped
                             OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonChain().addProperty("name", name).get());
                         if (Bukkit.getPlayer(name) != null) {
                             data = getData(Bukkit.getPlayer(name));
+                            break;
+                        }
+                        if (tries >= 10) {
+                            data = OctoCore.getGson().fromJson(getProfileJsonOnlineorOffline(name), PlayerData.class);
                             break;
                         }
                         if (getProfileDocument(name).getLong("lastSave") - System.currentTimeMillis() > 5000) {
