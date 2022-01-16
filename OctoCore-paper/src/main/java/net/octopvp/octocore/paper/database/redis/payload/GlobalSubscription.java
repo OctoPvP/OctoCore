@@ -11,7 +11,6 @@ import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.object.redis.JedisHandle;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.Replacement;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerCreateEvent;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
@@ -19,7 +18,6 @@ import net.octopvp.octocore.paper.listeners.JoinLeaveListener;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.paper.listeners.redis.PunishmentRedisHandler;
 import net.octopvp.octocore.paper.manager.impl.*;
-import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.Broadcast;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -33,7 +31,6 @@ import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import javax.swing.text.Utilities;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
@@ -41,9 +38,9 @@ import java.util.stream.Collectors;
 
 public class GlobalSubscription implements JedisHandle {
     //TODO bungeecord fallback
-    private static ArrayList<UUID> alreadyCreating = new ArrayList<>();
+    private static final ArrayList<UUID> alreadyCreating = new ArrayList<>();
 
-    private static OctoCore plugin = OctoCore.getInstance();
+    private static final OctoCore plugin = OctoCore.getInstance();
     @Override
     public void handleMessage(JsonObject object) {
         JedisAction payload;
@@ -64,16 +61,19 @@ public class GlobalSubscription implements JedisHandle {
             serverData.setMaxPlayers(data.get("maxPlayers").getAsInt());
             serverData.setRecentTps(new double[]{data.get("tps1").getAsDouble(), data.get("tps2").getAsDouble(), data.get("tps3").getAsDouble()});
             serverData.setNames(StringUtils.getListFromString(data.get("players").getAsString()));
-
-            for (ServerData connectedServer : OctoCore.getServerManager().getConnectedServers()) {
-                if (System.currentTimeMillis() - connectedServer.getLastTick() >= 15000L){ //15 seconds
-                    OctoCore.getServerManager().getConnectedServers().remove(connectedServer);
-                    if (!connectedServer.isSafelyStopped()){ //check if the server has safely stopped, if not, broadcast crash message
-                        if(OctoCore.isMaster()){ //make sure these kind of broadcasts only happen on master
-                            JsonObject jsonObject = new JsonObject();
-                            jsonObject.addProperty("message",CC.RED + connectedServer.getServerName() + " may have crashed (has not responded for 15 seconds)");
-                            plugin.getRedisData().write(JedisAction.ADMIN_ALERT,jsonObject);
-                        }
+            Iterator iterator = OctoCore.getServerManager().getConnectedServers().iterator();
+            while (iterator.hasNext()) {
+                ServerData connectedServer = (ServerData) iterator.next();
+                boolean time = System.currentTimeMillis() - connectedServer.getLastTick() >= 15000L, removed = false;
+                if (time || connectedServer.isSafelyStopped()) {
+                    iterator.remove();
+                    removed = true;
+                }
+                if (removed && !connectedServer.isSafelyStopped()) {
+                    if (OctoCore.isMaster()) { //make sure these kind of broadcasts only happen on master
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("message", CC.RED + connectedServer.getServerName() + " may have crashed (has not responded for 15 seconds)");
+                        plugin.getRedisData().write(JedisAction.ADMIN_ALERT, jsonObject);
                     }
                 }
             }
@@ -241,7 +241,7 @@ public class GlobalSubscription implements JedisHandle {
                 String json = data.get("messagejson").getAsString();
                 String channel = data.get("channel").getAsString();
                 EmbedBuilder embedBuilder = OctoCore.getGson().fromJson(json, EmbedBuilder.class);
-                OctoCore.getInstance().getJdaManager().getJda().getTextChannelById(channel).sendMessage(embedBuilder.build()).queue();
+                JDAManager.getJda().getTextChannelById(channel).sendMessage(embedBuilder.build()).queue();
             }
             return;
         }

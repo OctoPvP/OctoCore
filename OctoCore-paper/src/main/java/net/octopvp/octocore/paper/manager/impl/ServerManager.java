@@ -1,6 +1,5 @@
 package net.octopvp.octocore.paper.manager.impl;
 
-import io.netty.util.internal.ConcurrentSet;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.paper.OctoCore;
@@ -11,11 +10,12 @@ import net.octopvp.octocore.paper.objects.ServerData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Setter
 public class ServerManager extends Manager {
-    private Set<ServerData> connectedServers = new ConcurrentSet<>();
+    private Set<ServerData> connectedServers = ConcurrentHashMap.newKeySet();
 
     public ServerData createServerData(String name) {
         if (getServerData(name) != null) return null;
