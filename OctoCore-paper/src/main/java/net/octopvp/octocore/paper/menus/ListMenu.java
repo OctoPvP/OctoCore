@@ -4,6 +4,8 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.conversations.tag.FilterConversation;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
+import net.octopvp.octocore.paper.utils.menu.MenuManager;
+import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.common.object.Permission;
@@ -25,6 +27,9 @@ public class ListMenu extends PaginatedMenu {
         filtered = true;
     }
     public ListMenu(){}
+    public ListMenu(String[] args){
+        //setShowPageNumbersInTitle(args.length > 0);
+    }
     @Override
     public String getPagesTitle(Player player) {
         return CC.GREEN + "Online Players";
@@ -33,16 +38,55 @@ public class ListMenu extends PaginatedMenu {
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttonList = new ArrayList<>();
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            buttonList.add(new PlayerButton(onlinePlayer));
+        for (int j = 0; j < 100; j++) {
+            buttonList.add(new PlayerButton(player));
         }
         return buttonList;
     }
 
     @Override
-    public List<Button> getEveryMenuSlots(Player player) {
-        return null;
+    public Button getBackButton(Player player) {
+        return new BackButton() {
+            @Override
+            public void clicked(Player player, int slot, ClickType clickType) {
+                player.closeInventory();
+            }
+        };
     }
+
+    @Override
+    public void onOpen(Player player) {
+        //Logger.debug(MenuManager.getOpenedMenus().put(player.getUniqueId(), this));
+    }
+
+    @Override
+    public void onClose(Player player) {
+        //Logger.debug(MenuManager.getOpenedMenus().remove(player.getUniqueId()));
+    }
+
+    @Override
+    public List<Button> getToolbarButtons() {
+        if (true)
+            return null;
+        return Arrays.asList(new Button(){
+
+            @Override
+            public ItemStack getItem(Player player) {
+                return new ItemBuilder(Material.DIAMOND_SWORD).name("Test").build();
+            }
+
+            @Override
+            public int getSlot() {
+                return 0;
+            }
+
+            @Override
+            public void onClick(Player player, int slot, ClickType clickType) {
+                player.sendMessage("asdf");
+            }
+        });
+    }
+
     private int i = 0;
     private int a = 0;
     public class PlayerButton extends Button{
@@ -54,12 +98,11 @@ public class ListMenu extends PaginatedMenu {
         @Override
         public ItemStack getItem(Player player) {
             a++;
+
             ItemBuilder ib = new ItemBuilder(Material.SKULL_ITEM).name(p.getName());
-            ib.lore(a + "");
-            if(player.hasPermission(Permission.PUNISH_PLAYER.getNode())) {
-                ib.lore(Arrays.asList(CC.SEPARATOR,CC.GREEN + "Client: " + CC.GOLD + "Lunar Client",CC.SEPARATOR,"",CC.YELLOW + CC.B + "Click to punish!"));
-            }
-            else ib.lore(Arrays.asList(CC.SEPARATOR,CC.GREEN + "Client: " + CC.GOLD + "Lunar Client",CC.SEPARATOR,""));
+            ib.lore(a + ""); //TODO client
+            ib.lore(Arrays.asList(CC.SEPARATOR,CC.GREEN + "Client: " + CC.GOLD + "Lunar Client",CC.SEPARATOR,"",CC.YELLOW + CC.B + "Click to view info!"));
+
             return ib.toSkullBuilder().withOwner(p.getName()).buildSkull();
         }
 
@@ -86,7 +129,7 @@ public class ListMenu extends PaginatedMenu {
         @Override
         public ItemStack getItem(Player player) {
             if (filtered1)
-                return new ItemBuilder(Material.HOPPER).name(CC.AQUA + "Filter").lore(CC.RED + "Click to remove the current filter").build();
+                return new ItemBuilder(Material.HOPPER).name(CC.AQUA + "Filter").lore(CC.YELLOW + "Click to remove the current filter").build();
             return new ItemBuilder(Material.HOPPER).name(CC.AQUA + "Filter").lore(CC.YELLOW + "Click to add a filter").build();
         }
 

@@ -1,5 +1,10 @@
 package net.octopvp.octocore.paper.manager.impl;
 
+import io.sentry.Sentry;
+import io.sentry.SentryEvent;
+import io.sentry.SentryLevel;
+import io.sentry.protocol.User;
+import net.octopvp.octocore.common.object.builder.SentryMessageBuilder;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.paper.OctoCore;
@@ -31,15 +36,15 @@ public class PermissionManager extends Manager {
     }
     public static void injectPermissible(Player player, PlayerData data){
         UUID uuid = player.getUniqueId();
-        Logger.debug("UUID: %1",uuid);
         PermissibleBase old = player.getPermissibleBase();
         PermissibleBase newBase = new OctoPermissible(player,old);
         player.setPermissibleBase(newBase);
         if (player.getPermissibleBase() instanceof OctoPermissible){
-            Logger.info("Successfully injected permissible!");
+            Logger.debug("Successfully injected permissible!");
             data.loadPerms(player);
         }else{
             Logger.error("Could not inject permissible!");
+            PlayerManager.captureSentryEvent("Could not inject permissible!",player);
         }
     }
     public static boolean isWildcard(String perm) {

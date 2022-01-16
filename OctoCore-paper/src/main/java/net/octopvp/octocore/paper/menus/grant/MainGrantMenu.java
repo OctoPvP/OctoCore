@@ -69,12 +69,15 @@ public class MainGrantMenu extends Menu {
     public class PlaceHolderButton extends PlaceholderButton {
         @Override
         public int[] getSlots() {
+            return genPlaceholderSpots(IntStream.range(0,27),11,15);
+            /*
             List<Integer> a = new ArrayList<>();
             IntStream.range(0,27).forEach((i)->{
                 if (!(i == 11 || i == 15))
                     a.add(i);
             });
             return a.stream().mapToInt(i ->i).toArray();
+             */
         }
     }
 }

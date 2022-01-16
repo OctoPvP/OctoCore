@@ -7,28 +7,36 @@ import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
+import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
+import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
+import net.octopvp.octocore.paper.utils.menu.buttons.impl.FilterButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class InheritedRanksMenu extends PaginatedMenu {
     private boolean showOnlyInherited = false;
+    private boolean changed = false;
+
     @SneakyThrows
-    public InheritedRanksMenu(Menu previousMenu, RankBuilder builder, ReturnableTypeCallback<RankBuilder> callback){
+    public InheritedRanksMenu(Menu previousMenu, RankBuilder builder, ReturnableTypeCallback<RankBuilder> callback) {
         this.previousMenu = previousMenu;
         this.builder = builder;
         this.callback = callback;
         this.startBuilder = builder.clone();
     }
+
     private final Menu previousMenu;
     private final RankBuilder builder;
     private ReturnableTypeCallback<RankBuilder> callback;
@@ -49,7 +57,7 @@ public class InheritedRanksMenu extends PaginatedMenu {
             if (showOnlyInherited) {
                 if (builder.getRank().getInheritedRanks().contains(rank.getRankId()))
                     list.add(new RankButton(rank));
-            }else list.add(new RankButton(rank));
+            } else list.add(new RankButton(rank));
         }
         return list;
     }
@@ -61,12 +69,35 @@ public class InheritedRanksMenu extends PaginatedMenu {
 
     @Override
     public Button getFilterButton() {
-        return super.getFilterButton();
+        return new FilterButton();
+    }
+
+    @Override
+    public Button getBackButton(Player player) {
+        return new BackButton() {
+            @Override
+            public void clicked(Player player, int slot, ClickType clickType) {
+                previousMenu.open(player);
+            }
+        };
+    }
+
+    @Override
+    public void onClose(Player player, InventoryCloseEvent event) {
+        super.onClose(player, event);
+        /*
+        if (event.isClosedByPlayer() && changed) {
+            open(player);
+            SoundUtil.playError(player);
+            player.sendMessage(CC.RED + "You need to save your changes!");
+        }
+         */
     }
 
     private class RankButton extends Button {
         private final Rank rankData;
-        public RankButton(Rank rank){
+
+        public RankButton(Rank rank) {
             this.rankData = rank;
         }
 
@@ -76,10 +107,11 @@ public class InheritedRanksMenu extends PaginatedMenu {
             ItemBuilder item = new ItemBuilder(Material.WOOL);
             item.setName(rankData.getDisplayName());
             item.durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())));
-            item.lore(CC.SEPARATOR,CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(),CC.AQUA + "Inherited: " + CC.YELLOW + StringUtils.join(rankData.getInheritedRanksName(),", "),CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
-                    CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(),CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(),CC.AQUA + "Purchaseable: " + CC.YELLOW + rankData.isPurchasable(),
+            item.lore(CC.SEPARATOR, CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(), CC.AQUA + "Inherited: " + CC.YELLOW + StringUtils.join(rankData.getInheritedRanksName(), ", "), CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
+                    CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(), CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(), CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
                     CC.SEPARATOR,
-                    CC.YELLOW + (builder.getRank().getInheritedRanks().contains(rankData.getRankId()) ? "Click to remove inherited rank" : "Click to add inherited rank"));;
+                    CC.YELLOW + (builder.getRank().getInheritedRanks().contains(rankData.getRankId()) ? CC.RED + "Click to remove inherited rank" : "Click to add inherited rank"));
+            ;
             return item.build();
         }
 
@@ -90,14 +122,17 @@ public class InheritedRanksMenu extends PaginatedMenu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            if(builder.getRank().getInheritedRanks().contains(rankData.getRankId())){
+            if (builder.getRank().getInheritedRanks().contains(rankData.getRankId())) {
                 builder.removeInheritedRank(rankData.getRankId());
-            }else{
+            } else {
                 builder.addInheritedRank(rankData.getRankId());
             }
+            changed = true;
+            SoundUtil.playPing(player);
             update(player);
         }
     }
+
     private class FilterButton extends net.octopvp.octocore.paper.utils.menu.buttons.impl.FilterButton {
 
         @Override

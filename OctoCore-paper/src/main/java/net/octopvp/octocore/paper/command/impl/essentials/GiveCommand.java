@@ -19,7 +19,7 @@ public class GiveCommand extends BaseCommand {
     @Command(name = "give",aliases = {"i","g","item"},permission = Permission.GIVE,playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         if(args.length == 1){
-            Material material = ItemUtils.getItemMap().get(args[0]);
+            Material material = ItemUtils.getItemMap().get(args[0].toUpperCase());
             if(material == null){
                 sender.sendMessage(CC.RED + "Usage: /i <item> [amount]");
                 return CommandResult.SUCCESS;
@@ -28,7 +28,7 @@ public class GiveCommand extends BaseCommand {
             sender.getPlayer().getInventory().addItem(itemStack);
             return CommandResult.SUCCESS;
         }else if(args.length == 2){
-            Material material = ItemUtils.getItemMap().get(args[0]);
+            Material material = ItemUtils.getItemMap().get(args[0].toUpperCase());
             if(material == null){
                 sender.sendMessage(CC.RED + "Usage: /i <item> [amount]");
                 return CommandResult.SUCCESS;

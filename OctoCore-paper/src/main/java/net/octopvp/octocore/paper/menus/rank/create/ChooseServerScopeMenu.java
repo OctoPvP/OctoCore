@@ -10,7 +10,6 @@ import net.octopvp.octocore.paper.objects.ServerData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.Skulls;
 import net.octopvp.octocore.paper.utils.SoundUtil;
-import net.octopvp.octocore.common.util.callback.TypeCallback;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -27,6 +26,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class ChooseServerScopeMenu extends PaginatedMenu {
     private final Consumer<ServerContext> callback;
+
     @Override
     public String getPagesTitle(Player player) {
         return CC.AQUA + "Choose server scope";
@@ -36,24 +36,26 @@ public class ChooseServerScopeMenu extends PaginatedMenu {
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
         buttons.add(new GlobalButton());
-        OctoCore.getServerManager().getConnectedServers().forEach(server ->buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
+        OctoCore.getServerManager().getConnectedServers().forEach(server -> buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
         return buttons;
     }
 
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
-        return Lists.newArrayList(new GlobalButton(),new CustomButton());
+        return Lists.newArrayList(new GlobalButton(), new CustomButton());
     }
 
     private int i = 0;
+
     @RequiredArgsConstructor
-    private class ServerButton extends Button{
+    private class ServerButton extends Button {
         private final ServerData serverData;
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.PAPER).name(serverData.getServerName()).lore(CC.SEPARATOR,CC.GREEN + "Click to select " + serverData.getServerName() + " as the server to grant the rank on.").build();
+            return new ItemBuilder(Material.PAPER).name(serverData.getServerName()).lore(CC.SEPARATOR, CC.GREEN + "Click to select " + serverData.getServerName() + " as the server to grant the rank on.").build();
         }
+
         @Override
         public int getSlot() {
             return i++;
@@ -67,7 +69,7 @@ public class ChooseServerScopeMenu extends PaginatedMenu {
     }
 
 
-    private class GlobalButton extends Button{
+    private class GlobalButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
@@ -86,7 +88,7 @@ public class ChooseServerScopeMenu extends PaginatedMenu {
         }
     }
 
-    private class CustomButton extends Button{
+    private class CustomButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Custom server").lore(CC.YELLOW + "Click to set a custom server scope.").build();
@@ -102,9 +104,10 @@ public class ChooseServerScopeMenu extends PaginatedMenu {
             super.onClick(player, slot, clickType);
             prompt(player);
         }
-        private void prompt(Player player){
-            OctoCore.getConversationFactory().withFirstPrompt(new QuestionConversation(Lang.CUSTOM_SERVER_SCOPE.getMsg(),(s)->{
-                if (s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("exit")){
+
+        private void prompt(Player player) {
+            OctoCore.getConversationFactory().withFirstPrompt(new QuestionConversation(Lang.CUSTOM_SERVER_SCOPE.getMsg(), (s) -> {
+                if (s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("exit")) {
                     open(player);
                     player.sendMessage(CC.RED + "Cancelled!");
                     return Prompt.END_OF_CONVERSATION;

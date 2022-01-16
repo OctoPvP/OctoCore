@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.utils.errorhandling;
 
 import net.octopvp.octocore.common.RNG;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseHelper;
 
@@ -22,7 +23,7 @@ public class ErrorHandling {
         e.addData("Time",new Date().toString());
         e.addData("CurrentTimeMillis",System.currentTimeMillis() + "");
         e.addData("ID",rng);
-        System.out.println("Error detected. Posting to hastebin. Error code: " + rng);
+        Logger.debug("Error detected. Posting to hastebin. Error code: " + rng);
         StringBuilder toHasteBin = new StringBuilder("---------------------------------------\nAny extra data that may be needed\n\n");
         e.getDescription().forEach(k ->{
             toHasteBin.append("\n" + k);
@@ -47,7 +48,7 @@ public class ErrorHandling {
             hastebinLink = "Failed to post to hastebin";
         }
         String[] ret = new String[]{rng,hastebinLink};
-        System.out.println("Error Code: " + rng + " | Hastebin link: " + hastebinLink + " logging to sql.");
+        Logger.debug("Error Code: " + rng + " | Hastebin link: " + hastebinLink + " logging to sql.");
         try {
             OctoCore.getConnection().prepareStatement(DatabaseHelper.ADD_ERROR_DATA.getSql(rng,hastebinLink));
         } catch (SQLException throwables) {

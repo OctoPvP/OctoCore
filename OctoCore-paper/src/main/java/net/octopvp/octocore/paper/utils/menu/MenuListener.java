@@ -1,5 +1,6 @@
 package net.octopvp.octocore.paper.utils.menu;
 
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import org.bukkit.entity.Player;
@@ -31,13 +32,14 @@ public class MenuListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onClose(InventoryCloseEvent event) {
+        //Logger.debug("Closed by player: " + event.isClosedByPlayer());
         Player player = (Player) event.getPlayer();
 
         Menu menu = MenuManager.getOpenedMenus().get(player.getUniqueId());
 
         if (menu == null) return;
-
-        menu.onClose(player);
+        menu.onCloseReserved(player);
+        menu.onClose(player,event);
         MenuManager.getOpenedMenus().remove(player.getUniqueId());
     }
 }

@@ -14,6 +14,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.text.MessageFormat;
 import java.util.Set;
+import java.util.UUID;
 
 public class Sender implements CommandSender  {
     private CommandSender commandSender;
@@ -137,6 +138,13 @@ public class Sender implements CommandSender  {
 
     public CommandSender getCommandSender() {
         return this.commandSender;
+    }
+
+    public UUID getUUID(){
+        return getPlayer() == null ? new UUID(0,0) : getPlayer().getUniqueId();
+    }
+    public UUID getUniqueId(){
+        return getUUID();
     }
 
     public void setCommandSender(CommandSender commandSender) {

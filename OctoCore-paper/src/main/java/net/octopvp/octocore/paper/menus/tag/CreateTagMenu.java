@@ -41,11 +41,6 @@ public class CreateTagMenu extends Menu {
     }
 
     @Override
-    public void onOpen(Player player) {
-        super.onOpen(player);
-    }
-
-    @Override
     public String getName(Player player) {
         return CC.GREEN + "Create a tag";
     }

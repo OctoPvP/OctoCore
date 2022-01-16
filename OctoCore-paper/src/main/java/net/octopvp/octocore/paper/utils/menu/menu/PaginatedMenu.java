@@ -2,18 +2,19 @@ package net.octopvp.octocore.paper.utils.menu.menu;
 
 import lombok.Getter;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.paper.utils.menu.MenuManager;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
-import net.octopvp.octocore.paper.utils.menu.buttons.impl.CloseButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.NextPageButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.PreviousPageButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 public abstract class PaginatedMenu extends Menu {
 
@@ -22,43 +23,59 @@ public abstract class PaginatedMenu extends Menu {
     @Override
     public List<Button> getButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
-
+        List<Button> toolbar = getToolbarButtons();
+        if (toolbar == null) {
+            toolbar = new ArrayList<>();
+        }
+        List<Button> bottom = new ArrayList<>();
         //int minSlot = (int) ((double) (page - 1) * 27);
         //int maxSlot = (int) ((double) (page) * 27);
         int minSlot = (int) ((double) (page - 1) * getMaxPageItems());
         int maxSlot = (int) ((double) (page) * getMaxPageItems());
-
-        buttons.add(new NextPageButton(this));
-        buttons.add(new PreviousPageButton(this));
-        if (getToolbarButtons() != null){
-            buttons.addAll(getToolbarButtons());
+        Button next = new NextPageButton(this),previous = new PreviousPageButton(this);
+        buttons.add(next);
+        buttons.add(previous);
+        bottom.add(next);
+        bottom.add(previous);
+        Button backButton = getBackButton(player);
+        if (backButton != null){
+            bottom.add(backButton);
+            buttons.add(backButton);
         }
-        if (getPlaceholderButton() != null)
-            buttons.add(getPlaceholderButton());
-        else buttons.add(new PlaceholderButton(this,player));
-        buttons.add(getCloseButton());
-        if (getFilterButton() != null)
-            buttons.add(getFilterButton());
-
-        if (this.getEveryMenuSlots(player) != null) {
-            this.getEveryMenuSlots(player).forEach(slot -> {
-                buttons.removeIf(s -> s.hasSlot(slot.getSlot()));
-            });
-            buttons.addAll(this.getEveryMenuSlots(player));
+        if (toolbar != null){
+            buttons.addAll(toolbar);
+        }
+        Button close = getCloseButton(),filter = getFilterButton();
+        if (close != null) {
+            buttons.add(close);
+            bottom.add(close);
+        }
+        if (filter != null){
+            buttons.add(filter);
+            bottom.add(filter);
+        }
+        List<Button> overrideEveryMenu = getEveryMenuSlots(player);
+        if (overrideEveryMenu != null) {
+            overrideEveryMenu.forEach(slot -> buttons.removeIf(s -> s.hasSlot(slot.getSlot()))); //remove any old buttons that conflict with the new ones
+            buttons.addAll(overrideEveryMenu);
         }
         AtomicInteger index = new AtomicInteger(0);
-        this.getPaginatedButtons(player).forEach(slot -> {
-            int current = index.getAndIncrement();
+        this.getPaginatedButtons(player).forEach(button -> { // loop through all paginated buttons
+            int current = index.getAndIncrement(); // current index
             if (current >= minSlot && current < maxSlot) {
-                current -= (int) ((double) (27) * (page - 1)) - 9;
-                buttons.add(this.getNewSlot(slot, current));
+                current -= (int) ((double) (getMaxPageItems()) * (page - 1)) - 9;
+                buttons.add(this.getNewButton(button, current)); // add new button overriding the slot
             }
         });
+        Button placeholder = getPlaceholderButton();
+        if (placeholder != null)
+            buttons.add(placeholder);
+        else buttons.add(new PaginatedPlaceholderButton(toolbar,bottom));
         return buttons;
     }
 
 
-    private Button getNewSlot(Button button, int s) {
+    private Button getNewButton(Button button, int s) {
         return new Button() {
             @Override
             public ItemStack getItem(Player player) {
@@ -73,6 +90,11 @@ public abstract class PaginatedMenu extends Menu {
             @Override
             public void onClick(Player player, int s, ClickType clickType) {
                 button.onClick(player, s, clickType);
+            }
+
+            @Override
+            public boolean hasSlot(int slot) {
+                return button.hasSlot(slot);
             }
         };
     }
@@ -94,14 +116,17 @@ public abstract class PaginatedMenu extends Menu {
         if (this.getPaginatedButtons(player).isEmpty()) {
             return 1;
         }
-        return (int) Math.ceil(getPaginatedButtons(player).size() / (double) 27);
+        //return (int) Math.ceil(getPaginatedButtons(player).size() / (double) 27);
+        return (int) Math.ceil(getPaginatedButtons(player).size() / (double) getMaxPageItems());
     }
 
     public abstract String getPagesTitle(Player player);
 
     public abstract List<Button> getPaginatedButtons(Player player);
 
-    public abstract List<Button> getEveryMenuSlots(Player player);
+    public List<Button> getEveryMenuSlots(Player player){
+        return null;
+    }
     public Button getFilterButton(){
         return null;
     }
@@ -114,6 +139,9 @@ public abstract class PaginatedMenu extends Menu {
     public int getMaxPageItems(){
         return 27;
     }
+    public int getMenuSize(){
+        return getMaxPageItems() + 18; //if it dosent work, set to 17
+    }
     public boolean doesButtonExist(List<Button> buttons,int i){
         return buttons.stream().filter(button ->{
             if (button.getSlot() == i){
@@ -125,5 +153,59 @@ public abstract class PaginatedMenu extends Menu {
             }
             return false;
         }).findFirst().orElse(null) != null;
+    }
+
+    @Override
+    public final void onOpenReserved(Player player) {
+    }
+
+    @Override
+    public final void onCloseReserved(Player player) {
+        MenuManager.getOpenedMenus().remove(player.getUniqueId());
+    }
+
+    public class PaginatedPlaceholderButton extends PlaceholderButton {
+        private List<Integer> topslots = new ArrayList<>(), bottomslots = new ArrayList<>();
+        public PaginatedPlaceholderButton(List<Button> top,List<Button> bottom) {
+            for (Button button : top) {
+                topslots.add(button.getSlot());
+                if (button.getSlots() != null) {
+                    for (int slot : button.getSlots()) {
+                        topslots.add(slot);
+                    }
+                }
+            }
+            for (Button button : bottom) {
+                bottomslots.add(button.getSlot());
+                if (button.getSlots() != null) {
+                    for (int slot : button.getSlots()) {
+                        bottomslots.add(slot);
+                    }
+                }
+            }
+            //Logger.debug(topslots);
+            //Logger.debug(bottomslots);
+        }
+
+        @Override
+        public int getSlot() {
+            return -1;
+        }
+
+        @Override
+        public int[] getSlots() {
+            Set<Integer> a = new HashSet<>(); //TODO side border.
+            IntStream.range(0,9).forEach(i ->{ //top toolbar, skip slots that are used
+                if (!topslots.contains(i))
+                    a.add(i);
+            });
+            IntStream.range(getMenuSize() - 9, getMenuSize()).forEach(i -> { //bottom toolbar, skip slots that are used
+                if (!bottomslots.contains(i))
+                    a.add(i);
+            });
+            int[] slots = a.stream().mapToInt(i -> i).toArray();
+            //Logger.debug(Arrays.toString(slots));
+            return slots;
+        }
     }
 }

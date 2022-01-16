@@ -250,6 +250,7 @@ public class StringUtils {
         }
         return finalReturn;
     }
+    /*
     public static StringBuilder appendRandomChatColors(StringBuilder sb, int howmanyper,int howmanytimes){
         List<ChatColor> colors = Arrays.asList(ChatColor.ALL_CHATCOLORS);
         for (int i = 0; i < howmanytimes; i++) {
@@ -275,6 +276,7 @@ public class StringUtils {
     public static String[] getRandomChatColors(int howmanyper,int howmanytimes){
         return getRandomChatColorsAsList(howmanyper, howmanytimes).toArray(new String[0]);
     }
+     */
 
     private static Map<ChatColor, ColorSet<Integer, Integer, Integer>> colorMap = new HashMap<ChatColor, ColorSet<Integer, Integer, Integer>>();
 

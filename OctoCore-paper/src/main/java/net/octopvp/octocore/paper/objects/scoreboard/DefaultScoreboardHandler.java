@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.objects.scoreboard;
 
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.scoreboard.common.EntryBuilder;
@@ -29,12 +30,16 @@ public class DefaultScoreboardHandler implements ScoreboardHandler {
         PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
         if (playerData == null)
             return new EntryBuilder().blank().build();
+        String name = playerData.getCurrentColor() + CC.strip(player.getDisplayName());
+        if (name.endsWith("\u00A7"))
+            name = name.substring(0, name.length() - 1);
+        //Logger.debug("Name: " + name);
         return new EntryBuilder()
                 .next(CC.SCOREBOARD_SEPARATOR)
                 .blank()
-                .next(CC.AQUA + "Your Name: " + CC.GREEN + playerData.getCurrentColor() + player.getDisplayName()) //Note - this somehow sets the player's nametag -> .next(CC.AQUA + "Your Name: " + CC.GREEN + player.getName())
-                .next(CC.AQUA + "Rank: " + playerData.getCurrentPrefix())
-                .next(CC.AQUA + "Online: " + CC.GREEN + OctoCore.getServerManager().getGlobalPlayers().size())
+                .next(CC.AQUA + "Your Name&7: " + CC.GREEN + name) //Note - this somehow sets the player's nametag -> .next(CC.AQUA + "Your Name: " + CC.GREEN + player.getName())
+                .next(CC.AQUA + "Rank&7: " + playerData.getCurrentPrefix())
+                .next(CC.AQUA + "Online&7: " + CC.GREEN + OctoCore.getServerManager().getGlobalPlayers().size())
                 .blank()
                 .next(CC.SCOREBOARD_SEPARATOR)
                 .next(CC.SCOREBOARD_IP_SEPARATOR + (a ? CC.AQUA : CC.GREEN) + " " + OctoCore.getInstance().getConfig().getString("server-ip") + " " + CC.SCOREBOARD_IP_SEPARATOR)

@@ -155,6 +155,9 @@ public class Rank implements Cloneable {
     public String getPrefix() {
         return CC.translate(StringUtils.replacePlaceholders(prefix,color.toString()));
     }
+    public String getDefaultPrefix(){
+        return CC.translate(StringUtils.replacePlaceholders(prefix,color.toString()));
+    }
     public String getPrefix(String color1) {
         if (changableMainColor && color1 != null)
             return CC.translate(StringUtils.replacePlaceholders(prefix,color1));

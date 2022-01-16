@@ -9,6 +9,7 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
+import net.octopvp.octocore.common.object.ServerInfo;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
 import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
@@ -22,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.UUID;
 
 public final class OctoCoreWaterfall extends Plugin {
@@ -37,6 +37,7 @@ public final class OctoCoreWaterfall extends Plugin {
 
     @Override
     public void onEnable() {
+        long start = System.currentTimeMillis();
         new Logger(getLogger(), "[OctoCore] ", (message, players) -> {
             for (UUID player : players) {
                 ProxyServer.getInstance().getPlayer(player).sendMessage(message);
@@ -45,7 +46,22 @@ public final class OctoCoreWaterfall extends Plugin {
         instance = this;
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
-        OctoCoreCommon.setServerName("Bungee");
+        OctoCoreCommon.init(new ServerInfo() {
+            @Override
+            public String getServerName() {
+                return "BungeeCord";
+            }
+
+            @Override
+            public String getCommitHash() {
+                return "UNKNOWN";
+            }
+
+            @Override
+            public String getCommitBranch() {
+                return "UNKNOWN";
+            }
+        });
         File file = new File(getDataFolder(), "config.yml");
 
 
@@ -75,7 +91,7 @@ public final class OctoCoreWaterfall extends Plugin {
         Logger.debug(config.getBoolean("protocol.enabled"));
         Logger.debug(config.getString("protocol.version"));
         getProxy().getPluginManager().registerListener(this,new PingEvent());
-        Logger.debug("OctoBungee Started!");
+        Logger.debug("OctoBungee Started! " + (System.currentTimeMillis() - start) + "ms");
     }
     public Configuration getConfig(){
         return config;

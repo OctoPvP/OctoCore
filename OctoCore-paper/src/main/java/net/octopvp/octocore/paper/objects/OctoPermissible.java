@@ -3,8 +3,8 @@ package net.octopvp.octocore.paper.objects;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.*;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.permissions.PermissibleBase;
+import org.bukkit.permissions.Permission;
 
 import java.util.UUID;
 
@@ -14,7 +14,6 @@ public class OctoPermissible extends PermissibleBase {
     public OctoPermissible(Player player,PermissibleBase old) {
         super(player);
         uuid = player.getUniqueId();
-        Logger.debug("UUID1: %1",uuid);
         this.oldPermissibleBase = old;
     }
 

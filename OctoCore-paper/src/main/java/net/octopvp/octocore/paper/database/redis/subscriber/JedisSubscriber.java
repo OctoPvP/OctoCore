@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import lombok.Getter;
 import net.octopvp.octocore.common.object.redis.JedisHandle;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
+import net.octopvp.octocore.common.util.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
@@ -32,7 +33,7 @@ public class JedisSubscriber {
                     JsonObject object = JSON_PARSER.parse(message).getAsJsonObject();
                     JedisSubscriber.this.subscriptionHandler.handleMessage(object);
                 } catch (JsonParseException e) {
-                    System.out.println("Received message that could not be parsed");
+                    Logger.debug("Received message that could not be parsed");
                 }
             }
         };

@@ -7,15 +7,24 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.viaversion.viaversion.api.Via;
+import io.sentry.Sentry;
+import io.sentry.SentryEvent;
+import io.sentry.SentryLevel;
+import io.sentry.protocol.SentryException;
+import io.sentry.protocol.SentryStackFrame;
+import io.sentry.protocol.SentryStackTrace;
+import io.sentry.protocol.User;
 import lombok.Getter;
 import net.octopvp.octocore.common.object.AlertType;
 import net.octopvp.octocore.common.object.HashedAddress;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerType;
+import net.octopvp.octocore.common.object.builder.SentryMessageBuilder;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.manager.impl.autoinit.BookManager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
@@ -25,12 +34,10 @@ import org.apache.commons.lang3.Validate;
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,11 +54,24 @@ public class PlayerManager extends Manager {
         return playerProfiles.values().stream().filter(profile -> profile.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
+    public static Map<UUID,PlayerData> getOnlineData(){
+        return playerProfiles;
+    }
+
     //get the data of a player that is not online
     public static CompletableFuture<PlayerData> getOfflineData(String name) {
+        OfflinePlayer op = Bukkit.getOfflinePlayer(name);
+        return getOfflineData(op);
+    }
+    public static CompletableFuture<PlayerData> getOfflineData(UUID uuid) {
+        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+        return getOfflineData(op);
+    }
+    public static CompletableFuture<PlayerData> getOfflineData(OfflinePlayer op) {
         CompletableFuture<PlayerData> completableFuture = new CompletableFuture<>();
-        if (Bukkit.getPlayer(name) != null)
-            completableFuture.complete(getData(Bukkit.getPlayer(name)));
+        String name = op.getName();
+        if (Bukkit.getPlayer(op.getUniqueId()) != null)
+            completableFuture.complete(getData(op.getPlayer()));
         else if (OctoCore.getServerManager().isPlayerOnline(name)) {
             Tasks.runAsync(() -> {
                 OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonChain().addProperty("name", name).get());
@@ -92,26 +112,21 @@ public class PlayerManager extends Manager {
         backupCollection = DatabaseManager.getMongoDatabase().getCollection("backup");
     }
 
-    public static void processJoin(UUID uuid, String ip) {
+    public static void processJoin(Player player,UUID uuid, String ip) {
+        Sentry.addBreadcrumb(player.getName() + " joined");
         Tasks.runAsync(() -> {
             PlayerData profile = playerProfiles.get(uuid);
-            if (profile == null)
+            if (profile == null) {
                 Logger.debug("Profile is null!");
-            Player player = Bukkit.getPlayer(uuid);
-            while (player == null) {
-                try {
-                    Thread.sleep(25);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                player = Bukkit.getPlayer(uuid);
+                captureSentryEvent("Profile is null!",player.getUniqueId(),player.getName());
+                return;
             }
-            Logger.debug("Injecting custom PermissibleBase");
             PermissionManager.injectPermissible(player, profile);
             profile.setRankType(profile.getHighestRank().getRankType());
 
             profile.setLastSeenServer(OctoCore.getServerName());
             profile.setLastSeenIp(new HashedAddress(ip));
+            profile.onJoin(player);
 
             GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(player.getName());
             if (globalPlayer != null && globalPlayer.getLastServer() != null && !globalPlayer.getLastServer().equalsIgnoreCase(OctoCore.getServerName())) {
@@ -135,7 +150,6 @@ public class PlayerManager extends Manager {
                 ScoreBoardManager.handleJoin(finalPlayer);
                 if (OctoCore.getServerType() == ServerType.HUB || OctoCore.getServerType() == ServerType.MASTER) {
                     int version = Via.getAPI().getPlayerVersion(finalPlayer);
-                    Logger.debug("Player Version: " + version);
                     if (version != 47 && version != -1) {
                         BookManager.showUnsupportedVerBook(finalPlayer);
                     }
@@ -144,19 +158,39 @@ public class PlayerManager extends Manager {
             });
         });
     }
+    public static void captureSentryEvent(String eventName,Player player){
+        captureSentryEvent(eventName,player.getUniqueId(),player.getName());
+    }
+    public static void captureSentryEvent(String eventName,UUID uuid, String name){
+        if (Sentry.isEnabled()){
+            SentryEvent event = new SentryEvent();
+            event.setLevel(SentryLevel.ERROR);
+            event.setMessage(new SentryMessageBuilder().setMessage(eventName).build());
+            User user = new User();
+            user.setUsername(name);
+            user.setId(uuid.toString());
+            event.setUser(user);
+            Sentry.captureEvent(event);
+        }
+    }
 
     public static void loadPData(UUID uuid, String name, boolean saveState) {
         try {
             PlayerData profile;
             boolean b = !doesDocumentExistByUUID(uuid), passed = !OctoCore.getServerManager().isPlayerOnline(name), a = false;
-
+            int tries = 0;
             while (!passed) {
                 PlayerData.SaveState state = getState(uuid);
                 if (state == null)
                     break;
                 if (state == PlayerData.SaveState.SAVING) {
-                    System.out.println("Waiting 50 millis, then requesting savestate again");
+                    if (tries > 10) {
+                        Logger.debug("Tried to load player data for " + name + " but it was still saving!");
+                        return;
+                    }
+                    Logger.debug("Waiting 50 millis, then requesting savestate again");
                     Thread.sleep(50);//oh no
+                    tries++;
                     if (!a) {
                         OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_SWITCH, new JsonChain().addProperty("uuid", uuid.toString()).get());
                         a = true;
@@ -246,11 +280,9 @@ public class PlayerManager extends Manager {
      */
     public static PlayerData loadProfileFromDB(UUID uuid, boolean saveState) {
         try {
-            Logger.debug("Loading profile " + uuid.toString() + " from db.");
             PlayerData p;
             Document doc = getProfileDocument(uuid);
             String json = getProfileJson(doc);
-            Logger.debug("Json for profile " + uuid + " is: \n" + json);
             p = deserializeProfile(json);
             p.setLastLoaded(System.currentTimeMillis());
             p.setLastLogin(System.currentTimeMillis());
@@ -305,7 +337,7 @@ public class PlayerManager extends Manager {
             return;
         profile.setLastSave(System.currentTimeMillis());
         String json = serializeProfileToJson(profile);
-        Logger.debug("Saving profile: \nUUID:" + profile.getUuid() + "\nJSON: " + json);
+        //Logger.debug("Saving profile: \nUUID:" + profile.getUuid() + "\nJSON: " + json);
         pdataCollection.replaceOne(getProfileDocument(profile.getUuid()), Document.parse(json), new ReplaceOptions().upsert(true));
         profile.setLastDataSave(0);
     }
@@ -369,8 +401,11 @@ public class PlayerManager extends Manager {
         return playerProfiles.get(uuid);
     }
 
-    public static PlayerData getData(UUID uuid) {
+    public static PlayerData getPlayerData(UUID uuid) {
         return getProfile(uuid);
+    }
+    public static PlayerData getData(UUID uuid){
+        return getPlayerData(uuid);
     }
 
     public static PlayerData getProfile(Player player) {
@@ -476,20 +511,17 @@ public class PlayerManager extends Manager {
             jsonObject.addProperty("name", placeholders[0]);
             jsonObject.addProperty("server", placeholders[1]);
             OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_CONNECT, jsonObject);
-            Logger.debug("Writing staff connect");
         } else if (type == AlertType.LEAVE) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("name", placeholders[0]);
             jsonObject.addProperty("server", placeholders[1]);
             OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_DISCONNECT, jsonObject);
-            Logger.debug("Writing staff disconnect");
         } else if (type == AlertType.SWITCH) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("name", placeholders[0]);
             jsonObject.addProperty("from", placeholders[1]);
             jsonObject.addProperty("to", placeholders[2]);
             OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_SWITCH, jsonObject);
-            Logger.debug("Writing staff switch");
         }
     }
 
@@ -543,6 +575,11 @@ public class PlayerManager extends Manager {
         if (doesDocumentExistByName(name))
             return serializeProfileToJson(getProfileFromDB(name));
         return null;
+    }
+    public static String getFixedName(String name){
+        Document document = pdataCollection.find(Filters.eq("lowerName", name.toLowerCase())).first();
+        if (document == null) return name;
+        return document.getString("name");
     }
 
     public static void deleteData(UUID uuid) {

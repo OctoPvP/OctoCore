@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.nametag.skin.Skin;
 import net.octopvp.octocore.paper.utils.nametag.skin.SkinCallBack;
 import org.apache.commons.lang.Validate;
@@ -362,7 +363,7 @@ public class NameTagChanger {
     }
 
     void printMessage(String message) {
-        System.out.println(message);
+        Logger.debug(message);
     }
 
     /**

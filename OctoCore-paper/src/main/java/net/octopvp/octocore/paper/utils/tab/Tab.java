@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper.utils.tab;
 
 import com.google.common.base.Preconditions;
 import lombok.Getter;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.tab.tablist.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +32,7 @@ public class Tab implements Listener {
 
     public static void log(Level level, String message) {
         if (level.intValue() >= logLevel.intValue())
-            System.out.println("[" + level.getName() + "] " + message);
+            Logger.debug("[" + level.getName() + "] " + message);
     }
 
     /**

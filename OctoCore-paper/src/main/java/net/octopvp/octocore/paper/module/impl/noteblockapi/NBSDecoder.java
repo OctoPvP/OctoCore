@@ -90,12 +90,12 @@ public class NBSDecoder {
             short tick = -1;
             while (true) {
                 short jumpTicks = readShort(dataInputStream); // jumps till next tick
-                //System.out.println("Jumps to next tick: " + jumpTicks);
+                //Logger.debug("Jumps to next tick: " + jumpTicks);
                 if (jumpTicks == 0) {
                     break;
                 }
                 tick += jumpTicks;
-                //System.out.println("Tick: " + tick);
+                //Logger.debug("Tick: " + tick);
                 short layer = -1;
                 while (true) {
                     short jumpLayers = readShort(dataInputStream); // jumps till next layer
@@ -103,7 +103,7 @@ public class NBSDecoder {
                         break;
                     }
                     layer += jumpLayers;
-                    //System.out.println("Layer: " + layer);
+                    //Logger.debug("Layer: " + layer);
                     byte instrument = dataInputStream.readByte();
 
                     if (firstcustominstrumentdiff > 0 && instrument >= firstcustominstrument) {

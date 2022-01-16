@@ -197,6 +197,19 @@ public class ItemBuilder {
         this.damage = damage;
         return this;
     }
+    /**
+     * Sets the Durability (Damage) of the ItemStack
+     *
+     * @param damage Damage for the ItemStack
+     */
+    public ItemBuilder setDurability(short damage) {
+        this.damage = damage;
+        return this;
+    }
+    public ItemBuilder setDurability(int damage) {
+        this.damage = (short) damage;
+        return this;
+    }
 
     /**
      * Sets the Durability (Damage) of the ItemStack
@@ -326,6 +339,8 @@ public class ItemBuilder {
     public ItemBuilder lores(String... lines) {
         Validate.notNull(lines, "The lines are null.");
         for (String line : lines) {
+            if (line == null)
+                continue;
             lore(andSymbol ? ChatColor.translateAlternateColorCodes('&', line) : line);
         }
         return this;
@@ -672,6 +687,9 @@ public class ItemBuilder {
         }
         item.setItemMeta(meta);
         return item;
+    }
+    public ItemStack toItemStack(){
+        return build();
     }
     public ItemBuilder data(short data) {
         this.durability(data);

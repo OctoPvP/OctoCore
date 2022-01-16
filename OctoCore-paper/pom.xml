@@ -17,7 +17,6 @@
     <build>
         <testSourceDirectory>src/test/java</testSourceDirectory>
         <plugins>
-            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -37,13 +36,19 @@
                 <configuration>
                     <minimizeJar>true</minimizeJar>
                     <artifactSet>
-                        <includes>
-                            <include>org.reflections</include>
-                        </includes>
+                        <excludes>
+                            <exclude>junit:junit</exclude>
+                            <exclude>org.bukkit.*</exclude>
+                            <exclude>com.lunarclient.*</exclude>
+                            <exclude>net.octopvp:OctoSpigot-api:jar:1.8.8-R0.1-SNAPSHOT</exclude>
+                            <exclude>net.octopvp:OctoBungee-chat:jar:1.18-R0.1-SNAPSHOT</exclude>
+                            <exclude>net.octopvp:OctoSpigot-Common:jar:1</exclude>
+                            <exclude>net.octopvp:OctoSpigot-Common:*</exclude>
+                            <exclude>org.bukkit:bukkit:1.13.1-R0.1-SNAPSHOT</exclude> <!-- stupid vault -->
+                        </excludes>
                     </artifactSet>
                 </configuration>
             </plugin>
-            -->
         </plugins>
     </build>
 
@@ -102,31 +107,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.luckperms</groupId>
-            <artifactId>api</artifactId>
-            <version>5.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.warrenstrange</groupId>
             <artifactId>googleauth</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.gitlab.ruany</groupId>
-            <artifactId>LiteBansAPI</artifactId>
-            <version>0.3.4</version>
-            <scope>provided</scope>
+            <version>1.5.0</version>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>4.6.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.lunarclient</groupId>
             <artifactId>bukkitapi</artifactId>
             <version>1.0-20210307.203619-3</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
@@ -144,7 +139,7 @@
             <groupId>net.octopvp</groupId>
             <artifactId>OctoSpigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <!-- fix the JDA class not found error -->
         <dependency>

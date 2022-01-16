@@ -1,5 +1,6 @@
 package net.octopvp.octocore.common.util;
 
+import lombok.Getter;
 import net.octopvp.octocore.common.StringUtils;
 
 import java.util.Collection;
@@ -12,6 +13,7 @@ public class Logger {
     private static Logger instance;
     private static String prefix = "[OctoCore] ";
     private static Messenger messenger = new NoOpMessenger();
+    @Getter
     private static Set<UUID> debugPlayers = new HashSet<>();
     public Logger(java.util.logging.Logger logger,String prefix,Messenger messenger){
         this.actualLogger = logger;
@@ -29,8 +31,13 @@ public class Logger {
         instance.actualLogger.severe(StringUtils.replacePlaceholders(prefix + " " + str,placeholders));
     }
     public static void debug(Object str,Object... placeholders){
-        info("[DEBUG] " + StringUtils.replacePlaceholders(str.toString(),placeholders));
-        messenger.sendMessage(CC.BOLD + CC.YELLOW + "[DEBUG] " + CC.RESET + StringUtils.replacePlaceholders(str.toString(),placeholders),debugPlayers);
+        if (System.getProperty("octocore.debug","false").equalsIgnoreCase("true")) {
+            StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+            String caller = elements[2].getFileName() + ":" + elements[2].getLineNumber();
+            String message = "[DEBUG] " + caller + " | " + StringUtils.replacePlaceholders(str.toString(),placeholders);
+            info(message);
+            messenger.sendMessage(CC.BOLD + CC.YELLOW + "[DEBUG] " + CC.RESET + StringUtils.replacePlaceholders(str.toString(),placeholders),debugPlayers);
+        }
     }
     public static interface Messenger {
         void sendMessage(String message, Collection<UUID> players);

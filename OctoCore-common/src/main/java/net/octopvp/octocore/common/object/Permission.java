@@ -80,6 +80,25 @@ public enum Permission  {
     DELETE_RANK("octocore.command.deleterank"),
     EDIT_RANK("octocore.command.editrank"),
 
+
+    PUNISHMENT_BASE("octocore.punish."),
+    PUNISHMENT_BASE_COMMAND("octocore.punish.command."),
+    PUNISHMENT_SEE_SILENT(PUNISHMENT_BASE + "see.silent"),
+    PUNISHMENT_UNBLACKLIST(PUNISHMENT_BASE + "unblacklist"),
+    PUNISHMENT_UNBAN(PUNISHMENT_BASE + "unblacklist"),
+    PUNISHMENT_UNMUTE(PUNISHMENT_BASE + "unblacklist"),
+    PUNISHMENT_STAFFROLLBACK(PUNISHMENT_BASE_COMMAND + "staffrollback"),
+    PUNISHMENT_STAFF_HISTORY(PUNISHMENT_BASE_COMMAND + "staffhistory"),
+    PUNISHMENT_HISTORY(PUNISHMENT_BASE_COMMAND + "history"),
+
+    PUNISHMENT_KICK(PUNISHMENT_BASE_COMMAND + "kick"),
+    PUNISHMENT_BAN(PUNISHMENT_BASE_COMMAND + "ban"),
+    PUNISHMENT_IPBAN(PUNISHMENT_BASE_COMMAND + "ipban"),
+    PUNISHMENT_BLACKLIST(PUNISHMENT_BASE_COMMAND + "blacklist"),
+    PUNISHMENT_WARN(PUNISHMENT_BASE_COMMAND + "warn"),
+    PUNISHMENT_MUTE(PUNISHMENT_BASE_COMMAND + "mute"),
+    PUNISHMENT_SEE_JOIN_ALERT(PUNISHMENT_BASE + "joinalert"),
+
     TEST("test");
     private final String node;
     Permission(String node){

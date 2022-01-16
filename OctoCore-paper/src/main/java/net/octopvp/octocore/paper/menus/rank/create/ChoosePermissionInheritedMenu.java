@@ -31,13 +31,13 @@ public class ChoosePermissionInheritedMenu extends Menu {
 
     @Override
     public List<Button> getButtons(Player player) {
-        return Lists.newArrayList(new PlaceHolderButton(),new PermissionsButton(),new Donebutton());
+        return Lists.newArrayList(new PlaceHolderButton(), new PermissionsButton(), new InheritedButton(), new DoneButton());
     }
 
     private class PermissionsButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.IRON_INGOT).name(CC.AQUA + "Permissions").lore(CC.SEPARATOR,CC.AQUA + "Total Permissions: " + CC.YELLOW + rankBuilder.getRank().getNodes().size(),CC.AQUA + "Total Allowed Permissions: " + CC.YELLOW + rankBuilder.getRank().getAllowedPermissions().size(),CC.AQUA + "Total Negated Permissions: " + CC.YELLOW + rankBuilder.getRank().getNegatedPermissions().size(),CC.SEPARATOR).build();
+            return new ItemBuilder(Material.EMERALD).name(CC.AQUA + "Permissions").lore(CC.SEPARATOR, CC.AQUA + "Total Permissions: " + CC.YELLOW + rankBuilder.getRank().getNodes().size(), CC.AQUA + "Total Allowed Permissions: " + CC.YELLOW + rankBuilder.getRank().getAllowedPermissions().size(), CC.AQUA + "Total Negated Permissions: " + CC.YELLOW + rankBuilder.getRank().getNegatedPermissions().size(), CC.SEPARATOR).build();
         }
 
         @Override
@@ -47,7 +47,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            new CreateRankManagePermissionsMenu(instance, rankBuilder,(b)->{
+            new CreateRankManagePermissionsMenu(instance, rankBuilder, (b) -> {
                 rankBuilder = b;
                 open(player);
                 SoundUtil.playPing(player);
@@ -59,7 +59,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
     private class InheritedButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.IRON_INGOT).name(CC.AQUA + "Inherited").lore(CC.SEPARATOR,CC.AQUA + "Inherited Ranks: " + CC.YELLOW + rankBuilder.getRank().getInheritedRanks().size(),CC.SEPARATOR).build();
+            return new ItemBuilder(Material.ANVIL).name(CC.AQUA + "Inherited").lore(CC.SEPARATOR, CC.AQUA + "Inherited Ranks: " + CC.YELLOW + rankBuilder.getRank().getInheritedRanks().size(), CC.SEPARATOR).build();
         }
 
         @Override
@@ -69,7 +69,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            new InheritedRanksMenu(instance, rankBuilder,(b)->{
+            new InheritedRanksMenu(instance, rankBuilder, (b) -> {
                 rankBuilder = b;
                 open(player);
                 SoundUtil.playPing(player);
@@ -92,7 +92,8 @@ public class ChoosePermissionInheritedMenu extends Menu {
             }
         };
     }
-    private class Donebutton extends Button {
+
+    private class DoneButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.EMERALD_BLOCK).name(CC.GREEN + "Done!").build();
@@ -115,15 +116,16 @@ public class ChoosePermissionInheritedMenu extends Menu {
     public String getName(Player player) {
         return CC.GREEN + "Choose an action.";
     }
+
     public class PlaceHolderButton extends PlaceholderButton {
         @Override
         public int[] getSlots() {
             List<Integer> a = new ArrayList<>();
-            IntStream.range(0,26).forEach((i)->{
+            IntStream.range(0, 26).forEach((i) -> {
                 if (!(i == 11 || i == 15))
                     a.add(i);
             });
-            return a.stream().mapToInt(i ->i).toArray();
+            return a.stream().mapToInt(i -> i).toArray();
         }
     }
 }

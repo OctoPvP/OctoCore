@@ -51,7 +51,7 @@ public class SimpleScoreboard implements Scoreboard {
         if (activated) return;
         if (handler == null) throw new IllegalArgumentException("Scoreboard handler not set");
         activated = true;
-        // Set to the custom scoreboard
+        // Set to the custom scoreboar
         holder.setScoreboard(scoreboard);
         // And start updating on a desired interval
         updateTask = new BukkitRunnable() {

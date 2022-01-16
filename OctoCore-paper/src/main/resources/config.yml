@@ -43,6 +43,14 @@ update-pdata-interval: 100
 default-tab: true
 health-display: true
 build-prot: true
+sentry:
+  enable: true
+  sentry-dsn: 'https://94dee64522e045f8bfa38796e9b130b6@o1085901.ingest.sentry.io/6097374'
+punish:
+  alts:
+    max: 5
+    #allow alts on this server
+    allow-alts: true
 settings:
   auto-respawn: true
   world-name: world

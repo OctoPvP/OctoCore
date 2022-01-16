@@ -11,6 +11,7 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
@@ -97,7 +98,6 @@ public class RankManager extends Manager {
     }
 
     public static void sendPermissionToBungee(Player player, String name, Node node) {
-        Logger.debug("Sending Permission To Bungee:\nName: %1,\nPerm: %2\nAllowed: %3\nScope: %4\nPlayer: %5", name, node.getPermission(), node.isAllowed() &&  node.getServer().isBungee(), node.getServer(), player.getName());
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
         try {
@@ -111,9 +111,7 @@ public class RankManager extends Manager {
             Logger.error("Failed to send permission to bungee. for " + player.getName());
         }
         String channel = PluginMsgChannels.SubChannels.PERMISSIONS;
-        Logger.debug("Sending... Channel: %1", channel);
         player.sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.PLUGIN_MSG, b.toByteArray());
-        Logger.debug("Sent!");
     }
 
     public static boolean canGrant(PlayerData granter, Rank rankData) {

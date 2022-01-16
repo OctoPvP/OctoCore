@@ -3,6 +3,7 @@ package net.octopvp.octocore.paper.utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -37,7 +38,7 @@ public class MojangUtil {
             try{
                 URL url = new URL( "https://api.mojang.com/user/profiles/" + uuid1.toString().replace("-", "") + "/names");
                 String response = readStringFromURL(url.toString());
-                System.out.println(response);
+                Logger.debug(response);
                 JsonArray namev = new JsonParser().parse(response).getAsJsonArray();
                 String slot = namev.get(namev.size() - 1).toString();
                 JsonObject nameObject = new JsonParser().parse(slot).getAsJsonObject();

@@ -2,9 +2,10 @@ package net.octopvp.octocore.paper.objects;
 
 import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.java.Log;
 import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.object.*;
@@ -15,30 +16,35 @@ import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.menus.grant.GrantProcedure;
+import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
+import net.octopvp.octocore.paper.module.impl.punishments.player.PunishHistory;
+import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.enums.RankType;
-import net.octopvp.octocore.paper.objects.permissions.*;
+import net.octopvp.octocore.paper.objects.permissions.Grant;
+import net.octopvp.octocore.paper.objects.permissions.Rank;
+import net.octopvp.octocore.paper.utils.DateUtils;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 @Setter
 public class PlayerData {
     private static transient Plugin plugin = OctoCore.getInstance();
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
     //TODO set defaults for this so theres no errors when using/loading old data from older updates (idk if this makes sense lol)
     private UUID uuid;
     private double dataVersion = 0.0;
@@ -49,7 +55,14 @@ public class PlayerData {
     private transient boolean fullyJoined = false;
     private transient int lastDataSave = 0;
     private long coins = 0,lastLoaded,lastLogin,xp = 0,firstJoin = System.currentTimeMillis(),lastSave = System.currentTimeMillis();
-    private String nick,lastKnownName = "<unknown>",nickPrefix,nickColor,name = lastKnownName,server,authSecret,lastSeenServer = "Unknown",rankName = "default";
+    private String nick,
+            lastKnownName = "<unknown>",
+            nickPrefix,
+            nickColor,
+            name = lastKnownName,
+            lowerName = name.toLowerCase(),
+            server,authSecret,lastSeenServer = "Unknown",rankName = "default",
+    lastSeen;
     private HashedAddress lastAuthedIp = new HashedAddress(""),lastSeenIp = new HashedAddress("");
     private transient String lastMessage; //only applies to this server for spam prot (maybe :))
     private List<String> metaDataList = new ArrayList<>();
@@ -71,15 +84,18 @@ public class PlayerData {
     private Set<Node> nodes = new HashSet<>();
     private SaveState saveState = SaveState.SAVED;
     private String s = "default";
+    private transient List<PunishHistory> punishmentsExecuted = new ArrayList<>();
 
     private transient List<LoadNote> loadNotes = new ArrayList<>();
     private transient GrantProcedure grantProcedure = null;
     private transient Map<String, PermissionResult> cachedPermissions = new ConcurrentHashMap<>();
+
     public PlayerData(UUID uuid,String name) {
         this.uuid = uuid;
         this.lastLoaded = System.currentTimeMillis();
         this.lastKnownName = name;
         this.name = lastKnownName;
+        this.lowerName = name.toLowerCase();
         this._id = uuid.toString();
         Player player = Bukkit.getPlayer(uuid);
         if (player != null)
@@ -89,11 +105,24 @@ public class PlayerData {
     public void onLoad(Document... documents){
         this.grants.removeIf(Objects::isNull);
         this.lastLoaded = System.currentTimeMillis();
+
         if (cachedPermissions == null)
             cachedPermissions = new ConcurrentHashMap<>();
         if (loadNotes == null)
             loadNotes = new ArrayList<>();
         Document document = (documents.length == 1 ? documents[0] : PlayerManager.getProfileDocument(uuid));
+    }
+    public void onSave(Player player){
+        if (player != null){
+            this.lastSeen = DATE_FORMAT.format(new Date());
+        }
+    }
+
+    public void onJoin(Player player){
+        this.lastSeen = DATE_FORMAT.format(new Date());
+        name = player.getName();
+        lowerName = name.toLowerCase();
+        lastKnownName = name;
     }
     public Node getNode(String perm){
         return nodes.stream().filter(node -> node.getPermission().equalsIgnoreCase(perm)).findFirst().orElse(null);
@@ -137,7 +166,7 @@ public class PlayerData {
     public boolean isOnline(String name) { // FIXME inverted this because its returning false even if they are online
         return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData ->
                 serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
-                        .contains(name.toLowerCase())).findFirst().orElse(null) == null;
+                        .contains(name.toLowerCase())).findFirst().orElse(null) != null;
     }
     public boolean isOnlineThisServer(){
         return Bukkit.getPlayer(uuid) != null;
@@ -250,11 +279,9 @@ public class PlayerData {
         List<Grant> currentGrants = new ArrayList<>(this.grants);
         for (Grant grant : currentGrants) {
             if (grant.hasExpired()) continue;
-            Logger.debug("Loading Grant: " + grant);
             Rank rankData = grant.getRank();
             if (rankData != null) {
                 bungeePermissions.addAll(rankData.getEffectiveBungeePermissions());
-                Logger.debug("%1 bungee perms", bungeePermissions.size());
                 ArrayList<UUID> inheritances = Lists.newArrayList(rankData.getInheritedRanks());
                 inheritances.forEach(inheritance -> {
                     Rank rankInheritance = RankManager.getRankById(inheritance);
@@ -271,7 +298,6 @@ public class PlayerData {
                 Rank rankInheritance = RankManager.getRankById(inheritance);
                 if (rankInheritance != null) {
                     bungeePermissions.addAll(rankInheritance.getEffectiveBungeePermissions());
-                    Logger.debug("%1 bungee perms now", bungeePermissions.size());
                 }
             });
         }
@@ -283,7 +309,6 @@ public class PlayerData {
          */
         if (!player.getDisplayName().equals(this.getDisplayName())) //TODO handle nicks
             player.setDisplayName(this.getDisplayName());
-        Logger.debug("Final Bungee Perms: " + bungeePermissions.size());
         //bungeePermissions.forEach((permission,bool) -> RankManager.sendPermissionToBungee(player, player.getName(), permission, bool,
         //        "global")); //TODO use nodes
         bungeePermissions.forEach(node -> RankManager.sendPermissionToBungee(player, player.getName(), node));
@@ -390,6 +415,55 @@ public class PlayerData {
                     b.toByteArray()
             );
         }
+    }
+    public String getLastSeenAgo() {
+        if (Bukkit.getPlayer(this.uuid) != null) return "Now";
+
+        Calendar from = Calendar.getInstance();
+        Calendar to = Calendar.getInstance();
+
+        from.setTime(new Date(lastLogin));
+        to.setTime(new Date(System.currentTimeMillis()));
+
+        return DateUtils.formatDateDiff(from, to) + " ago";
+    }
+
+    public List<PunishHistory> getPunishmentsExecuted(){
+        if (punishmentsExecuted == null) punishmentsExecuted = new ArrayList<>();
+        return punishmentsExecuted;
+    }
+    public void loadPunishmentsPerformed(){
+        this.punishmentsExecuted.clear();
+        Stream.of(PunishmentType.values()).forEach(punishmentType -> {
+            List<Document> punishments = this.getCollection(punishmentType).find(Filters.eq("addedBy", this.uuid.toString())).into(new ArrayList<>());
+
+            punishments.forEach(document -> {
+                PunishHistory punishHistory = new PunishHistory(this.name, punishmentType);
+                punishHistory.setAddedAt(document.getLong("addedAt"));
+                punishHistory.setDuration(document.getLong("durationTime"));
+                punishHistory.setPermanent(document.getBoolean("permanent"));
+                punishHistory.setExecutor(document.getString("addedBy"));
+                punishHistory.setTarget(document.getString("name"));
+                punishHistory.setReason(document.getString("reason"));
+                punishHistory.setActive(document.getBoolean("active"));
+                punishHistory.setLast(document.getBoolean("last"));
+                punishHistory.setSilent(document.getBoolean("silent"));
+                punishHistory.setEnteredDuration(document.getString("enteredDuration"));
+                punishmentsExecuted.add(punishHistory);
+            });
+        });
+    }
+    private MongoCollection<Document> getCollection(PunishmentType punishmentType) {
+        if (punishmentType == PunishmentType.BAN) {
+            return PunishModule.getBans();
+        } else if (punishmentType == PunishmentType.MUTE) {
+            return PunishModule.getMutes();
+        } else if (punishmentType == PunishmentType.KICK) {
+            return PunishModule.getKicks();
+        } else if (punishmentType == PunishmentType.BLACKLIST) {
+            return PunishModule.getBlacklists();
+        }
+        return PunishModule.getWarns();
     }
     public static enum SaveState {
         SAVED,SAVING

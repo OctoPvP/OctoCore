@@ -3,11 +3,9 @@ package net.octopvp.octocore.paper.utils.menu.buttons.impl;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
-import net.octopvp.octocore.paper.utils.SoundUtil;
-import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
+import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -20,12 +18,13 @@ public class PreviousPageButton extends Button {
     public ItemStack getItem(Player player) {
         ItemBuilder item = new ItemBuilder(Material.ARROW);
         item.setName("&aPrevious page");
-        if (this.paginatedMenu.getPage() < this.paginatedMenu.getPages(player)) { //next page
+        if (paginatedMenu.getPage() == 1) {
+            item.lore(CC.RED + "This is the first page!");
+        } else {
             item.lore(
                     CC.GREEN + "Click to go to the last page"
             );
-        }else item.lore(CC.RED + "This is the first page!");
-        item.name(CC.GREEN + "Previous Page");
+        }
         return item.build();
     }
 

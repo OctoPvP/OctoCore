@@ -11,6 +11,8 @@ import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
+import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
+import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.PlayerInfoButton;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -24,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class AddGrantMenu extends PaginatedMenu {
     private final PlayerData data;
@@ -46,14 +49,15 @@ public class AddGrantMenu extends PaginatedMenu {
 
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
-        List<Button> buttons = new ArrayList<>();
-        buttons.add(new PlayerInfoButton(data,4));
-        return buttons;
+        List<Button> slots = new ArrayList<>();
+
+        slots.add(new PlayerInfoButton(data,4));
+
+        return slots;
     }
 
     @Override
     public void onOpen(Player player) {
-        this.setUpdateInTask(true);
     }
 
     @Override
@@ -64,6 +68,17 @@ public class AddGrantMenu extends PaginatedMenu {
         }
         PlayerManager.deleteData(data.getUuid());
     }
+
+    @Override
+    public Button getBackButton(Player player) {
+        return new BackButton() {
+            @Override
+            public void clicked(Player player, int slot, ClickType clickType) {
+                previous.open(player);
+            }
+        };
+    }
+
     @AllArgsConstructor
     private class RankButton extends Button {
         private Rank rankData;
@@ -75,7 +90,7 @@ public class AddGrantMenu extends PaginatedMenu {
             item.setName(rankData.getDisplayName());
             item.durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())));
             item.lore(CC.SEPARATOR,CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(),CC.AQUA + "Inherited: " + CC.YELLOW + StringUtils.join(rankData.getInheritedRanksName(),", "),CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
-                    CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(),CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(),CC.AQUA + "Purchaseable: " + CC.YELLOW + rankData.isPurchasable(),
+                    CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(),CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(),CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
                     CC.SEPARATOR
             );
             return item.build();

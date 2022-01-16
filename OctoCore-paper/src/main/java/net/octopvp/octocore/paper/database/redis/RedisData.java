@@ -3,6 +3,7 @@ package net.octopvp.octocore.paper.database.redis;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import net.octopvp.octocore.common.PluginMsgChannels;
+import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.object.redis.JedisChannels;
@@ -60,7 +61,9 @@ public class RedisData {
     public boolean isActive() {
         return this.pool != null && !this.pool.isClosed();
     }
-
+    public void write(JedisAction payload, JsonChain data) {
+        write(payload,data.get());
+    }
     public void write(JedisAction payload, JsonObject data) {
         if (!isConnected() || !isActive()) {
             JsonObject object = new JsonObject();

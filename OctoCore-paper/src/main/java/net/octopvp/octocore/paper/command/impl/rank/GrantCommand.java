@@ -2,35 +2,31 @@ package net.octopvp.octocore.paper.command.impl.rank;
 
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.menus.grant.AddGrantMenu;
 import net.octopvp.octocore.paper.menus.grant.MainGrantMenu;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
-public class GrantCommand extends BaseCommand{
-    @Command(name = "grant",permission = Permission.GRANT,cooldown = 1)
+public class GrantCommand extends BaseCommand {
+    @Command(name = "grant",permission = Permission.GRANT)
     public CommandResult execute(Sender sender, String[] args) {
-        Tasks.runAsync(()->{
-            if (args.length != 1){
-                sender.sendMessage(CC.RED + "Usage: /grant <player>");
-                return;
-            }
-            PlayerData d1 = PlayerManager.getPlayerData(args[0]);
-            if (d1 != null){
-                new MainGrantMenu(d1).open(sender);
-            }else{
-                //player is on other server
-                if (OctoCore.getServerManager().isPlayerOnline(args[0])){
-
-                }
-            }
+        return e1(sender, args);
+    }
+    @Command(
+            name = "g1",
+            permission = Permission.GRANT
+    )
+    public CommandResult e1(Sender sender,String[] args){
+        sender.sendMessage(CC.GREEN + "Getting PlayerData...");
+        PlayerManager.getOfflineData(args[0]).thenAcceptAsync((data)->{
+            new MainGrantMenu(data).open(sender.getPlayer());
         });
         return CommandResult.SUCCESS;
     }
+    //get player data
+
 }

@@ -4,6 +4,7 @@ public class PluginMsgChannels {
     public class SubChannels{
         public static final String SYNC = "SYNC";
         public static final String PERMISSIONS = "permissions";
+        public static final String FREEZE = "freeze";
         public static final String TEST = "TEST";
     }
     /*

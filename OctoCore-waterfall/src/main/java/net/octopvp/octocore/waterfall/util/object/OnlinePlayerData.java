@@ -16,6 +16,7 @@ public class OnlinePlayerData {
     private final UUID uuid;
     private Set<Node> nodes = new HashSet<>();
     private Map<String,Boolean> cachedPermResults = new HashMap<>();
+    private boolean frozen = false;
     public boolean hasPermission(String perm){
         boolean result = false;
         if (cachedPermResults.containsKey(perm.toLowerCase()))

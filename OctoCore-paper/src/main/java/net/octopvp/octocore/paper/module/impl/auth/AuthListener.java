@@ -1,5 +1,6 @@
 package net.octopvp.octocore.paper.module.impl.auth;
 
+import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

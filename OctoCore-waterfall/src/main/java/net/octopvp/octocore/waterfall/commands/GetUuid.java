@@ -1,4 +1,4 @@
-package net.octopvp.octocore.waterfall;
+package net.octopvp.octocore.waterfall.commands;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

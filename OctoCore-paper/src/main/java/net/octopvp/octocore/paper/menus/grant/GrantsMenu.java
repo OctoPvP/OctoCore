@@ -7,6 +7,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
@@ -129,20 +130,20 @@ public class GrantsMenu extends PaginatedMenu {
             Rank rank = grant.getRank();
             if (rank != null){
                 ib.lore( CC.SEPARATOR,
-                        CC.AQUA + "Rank: " + grant.getRank().getDisplayName(),
-                        CC.AQUA + "Added By: " + CC.YELLOW + grant.getAddedBy(),
-                        CC.AQUA + "Added Date: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
-                        CC.AQUA + "Duration: " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
-                        CC.AQUA + "Reason: " + CC.YELLOW + grant.getReason(),
-                        CC.AQUA + "Server: " + CC.YELLOW + grant.getServer().getServer(),
+                        CC.AQUA + "Rank&7: " + grant.getRank().getDisplayName(),
+                        CC.AQUA + "Added By&7: " + CC.YELLOW + grant.getAddedBy(),
+                        CC.AQUA + "Added Date&7: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
+                        CC.AQUA + "Duration&7: " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
+                        CC.AQUA + "Reason&7: " + CC.YELLOW + grant.getReason(),
+                        CC.AQUA + "Server&7: " + CC.YELLOW + grant.getServer().getServer(),
                         "",
-                        CC.AQUA + "Active: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
-                        CC.AQUA + "Expires: " + CC.YELLOW + grant.getNiceExpire()
+                        CC.AQUA + "Active&7: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
+                        CC.AQUA + "Expires&7: " + CC.YELLOW + grant.getNiceExpire()
                 );
                 if (grant.getRemovedBy() != null){
                     ib.lore(
-                            CC.AQUA + "Removed By: " + CC.YELLOW + grant.getRemovedBy(),
-                            CC.AQUA + "Removed At: " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt())
+                            CC.AQUA + "Removed By&7: " + CC.YELLOW + grant.getRemovedBy(),
+                            CC.AQUA + "Removed At&7: " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt())
                     );
                 }
                 if (!grant.hasExpired() && !rank.isDefaultRank()){
@@ -151,21 +152,21 @@ public class GrantsMenu extends PaginatedMenu {
                 ib.lore(CC.SEPARATOR);
             }else{
                 ib.lore(CC.SEPARATOR,CC.RED + "Rank was deleted!",
-                        CC.AQUA + "Rank: " + grant.getRankName(),
-                        CC.AQUA + "Added By: " + CC.YELLOW + grant.getAddedBy(),
-                        CC.AQUA + "Added Date: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
-                        CC.AQUA + "Duration: " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
-                        CC.AQUA + "Reason: " + CC.YELLOW + grant.getReason(),
-                        CC.AQUA + "Server: " + CC.YELLOW + grant.getServer().getServer(),
+                        CC.AQUA + "Rank&7: " + grant.getRankName(),
+                        CC.AQUA + "Added By&7: " + CC.YELLOW + grant.getAddedBy(),
+                        CC.AQUA + "Added Date&7: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
+                        CC.AQUA + "Duration&7 " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
+                        CC.AQUA + "Reason&7 " + CC.YELLOW + grant.getReason(),
+                        CC.AQUA + "Server&7 " + CC.YELLOW + grant.getServer().getServer(),
                         "",
-                        CC.AQUA + "Active: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
-                        CC.AQUA + "Expires: " + CC.YELLOW + grant.getNiceExpire(),
+                        CC.AQUA + "Active&7 " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
+                        CC.AQUA + "Expires&7 " + CC.YELLOW + grant.getNiceExpire(),
                         CC.SEPARATOR
                 );
                 if (grant.getRemovedBy() != null){
                     ib.lore(
-                            CC.AQUA + "Removed By: " + CC.YELLOW + grant.getRemovedBy(),
-                            CC.AQUA + "Removed At: " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt()),
+                            CC.AQUA + "Removed By&7 " + CC.YELLOW + grant.getRemovedBy(),
+                            CC.AQUA + "Removed At&7 " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt()),
                             CC.SEPARATOR
                     );
                 }
@@ -186,6 +187,9 @@ public class GrantsMenu extends PaginatedMenu {
             grant.setActive(false);
             grant.setRemovedBy(player.getName());
             grant.setRemovedAt(System.currentTimeMillis());
+            if (!targetData.isOnline()) {
+                targetData.save();
+            }
             OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE,new JsonChain().addProperty("name",targetData.getName()).addProperty("add",false).addProperty("tochange",OctoCore.getGson().toJson(grant)).get());
             update(player);
         }

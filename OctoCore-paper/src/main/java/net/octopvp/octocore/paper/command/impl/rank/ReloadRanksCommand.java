@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.command.impl.grant;
+package net.octopvp.octocore.paper.command.impl.rank;
 
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;

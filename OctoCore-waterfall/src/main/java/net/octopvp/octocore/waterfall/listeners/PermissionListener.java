@@ -1,6 +1,5 @@
 package net.octopvp.octocore.waterfall.listeners;
 
-import lombok.extern.java.Log;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -19,10 +18,6 @@ import java.io.*;
 
 public class PermissionListener implements Listener {
 
-    public PermissionListener() {
-        System.out.println("PermListener Init");
-    }
-
     @EventHandler
     public void onPermissionRequest(PluginMessageEvent event) {
         try {
@@ -36,6 +31,14 @@ public class PermissionListener implements Listener {
                     return;
                 }
                 PermUpdateType type = PermUpdateType.valueOf(in.readUTF());
+                if (type == PermUpdateType.CLEAR_CACHE) {
+                    ProxiedPlayer player = ProxyServer.getInstance().getPlayer(in.readUTF());
+                    if (player != null) {
+                        OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
+                        data.getCachedPermResults().clear();
+                    }
+                    return;
+                }
                 ProxiedPlayer player = ProxyServer.getInstance().getPlayer(in.readUTF());
                 NodeBuilder nodeBuilder = new NodeBuilder();
                 nodeBuilder.setPermission(in.readUTF()).setAllowed(Boolean.parseBoolean(in.readUTF())).setScope(in.readUTF());
@@ -83,7 +86,7 @@ public class PermissionListener implements Listener {
 
                 String payload = in.readUTF();
 
-                System.out.println("Payload has been received");
+                Logger.debug("Payload has been received");
 
                 for (ServerInfo serverInfo : ProxyServer.getInstance().getServers().values()) {
                     ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -92,7 +95,7 @@ public class PermissionListener implements Listener {
                         out.writeUTF(PluginMsgChannels.PLUGIN_MSG);
                         out.writeUTF(payload);
                     } catch (IOException e) {
-                        System.out.println("Failed to send synchronization to spigot");
+                        Logger.debug("Failed to send synchronization to spigot");
                     }
                     serverInfo.sendData(PluginMsgChannels.SubChannels.SYNC, b.toByteArray());
                 }

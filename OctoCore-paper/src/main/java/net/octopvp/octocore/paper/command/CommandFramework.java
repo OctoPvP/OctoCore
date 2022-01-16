@@ -110,23 +110,24 @@ public class CommandFramework implements CommandExecutor {
 					}
 				}
 				try {
-					CommandResult result = (CommandResult) method.invoke(methodObject, new Sender(sender), args);
-					if(result == CommandResult.SUCCESS)
-						return true;
-					else if (result == CommandResult.INVALID_ARGS){
-						sender.sendMessage(CC.RED + "Usage: /" + command.name() + " " + command.usage());
-						return true;
-					}
-					else if(result == null){
-						return true;
-					}
-					else if(result.getMsg() == "" || result.getMsg() == " "){
-						return true;
-					}else if(result.getMsg() == null){
-						return true;
-					} else{
-						sender.sendMessage(result.getMsg());
-						return true;
+					Object resultObj = method.invoke(methodObject, new Sender(sender), args);
+					if (resultObj instanceof CommandResult) {
+						CommandResult result = (CommandResult) resultObj;
+						if (result == CommandResult.SUCCESS)
+							return true;
+						else if (result == CommandResult.INVALID_ARGS) {
+							sender.sendMessage(CC.RED + "Usage: /" + command.name() + " " + command.usage());
+							return true;
+						} else if (result == null) {
+							return true;
+						} else if (result.getMsg() == "" || result.getMsg() == " ") {
+							return true;
+						} else if (result.getMsg() == null) {
+							return true;
+						} else {
+							sender.sendMessage(result.getMsg());
+							return true;
+						}
 					}
 				} catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
 					e.printStackTrace();

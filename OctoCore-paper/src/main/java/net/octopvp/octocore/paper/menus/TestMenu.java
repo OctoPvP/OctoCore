@@ -59,7 +59,7 @@ public class TestMenu extends Menu {
             }
         });
     }
-    public class PlaceholderButton1 extends net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton{
+    private class PlaceholderButton1 extends net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton{
         @Override
         public int[] getSlots() {
             if (a)

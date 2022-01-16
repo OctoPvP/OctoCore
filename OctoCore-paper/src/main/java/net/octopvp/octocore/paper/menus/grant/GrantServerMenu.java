@@ -11,6 +11,7 @@ import net.octopvp.octocore.paper.objects.ServerData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.Skulls;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
+import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Material;
@@ -26,7 +27,7 @@ public class GrantServerMenu extends PaginatedMenu {
     private final PlayerData d;
     @Override
     public String getPagesTitle(Player player) {
-        return CC.AQUA + "Choose active server";
+        return "Choose active server";
     }
 
     @Override
@@ -40,6 +41,11 @@ public class GrantServerMenu extends PaginatedMenu {
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
         return Lists.newArrayList(new GlobalButton());
+    }
+
+    @Override
+    public Button getBackButton(Player player) {
+        return new BackButton.DefaultBackButton(previous);
     }
 
     private int i = 0;

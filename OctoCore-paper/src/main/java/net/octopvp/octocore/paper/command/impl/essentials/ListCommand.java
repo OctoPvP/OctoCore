@@ -18,6 +18,10 @@ import java.util.List;
 public class ListCommand extends BaseCommand {
     @Command(name = "list",aliases = {"players"} ,description = "List all online players (gui)",permission = Permission.LIST_PLAYERS)
     public CommandResult execute(Sender sender, String[] args) {
+        if (true){
+            new ListMenu(args).open(sender.getPlayer());
+            return CommandResult.SUCCESS;
+        }
         if(sender.getCommandSender() instanceof Player){
             //do the gui thing
             if(args.length > 1){
