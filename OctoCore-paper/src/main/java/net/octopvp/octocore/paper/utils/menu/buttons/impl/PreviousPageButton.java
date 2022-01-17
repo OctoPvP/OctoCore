@@ -21,9 +21,7 @@ public class PreviousPageButton extends Button {
         if (paginatedMenu.getPage() == 1) {
             item.lore(CC.RED + "This is the first page!");
         } else {
-            item.lore(
-                    CC.GREEN + "Click to go to the last page"
-            );
+            item.lore(CC.GREEN + "Click to go to the last page");
         }
         return item.build();
     }

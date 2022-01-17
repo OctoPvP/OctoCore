@@ -411,10 +411,10 @@ public class GlobalSubscription implements JedisHandle {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 MainRedisHandler.getSaving().add(uuid);
-                JoinLeaveListener.freezePlayer(player);
+                //JoinLeaveListener.freezePlayer(player);
                 Tasks.runAsyncLater(()->{
                     if (Bukkit.getPlayer(uuid) != null){
-                        JoinLeaveListener.unfreezePlayer(player);
+                        //JoinLeaveListener.unfreezePlayer(player);
                         player.sendMessage(CC.RED + "Could not send you to that server!");
                     }
                 },100);

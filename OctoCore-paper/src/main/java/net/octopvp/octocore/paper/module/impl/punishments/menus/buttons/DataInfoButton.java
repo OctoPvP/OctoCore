@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.module.impl.punishments.menus.slots;
+package net.octopvp.octocore.paper.module.impl.punishments.menus.buttons;
 
 import lombok.AllArgsConstructor;
 import net.octopvp.octocore.common.util.CC;

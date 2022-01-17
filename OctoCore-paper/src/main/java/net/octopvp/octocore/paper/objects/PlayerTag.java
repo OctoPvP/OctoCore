@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.paper.OctoCore;
 import org.bukkit.Material;
 
 import java.util.UUID;
@@ -21,5 +22,10 @@ public class PlayerTag {
     public PlayerTag setMaterial(Material m){
         this.material = m;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return OctoCore.getGson().toJson(this);
     }
 }

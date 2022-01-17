@@ -7,7 +7,6 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.module.impl.punishments.menus.alts.AltsMenu;
 import net.octopvp.octocore.paper.module.impl.punishments.menus.alts.PotentialAltsMenu;
 import net.octopvp.octocore.paper.module.impl.punishments.menus.punishments.*;
-import net.octopvp.octocore.paper.module.impl.punishments.menus.slots.DataInfoButton;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
@@ -25,7 +24,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

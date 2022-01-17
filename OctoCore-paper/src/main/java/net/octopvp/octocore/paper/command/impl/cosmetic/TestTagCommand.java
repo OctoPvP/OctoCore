@@ -4,6 +4,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.manager.impl.ChatManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -17,7 +18,7 @@ public class TestTagCommand extends BaseCommand {
             return CommandResult.INVALID_ARGS;
         TagManager.setPlayerTag(sender.getPlayer(),args[0]);
         PlayerData pdata  = PlayerManager.getProfile(sender.getPlayer().getUniqueId());
-        sender.sendMessage(CC.GREEN + "Set your tag to: " + pdata.getTagString() + "\n" + CC.GREEN + "Your chat message will now look like: \n" + pdata.getFormattedName(false, sender.getPlayer()) + CC.R + ": Hello World");
+        sender.sendMessage(CC.GREEN + "Set your tag to: " + pdata.getTagString() + "\n" + CC.GREEN + "Your chat message will now look like: \n" + ChatManager.formatChat(sender.getPlayer(),"Hello World!",true));
         return CommandResult.SUCCESS;
     }
 }

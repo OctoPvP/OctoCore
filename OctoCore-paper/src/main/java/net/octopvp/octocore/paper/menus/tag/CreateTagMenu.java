@@ -42,7 +42,7 @@ public class CreateTagMenu extends Menu {
 
     @Override
     public String getName(Player player) {
-        return CC.GREEN + "Create a tag";
+        return "Create a tag";
     }
 
     @Override

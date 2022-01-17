@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.menus.tag;
 
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class MainTagMenu extends Menu {
-
+    private Menu instance = this;
     @Override
     public List<Button> getButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
@@ -35,13 +36,13 @@ public class MainTagMenu extends Menu {
 
     @Override
     public String getName(Player player) {
-        return CC.GREEN + "Tags";
+        return "Tags";
     }
     public class BuyTagsButton extends Button{
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.GOLD_BARDING).name(CC.AQUA + "Buy Tags").lore(CC.SEPARATOR,"",CC.AQUA + "Click here to buy new tags!","",CC.SEPARATOR).build();
+            return new ItemBuilder(Material.GOLD_BARDING).name(CC.AQUA + "Buy Tags").lore(CC.SEPARATOR,CC.AQUA + "Click here to buy new tags!",CC.SEPARATOR).build();
         }
 
         @Override
@@ -59,7 +60,7 @@ public class MainTagMenu extends Menu {
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.GOLDEN_CARROT).name(CC.GOLD + "View All Tags").lore(CC.SEPARATOR,"",CC.AQUA + "Click here to view all tags!","",CC.SEPARATOR).build();
+            return new ItemBuilder(Material.GOLDEN_CARROT).name(CC.GOLD + "View All Tags").lore(CC.SEPARATOR,CC.AQUA + "Click here to view all tags!",CC.SEPARATOR).build();
         }
 
         @Override
@@ -69,15 +70,14 @@ public class MainTagMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            SoundUtil.playError(player);
-            player.sendMessage(Lang.FEATURE_NOT_IMPLEMENTED.getMsg());
+            new ListTagsMenu(instance).open(player);
         }
     }
     public class ViewYourTagsButton extends Button{
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.CHEST).name(CC.GREEN + "My Tags").lore(CC.SEPARATOR,"",CC.AQUA + "Click here to view all tags you own!","",CC.SEPARATOR).build();
+            return new ItemBuilder(Material.CHEST).name(CC.GREEN + "My Tags").lore(CC.SEPARATOR,CC.AQUA + "Click here to view all tags you own!",CC.SEPARATOR).build();
         }
 
         @Override
@@ -93,6 +93,7 @@ public class MainTagMenu extends Menu {
                 if (tag != null)
                     tags.add(tag);
             });
+            Logger.debug("Tags: " + tags.size() + " | " + tags);
             new MyTagsMenu(tags,player).open(player);
         }
     }

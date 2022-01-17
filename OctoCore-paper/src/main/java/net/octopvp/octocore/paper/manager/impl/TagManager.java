@@ -50,6 +50,7 @@ public class TagManager extends Manager {
         if (tag == null)
             return;
         PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
+        pdata.getAllowedTags().add(tag);
         pdata.setTag(tag);
     }
     public static PlayerTag getTag(String id){

@@ -131,11 +131,11 @@ public class PlayerManager extends Manager {
             GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(player.getName());
             if (globalPlayer != null && globalPlayer.getLastServer() != null && !globalPlayer.getLastServer().equalsIgnoreCase(OctoCore.getServerName())) {
                 if (player.hasPermission(Permission.SEND_SWITCH_MESSAGE.getNode())) {
-                    sendStaffAlert(AlertType.SWITCH, player.getName(), globalPlayer.getLastServer(), OctoCore.getServerName());
+                    //sendStaffAlert(AlertType.SWITCH, player.getName(), globalPlayer.getLastServer(), OctoCore.getServerName());
                 }
             } else {
                 if (player.hasPermission(Permission.SEND_JOIN_MESSAGE.getNode())) {
-                    sendStaffAlert(AlertType.JOIN, player.getName(), OctoCore.getServerName());
+                    //sendStaffAlert(AlertType.JOIN, player.getName(), OctoCore.getServerName());
                 }
             }
             long time = profile.getWorldTime().getTime();
@@ -242,7 +242,7 @@ public class PlayerManager extends Manager {
         unloadProfile(player.getUniqueId());
         Tasks.runLater(() -> {
             if (playerData.isOnline()) {
-                sendStaffAlert(AlertType.LEAVE, player.getName(), OctoCore.getServerName());
+                //sendStaffAlert(AlertType.LEAVE, player.getName(), OctoCore.getServerName());
             }
         }, 45l);
     }
@@ -396,8 +396,6 @@ public class PlayerManager extends Manager {
      */
     public static PlayerData getProfile(UUID uuid) {
         Validate.notNull(uuid);
-        if (!playerProfiles.containsKey(uuid))
-            return null;
         return playerProfiles.get(uuid);
     }
 

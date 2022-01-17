@@ -5,7 +5,6 @@ import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
@@ -20,25 +19,27 @@ import java.util.List;
 public class MyTagsMenu extends PaginatedMenu { //TODO back button
     private List<PlayerTag> currentTags;
     private Player player;
-    public MyTagsMenu(List<PlayerTag> currentTags, Player player){
+
+    public MyTagsMenu(List<PlayerTag> currentTags, Player player) {
         for (PlayerTag currentTag : currentTags) {
         }
         this.currentTags = currentTags;
         this.player = player;
     }
+
     @Override
     public String getPagesTitle(Player player) {
-        return CC.AQUA + "Your Tags";
+        return "Your Tags";
     }
 
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         PlayerData data = PlayerManager.getProfile(player.getUniqueId());
         List<Button> buttons = new ArrayList<>();
-        for (PlayerTag tag : data.getAllowedTags()) {
+        for (PlayerTag tag : currentTags) {
             if (tag == null)
                 continue;
-            buttons.add(new TagButton(tag,player));
+            buttons.add(new TagButton(tag, player));
         }
         return buttons;
     }
@@ -52,6 +53,7 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
     public Button getBackButton(Player player) {
         return new MenuBackButton();
     }
+
     public class MenuBackButton extends BackButton {
         @Override
         public void clicked(Player player, int slot, ClickType clickType) {
@@ -60,29 +62,30 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
     }
 
     private static int i = 0;
-    public class TagButton extends Button{
+
+    public class TagButton extends Button {
         private boolean a;
         private PlayerTag tag;
-        public TagButton(PlayerTag tag,Player player){
+
+        public TagButton(PlayerTag tag, Player player) {
             this.tag = tag;
             PlayerData data = PlayerManager.getProfile(player.getUniqueId());
             if (data.getTag() != null)
-                a = data.getTag().getId() == tag.getId(); //this is the tag theyre using rn
+                a = data.getTag().getId().toString().equalsIgnoreCase(tag.getId().toString()); //this is the tag theyre using rn
         }
+
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(tag.getMaterial()).name(CC.AQUA + tag.getName()).lore(
-                    CC.SCOREBOARD_SEPARATOR,
-                    "",
+                    CC.SEPARATOR,
                     CC.AQUA + "Tag: " + CC.WHITE + tag.getTag(),
-                    "",
                     CC.AQUA + "Description: " + CC.WHITE + tag.getDescription(),
-                    "",
-                    CC.SCOREBOARD_SEPARATOR,
+                    CC.SEPARATOR,
                     (a ? CC.RED + "Click to remove!" : CC.YELLOW + "Click to use!")
 
-                    ).build();
+            ).build();
         }
+
         @Override
         public int getSlot() {
             return i++;
@@ -91,11 +94,11 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
             SoundUtil.playPing(player);
-            if (a){
+            if (a) {
                 a = false;
                 player.sendMessage(CC.GREEN + "Unequipped your tag!");
                 PlayerManager.getProfile(player.getUniqueId()).setTag(null);
-            }else {
+            } else {
                 player.sendMessage(CC.GREEN + "Equipped your tag!");
                 PlayerManager.getProfile(player.getUniqueId()).setTag(tag);
             }
