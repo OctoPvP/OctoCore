@@ -14,14 +14,10 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerCreateEvent;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
-import net.octopvp.octocore.paper.listeners.JoinLeaveListener;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.paper.listeners.redis.PunishmentRedisHandler;
 import net.octopvp.octocore.paper.manager.impl.*;
-import net.octopvp.octocore.paper.objects.Broadcast;
-import net.octopvp.octocore.paper.objects.GlobalPlayer;
-import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.objects.ServerData;
+import net.octopvp.octocore.paper.objects.*;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
 import net.octopvp.octocore.paper.objects.enums.DataUpdateReason;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
@@ -31,9 +27,7 @@ import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GlobalSubscription implements JedisHandle {
@@ -148,8 +142,13 @@ public class GlobalSubscription implements JedisHandle {
             globalPlayer.setStaffChatAlerts(data.has("staffChatAlerts") && data.get("staffChatAlerts").getAsBoolean());
             globalPlayer.setAdminChatAlerts(data.has("adminChatAlerts") && data.get("adminChatAlerts").getAsBoolean());
             globalPlayer.setReportAlerts(data.has("reportAlerts") && data.get("reportAlerts").getAsBoolean());
-            globalPlayer.setAllTags(OctoCore.getGson().fromJson(data.get("allTags").getAsString(),ArrayList.class));
-
+            HashSet<UUID> tagsUUID = OctoCore.getGson().fromJson(data.get("allTags").getAsString(), HashSet.class);
+            List<PlayerTag> tags = new ArrayList<>();
+            for (UUID uuid1 : tagsUUID) {
+                PlayerTag tag = TagManager.getTag(uuid1);
+                if (tag != null) tags.add(tag);
+            }
+            globalPlayer.setAllTags(tags);
             if (created) {
                 plugin.getServer().getPluginManager().callEvent(new GlobalPlayerCreateEvent(globalPlayer));
             }
@@ -371,7 +370,7 @@ public class GlobalSubscription implements JedisHandle {
                     String toAdd = data.get("add").getAsString();
                     if (Bukkit.getPlayer(target) != null){
                         PlayerData pdata = PlayerManager.getProfile(Bukkit.getPlayer(target).getUniqueId());
-                        pdata.getAllowedTags().add(TagManager.getTagByName(toAdd)); //maybe get by id
+                        pdata.addTag(TagManager.getTagByName(toAdd)); //maybe get by id
                     }
                     break;
                 case TAGS_UPDATE_REMOVE:
@@ -379,7 +378,7 @@ public class GlobalSubscription implements JedisHandle {
                     String toRemove = data.get("remove").getAsString();
                     if (Bukkit.getPlayer(targetWho) != null){
                         PlayerData playerData = PlayerManager.getProfile(Bukkit.getPlayer(targetWho).getUniqueId());
-                        playerData.getAllowedTags().remove(TagManager.getTagByName(toRemove).getId());
+                        playerData.removeTag(TagManager.getTagByName(toRemove).getId());
                     }
                     break;
             }

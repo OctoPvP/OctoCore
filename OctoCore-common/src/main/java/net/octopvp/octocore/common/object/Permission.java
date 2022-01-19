@@ -99,9 +99,12 @@ public enum Permission  {
     PUNISHMENT_MUTE(PUNISHMENT_BASE_COMMAND + "mute"),
     PUNISHMENT_SEE_JOIN_ALERT(PUNISHMENT_BASE + "joinalert"),
 
+    TAG_ADMIN_MENU("octocore.command.tagadmin"),
+
     TEST("test");
     private final String node;
-    Permission(String node){
+
+    Permission(String node) {
         this.node = node;
     }
 

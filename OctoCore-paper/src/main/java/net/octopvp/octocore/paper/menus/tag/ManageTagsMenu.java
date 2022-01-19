@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerTag;
+import net.octopvp.octocore.paper.objects.PlayerTagBuilder;
+import net.octopvp.octocore.paper.other.ManageTagProcess;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
@@ -17,11 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class ListTagsMenu extends PaginatedMenu {
-    private final Menu prev;
+public class ManageTagsMenu extends PaginatedMenu {
+    private final Menu prev, instance = this;
+
     @Override
     public String getPagesTitle(Player player) {
-        return "Tags";
+        return "Manage Tags";
     }
 
     @Override
@@ -35,12 +38,7 @@ public class ListTagsMenu extends PaginatedMenu {
 
     @Override
     public Button getBackButton(Player player) {
-        return new BackButton() {
-            @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
-                prev.open(player);
-            }
-        };
+        return new BackButton.DefaultBackButton(prev);
     }
 
     @RequiredArgsConstructor
@@ -49,18 +47,27 @@ public class ListTagsMenu extends PaginatedMenu {
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(tag.getMaterial()).name(CC.AQUA + tag.getName()).lore(
-                    CC.SCOREBOARD_SEPARATOR,
+            ItemBuilder builder = new ItemBuilder(tag.getMaterial()).name(CC.AQUA + tag.getName()).lore(
+                    CC.SEPARATOR,
                     CC.AQUA + "Tag: " + CC.WHITE + tag.getTag(),
                     CC.AQUA + "Description: " + CC.WHITE + tag.getDescription(),
-                    CC.SCOREBOARD_SEPARATOR,
-                    "&7ID: " + tag.getId()
-            ).build();
+                    CC.AQUA + "ID: " + CC.WHITE + tag.getId(),
+                    CC.SEPARATOR,
+                    CC.YELLOW + "Click to manage this tag."
+            );
+            return builder.build();
         }
 
         @Override
         public int getSlot() {
             return 0;
+        }
+
+        @Override
+        public void onClick(Player player, int slot, ClickType clickType) {
+            super.onClick(player, slot, clickType);
+            PlayerTagBuilder builder = tag.toBuilder();
+            new ManageTagMenu(instance, builder, new ManageTagProcess(builder, player)).open(player);
         }
     }
 }

@@ -1,14 +1,13 @@
 package net.octopvp.octocore.paper.utils.runnable.runnables;
 
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.common.object.redis.JedisAction;
+import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
-import net.octopvp.octocore.paper.utils.menu.MenuManager;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -56,7 +55,7 @@ public class DataUpdateRunnable implements Runnable{
             playerDataChain.addProperty("adminChatAlerts", playerData.isAdminChatAlerts());
             playerDataChain.addProperty("reportAlerts", playerData.isReportAlerts());
 
-            playerDataChain.addProperty("allTags",OctoCore.getGson().toJson(playerData.getAllowedTags()));
+            playerDataChain.addProperty("allTags", OctoCore.getGson().toJson(playerData.getAllowedTagsID()));
 
             playerDataChain.addProperty("permissions",OctoCore.getGson().toJson(playerData.getAllEffectivePermissions()));
 

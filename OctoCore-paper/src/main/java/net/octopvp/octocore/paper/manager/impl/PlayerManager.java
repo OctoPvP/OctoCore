@@ -10,9 +10,6 @@ import com.viaversion.viaversion.api.Via;
 import io.sentry.Sentry;
 import io.sentry.SentryEvent;
 import io.sentry.SentryLevel;
-import io.sentry.protocol.SentryException;
-import io.sentry.protocol.SentryStackFrame;
-import io.sentry.protocol.SentryStackTrace;
 import io.sentry.protocol.User;
 import lombok.Getter;
 import net.octopvp.octocore.common.object.AlertType;
@@ -37,7 +34,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +45,7 @@ public class PlayerManager extends Manager {
     private static MongoCollection<Document> pdataCollection = null;
     private static MongoCollection<Document> backupCollection = null;
     @Getter
-    private static Map<UUID, PlayerData> playerProfiles = new ConcurrentHashMap<>();
+    private static final Map<UUID, PlayerData> playerProfiles = new ConcurrentHashMap<>();
     private static final JsonWriterSettings settings = JsonWriterSettings.builder()
             .int64Converter((value, writer) -> writer.writeNumber(value.toString()))
             .build();
@@ -102,7 +102,10 @@ public class PlayerManager extends Manager {
                 completableFuture.complete(data);
             });
         } else {
-            completableFuture.complete(OctoCore.getGson().fromJson(getProfileJsonOnlineorOffline(name), PlayerData.class));
+            String json = getProfileJsonOnlineorOffline(name);
+            if (json == null)
+                completableFuture.complete(null);
+            completableFuture.complete(OctoCore.getGson().fromJson(json, PlayerData.class));
         }
         return completableFuture;
     }

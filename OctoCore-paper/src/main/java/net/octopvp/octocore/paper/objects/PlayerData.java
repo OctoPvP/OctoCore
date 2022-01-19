@@ -10,7 +10,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.object.*;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
@@ -18,6 +17,7 @@ import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
+import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.menus.grant.GrantProcedure;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishHistory;
@@ -50,34 +50,36 @@ public class PlayerData {
     private double dataVersion = 0.0;
     @SerializedName("_id")
     private String _id; //for mongodb _id field (quick and dirty way)
-    private boolean frozen,nicked = false,authEnabled = false, vanished = false, joinVanished = false,customColorEnabled = false;
+    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false;
     private String customColor;
     private transient boolean fullyJoined = false;
     private transient int lastDataSave = 0;
-    private long coins = 0,lastLoaded,lastLogin,xp = 0,firstJoin = System.currentTimeMillis(),lastSave = System.currentTimeMillis();
+    private long coins = 0, lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis();
     private String nick,
             lastKnownName = "<unknown>",
             nickPrefix,
             nickColor,
             name = lastKnownName,
             lowerName = name.toLowerCase(),
-            server,authSecret,lastSeenServer = "Unknown",rankName = "default",
-    lastSeen;
-    private HashedAddress lastAuthedIp = new HashedAddress(""),lastSeenIp = new HashedAddress("");
+            server, authSecret, lastSeenServer = "Unknown", rankName = "default",
+            lastSeen;
+    private HashedAddress lastAuthedIp = new HashedAddress(""), lastSeenIp = new HashedAddress("");
     private transient String lastMessage; //only applies to this server for spam prot (maybe :))
     private List<String> metaDataList = new ArrayList<>();
-    private Map<String,String> metaData = new ConcurrentHashMap<>();
+    private Map<String, String> metaData = new ConcurrentHashMap<>();
     private RankType rankType = RankType.DEFAULT; //player's rank type, defaults to PLAYER (not meant for permission managment)
     private WorldTime worldTime = WorldTime.DAY;
-    private PlayerTag tag = null,nickTag = null;
-    private int /**playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/playTime = 0;
-    private List<PlayerTag> allowedTags = new ArrayList<>();
+    private PlayerTag tag = null, nickTag = null;
+    private int /**playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/
+            playTime = 0;
+    private HashSet<UUID> allowedTagsID = new HashSet<>();
+    private transient Set<PlayerTag> allowedTags;
     private UUID nickUUID;
-    private ChatColor nameColor = ChatColor.GREEN,chatColor = ChatColor.GREEN;
+    private ChatColor nameColor = ChatColor.GREEN, chatColor = ChatColor.GREEN;
     private boolean nameColorBold = false, nameColorItalic = false;
 
     private boolean staffChatAlerts = true, adminChatAlerts = true, reportAlerts = true;
-    private boolean staffChat = false,adminChat = false,build = false;
+    private boolean staffChat = false, adminChat = false, build = false;
 
     private Set<Grant> grants = new HashSet<>();
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
@@ -90,7 +92,7 @@ public class PlayerData {
     private transient GrantProcedure grantProcedure = null;
     private transient Map<String, PermissionResult> cachedPermissions = new ConcurrentHashMap<>();
 
-    public PlayerData(UUID uuid,String name) {
+    public PlayerData(UUID uuid, String name) {
         this.uuid = uuid;
         this.lastLoaded = System.currentTimeMillis();
         this.lastKnownName = name;
@@ -102,7 +104,8 @@ public class PlayerData {
             this.lastSeenIp = new HashedAddress(player.getAddress().getHostName());
         onLoad();
     }
-    public void onLoad(Document... documents){
+
+    public void onLoad(Document... documents) {
         this.grants.removeIf(Objects::isNull);
         this.lastLoaded = System.currentTimeMillis();
 
@@ -112,28 +115,33 @@ public class PlayerData {
             loadNotes = new ArrayList<>();
         Document document = (documents.length == 1 ? documents[0] : PlayerManager.getProfileDocument(uuid));
     }
-    public void onSave(Player player){
-        if (player != null){
+
+    public void onSave(Player player) {
+        if (player != null) {
             this.lastSeen = DATE_FORMAT.format(new Date());
         }
     }
 
-    public void onJoin(Player player){
+    public void onJoin(Player player) {
         this.lastSeen = DATE_FORMAT.format(new Date());
         name = player.getName();
         lowerName = name.toLowerCase();
         lastKnownName = name;
     }
-    public Node getNode(String perm){
+
+    public Node getNode(String perm) {
         return nodes.stream().filter(node -> node.getPermission().equalsIgnoreCase(perm)).findFirst().orElse(null);
     }
-    public boolean nodeExists(String perm){
+
+    public boolean nodeExists(String perm) {
         return getNode(perm) != null;
     }
-    public void save(){
+
+    public void save() {
         PlayerManager.saveProfile(this);
     }
-    public String getFormattedName(boolean nicked,Player player){
+
+    public String getFormattedName(boolean nicked, Player player) {
         String prefix = getHighestRank().getPrefix();
         if (nicked)
             return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (tag != null ? " " + getTagString() : "");
@@ -144,45 +152,55 @@ public class PlayerData {
         return CC.translate(getHighestRank().getPrefix() + getNameColor() + " " + lastKnownName) + (tag != null ? " " + getTagString() : "");
          */
     }
-    public PlayerData addLoadNote(LoadNote note){
+
+    public PlayerData addLoadNote(LoadNote note) {
         this.loadNotes.add(note);
         return this;
     }
-    public String getCurrentPrefix(){
+
+    public String getCurrentPrefix() {
         return (isNicked() ? nickPrefix : getHighestRank().getPrefix());
     }
-    public String getCurrentColor(){
+
+    public String getCurrentColor() {
         return (isNicked() ? nickColor : getActualMainColor());
     }
-    public String getActualMainColor(){
+
+    public String getActualMainColor() {
         return (customColor != null &&
                 isCustomColorEnabled() ?
                 customColor :
                 getHighestRank().getColor().toString());
     }
-    public String getPrefixColorOrNull(){
+
+    public String getPrefixColorOrNull() {
         return (customColor != null && isCustomColorEnabled() ? customColor : null);
     }
+
     public boolean isOnline(String name) { // FIXME inverted this because its returning false even if they are online
         return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData ->
                 serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
                         .contains(name.toLowerCase())).findFirst().orElse(null) != null;
     }
-    public boolean isOnlineThisServer(){
+
+    public boolean isOnlineThisServer() {
         return Bukkit.getPlayer(uuid) != null;
     }
-    public boolean isOnline(){
+
+    public boolean isOnline() {
         return isOnline(name);
     }
-    public String getTagString(){
+
+    public String getTagString() {
         if (tag == null)
             return "";
-        if (isNicked()){
+        if (isNicked()) {
             return CC.D_GRAY + CC.ARROW_LEFT + getNickTag().getTag() + CC.D_GRAY + CC.ARROW_RIGHT;
         }
         return CC.D_GRAY + CC.ARROW_LEFT + getTag().getTag() + CC.D_GRAY + CC.ARROW_RIGHT;
     }
-    public boolean hasTag(String tagName){
+
+    public boolean hasTag(String tagName) {
         boolean a = false;
         for (PlayerTag playerTag : allowedTags) {
             if (playerTag.getName().equalsIgnoreCase(tagName)) {
@@ -192,14 +210,18 @@ public class PlayerData {
         }
         return a;
     }
-    public UUID getMainSkinUUID(){
+
+    public UUID getMainSkinUUID() {
         return (isNicked() ? nickUUID : uuid);
     }
-    public boolean isCustomColorEnabled(){
-        if (customColorEnabled){
+
+    public boolean isCustomColorEnabled() {
+        if (customColorEnabled) {
             return this.hasPermission(Permission.CUSTOM_COLOR.toString());
-        }return false;
+        }
+        return false;
     }
+
     public String getNameColor() {
         if (this.nameColor == null) {
             return this.getHighestRank().getDisplayColor();
@@ -215,9 +237,11 @@ public class PlayerData {
         }
         return this.nameColor.toString();
     }
+
     public List<Grant> getActiveGrants() {
         return this.grants.stream().filter(grant -> !grant.hasExpired() && RankManager.getRankById(grant.getRankId()) != null).collect(Collectors.toList());
     }
+
     public boolean hasRank(Rank rankData) {
         for (Grant grant : this.getActiveGrants()) {
             if (grant.getRankName().equalsIgnoreCase(rankData.getName())) {
@@ -226,53 +250,60 @@ public class PlayerData {
         }
         return false;
     }
-    public boolean isNon(){
+
+    public boolean isNon() {
         return this.getHighestRank().isDefaultRank(); //F
     }
-    public Rank getHighestRank(){
+
+    public Rank getHighestRank() {
         return this.getActiveGrants().stream().map(Grant::getRank)
                 .max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getDefaultRank());
     }
-    public Set<Node> getFinalNodes(){
+
+    public Set<Node> getFinalNodes() {
         Set<Node> nodes1 = new HashSet<>(nodes);
         for (Node finalNode : getHighestRank().getFinalNodes()) {
-            if (nodes1.stream().filter(node -> node.getPermission().equals(finalNode.getPermission())).findFirst().orElse( null) == null){ //node is not manually set
+            if (nodes1.stream().filter(node -> node.getPermission().equals(finalNode.getPermission())).findFirst().orElse(null) == null) { //node is not manually set
                 nodes1.add(finalNode);
             }
         }
         return nodes1;
     }
-    public boolean hasPermission(Node node){
+
+    public boolean hasPermission(Node node) {
         return hasPermission(node.getPermission());
     }
-    public boolean hasPermission(String perm){ //haha this is a laggy mess
+
+    public boolean hasPermission(String perm) { //haha this is a laggy mess
         PermissionResult cachedResult = cachedPermissions.get(perm);
-        if (cachedResult != null){
-            if (cachedResult.getTimestamp() + 600000 < System.currentTimeMillis()){ //10 minutes ttl
+        if (cachedResult != null) {
+            if (cachedResult.getTimestamp() + 600000 < System.currentTimeMillis()) { //10 minutes ttl
                 cachedPermissions.remove(perm);
-            }
-            else
+            } else
                 return cachedResult.allowed();
         }
-        PermissionResult result = PermissionCalculator.hasPermissionResult(perm,getFinalNodes());
-        cachedPermissions.put(perm,result);
+        PermissionResult result = PermissionCalculator.hasPermissionResult(perm, getFinalNodes());
+        cachedPermissions.put(perm, result);
         if (result.getReason() == PermissionReason.NOT_SET)
             return getHighestRank().hasPermission(perm);
         else return result.allowed();
     }
-    public PermissionResult getPermissionResult(String permission,String server){
-        return PermissionCalculator.hasPermissionResult(permission,getFinalNodes(),server);
-    }
-    public PermissionResult getPermissionResult(String permission){
-        return PermissionCalculator.hasPermissionResult(permission,getFinalNodes());
+
+    public PermissionResult getPermissionResult(String permission, String server) {
+        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes(), server);
     }
 
-    public void applyGrant(Grant grant){
+    public PermissionResult getPermissionResult(String permission) {
+        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes());
+    }
+
+    public void applyGrant(Grant grant) {
         grants.add(grant);
         if (Bukkit.getPlayer(uuid) != null)
             loadPerms(Bukkit.getPlayer(uuid));
         save();
     }
+
     public void loadPerms(Player player) {
         //Map<String,Boolean> bungeePermissions = new HashMap<>();
         Set<Node> bungeePermissions = new HashSet<>();
@@ -313,11 +344,13 @@ public class PlayerData {
         //        "global")); //TODO use nodes
         bungeePermissions.forEach(node -> RankManager.sendPermissionToBungee(player, player.getName(), node));
     }
-    public String getPrefix(){
+
+    public String getPrefix() {
         return CC.translate(getHighestRank().getPrefix(this.getPrefixColorOrNull()));
     }
-    public Map<String,ServerContext> getAllEffectivePermissions(){
-        Map<String,ServerContext> permissions = new HashMap<>();
+
+    public Map<String, ServerContext> getAllEffectivePermissions() {
+        Map<String, ServerContext> permissions = new HashMap<>();
         List<Grant> currentGrants = new ArrayList<>(this.grants);
         for (Grant grant : currentGrants) {
             if (grant.hasExpired()) continue;
@@ -336,9 +369,9 @@ public class PlayerData {
             }
         }
         Rank defaultRank = RankManager.getDefaultRank();
-        if (defaultRank != null){
+        if (defaultRank != null) {
             permissions.putAll(defaultRank.getAllEffectivePermissions());
-            defaultRank.getInheritedRanks().forEach(i ->{
+            defaultRank.getInheritedRanks().forEach(i -> {
                 Rank inherited = RankManager.getRankById(i);
                 if (inherited != null)
                     permissions.putAll(inherited.getAllEffectivePermissions());
@@ -347,14 +380,16 @@ public class PlayerData {
         permissions.putAll(this.getAllSetEffectivePermissions());
         return permissions;
     }
-    public String getDisplayName(){
+
+    public String getDisplayName() {
         if (nicked)
             return CC.translate(getCurrentColor() + getNickColor() + CC.R);
         else
             return CC.translate(getCurrentColor() + getName() + CC.R);
     }
-    public Map<String,ServerContext> getAllNegatedPermissions(){
-        Map<String,ServerContext> permissions = new HashMap<>();
+
+    public Map<String, ServerContext> getAllNegatedPermissions() {
+        Map<String, ServerContext> permissions = new HashMap<>();
         List<Grant> currentGrants = new ArrayList<>(this.grants);
         Iterator<Grant> grantIterator = currentGrants.iterator();
         while (grantIterator.hasNext()) {
@@ -371,9 +406,9 @@ public class PlayerData {
             }
         }
         Rank defaultRank = RankManager.getDefaultRank();
-        if (defaultRank != null){
+        if (defaultRank != null) {
             permissions.putAll(defaultRank.getNegatedPermissions());
-            defaultRank.getInheritedRanks().forEach(i ->{
+            defaultRank.getInheritedRanks().forEach(i -> {
                 Rank inherited = RankManager.getRankById(i);
                 if (inherited != null) permissions.putAll(inherited.getNegatedPermissions());
             });
@@ -381,25 +416,28 @@ public class PlayerData {
         permissions.putAll(getAllSetNegatedPermissions());
         return permissions;
     }
-    public Map<String,ServerContext> getAllSetEffectivePermissions(){
-        Map<String,ServerContext> a = new HashMap<>();
-        nodes.forEach(node ->{
+
+    public Map<String, ServerContext> getAllSetEffectivePermissions() {
+        Map<String, ServerContext> a = new HashMap<>();
+        nodes.forEach(node -> {
             if (hasPermission(node.getPermission()))
-                a.put(node.getPermission(),node.getServer());
+                a.put(node.getPermission(), node.getServer());
         });
         return a;
     }
-    public Map<String,ServerContext> getAllSetNegatedPermissions(){
-        Map<String,ServerContext> a = new HashMap<>();
-        nodes.forEach(node ->{
+
+    public Map<String, ServerContext> getAllSetNegatedPermissions() {
+        Map<String, ServerContext> a = new HashMap<>();
+        nodes.forEach(node -> {
             if (node.isNegated())
-                a.put(node.getPermission(),node.getServer());
+                a.put(node.getPermission(), node.getServer());
         });
         return a;
     }
-    public void clearPermCache(){
+
+    public void clearPermCache() {
         cachedPermissions.clear();
-        if (Bukkit.getPlayer(uuid) != null){
+        if (Bukkit.getPlayer(uuid) != null) {
             ByteArrayOutputStream b = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(b);
             try {
@@ -416,6 +454,7 @@ public class PlayerData {
             );
         }
     }
+
     public String getLastSeenAgo() {
         if (Bukkit.getPlayer(this.uuid) != null) return "Now";
 
@@ -428,11 +467,12 @@ public class PlayerData {
         return DateUtils.formatDateDiff(from, to) + " ago";
     }
 
-    public List<PunishHistory> getPunishmentsExecuted(){
+    public List<PunishHistory> getPunishmentsExecuted() {
         if (punishmentsExecuted == null) punishmentsExecuted = new ArrayList<>();
         return punishmentsExecuted;
     }
-    public void loadPunishmentsPerformed(){
+
+    public void loadPunishmentsPerformed() {
         this.punishmentsExecuted.clear();
         Stream.of(PunishmentType.values()).forEach(punishmentType -> {
             List<Document> punishments = this.getCollection(punishmentType).find(Filters.eq("addedBy", this.uuid.toString())).into(new ArrayList<>());
@@ -453,6 +493,7 @@ public class PlayerData {
             });
         });
     }
+
     private MongoCollection<Document> getCollection(PunishmentType punishmentType) {
         if (punishmentType == PunishmentType.BAN) {
             return PunishModule.getBans();
@@ -465,10 +506,45 @@ public class PlayerData {
         }
         return PunishModule.getWarns();
     }
-    public static enum SaveState {
-        SAVED,SAVING
+
+    public Set<PlayerTag> getAllowedTags() {
+        if (allowedTags == null) {
+            allowedTags = new HashSet<>();
+            if (allowedTagsID == null) {
+                allowedTagsID = new HashSet<>();
+                return allowedTags;
+            }
+            for (UUID id : allowedTagsID) {
+                PlayerTag tag = TagManager.getTag(id);
+                if (tag != null) allowedTags.add(tag);
+            }
+        }
+        return allowedTags;
     }
-    public static enum LoadNote {
+
+    public boolean hasTag(PlayerTag tag) {
+        return hasTag(tag.getId());
+    }
+
+    public boolean hasTag(UUID tagID) {
+        return allowedTagsID.contains(tagID);
+    }
+
+    public void addTag(PlayerTag tag) {
+        allowedTagsID.add(tag.getId());
+        allowedTags.add(tag);
+    }
+
+    public void removeTag(UUID tagID) {
+        allowedTagsID.remove(tagID);
+        allowedTags = null; // Reset cache
+    }
+
+    public enum SaveState {
+        SAVED, SAVING
+    }
+
+    public enum LoadNote {
 
     }
 

@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.utils.menu.menu;
 
 import lombok.Getter;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.menu.MenuManager;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
@@ -12,7 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
@@ -113,11 +115,12 @@ public abstract class PaginatedMenu extends Menu {
     }
 
     public int getPages(Player player) {
-        if (this.getPaginatedButtons(player).isEmpty()) {
+        List<Button> buttons = this.getPaginatedButtons(player);
+        if (buttons.isEmpty()) {
             return 1;
         }
         //return (int) Math.ceil(getPaginatedButtons(player).size() / (double) 27);
-        return (int) Math.ceil(getPaginatedButtons(player).size() / (double) getMaxPageItems());
+        return (int) Math.ceil(buttons.size() / (double) getMaxPageItems());
     }
 
     public abstract String getPagesTitle(Player player);
@@ -165,8 +168,10 @@ public abstract class PaginatedMenu extends Menu {
     }
 
     public class PaginatedPlaceholderButton extends PlaceholderButton {
-        private List<Integer> topslots = new ArrayList<>(), bottomslots = new ArrayList<>();
-        public PaginatedPlaceholderButton(List<Button> top,List<Button> bottom) {
+        private final List<Integer> topslots = new ArrayList<>();
+        private final List<Integer> bottomslots = new ArrayList<>();
+
+        public PaginatedPlaceholderButton(List<Button> top, List<Button> bottom) {
             for (Button button : top) {
                 topslots.add(button.getSlot());
                 if (button.getSlots() != null) {

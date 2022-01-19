@@ -1,12 +1,13 @@
 package net.octopvp.octocore.paper.command.impl.cosmetic;
 
 import com.google.gson.JsonObject;
+import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.menus.tag.GiveTagsMenu;
@@ -15,7 +16,6 @@ import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.objects.enums.DataUpdateReason;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.common.util.json.JsonChain;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -33,16 +33,16 @@ public class GiveTagCommand extends BaseCommand {
         if (args.length == 2)
             tag = args[1];
         if (OctoCore.getServerManager().isPlayerOnline(target)){
-            if (Bukkit.getPlayer(target) != null){
+            if (Bukkit.getPlayer(target) != null) {
                 //on this server
                 PlayerData profile = PlayerManager.getProfile(Bukkit.getPlayer(target).getUniqueId());
-                if (tag == ""){
+                if (tag == "") {
                     new GiveTagsMenu(profile).open(sender.getPlayer());
                     return CommandResult.SUCCESS;
                 }
                 PlayerTag tag1 = TagManager.getTagByName(tag);
-                if (!profile.getAllowedTags().contains(tag1))
-                    profile.getAllowedTags().add(tag1);
+                if (!profile.hasTag(tag1))
+                    profile.addTag(tag1);
                 sender.sendMessage(CC.GREEN + "Added tag " + tag1.getName() + " to " + target);
                 return CommandResult.SUCCESS;
             }else{
@@ -72,7 +72,7 @@ public class GiveTagCommand extends BaseCommand {
             }
             PlayerTag tag1 = TagManager.getTagByName(tag);
             if (!data.hasTag(tag1.getName()))
-                data.getAllowedTags().add(tag1);
+                data.addTag(tag1);
             data.save();
             sender.sendMessage(CC.GREEN + "Added tag " + tag1.getName() + " to " + target);
             return CommandResult.SUCCESS;

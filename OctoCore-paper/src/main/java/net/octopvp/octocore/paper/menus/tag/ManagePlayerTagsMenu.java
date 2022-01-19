@@ -2,12 +2,10 @@ package net.octopvp.octocore.paper.menus.tag;
 
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.manager.impl.TagManager;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
-import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
-import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -17,50 +15,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class ListTagsMenu extends PaginatedMenu {
-    private final Menu prev;
+public class ManagePlayerTagsMenu extends PaginatedMenu {
+    private final PlayerData data;
+
     @Override
     public String getPagesTitle(Player player) {
-        return "Tags";
+        return "Manage " + data.getName() + "'s Tags";
     }
 
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
-        for (PlayerTag tag : TagManager.getTags()) {
-            buttons.add(new TagButton(tag));
-        }
-        return buttons;
-    }
 
-    @Override
-    public Button getBackButton(Player player) {
-        return new BackButton() {
-            @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
-                prev.open(player);
-            }
-        };
+        return buttons;
     }
 
     @RequiredArgsConstructor
     private class TagButton extends Button {
+
         private final PlayerTag tag;
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(tag.getMaterial()).name(CC.AQUA + tag.getName()).lore(
-                    CC.SCOREBOARD_SEPARATOR,
+            ItemBuilder builder = new ItemBuilder(tag.getMaterial()).name(CC.AQUA + tag.getName()).lore(
+                    CC.SEPARATOR,
                     CC.AQUA + "Tag: " + CC.WHITE + tag.getTag(),
                     CC.AQUA + "Description: " + CC.WHITE + tag.getDescription(),
-                    CC.SCOREBOARD_SEPARATOR,
-                    "&7ID: " + tag.getId()
-            ).build();
+                    CC.AQUA + "ID: " + CC.WHITE + tag.getId(),
+                    CC.SEPARATOR,
+                    CC.YELLOW + "Shift-Right-Click to remove this tag."
+            );
+            return builder.build();
         }
 
         @Override
         public int getSlot() {
             return 0;
+        }
+
+        @Override
+        public void onClick(Player player, int slot, ClickType clickType) {
+            super.onClick(player, slot, clickType);
+            if (clickType == ClickType.SHIFT_RIGHT) {
+                data.removeTag(tag);
+            }
         }
     }
 }
