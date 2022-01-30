@@ -77,7 +77,7 @@ public class TagManager extends Manager {
     }
 
     public static PlayerTag getTag(UUID id) {
-        return tags.stream().filter(tag -> tag.getId().toString().equals(id.toString())).findFirst().orElse(null);
+        return tags.stream().filter(tag -> tag.getId().equals(id)).findFirst().orElse(null);
     }
 
     public static PlayerTag[] convertId(List<String> ids) {

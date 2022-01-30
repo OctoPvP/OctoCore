@@ -70,8 +70,8 @@ public class UnBlacklistCommand extends BaseCommand {
             jsonChain.addProperty("target", targetData.getPlayerName());
             jsonChain.addProperty("silent", punishment.isRemovedSilent());
             jsonChain.addProperty("reason", reason);
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
+            if (sender.isPlayer()) {
+                Player player = sender.getPlayer();
                 jsonChain.addProperty("senderDisplay", player.getDisplayName());
 
                 PlayerData playerData = PlayerManager.getData(player.getUniqueId());

@@ -71,8 +71,8 @@ public class UnBanCommand extends BaseCommand {
             punishment.setWhenRemoved(System.currentTimeMillis());
 
             JsonChain jsonChain = new JsonChain();
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
+            if (sender.isPlayer()) {
+                Player player = sender.getPlayer();
                 jsonChain.addProperty("senderDisplay", player.getDisplayName());
 
                 PlayerData playerData = PlayerManager.getData(player.getUniqueId());

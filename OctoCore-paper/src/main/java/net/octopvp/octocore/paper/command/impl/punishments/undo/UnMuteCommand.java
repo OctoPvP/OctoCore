@@ -70,8 +70,8 @@ public class UnMuteCommand extends BaseCommand {
             punishment.setWhenRemoved(System.currentTimeMillis());
 
             JsonChain jsonChain = new JsonChain().addProperty("sender", sender.getName()).addProperty("target", targetData.getPlayerName()).addProperty("silent", punishment.isRemovedSilent()).addProperty("reason", reason);
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
+            if (sender.isPlayer()) {
+                Player player = sender.getPlayer();
                 jsonChain.addProperty("senderDisplay", player.getDisplayName());
 
                 PlayerData playerData = PlayerManager.getPlayerData(player.getUniqueId());

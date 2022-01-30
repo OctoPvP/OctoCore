@@ -8,6 +8,7 @@ import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.objects.PlayerData;
+import net.octopvp.octocore.paper.utils.GsonSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -37,27 +38,28 @@ public class DataUpdateRunnable implements Runnable{
         for (PlayerData playerData : PlayerManager.getPlayerProfiles().values()) {
             if (playerData == null) continue;
             playerData.setLastDataSave(playerData.getLastDataSave() + 1);
-            if (playerData.getLastDataSave() > 120) //save every 2 mins
+            if (playerData.getLastDataSave() >= 120) //save every 2 mins
                 playerData.save();
             playerData.setPlayTime(playerData.getPlayTime() + 1); //increment playtime by 1 second
-            JsonChain playerDataChain = new JsonChain();
-            playerDataChain.addProperty("name", playerData.getName());
-            playerDataChain.addProperty("uuid", playerData.getUuid().toString());
-            playerDataChain.addProperty("server", OctoCore.getServerName());
-            playerDataChain.addProperty("rankName", playerData.getRankName());
-            playerDataChain.addProperty("lastSeen", playerData.getLastLogin());
-            playerDataChain.addProperty("firstJoined", playerData.getFirstJoin());
-            playerDataChain.addProperty("vanished", playerData.isVanished());
-            playerDataChain.addProperty("lastActivity", System.currentTimeMillis());
-            playerDataChain.addProperty("lastServer", OctoCore.getServerName());
-
-            playerDataChain.addProperty("staffChatAlerts", playerData.isStaffChatAlerts());
-            playerDataChain.addProperty("adminChatAlerts", playerData.isAdminChatAlerts());
-            playerDataChain.addProperty("reportAlerts", playerData.isReportAlerts());
-
-            playerDataChain.addProperty("allTags", OctoCore.getGson().toJson(playerData.getAllowedTagsID()));
-
-            playerDataChain.addProperty("permissions",OctoCore.getGson().toJson(playerData.getAllEffectivePermissions()));
+            Player player = Bukkit.getPlayer(playerData.getUuid());
+            String name = playerData.getName();
+            if (name == null && playerData.isOnline())
+                name = player.getName();
+            JsonChain playerDataChain = new JsonChain()
+                    .addProperty("name", name)
+                    .addProperty("uuid", playerData.getUuid().toString())
+                    .addProperty("server", OctoCore.getServerName())
+                    .addProperty("rankName", playerData.getRankName())
+                    .addProperty("lastSeen", playerData.getLastLogin())
+                    .addProperty("firstJoined", playerData.getFirstJoin())
+                    .addProperty("vanished", playerData.isVanished())
+                    .addProperty("lastActivity", System.currentTimeMillis())
+                    .addProperty("lastServer", OctoCore.getServerName())
+                    .addProperty("staffChatAlerts", playerData.isStaffChatAlerts())
+                    .addProperty("adminChatAlerts", playerData.isAdminChatAlerts())
+                    .addProperty("reportAlerts", playerData.isReportAlerts())
+                    .addProperty("allTags", GsonSerializer.serializeUUIDSet(playerData.getAllowedTagsID()))
+                    .addProperty("permissions", OctoCore.getGson().toJson(playerData.getAllEffectivePermissions()));
 
             OctoCore.getInstance().getRedisData().write(JedisAction.PLAYER_DATA, playerDataChain.get());
         }

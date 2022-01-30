@@ -101,8 +101,8 @@ public class BanIPCommand extends BaseCommand {
             punishment.execute(sender);
             punishment.save();
 
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
+            if (sender.isPlayer()) {
+                Player player = sender.getPlayer();
                 PlayerData playerData = PlayerManager.getPlayerData(player.getUniqueId());
                 if (playerData == null) {
                     return;

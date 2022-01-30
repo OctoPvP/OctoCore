@@ -108,6 +108,7 @@ public class PlayerData {
     public void onLoad(Document... documents) {
         this.grants.removeIf(Objects::isNull);
         this.lastLoaded = System.currentTimeMillis();
+        this.name = requestName();
 
         if (cachedPermissions == null)
             cachedPermissions = new ConcurrentHashMap<>();
@@ -127,6 +128,11 @@ public class PlayerData {
         name = player.getName();
         lowerName = name.toLowerCase();
         lastKnownName = name;
+    }
+
+
+    public String requestName() {
+        return Bukkit.getOfflinePlayer(uuid).getName();
     }
 
     public Node getNode(String perm) {
@@ -178,6 +184,8 @@ public class PlayerData {
     }
 
     public boolean isOnline(String name) { // FIXME inverted this because its returning false even if they are online
+        if (Bukkit.getPlayer(uuid) != null)
+            return true;
         return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData ->
                 serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
                         .contains(name.toLowerCase())).findFirst().orElse(null) != null;
@@ -531,6 +539,10 @@ public class PlayerData {
     }
 
     public void addTag(PlayerTag tag) {
+        if (allowedTagsID == null) allowedTagsID = new HashSet<>();
+        if (allowedTags == null) {
+            allowedTags = getAllowedTags();
+        }
         allowedTagsID.add(tag.getId());
         allowedTags.add(tag);
     }

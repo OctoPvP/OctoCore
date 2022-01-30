@@ -125,7 +125,7 @@ public enum Lang {
     JOIN_BLACKLISTED("&4%1 &ctried to join but is &4BLACKLISTED&c. &7(&c%2&7)"),
 
     PUNISHMENT_SILENT("&f[&7Silent&f] "),
-    PUNISHMENT_UNDO("&c%1&c was %4 by %3&c for &7%4"),
+    PUNISHMENT_UNDO("&c%1&c was un-%2 by %3&c for &7%4"),
     //PUNISHMENT_UNDO("$s%1$m was $sun%2 $mby $s%3 $mfor $v%4"),
     PUNISHMENT_DO("&c%1&c was &4%2&c by %3 for &7%4"),
     //PUNISHMENT_DO("$s%1&c was $s%2 &cby $s%3 &cfor $v%4"),

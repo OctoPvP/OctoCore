@@ -24,7 +24,7 @@ public class WarnCommand extends BaseCommand {
 
     @Command(name = "warn", permission = Permission.PUNISHMENT_WARN)
     public CommandResult execute(Sender sender, String[] args) {
-        
+
 
         Tasks.runAsync(() -> {
             if (args.length < 2) {
@@ -97,8 +97,8 @@ public class WarnCommand extends BaseCommand {
             punishment.execute(sender);
             punishment.save();
 
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
+            if (sender.isPlayer()) {
+                Player player = sender.getPlayer();
                 PlayerData playerData = PlayerManager.getPlayerData(player.getUniqueId());
                 if (playerData == null) {
                     return;

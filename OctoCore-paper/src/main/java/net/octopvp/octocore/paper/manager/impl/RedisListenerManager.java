@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RedisListenerManager extends Manager {
-    private static TriMap<RedisHandler,JedisAction,Method,Object> handlers = new HashTriMap<>();
+    private static final TriMap<RedisHandler, JedisAction, Method, Object> handlers = new HashTriMap<>();
     @Override
     public void init(OctoCore plugin) {
-        for (Class clazz : ReflectionUtils.getClassesInPackage(plugin, "net.octopvp.octocore.paper.listeners.redis")) {
+        for (Class<?> clazz : ReflectionUtils.getClassesInPackage(plugin, "net.octopvp.octocore.paper.listeners.redis")) {
             registerHandler(clazz);
         }
         Logger.debug("Successfully registered %1 handlers.", handlers.size());

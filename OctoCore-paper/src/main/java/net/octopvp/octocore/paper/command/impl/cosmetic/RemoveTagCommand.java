@@ -50,7 +50,7 @@ public class RemoveTagCommand extends BaseCommand {
             sender.sendMessage(CC.GREEN + "Found " + target + "'s data!");
             PlayerTag tag1 = TagManager.getTagByName(tag);
             if (data.hasTag(tag1))
-                data.removeTag(tag1);
+                data.removeTag(tag1.getId());
             PlayerManager.saveProfile(data);
             sender.sendMessage(CC.GREEN + "Added tag " + tag1.getName() + " to " + target);
             return CommandResult.SUCCESS;

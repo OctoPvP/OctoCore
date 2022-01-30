@@ -3,16 +3,14 @@ package net.octopvp.octocore.paper.objects;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.ServerContext;
-import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.json.JsonChain;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.octopvp.octocore.paper.OctoCore;
 
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -52,8 +50,7 @@ public class GlobalPlayer {
         if (negatedPermissions.containsKey(permission))
             return negatedPermissions.get(permission).getServer().equalsIgnoreCase(server) || negatedPermissions.get(permission).isGlobal();
         if (permissions.containsKey(permission)){
-            if (permissions.get(permission).getServer().equalsIgnoreCase(server) || permissions.get(permission).isGlobal())
-                return true;
+            return permissions.get(permission).getServer().equalsIgnoreCase(server) || permissions.get(permission).isGlobal();
         }
         return false;
     }
@@ -67,8 +64,7 @@ public class GlobalPlayer {
         if (permissionNegated(permission))
             return false;
         if (permissions.containsKey(permission)) {
-            if (permissions.get(permission).isThisServer())
-                return true;
+            return permissions.get(permission).isThisServer();
         }
         return false;
     }

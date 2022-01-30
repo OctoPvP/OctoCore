@@ -26,18 +26,20 @@ import java.util.List;
 
 public class CreateRankManagePermissionsMenu extends PaginatedMenu {
     @SneakyThrows
-    public CreateRankManagePermissionsMenu(Menu previousMenu, RankBuilder builder, ReturnableTypeCallback<RankBuilder> callback){
+    public CreateRankManagePermissionsMenu(Menu previousMenu, RankBuilder builder, ReturnableTypeCallback<RankBuilder> callback) {
         this.previousMenu = previousMenu;
         this.builder = builder;
         this.callback = callback;
         this.startBuilder = builder.clone();
     }
+
     private final Menu previousMenu;
     private final RankBuilder builder;
-    private ReturnableTypeCallback<RankBuilder> callback;
+    private final ReturnableTypeCallback<RankBuilder> callback;
 
-    private RankBuilder startBuilder;
-    private Menu prev = this;
+    private final RankBuilder startBuilder;
+    private final Menu prev = this;
+
     @Override
     public String getPagesTitle(Player player) {
         return CC.GREEN + "Manage Permissions";
@@ -46,7 +48,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
-        builder.getRank().getNodes().forEach(node ->buttons.add(new PermissionButton(node)));
+        builder.getRank().getNodes().forEach(node -> buttons.add(new PermissionButton(node)));
         return buttons;
     }
 
@@ -67,15 +69,18 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
 
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
-        return Lists.newArrayList(new AddPermissionButton(),new DoneButton());
+        return Lists.newArrayList(new AddPermissionButton(), new DoneButton());
     }
+
     private int i = 0;
+
     @AllArgsConstructor
-    private class PermissionButton extends Button{
+    private class PermissionButton extends Button {
         private Node node;
+
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.WOOL).durability(WoolUtils.convertChatColorToWoolData(node.isAllowed() ? ChatColor.GREEN : ChatColor.RED)).name((node.isAllowed() ? ChatColor.GREEN : ChatColor.RED) + node.getPermission()).lore(CC.SEPARATOR,CC.AQUA + "Allowed: " + (node.isAllowed() ? CC.GREEN + "Yes" : CC.RED + "No"),CC.SEPARATOR,CC.YELLOW + "Left-Click to edit!",CC.RED + "Shift-Right Click to Remove!").build();
+            return new ItemBuilder(Material.WOOL).durability(WoolUtils.convertChatColorToWoolData(node.isAllowed() ? ChatColor.GREEN : ChatColor.RED)).name((node.isAllowed() ? ChatColor.GREEN : ChatColor.RED) + node.getPermission()).lore(CC.SEPARATOR, CC.AQUA + "Allowed: " + (node.isAllowed() ? CC.GREEN + "Yes" : CC.RED + "No"), CC.SEPARATOR, CC.YELLOW + "Left-Click to edit!", CC.RED + "Shift-Right Click to Remove!").build();
         }
 
         @Override
@@ -85,11 +90,11 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
-            if (clickType == ClickType.SHIFT_RIGHT){
+            if (clickType == ClickType.SHIFT_RIGHT) {
                 builder.unsetPermission(node);
                 update(player);
-            }else if (clickType == ClickType.LEFT){
-                new EditPermissionMenu(new NodeBuilder(node),false,prev,(nodeBuilder) ->{
+            } else if (clickType == ClickType.LEFT) {
+                new EditPermissionMenu(new NodeBuilder(node), false, prev, (nodeBuilder) -> {
                     node = nodeBuilder.build(); //TODO make sure that this sets it correctly
                     SoundUtil.playPing(player);
                     player.sendMessage(CC.GREEN + "Done!");
@@ -98,6 +103,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
             }
         }
     }
+
     @AllArgsConstructor
     private class AddPermissionButton extends Button {
         @Override
@@ -113,13 +119,14 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
         @Override
         public void onClick(Player player, int slot, ClickType clickType) {
             super.onClick(player, slot, clickType);
-            new EditPermissionMenu(new NodeBuilder(),true,prev,(nodeBuilder) ->{
+            new EditPermissionMenu(new NodeBuilder(), true, prev, (nodeBuilder) -> {
                 builder.addNode(nodeBuilder.build());
                 player.sendMessage(CC.GREEN + "Done!");
                 open(player);
             }).open(player);
         }
     }
+
     private class DoneButton extends Button {
 
         @Override

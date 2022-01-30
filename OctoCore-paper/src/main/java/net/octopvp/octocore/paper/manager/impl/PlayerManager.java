@@ -312,6 +312,7 @@ public class PlayerManager extends Manager {
         profile.setXp(0);
         profile.setFrozen(false);
         profile.setLastLogin(System.currentTimeMillis());
+        profile.setName(name);
         Logger.debug("Serializing profile");
         String json = serializeProfileToJson(profile);
         Document doc = Document.parse(json);
