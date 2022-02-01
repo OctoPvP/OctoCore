@@ -4,15 +4,13 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.conversations.tag.FilterConversation;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
-import net.octopvp.octocore.paper.utils.menu.MenuManager;
+import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
-import net.octopvp.octocore.paper.utils.menu.buttons.Button;
-import net.octopvp.octocore.common.object.Permission;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ public class ListMenu extends PaginatedMenu {
     public Button getBackButton(Player player) {
         return new BackButton() {
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 player.closeInventory();
             }
         };
@@ -81,7 +79,7 @@ public class ListMenu extends PaginatedMenu {
             }
 
             @Override
-            public void onClick(Player player, int slot, ClickType clickType) {
+            public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 player.sendMessage("asdf");
             }
         });
@@ -90,7 +88,7 @@ public class ListMenu extends PaginatedMenu {
     private int i = 0;
     private int a = 0;
     public class PlayerButton extends Button{
-        private Player p;
+        private final Player p;
         public PlayerButton(Player pl){
             p = pl;
         }
@@ -113,8 +111,8 @@ public class ListMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             player.chat("/punish " + p.getName());
         }
     }
@@ -139,14 +137,14 @@ public class ListMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot,ClickType clickType) {
-            if (filtered1){
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            if (filtered1) {
                 player.closeInventory();
                 new ListMenu().open(player);
                 return;
             }
             player.getOpenInventory().close();
-            OctoCore.getConversationFactory().withFirstPrompt(new FilterConversation((s)->{
+            OctoCore.getConversationFactory().withFirstPrompt(new FilterConversation((s) -> {
                 if (s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("exit"))
                     new ListMenu().open(player);
                 else new ListMenu(s).open(player);

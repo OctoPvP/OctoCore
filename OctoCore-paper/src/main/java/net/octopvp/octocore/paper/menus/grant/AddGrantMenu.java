@@ -3,30 +3,29 @@ package net.octopvp.octocore.paper.menus.grant;
 import lombok.AllArgsConstructor;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
+import net.octopvp.octocore.paper.objects.GrantProcedure;
+import net.octopvp.octocore.paper.objects.GrantProcedureState;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
-import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.PlayerInfoButton;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class AddGrantMenu extends PaginatedMenu {
     private final PlayerData data;
@@ -73,7 +72,7 @@ public class AddGrantMenu extends PaginatedMenu {
     public Button getBackButton(Player player) {
         return new BackButton() {
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 previous.open(player);
             }
         };
@@ -102,13 +101,13 @@ public class AddGrantMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             if (rankData.isDefaultRank()) {
                 player.sendMessage(Lang.GRANT_CANT_GRANT_DEFAULT.getMsg());
                 return;
             }
             if (playerData.hasRank(rankData)) {
-                player.sendMessage(Lang.GRANT_ALREADY_HAS_RANK.getMsg(playerData.getName(),rankData.getName()));
+                player.sendMessage(Lang.GRANT_ALREADY_HAS_RANK.getMsg(playerData.getName(), rankData.getName()));
                 return;
             }
             PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());

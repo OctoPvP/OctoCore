@@ -12,6 +12,7 @@ import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.stream.IntStream;
 public class ChoosePermissionInheritedMenu extends Menu {
     private RankBuilder rankBuilder;
     private final Consumer<RankBuilder> callback;
-    private Menu instance = this;
+    private final Menu instance = this;
 
     public ChoosePermissionInheritedMenu(RankBuilder rankBuilder, Consumer<RankBuilder> callback) {
         this.rankBuilder = rankBuilder;
@@ -46,7 +47,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new CreateRankManagePermissionsMenu(instance, rankBuilder, (b) -> {
                 rankBuilder = b;
                 open(player);
@@ -68,7 +69,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new InheritedRanksMenu(instance, rankBuilder, (b) -> {
                 rankBuilder = b;
                 open(player);
@@ -82,7 +83,7 @@ public class ChoosePermissionInheritedMenu extends Menu {
     public Button getBackButton(Player player) {
         return new BackButton() {
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 callback.accept(rankBuilder);
             }
 
@@ -105,8 +106,8 @@ public class ChoosePermissionInheritedMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             SoundUtil.playPing(player);
             callback.accept(rankBuilder);
         }

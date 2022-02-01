@@ -10,9 +10,9 @@ import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -45,7 +45,7 @@ public class MainGrantMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new GrantsMenu(playerData).open(player);
         }
     }
@@ -62,7 +62,7 @@ public class MainGrantMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new AddGrantMenu(playerData).open(player);
         }
     }

@@ -1,12 +1,8 @@
-package net.octopvp.octocore.paper.menus.grant;
+package net.octopvp.octocore.paper.objects;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.manager.impl.RankManager;
-import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.DateUtils;
 
 import java.util.UUID;

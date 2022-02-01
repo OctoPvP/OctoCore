@@ -11,6 +11,7 @@ import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class ListTagsMenu extends PaginatedMenu {
     public Button getBackButton(Player player) {
         return new BackButton() {
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 prev.open(player);
             }
         };

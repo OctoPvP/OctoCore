@@ -14,6 +14,7 @@ import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -67,8 +68,8 @@ public class ManagePlayerTagsMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             if (clickType == ClickType.SHIFT_RIGHT) {
                 OctoCore.getInstance().getRedisData().write(JedisAction.TAG_UPDATE, new JsonChain().addProperty("uuid", data.getUuid().toString()).addProperty("type", "REMOVE_TAG").addProperty("tagId", tag.getId().toString()).get());
                 SoundUtil.playPing(player);
@@ -91,7 +92,7 @@ public class ManagePlayerTagsMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new GiveTagsMenu(data).open(player);
         }
     }

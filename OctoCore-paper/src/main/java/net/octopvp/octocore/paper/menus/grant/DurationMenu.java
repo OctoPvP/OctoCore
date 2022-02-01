@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.objects.GrantProcedureState;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.DateUtils;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
@@ -18,6 +19,7 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class DurationMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
             if (playerData == null) {
                 player.closeInventory();
@@ -78,8 +80,8 @@ public class DurationMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            callback(data,player);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            callback(data, player);
         }
 
         private void callback(PlayerData playerData, Player player){

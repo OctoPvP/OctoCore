@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.objects.maps.tri;
 
-import net.octopvp.octocore.paper.objects.QuadConsumer;
+import net.octopvp.octocore.common.object.QuadConsumer;
 import org.javatuples.Triplet;
 
 import java.util.ConcurrentModificationException;

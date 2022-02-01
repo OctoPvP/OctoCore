@@ -13,6 +13,7 @@ import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -64,8 +65,8 @@ public class ManageTagsMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             PlayerTagBuilder builder = tag.toBuilder();
             new ManageTagMenu(instance, builder, new ManageTagProcess(builder, player)).open(player);
         }

@@ -11,6 +11,7 @@ import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class ManageTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
             process.build();
         }
@@ -104,7 +105,7 @@ public class ManageTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
             process.setNameProcess((builder) -> open(player));
         }
@@ -131,9 +132,9 @@ public class ManageTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
-            process.setDescProcess((builder)->{
+            process.setDescProcess((builder) -> {
                 open(player);
             });
         }
@@ -160,9 +161,9 @@ public class ManageTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
-            process.setTagProcess((builder)->{
+            process.setTagProcess((builder) -> {
                 this.tag = builder.getTag();
                 open(player);
             });
@@ -191,7 +192,7 @@ public class ManageTagMenu extends Menu {
         }
 
         @Override
-        public void clicked(Player player, int slot, ClickType clickType) {
+        public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             prev.open(player);
         }
     }
@@ -203,7 +204,7 @@ public class ManageTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.getOpenInventory().close();
         }
     }
@@ -221,8 +222,8 @@ public class ManageTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             TagManager.deleteTag(builder.getBase().getId());
             player.sendMessage(CC.GREEN + "Deleted tag " + builder.getBase().getId());
             player.closeInventory();

@@ -8,6 +8,7 @@ import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class NextPageButton extends Button {
     }
 
     @Override
-    public void onClick(Player player, int slot, ClickType clickType) {
+    public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
         if (!(this.paginatedMenu.getPage() < this.paginatedMenu.getPages(player))) {
             player.sendMessage(CC.RED + "You're already on the last page!");
             return;

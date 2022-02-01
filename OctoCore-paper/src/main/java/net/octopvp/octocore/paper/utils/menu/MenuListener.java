@@ -1,8 +1,7 @@
 package net.octopvp.octocore.paper.utils.menu;
 
-import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
+import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,7 +26,7 @@ public class MenuListener implements Listener {
         if (!menu.hasSlot(event.getSlot())) return;
 
         Button slot = menu.getSlot(event.getSlot());
-        slot.onClick(player, event.getSlot(), event.getClick());
+        slot.onClick(player, event.getSlot(), event.getClick(), event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -39,7 +38,7 @@ public class MenuListener implements Listener {
 
         if (menu == null) return;
         menu.onCloseReserved(player);
-        menu.onClose(player,event);
+        menu.onClose(player, event);
         MenuManager.getOpenedMenus().remove(player.getUniqueId());
     }
 }

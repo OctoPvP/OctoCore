@@ -13,6 +13,7 @@ import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class GiveTagsMenu extends PaginatedMenu {
                     .lore(CC.SEPARATOR, "",
                             CC.AQUA + "Tag: " + tag.getTag(),
                             CC.AQUA + "Description: " + tag.getDescription(), "",
-                            CC.SEPARATOR, (!data.hasTag(tag) ? CC.RED + "Click to give " + data.getName() + " this tag!" : CC.RED + data.getName() + " already has this tag!")).build();
+                            CC.SEPARATOR, (!data.hasTag(tag) ? CC.YELLOW + "Click to give " + data.getName() + " this tag!" : CC.RED + data.getName() + " already has this tag!")).build();
         }
 
         @Override
@@ -61,10 +62,15 @@ public class GiveTagsMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            if (data.hasTag(tag)) {
+                player.sendMessage(CC.RED + "That player already has that tag!");
+                return;
+            }
             SoundUtil.playPing(player);
             OctoCore.getInstance().getRedisData().write(JedisAction.TAG_UPDATE, new JsonChain().addProperty("uuid", data.getUuid().toString()).addProperty("type", "GIVE_TAG").addProperty("tagId", tag.getId().toString()).get());
             player.closeInventory();
+            player.sendMessage(CC.GREEN + "Gave " + data.getName() + " the " + tag.getName() + " tag!");
         }
     }
 }

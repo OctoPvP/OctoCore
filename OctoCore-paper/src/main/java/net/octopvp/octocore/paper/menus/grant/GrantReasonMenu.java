@@ -3,9 +3,9 @@ package net.octopvp.octocore.paper.menus.grant;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.conversations.QuestionConversation;
 import net.octopvp.octocore.paper.conversations.grant.GrantReasonConversation;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.objects.GrantProcedureState;
 import net.octopvp.octocore.paper.objects.GrantReason;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
@@ -13,11 +13,9 @@ import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Material;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -61,9 +59,9 @@ public class GrantReasonMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             PlayerData sendData = PlayerManager.getProfile(player.getUniqueId());
-            if (sendData == null || !playerData.isOnlineThisServer()){
+            if (sendData == null || !playerData.isOnlineThisServer()) {
                 player.closeInventory();
                 return;
             }
@@ -87,12 +85,13 @@ public class GrantReasonMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             prompt(player);
             player.closeInventory();
         }
-        public void prompt(Player player){
-            OctoCore.getConversationFactory().withFirstPrompt(new GrantReasonConversation(playerData,player)).withLocalEcho(false).buildConversation(player).begin();
+
+        public void prompt(Player player) {
+            OctoCore.getConversationFactory().withFirstPrompt(new GrantReasonConversation(playerData, player)).withLocalEcho(false).buildConversation(player).begin();
         }
     }
 }

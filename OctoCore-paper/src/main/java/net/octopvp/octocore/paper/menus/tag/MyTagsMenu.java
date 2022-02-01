@@ -11,14 +11,15 @@ import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyTagsMenu extends PaginatedMenu { //TODO back button
-    private List<PlayerTag> currentTags;
-    private Player player;
+    private final List<PlayerTag> currentTags;
+    private final Player player;
 
     public MyTagsMenu(List<PlayerTag> currentTags, Player player) {
         for (PlayerTag currentTag : currentTags) {
@@ -56,7 +57,7 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
 
     public class MenuBackButton extends BackButton {
         @Override
-        public void clicked(Player player, int slot, ClickType clickType) {
+        public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new MainTagMenu().open(player);
         }
     }
@@ -65,7 +66,7 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
 
     public class TagButton extends Button {
         private boolean a;
-        private PlayerTag tag;
+        private final PlayerTag tag;
 
         public TagButton(PlayerTag tag, Player player) {
             this.tag = tag;
@@ -92,7 +93,7 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             SoundUtil.playPing(player);
             if (a) {
                 a = false;

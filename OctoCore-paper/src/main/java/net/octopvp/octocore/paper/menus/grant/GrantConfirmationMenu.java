@@ -10,6 +10,7 @@ import net.octopvp.octocore.paper.api.events.PlayerGrantEvent;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
+import net.octopvp.octocore.paper.objects.GrantProcedure;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.builders.GrantBuilder;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
@@ -23,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ public class GrantConfirmationMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             PlayerData senderData = PlayerManager.getData(player);
             GrantProcedure grantProcedure = senderData.getGrantProcedure();
             Rank targetRank = RankManager.getRankByName(grantProcedure.getRankName());
@@ -72,9 +74,9 @@ public class GrantConfirmationMenu extends Menu {
             Grant grant = builder.build();
             Logger.debug("Grant: " + grant.toString());
             player.closeInventory();
-            PlayerGrantEvent event = new PlayerGrantEvent(grant, grantProcedure.getTargetData(), player);
-            Bukkit.getPluginManager().callEvent(event);
-            if (event.isCancelled()) return;
+            PlayerGrantEvent grantEvent = new PlayerGrantEvent(grant, grantProcedure.getTargetData(), player);
+            Bukkit.getPluginManager().callEvent(grantEvent);
+            if (grantEvent.isCancelled()) return;
             Tasks.runAsync(() -> {
                 AtomicReference<PlayerData> targetData = new AtomicReference<>(grantProcedure.getTargetData());
                 Logger.debug("Applying Grant To: " + targetData.get());
@@ -138,7 +140,7 @@ public class GrantConfirmationMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
         }
     }

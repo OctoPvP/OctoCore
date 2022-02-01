@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.conversations.grant;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.menus.grant.GrantConfirmationMenu;
-import net.octopvp.octocore.paper.menus.grant.GrantProcedureState;
+import net.octopvp.octocore.paper.objects.GrantProcedureState;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.conversations.ConversationContext;

@@ -17,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu {
             }
 
             @Override
-            public void onClick(Player player, int slot, ClickType clickType) {
+            public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 new StaffHistoryMenu(playerData).open(player);
             }
 
@@ -112,7 +113,7 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
             Tasks.run(() -> player.performCommand("check " + punishHistory.getTarget()));
         }
@@ -145,7 +146,7 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             activeOnly = !activeOnly;
             update(player);
             SoundUtil.playSound(player, Sound.ORB_PICKUP);

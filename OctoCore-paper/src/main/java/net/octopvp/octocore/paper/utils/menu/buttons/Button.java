@@ -1,9 +1,11 @@
 package net.octopvp.octocore.paper.utils.menu.buttons;
 
+import net.octopvp.octocore.common.object.QuadConsumer;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
@@ -15,7 +17,7 @@ public abstract class Button {
     public abstract ItemStack getItem(Player player);
     public abstract int getSlot();
 
-    public void onClick(Player player, int slot, ClickType clickType) {
+    public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
 
     }
 
@@ -46,6 +48,26 @@ public abstract class Button {
             @Override
             public int getSlot() {
                 return slot;
+            }
+        };
+    }
+
+    public static Button from(int slot, ItemStack item, QuadConsumer<Player, Integer, ClickType, InventoryClickEvent> consumer) {
+        return new Button() {
+            @Override
+            public ItemStack getItem(Player player) {
+                return item;
+            }
+
+            @Override
+            public int getSlot() {
+                return slot;
+            }
+
+            @Override
+            public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+                super.onClick(player, slot, clickType, event);
+                consumer.accept(player, slot, clickType, event);
             }
         };
     }

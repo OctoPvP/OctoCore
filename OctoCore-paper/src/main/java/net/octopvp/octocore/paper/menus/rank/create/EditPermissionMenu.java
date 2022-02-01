@@ -3,10 +3,10 @@ package net.octopvp.octocore.paper.menus.rank.create;
 import com.google.common.collect.Lists;
 import lombok.SneakyThrows;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.permissions.NodeBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.conversations.QuestionConversation;
 import net.octopvp.octocore.paper.manager.impl.FilterManager;
-import net.octopvp.octocore.common.util.permissions.NodeBuilder;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
@@ -17,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class EditPermissionMenu extends Menu {
     public Button getBackButton(Player player) {
         return new BackButton() {
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 previous.open(player);
             }
 
@@ -89,15 +90,16 @@ public class EditPermissionMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             SoundUtil.playPing(player);
             player.closeInventory();
             prompt(player);
         }
-        private void prompt(Player player){
-            OctoCore.getConversationFactory().withFirstPrompt(new QuestionConversation(Lang.EDIT_PERMISSION_SET_PERMISSION.getMsg(),(s)->{
-                if (s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("exit")){
+
+        private void prompt(Player player) {
+            OctoCore.getConversationFactory().withFirstPrompt(new QuestionConversation(Lang.EDIT_PERMISSION_SET_PERMISSION.getMsg(), (s) -> {
+                if (s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("exit")) {
                     open(player);
                     player.sendMessage(CC.RED + "Canceled!");
                     return Prompt.END_OF_CONVERSATION;
@@ -138,8 +140,8 @@ public class EditPermissionMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             nodeBuilder.setAllowed(!nodeBuilder.isAllowed());
             player.sendMessage(Lang.EDIT_PERMISSION_SET_ALLOWED.getMsg(nodeBuilder.isAllowed() ? CC.GREEN + "True" : CC.RED + "False"));
             update(player);
@@ -158,9 +160,9 @@ public class EditPermissionMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
-            new ChooseServerScopeMenu((context) ->{
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
+            new ChooseServerScopeMenu((context) -> {
                 nodeBuilder.setScope(context);
                 open(player);
             }).open(player);
@@ -179,9 +181,9 @@ public class EditPermissionMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
-            if (nodeBuilder.getPermission().equalsIgnoreCase("Not Set")){
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
+            if (nodeBuilder.getPermission().equalsIgnoreCase("Not Set")) {
                 player.sendMessage(CC.RED + "Please set a permission!");
                 SoundUtil.playError(player);
                 return;

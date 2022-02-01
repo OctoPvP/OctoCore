@@ -553,6 +553,27 @@ public class GlobalSubscription implements JedisHandle {
         }
         if (payload == JedisAction.EXECUTE_PUNISHMENT) {
             PunishmentRedisHandler.onExecPunishment(data);
+            return;
+        }
+        if (payload == JedisAction.TAG_UPDATE) {
+            System.out.println("Tag update: " + OctoCore.getGson().toJson(data));
+            String type = data.get("type").getAsString();
+            Player player = Bukkit.getPlayer(UUID.fromString(data.get("uuid").getAsString()));
+            UUID tagId = UUID.fromString(data.get("tagId").getAsString());
+            if (player == null || tagId == null) return;
+            PlayerTag tag = TagManager.getTag(tagId);
+            PlayerData playerData = PlayerManager.getData(player);
+            switch (type) {
+                case "GIVE_TAG": {
+                    playerData.addTag(tag);
+                    return;
+                }
+                case "REMOVE_TAG": {
+                    playerData.removeTag(tagId);
+                    return;
+                }
+            }
+            return;
         }
     }
 }

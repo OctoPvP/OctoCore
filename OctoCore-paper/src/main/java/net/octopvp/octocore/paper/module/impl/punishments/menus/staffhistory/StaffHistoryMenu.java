@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class StaffHistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             int all = PunishHistory.getPunishments(playerData, PunishmentType.BAN, false).size();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.BAN).open(player);
@@ -114,7 +115,7 @@ public class StaffHistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             int all = PunishHistory.getPunishments(playerData, PunishmentType.BLACKLIST, false).size();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.BLACKLIST).open(player);
@@ -145,7 +146,7 @@ public class StaffHistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             int all = PunishHistory.getPunishments(playerData, PunishmentType.MUTE, false).size();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.MUTE).open(player);
@@ -176,7 +177,7 @@ public class StaffHistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             int all = PunishHistory.getPunishments(playerData, PunishmentType.KICK, false).size();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.KICK).open(player);
@@ -207,7 +208,7 @@ public class StaffHistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             int all = PunishHistory.getPunishments(playerData, PunishmentType.WARN, false).size();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.WARN).open(player);

@@ -3,18 +3,18 @@ package net.octopvp.octocore.paper.menus.tag;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
+import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
-import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class MainTagMenu extends Menu {
-    private Menu instance = this;
+    private final Menu instance = this;
     @Override
     public List<Button> getButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
@@ -51,7 +51,7 @@ public class MainTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             SoundUtil.playError(player);
             player.sendMessage(Lang.FEATURE_NOT_IMPLEMENTED.getMsg());
         }
@@ -69,7 +69,7 @@ public class MainTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new ListTagsMenu(instance).open(player);
         }
     }
@@ -86,15 +86,15 @@ public class MainTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             PlayerData data = PlayerManager.getProfile(player.getUniqueId());
             List<PlayerTag> tags = new ArrayList<>();
-            data.getAllowedTags().forEach(tag ->{
+            data.getAllowedTags().forEach(tag -> {
                 if (tag != null)
                     tags.add(tag);
             });
             Logger.debug("Tags: " + tags.size() + " | " + tags);
-            new MyTagsMenu(tags,player).open(player);
+            new MyTagsMenu(tags, player).open(player);
         }
     }
     public class PlaceHolderButton extends PlaceholderButton {
@@ -116,7 +116,7 @@ public class MainTagMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.getOpenInventory().close();
         }
     }

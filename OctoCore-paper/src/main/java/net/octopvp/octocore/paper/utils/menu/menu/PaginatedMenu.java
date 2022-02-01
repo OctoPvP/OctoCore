@@ -9,6 +9,7 @@ import net.octopvp.octocore.paper.utils.menu.buttons.impl.NextPageButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.PreviousPageButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -90,8 +91,8 @@ public abstract class PaginatedMenu extends Menu {
             }
 
             @Override
-            public void onClick(Player player, int s, ClickType clickType) {
-                button.onClick(player, s, clickType);
+            public void onClick(Player player, int s, ClickType clickType, InventoryClickEvent event) {
+                button.onClick(player, s, clickType, event);
             }
 
             @Override

@@ -21,6 +21,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class HistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<Punishment> punishments = playerData.getPunishData().getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
             if (punishments.size() == 0) return;
             new BansMenu(playerData.getPunishData()).open(player);
@@ -116,7 +117,7 @@ public class HistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<Punishment> punishments = playerData.getPunishData().getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
             if (punishments.size() == 0) return;
             new BlacklistsMenu(playerData.getPunishData()).open(player);
@@ -148,7 +149,7 @@ public class HistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<Punishment> punishments = playerData.getPunishData().getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
             if (punishments.size() == 0) return;
             new MutesMenu(playerData.getPunishData()).open(player);
@@ -178,7 +179,7 @@ public class HistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<Punishment> punishments = playerData.getPunishData().getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
             if (punishments.size() == 0) return;
             new KicksMenu(playerData.getPunishData()).open(player);
@@ -209,7 +210,7 @@ public class HistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<Punishment> punishments = playerData.getPunishData().getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
             if (punishments.size() == 0) return;
             new WarnsMenu(playerData.getPunishData()).open(player);
@@ -250,7 +251,7 @@ public class HistoryMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             if (clickType == ClickType.RIGHT) {
                 new PotentialAltsMenu(playerData).open(player);
             } else if (clickType == ClickType.LEFT) {

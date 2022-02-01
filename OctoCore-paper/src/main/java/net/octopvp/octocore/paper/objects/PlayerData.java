@@ -18,7 +18,6 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
-import net.octopvp.octocore.paper.menus.grant.GrantProcedure;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishHistory;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;

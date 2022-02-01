@@ -11,19 +11,18 @@ import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
-import net.octopvp.octocore.paper.utils.menu.buttons.impl.FilterButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class InheritedRanksMenu extends PaginatedMenu {
     private boolean showOnlyInherited = false;
@@ -39,10 +38,10 @@ public class InheritedRanksMenu extends PaginatedMenu {
 
     private final Menu previousMenu;
     private final RankBuilder builder;
-    private ReturnableTypeCallback<RankBuilder> callback;
+    private final ReturnableTypeCallback<RankBuilder> callback;
 
-    private RankBuilder startBuilder;
-    private Menu prev = this;
+    private final RankBuilder startBuilder;
+    private final Menu prev = this;
 
 
     @Override
@@ -76,7 +75,7 @@ public class InheritedRanksMenu extends PaginatedMenu {
     public Button getBackButton(Player player) {
         return new BackButton() {
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 previousMenu.open(player);
             }
         };
@@ -111,7 +110,6 @@ public class InheritedRanksMenu extends PaginatedMenu {
                     CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(), CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(), CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
                     CC.SEPARATOR,
                     CC.YELLOW + (builder.getRank().getInheritedRanks().contains(rankData.getRankId()) ? CC.RED + "Click to remove inherited rank" : "Click to add inherited rank"));
-            ;
             return item.build();
         }
 
@@ -121,7 +119,7 @@ public class InheritedRanksMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             if (builder.getRank().getInheritedRanks().contains(rankData.getRankId())) {
                 builder.removeInheritedRank(rankData.getRankId());
             } else {

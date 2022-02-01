@@ -4,10 +4,8 @@ import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
@@ -22,6 +20,7 @@ import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -33,8 +32,9 @@ public class GrantsMenu extends PaginatedMenu {
     public GrantsMenu(PlayerData data){
         this.targetData = data;
     }
+
     private boolean all = true;
-    private Comparator<Grant> GRANT_COMPARATOR = Comparator.comparingLong(Grant::getAddedAt).reversed();
+    private final Comparator<Grant> GRANT_COMPARATOR = Comparator.comparingLong(Grant::getAddedAt).reversed();
     @Override
     public String getPagesTitle(Player player) {
         return CC.GREEN + targetData.getName() + "'s grants";
@@ -77,7 +77,7 @@ public class GrantsMenu extends PaginatedMenu {
         return new BackButton() {
 
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 new MainGrantMenu(targetData).open(player);
             }
 
@@ -180,7 +180,7 @@ public class GrantsMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             Rank rank = grant.getRank();
             if (rank != null && rank.isDefaultRank()) return;
             if (grant.hasExpired()) return;
@@ -190,7 +190,7 @@ public class GrantsMenu extends PaginatedMenu {
             if (!targetData.isOnline()) {
                 targetData.save();
             }
-            OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE,new JsonChain().addProperty("name",targetData.getName()).addProperty("add",false).addProperty("tochange",OctoCore.getGson().toJson(grant)).get());
+            OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonChain().addProperty("name", targetData.getName()).addProperty("add", false).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
             update(player);
         }
     }

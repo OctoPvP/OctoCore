@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class TagAdminMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new ManageTagsMenu(instance).open(player);
         }
     }
@@ -72,7 +73,7 @@ public class TagAdminMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new ManageTagMenu(player).open(player);
         }
     }
@@ -90,7 +91,7 @@ public class TagAdminMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
             new QuestionConversation(CC.GREEN + "Please enter the username of the player.", (answer) -> {
                 PlayerManager.getOfflineData(answer).thenAcceptAsync(data -> {
@@ -126,7 +127,7 @@ public class TagAdminMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.getOpenInventory().close();
         }
     }

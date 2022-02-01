@@ -19,6 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class ServerMenu extends PaginatedMenu {
     public Button getBackButton(Player player) {
         return new BackButton() {
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
 
             }
         };
@@ -72,7 +73,7 @@ public class ServerMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             SoundUtil.playPing(player);
             callback.accept(new ServerContext(serverData.getServerName()));
         }
@@ -92,7 +93,7 @@ public class ServerMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             SoundUtil.playPing(player);
             callback.accept(ServerContext.global());
         }
@@ -110,13 +111,14 @@ public class ServerMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             prompt(player);
         }
-        private void prompt(Player player){
-            OctoCore.getConversationFactory().withFirstPrompt(new QuestionConversation(Lang.CUSTOM_SERVER_SCOPE.getMsg(),(s)->{
-                if (s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("exit")){
+
+        private void prompt(Player player) {
+            OctoCore.getConversationFactory().withFirstPrompt(new QuestionConversation(Lang.CUSTOM_SERVER_SCOPE.getMsg(), (s) -> {
+                if (s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("exit")) {
                     open(player);
                     player.sendMessage(CC.RED + "Cancelled!");
                     return Prompt.END_OF_CONVERSATION;

@@ -9,6 +9,7 @@ import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class TestMenu2 extends Menu {
             }
 
             @Override
-            public void onClick(Player player, int slot, ClickType clickType) {
+            public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 new TestMenu3().open(player);
             }
         });
@@ -43,7 +44,7 @@ public class TestMenu2 extends Menu {
     public Button getBackButton(Player player) {
         return new BackButton() {
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 getPrevious().open(player);
             }
         };

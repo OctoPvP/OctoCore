@@ -19,6 +19,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
     public Button getBackButton(Player player) {
         return new BackButton() {
             @Override
-            public void clicked(Player player, int slot, ClickType clickType) {
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                 previousMenu.open(player);
             }
 
@@ -89,7 +90,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             if (clickType == ClickType.SHIFT_RIGHT) {
                 builder.unsetPermission(node);
                 update(player);
@@ -117,8 +118,8 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             new EditPermissionMenu(new NodeBuilder(), true, prev, (nodeBuilder) -> {
                 builder.addNode(nodeBuilder.build());
                 player.sendMessage(CC.GREEN + "Done!");
@@ -140,8 +141,8 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
-            super.onClick(player, slot, clickType);
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            super.onClick(player, slot, clickType, event);
             callback.call(builder);
         }
     }

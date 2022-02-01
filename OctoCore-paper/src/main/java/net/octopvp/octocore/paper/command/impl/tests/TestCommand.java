@@ -1,39 +1,29 @@
 package net.octopvp.octocore.paper.command.impl.tests;
 
 import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerContext;
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.command.Completer;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
-import net.octopvp.octocore.paper.menus.TestMenu;
-import net.octopvp.octocore.paper.menus.grant.AddGrantMenu;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.objects.builders.GrantBuilder;
-import net.octopvp.octocore.paper.objects.enums.RankType;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
-import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.utils.menu.MenuManager;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
-import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
-import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.permission.PermissionUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TestCommand extends BaseCommand {
@@ -73,7 +63,7 @@ public class TestCommand extends BaseCommand {
                 }
 
                 @Override
-                public void onClick(Player player, int slot, ClickType clickType) {
+                public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                     player.sendMessage("ez");
                 }
             });
@@ -101,7 +91,7 @@ public class TestCommand extends BaseCommand {
                     }
 
                     @Override
-                    public void onClick(Player player, int slot, ClickType clickType) {
+                    public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
                         player.sendMessage(finalI + "");
                     }
                 });

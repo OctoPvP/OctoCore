@@ -22,6 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -29,9 +30,9 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class EditRankMenu extends Menu {
-    private String name;
+    private final String name;
     private RankBuilder builder;
-    private boolean edit;
+    private final boolean edit;
 
     public EditRankMenu(String name) {
         this.name = name;
@@ -105,7 +106,7 @@ public class EditRankMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
             prompt(player);
         }
@@ -154,7 +155,7 @@ public class EditRankMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
             OctoCore.getConversationFactory().withFirstPrompt(new QuestionConversation(Lang.CREATE_RANK_SET_PREFIX.getMsg(), (s) -> {
                 if (s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("close")) {
@@ -182,7 +183,7 @@ public class EditRankMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new ChooseColorMenu(builder, (b) -> {
                 builder = b;
                 open(player);
@@ -202,7 +203,7 @@ public class EditRankMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
             prompt(player);
         }
@@ -244,7 +245,7 @@ public class EditRankMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             SoundUtil.playPing(player);
             if (clickType == ClickType.LEFT) {
                 if (builder.getRank().getRankType() == RankType.DEFAULT) // Default -> Donator -> Staff
@@ -265,7 +266,7 @@ public class EditRankMenu extends Menu {
         }
     }
 
-    private Menu instance = this;
+    private final Menu instance = this;
 
     private class ServerButton extends Button {
         @Override
@@ -279,7 +280,7 @@ public class EditRankMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             SoundUtil.playPing(player);
             new ServerMenu((server) -> {
                 if (server == null)
@@ -302,7 +303,7 @@ public class EditRankMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             new ChoosePermissionInheritedMenu(builder, (b) -> {
                 builder = b;
                 open(player);
@@ -322,7 +323,7 @@ public class EditRankMenu extends Menu {
         }
 
         @Override
-        public void onClick(Player player, int slot, ClickType clickType) {
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             if (!edit)
                 RankManager.createNewRank(builder);
             else builder.build().save();
