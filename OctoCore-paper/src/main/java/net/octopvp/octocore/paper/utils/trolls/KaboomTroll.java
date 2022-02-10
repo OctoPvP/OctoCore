@@ -1,19 +1,26 @@
 package net.octopvp.octocore.paper.utils.trolls;
 
+import lombok.Getter;
 import net.octopvp.octocore.paper.objects.Utils;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class KaboomTroll implements Troll{
+public class KaboomTroll implements Troll {
+    @Getter
+    private static final KaboomTroll instance = new KaboomTroll();
+
+    private KaboomTroll() {
+    }
+
     @Override
     public void activate(Player player) {
         int a = Utils.getBlockAbove(player);
         if (a >= 65) { //no blocks obstructing
             kaboom(player);
             return;
-        }else {
-            kaboom(player,a - 1);
+        } else {
+            kaboom(player, a - 1);
         }
     }
     public static void kaboom(Player player){

@@ -3,10 +3,17 @@ package net.octopvp.octocore.paper.utils.trolls;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.entity.Player;
 
-public class DemoMenuTroll implements Troll{
+public class DemoMenuTroll implements Troll {
+    @Getter
+    private static final DemoMenuTroll instance = new DemoMenuTroll();
+
+    private DemoMenuTroll() {
+    }
+
     @SneakyThrows
     @Override
     public void activate(Player player) {

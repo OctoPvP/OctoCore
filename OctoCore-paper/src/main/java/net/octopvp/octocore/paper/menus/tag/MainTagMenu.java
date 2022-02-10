@@ -102,14 +102,15 @@ public class MainTagMenu extends Menu {
         @Override
         public int[] getSlots() {
             List<Integer> a = new ArrayList<>();
-            IntStream.range(0,27).forEach((i)->{
+            IntStream.range(0, 27).forEach((i) -> {
                 if (!(i == 11 || i == 13 || i == 15 || i == 22))
                     a.add(i);
             });
-            return a.stream().mapToInt(i ->i).toArray();
+            return a.stream().mapToInt(i -> i).toArray();
         }
     }
-    public class CloseButton extends net.octopvp.octocore.paper.utils.menu.buttons.impl.CloseButton{
+
+    private class CloseButton extends net.octopvp.octocore.paper.utils.menu.buttons.impl.CloseButton {
         @Override
         public int getSlot() {
             return 22;

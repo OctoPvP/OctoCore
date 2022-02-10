@@ -1,6 +1,5 @@
 package net.octopvp.octocore.paper.menus.tag;
 
-import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.conversations.QuestionConversation;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -30,11 +29,6 @@ public class TagAdminMenu extends Menu {
         buttons.add(new CreateTagButton());
         buttons.add(new ManagePlayerTagsButton());
         return buttons;
-    }
-
-    @Override
-    public Button getCloseButton() {
-        return new CloseButton();
     }
 
     @Override
@@ -112,23 +106,10 @@ public class TagAdminMenu extends Menu {
         public int[] getSlots() {
             List<Integer> a = new ArrayList<>();
             IntStream.range(0, 27).forEach((i) -> {
-                if (!(i == 11 || i == 13 || i == 15 || i == 22))
+                if (!(i == 11 || i == 13 || i == 15))
                     a.add(i);
             });
             return a.stream().mapToInt(i -> i).toArray();
-        }
-    }
-
-    @RequiredArgsConstructor
-    public class CloseButton extends net.octopvp.octocore.paper.utils.menu.buttons.impl.CloseButton {
-        @Override
-        public int getSlot() {
-            return 22;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            player.getOpenInventory().close();
         }
     }
 }

@@ -197,7 +197,7 @@ public class ManageTagMenu extends Menu {
         }
     }
 
-    public class CloseButton extends net.octopvp.octocore.paper.utils.menu.buttons.impl.CloseButton {
+    private class CloseButton extends net.octopvp.octocore.paper.utils.menu.buttons.impl.CloseButton {
         @Override
         public int getSlot() {
             return 22;
