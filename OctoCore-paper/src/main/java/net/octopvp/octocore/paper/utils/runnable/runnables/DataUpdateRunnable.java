@@ -2,8 +2,10 @@ package net.octopvp.octocore.paper.utils.runnable.runnables;
 
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.redis.JedisAction;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataPacket;
+import net.octopvp.octocore.paper.database.redis.packets.server.ServerUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
@@ -29,12 +31,12 @@ public class DataUpdateRunnable implements Runnable{
             } while (playerDataIterator.hasNext());
         } catch (Exception ignored) { }
 
-        JsonChain jsonChain = new JsonChain().addProperty("maxPlayers", Bukkit.getMaxPlayers()).addProperty("whitelisted", Bukkit.hasWhitelist());
+        JsonBuilder jsonChain = new JsonBuilder().addProperty("maxPlayers", Bukkit.getMaxPlayers()).addProperty("whitelisted", Bukkit.hasWhitelist());
         jsonChain.addProperty("name", OctoCore.getServerName()).addProperty("tps1", Bukkit.getServer().spigot().getTPS()[0]).addProperty("tps2", Bukkit.getServer().spigot().getTPS()[1]);
         jsonChain.addProperty("tps3", Bukkit.getServer().spigot().getTPS()[2]).addProperty("lastTick", System.currentTimeMillis()).addProperty("players", StringUtils.getStringFromList(Bukkit.getOnlinePlayers().stream()
                 .map(Player::getName).collect(Collectors.toList())));
 
-        OctoCore.getInstance().getRedisData().write(JedisAction.SERVER_DATA, jsonChain.get());
+        new ServerUpdatePacket(jsonChain).send();
         for (PlayerData playerData : PlayerManager.getPlayerProfiles().values()) {
             if (playerData == null) continue;
             playerData.setLastDataSave(playerData.getLastDataSave() + 1);
@@ -45,7 +47,7 @@ public class DataUpdateRunnable implements Runnable{
             String name = playerData.getName();
             if (name == null && playerData.isOnline())
                 name = player.getName();
-            JsonChain playerDataChain = new JsonChain()
+            JsonBuilder playerDataChain = new JsonBuilder()
                     .addProperty("name", name)
                     .addProperty("uuid", playerData.getUuid().toString())
                     .addProperty("server", OctoCore.getServerName())
@@ -61,7 +63,7 @@ public class DataUpdateRunnable implements Runnable{
                     .addProperty("allTags", GsonSerializer.serializeUUIDSet(playerData.getAllowedTagsID()))
                     .addProperty("permissions", OctoCore.getGson().toJson(playerData.getAllEffectivePermissions()));
 
-            OctoCore.getInstance().getRedisData().write(JedisAction.PLAYER_DATA, playerDataChain.get());
+            new PlayerDataPacket(playerDataChain).send();
         }
     }
 }

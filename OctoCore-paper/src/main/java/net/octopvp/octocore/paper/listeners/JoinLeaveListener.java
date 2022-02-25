@@ -2,7 +2,7 @@ package net.octopvp.octocore.paper.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.redis.JedisAction;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
@@ -114,7 +114,7 @@ public class JoinLeaveListener implements Listener {
                                             activeBan.getNiceExpire(),activeBan.getNiceDuration()) : Lang.PERM_ENTRY),
                                     true)).toString()
             );
-            OctoCore.getInstance().getRedisData().write(JedisAction.PUNISHED_JOIN,new JsonChain().addProperty("name",name).addProperty("type", "Banned").addProperty("more",true).addProperty("expires",activeBan.getNiceExpire()).addProperty("addedBy",activeBan.getAddedByName()).get());
+            OctoCore.getInstance().getRedisData().write(JedisAction.PUNISHED_JOIN,new JsonBuilder().addProperty("name",name).addProperty("type", "Banned").addProperty("more",true).addProperty("expires",activeBan.getNiceExpire()).addProperty("addedBy",activeBan.getAddedByName()).get());
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
             return;
         }
@@ -147,7 +147,7 @@ public class JoinLeaveListener implements Listener {
                                             activeBan.getNiceExpire(),activeBan.getNiceDuration()) : Lang.PERM_ENTRY),
                                     true)).toString()
             );
-            OctoCore.getInstance().getRedisData().write(JedisAction.PUNISHED_JOIN,new JsonChain().addProperty("name",name).addProperty("type", "IP-Banned").addProperty("more",true).addProperty("expires",activeBan.getNiceExpire()).addProperty("addedBy",activeBan.getAddedByName()).get());
+            OctoCore.getInstance().getRedisData().write(JedisAction.PUNISHED_JOIN,new JsonBuilder().addProperty("name",name).addProperty("type", "IP-Banned").addProperty("more",true).addProperty("expires",activeBan.getNiceExpire()).addProperty("addedBy",activeBan.getAddedByName()).get());
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
         }
         if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED){

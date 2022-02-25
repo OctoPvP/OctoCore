@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.PlayerGrantEvent;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -97,13 +97,13 @@ public class GrantConfirmationMenu extends Menu {
                     player.sendMessage(Lang.GRANT_PERM_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getEnteredReason()));
                     if (globalPlayer != null)
                         globalPlayer.sendMessage(Lang.GRANT_PERM_GRANTED_TO.getMsg(targetRank.getDisplayName()));
-                    OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_ALERT, new JsonChain().addProperty("message", Lang.GRANT_ADMIN_ALERT_PERM.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getEnteredReason())).get());
+                    OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_ALERT, new JsonBuilder().addProperty("message", Lang.GRANT_ADMIN_ALERT_PERM.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getEnteredReason())).get());
                 } else {
                     player.sendMessage(Lang.GRANT_TEMP_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getNiceDuration()));
                     if (globalPlayer != null) {
                         globalPlayer.sendMessage(Lang.GRANT_TEMP_GRANTED_TO.getMsg(targetRank.getDisplayName(), grantProcedure.getNiceDuration()));
                     }
-                    OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_ALERT, new JsonChain().addProperty("message", Lang.GRANT_ADMIN_ALERT_TEMP.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getNiceDuration(), grantProcedure.getEnteredReason())).get());
+                    OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_ALERT, new JsonBuilder().addProperty("message", Lang.GRANT_ADMIN_ALERT_TEMP.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getNiceDuration(), grantProcedure.getEnteredReason())).get());
                 }
                 grant.setActive(true);
                 if (Bukkit.getPlayer(targetData.get().getUuid()) != null) {
@@ -113,7 +113,7 @@ public class GrantConfirmationMenu extends Menu {
                     data.save();
                 }else{
                     if (globalPlayer != null) {
-                        OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonChain().addProperty("name", targetData.get().getName()).addProperty("add", true).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
+                        OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonBuilder().addProperty("name", targetData.get().getName()).addProperty("add", true).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
                     } else {
                         PlayerData data = PlayerManager.getProfile(targetData.get().getUuid());
                         if (data == null)

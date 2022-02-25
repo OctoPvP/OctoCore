@@ -2,26 +2,26 @@ package net.octopvp.octocore.common.util.json;
 
 import com.google.gson.JsonObject;
 
-public class JsonChain {
+public class JsonBuilder {
 
     private JsonObject json = new JsonObject();
 
-    public JsonChain addProperty(String property, String value) {
+    public JsonBuilder addProperty(String property, String value) {
         this.json.addProperty(property, value);
         return this;
     }
 
-    public JsonChain addProperty(String property, Number value) {
+    public JsonBuilder addProperty(String property, Number value) {
         this.json.addProperty(property, value);
         return this;
     }
 
-    public JsonChain addProperty(String property, Boolean value) {
+    public JsonBuilder addProperty(String property, Boolean value) {
         this.json.addProperty(property, value);
         return this;
     }
 
-    public JsonChain addProperty(String property, Character value) {
+    public JsonBuilder addProperty(String property, Character value) {
         this.json.addProperty(property, value);
         return this;
     }

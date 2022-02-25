@@ -10,6 +10,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.object.ServerInfo;
+import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
 import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
@@ -34,6 +35,10 @@ public final class OctoCoreWaterfall extends Plugin {
     @Getter
     @Setter
     private BungeeRedisData redisData;
+
+    @Getter
+    @Setter
+    private RedisHandler redisHandler;
 
     @Override
     public void onEnable() {

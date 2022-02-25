@@ -6,7 +6,7 @@ import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
@@ -251,7 +251,7 @@ public class PunishmentRedisHandler {
     public static void altKick(String alts, String name, String type, boolean permanent, String niceDuration, String reason, String sender) {
         StringUtils.getListFromString(alts).forEach(alt -> {
             OctoCore.getInstance().getRedisData().write(JedisAction.EXECUTE_ALT_KICK,
-                    new JsonChain()
+                    new JsonBuilder()
                             .addProperty("alt", name)
                             .addProperty("type", type)
                             .addProperty("permanent", permanent)

@@ -34,7 +34,6 @@ public class Tasks <T> {
     }
 
     public static void runAsync( Runnable callable) {
-
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         } Bukkit.getScheduler().runTaskAsynchronously(plugin, callable);

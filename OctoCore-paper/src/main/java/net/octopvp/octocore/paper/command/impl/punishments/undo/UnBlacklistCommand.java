@@ -2,7 +2,7 @@ package net.octopvp.octocore.paper.command.impl.punishments.undo;
 
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.redis.JedisAction;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
@@ -65,7 +65,7 @@ public class UnBlacklistCommand extends BaseCommand {
             punishment.setRemovedSilent(silent);
             punishment.setWhenRemoved(System.currentTimeMillis());
 
-            JsonChain jsonChain = new JsonChain();
+            JsonBuilder jsonChain = new JsonBuilder();
             jsonChain.addProperty("sender", sender.getName());
             jsonChain.addProperty("target", targetData.getPlayerName());
             jsonChain.addProperty("silent", punishment.isRemovedSilent());

@@ -8,10 +8,11 @@ import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.object.PermUpdateType;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseManager;
+import net.octopvp.octocore.paper.database.redis.packets.other.ReloadRanksPacket;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
@@ -129,7 +130,7 @@ public class RankManager extends Manager {
     }
 
     public static void broadcastReload() {
-        OctoCore.getInstance().getRedisData().write(JedisAction.RELOAD_RANKS, new JsonChain().get());
+        new ReloadRanksPacket().send();
     }
 
     public static void delete(Rank rank) {

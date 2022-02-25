@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 
 public class GlobalSubscription implements JedisHandle {
     //TODO bungeecord fallback
-    private static final ArrayList<UUID> alreadyCreating = new ArrayList<>();
 
     private static final OctoCore plugin = OctoCore.getInstance();
 
@@ -51,198 +50,7 @@ public class GlobalSubscription implements JedisHandle {
             return;
         }
         RedisListenerManager.handleMessage(payload, data);
-        if (payload == JedisAction.SERVER_DATA) {
-            ServerData serverData = OctoCore.getServerManager().getServerData(data.get("name").getAsString());
-            if (serverData == null) {
-                serverData = OctoCore.getServerManager().createServerData(data.get("name").getAsString());
-            }
-            serverData.setWhitelisted(data.get("whitelisted").getAsBoolean());
-            serverData.setLastTick(data.get("lastTick").getAsLong());
-            serverData.setMaxPlayers(data.get("maxPlayers").getAsInt());
-            serverData.setRecentTps(new double[]{data.get("tps1").getAsDouble(), data.get("tps2").getAsDouble(), data.get("tps3").getAsDouble()});
-            serverData.setNames(StringUtils.getListFromString(data.get("players").getAsString()));
-            Iterator iterator = OctoCore.getServerManager().getConnectedServers().iterator();
-            while (iterator.hasNext()) {
-                ServerData connectedServer = (ServerData) iterator.next();
-                boolean time = System.currentTimeMillis() - connectedServer.getLastTick() >= 15000L, removed = false;
-                if (time || connectedServer.isSafelyStopped()) {
-                    iterator.remove();
-                    removed = true;
-                }
-                if (removed && !connectedServer.isSafelyStopped()) {
-                    if (OctoCore.isMaster()) { //make sure these kind of broadcasts only happen on master
-                        JsonObject jsonObject = new JsonObject();
-                        jsonObject.addProperty("message", CC.RED + connectedServer.getServerName() + " may have crashed (has not responded for 15 seconds)");
-                        plugin.getRedisData().write(JedisAction.ADMIN_ALERT, jsonObject);
-                    }
-                }
-            }
 
-            //Iterator<GlobalPlayer> globalPlayers = serverData.getOnlinePlayers().iterator();
-            for (Iterator<GlobalPlayer> globalPlayerIterator = serverData.getOnlinePlayers().iterator(); globalPlayerIterator.hasNext(); ) { //fix ConcurrentModificationException -> https://stackoverflow.com/a/25131800
-                GlobalPlayer globalPlayer = globalPlayerIterator.next();
-
-                if (System.currentTimeMillis() - globalPlayer.getLastActivity() >= 5000L) {
-                    GlobalPlayerDestroyEvent event = new GlobalPlayerDestroyEvent(globalPlayer);
-                    plugin.getServer().getPluginManager().callEvent(event);
-                    if (!event.isCancelled()) {
-                        globalPlayerIterator.remove();
-                    }
-                }
-            }
-            /*
-            while (globalPlayers.hasNext()) {
-                GlobalPlayer globalPlayer = globalPlayers.next();
-
-                if (System.currentTimeMillis() - globalPlayer.getLastActivity() >= 5000L) {
-                    GlobalPlayerDestroyEvent event = new GlobalPlayerDestroyEvent(globalPlayer);
-                    plugin.getServer().getPluginManager().callEvent(event);
-                    if (!event.isCancelled()) {
-                        if(OctoCore.isMaster()) {
-                            globalPlayer.hasPermission(Permission.SEND_LEAVE_MESSAGE.getNode()).thenAcceptAsync(b ->{
-                                if (b) PlayerManager.sendStaffAlert(AlertType.LEAVE, globalPlayer.getName(), OctoCore.getServerName());
-                            });
-                        }
-                        globalPlayers.remove();
-                    }
-                }
-            }
-             */
-        }
-        if (payload == JedisAction.PLAYER_DATA) {
-            if (!data.has("name") || data.get("name").isJsonNull()) {
-                Logger.error("Received data without name: " + OctoCore.getGson().toJson(data));
-                return;
-            }
-            boolean created = false;
-            GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(data.get("name").getAsString());
-            String from = null;
-            UUID uuid = UUID.fromString(data.get("uuid").getAsString());
-            if (globalPlayer != null)
-                from = globalPlayer.getServer(); //get globalplayer data (from) before updating
-            if (alreadyCreating.contains(uuid)) {
-                return;
-            }
-            if (globalPlayer == null) {
-                ServerData serverData = OctoCore.getServerManager().getServerData(data.get("server").getAsString());
-                if (serverData != null) {
-                    alreadyCreating.add(uuid);
-                    Tasks.runLater(() -> {
-                        alreadyCreating.remove(uuid);
-                    }, 15l);
-                    GlobalPlayer gPlayer = new GlobalPlayer();
-                    gPlayer.setName(data.get("name").getAsString());
-
-                    serverData.getOnlinePlayers().add(gPlayer);
-
-                    created = true;
-                    globalPlayer = OctoCore.getServerManager().getGlobalPlayer(data.get("name").getAsString());
-                }
-            }
-            if (globalPlayer == null) return;
-
-            globalPlayer.setServer(data.get("server").getAsString());
-            globalPlayer.setName(data.get("name").getAsString());
-            globalPlayer.setUniqueId(uuid);
-            globalPlayer.setLastSeen(data.get("lastSeen").getAsLong());
-            globalPlayer.setFirstJoined(data.get("firstJoined").getAsString());
-            globalPlayer.setLastActivity(data.get("lastActivity").getAsLong());
-            globalPlayer.setVanished(data.has("vanished") && data.get("vanished").getAsBoolean());
-            globalPlayer.setLastServer(data.has("lastServer") ? data.get("lastServer").getAsString() : null);
-            globalPlayer.setStaffChatAlerts(data.has("staffChatAlerts") && data.get("staffChatAlerts").getAsBoolean());
-            globalPlayer.setAdminChatAlerts(data.has("adminChatAlerts") && data.get("adminChatAlerts").getAsBoolean());
-            globalPlayer.setReportAlerts(data.has("reportAlerts") && data.get("reportAlerts").getAsBoolean());
-            Set<UUID> tagsUUID = GsonSerializer.deserializeUUIDSet(data.get("allTags").getAsString());
-            List<PlayerTag> tags = new ArrayList<>();
-            for (UUID uuid1 : tagsUUID) {
-                PlayerTag tag = TagManager.getTag(uuid1);
-                if (tag != null) tags.add(tag);
-            }
-            globalPlayer.setAllTags(tags);
-            if (created) {
-                plugin.getServer().getPluginManager().callEvent(new GlobalPlayerCreateEvent(globalPlayer));
-            }
-            return;
-        }
-        if (payload == JedisAction.PLAYER_MESSAGE) {
-            Player player = Bukkit.getPlayer(data.get("name").getAsString());
-            if (player != null) {
-                player.sendMessage(data.get("message").getAsString());
-            }
-            return;
-        }
-        if (payload == JedisAction.SERVER_ONLINE) {
-            String server = data.get("server").getAsString();
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (onlinePlayer.hasPermission(Permission.RECEIVE_SERVER_ONLINE_MESSAGE.getNode())) {
-                    onlinePlayer.sendMessage(Lang.ADMIN_ALERTS.getMsg(Lang.SERVER_ONLINE_FORMAT.getMsg(server)));
-                }
-            }
-            return;
-        }
-        if (payload == JedisAction.SERVER_OFFLINE) {
-            String server = data.get("server").getAsString();
-            OctoCore.getServerManager().getServerData(server).setSafelyStopped(true); //so master dosen't send the crash alert
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (onlinePlayer.hasPermission(Permission.RECEIVE_SERVER_OFFLINE_MESSAGE.getNode())) {
-                    onlinePlayer.sendMessage(Lang.ADMIN_ALERTS.getMsg(Lang.SERVER_OFFLINE_FORMAT.getMsg(server)));
-                }
-            }
-            return;
-        }
-        if (payload == JedisAction.REPORT_SAVE) { //TODO
-
-        }
-        if (payload == JedisAction.STAFF_CONNECT) {
-            String name = data.get("name").getAsString();
-            String server = data.get("server").getAsString();
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (onlinePlayer.hasPermission(Permission.RECEIVE_JOIN_MESSAGE.getNode())) {
-                    Logger.debug("Sending " + onlinePlayer.getName() + " staff connect message");
-                    onlinePlayer.sendMessage(Lang.STAFF_ALERTS.getMsg(Lang.STAFF_JOIN_ALERT_FORMAT.getMsg(name, server)));
-                }
-            }
-            return;
-        }
-        if (payload == JedisAction.STAFF_SWITCH) {
-            String name = data.get("name").getAsString();
-            String to = data.get("to").getAsString();
-            String from = data.get("from").getAsString();
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (onlinePlayer.hasPermission(Permission.RECEIVE_JOIN_MESSAGE.getNode())) {
-                    onlinePlayer.sendMessage(Lang.STAFF_ALERTS.getMsg(Lang.STAFF_SWITCH_ALERT_FORMAT.getMsg(name, from, to)));
-                }
-            }
-            return;
-        }
-        if (payload == JedisAction.STAFF_DISCONNECT) {
-            String name = data.get("name").getAsString();
-            String server = data.get("server").getAsString();
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (onlinePlayer.hasPermission(Permission.RECEIVE_JOIN_MESSAGE.getNode())) {
-                    onlinePlayer.sendMessage(Lang.STAFF_ALERTS.getMsg(Lang.STAFF_LEAVE_ALERT_FORMAT.getMsg(name, server)));
-                }
-            }
-            return;
-        }
-        if (payload == JedisAction.SERVER_COMMAND) {
-            String server = data.get("server").getAsString();
-            String command = data.get("command").getAsString();
-
-            if (command.startsWith("/")) {
-                command = command.substring(1);
-            }
-            if (OctoCore.getServerName().equalsIgnoreCase(server)) {
-                Bukkit.getConsoleSender().sendMessage(Lang.EXECUTING_REQUESTED_COMMAND.getMsg(command, data.get("sender").getAsString()));
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-            }
-            return;
-        }
-        if (payload == JedisAction.GLOBAL_COMMAND) {
-            String command = data.get("command").getAsString();
-            Tasks.runSync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)); //prevents this: Please notify author of plugin causing this execution to fix this bug! see: http://bit.ly/1oSiM6C
-            return;
-        }
         if (payload == JedisAction.SEND_DISCORD_MESSAGE) {
             if (OctoCore.isMaster()) {
                 if (!JDAManager.isEnabled())
@@ -392,10 +200,6 @@ public class GlobalSubscription implements JedisHandle {
                     }
                     break;
             }
-            return;
-        }
-        if (payload == JedisAction.RELOAD_RANKS) {
-            RankManager.reloadRanks();
             return;
         }
         if (payload == JedisAction.GRANTS_UPDATE) {

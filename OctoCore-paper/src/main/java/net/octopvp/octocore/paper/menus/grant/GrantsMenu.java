@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
@@ -190,7 +190,7 @@ public class GrantsMenu extends PaginatedMenu {
             if (!targetData.isOnline()) {
                 targetData.save();
             }
-            OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonChain().addProperty("name", targetData.getName()).addProperty("add", false).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
+            OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonBuilder().addProperty("name", targetData.getName()).addProperty("add", false).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
             update(player);
         }
     }

@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.command.impl.punishments.undo;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
@@ -69,7 +69,7 @@ public class UnMuteCommand extends BaseCommand {
             punishment.setRemovedSilent(silent);
             punishment.setWhenRemoved(System.currentTimeMillis());
 
-            JsonChain jsonChain = new JsonChain().addProperty("sender", sender.getName()).addProperty("target", targetData.getPlayerName()).addProperty("silent", punishment.isRemovedSilent()).addProperty("reason", reason);
+            JsonBuilder jsonChain = new JsonBuilder().addProperty("sender", sender.getName()).addProperty("target", targetData.getPlayerName()).addProperty("silent", punishment.isRemovedSilent()).addProperty("reason", reason);
             if (sender.isPlayer()) {
                 Player player = sender.getPlayer();
                 jsonChain.addProperty("senderDisplay", player.getDisplayName());

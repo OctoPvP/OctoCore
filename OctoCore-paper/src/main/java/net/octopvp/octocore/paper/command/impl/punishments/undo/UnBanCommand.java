@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.command.impl.punishments.undo;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
@@ -70,22 +70,22 @@ public class UnBanCommand extends BaseCommand {
             punishment.setRemovedSilent(silent);
             punishment.setWhenRemoved(System.currentTimeMillis());
 
-            JsonChain jsonChain = new JsonChain();
+            JsonBuilder jsonBuilder = new JsonBuilder();
             if (sender.isPlayer()) {
                 Player player = sender.getPlayer();
-                jsonChain.addProperty("senderDisplay", player.getDisplayName());
+                jsonBuilder.addProperty("senderDisplay", player.getDisplayName());
 
                 PlayerData playerData = PlayerManager.getData(player.getUniqueId());
-                jsonChain.addProperty("coloredName", playerData.getHighestRank().getColor() + playerData.getName());
+                jsonBuilder.addProperty("coloredName", playerData.getHighestRank().getColor() + playerData.getName());
             } else {
-                jsonChain.addProperty("senderDisplay", sender.getName());
+                jsonBuilder.addProperty("senderDisplay", sender.getName());
             }
-            jsonChain.addProperty("sender", sender.getName());
-            jsonChain.addProperty("target", targetData.getPlayerName());
-            jsonChain.addProperty("silent", punishment.isRemovedSilent());
-            jsonChain.addProperty("reason", reason);
+            jsonBuilder.addProperty("sender", sender.getName());
+            jsonBuilder.addProperty("target", targetData.getPlayerName());
+            jsonBuilder.addProperty("silent", punishment.isRemovedSilent());
+            jsonBuilder.addProperty("reason", reason);
 
-            plugin.getRedisData().write(JedisAction.EXECUTE_UNBAN, jsonChain.get());
+            plugin.getRedisData().write(JedisAction.EXECUTE_UNBAN, jsonBuilder.get());
 
             punishment.save(true);
 

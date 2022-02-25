@@ -15,6 +15,7 @@ import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.ServerInfo;
 import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.Settings;
+import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.command.CommandFramework;
@@ -61,6 +62,9 @@ public final class OctoCore extends JavaPlugin {
     @Getter
     @Setter
     private RedisData redisData;
+    @Getter
+    @Setter
+    private RedisHandler redisHandler;
     @Getter
     private static boolean master;
     @Getter

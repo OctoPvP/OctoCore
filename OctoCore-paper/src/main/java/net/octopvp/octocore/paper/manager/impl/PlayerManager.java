@@ -19,9 +19,12 @@ import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.builder.SentryMessageBuilder;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseManager;
+import net.octopvp.octocore.paper.database.redis.packets.staff.StaffConnectPacket;
+import net.octopvp.octocore.paper.database.redis.packets.staff.StaffLeavePacket;
+import net.octopvp.octocore.paper.database.redis.packets.staff.StaffSwitchPacket;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.manager.impl.autoinit.BookManager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
@@ -74,14 +77,14 @@ public class PlayerManager extends Manager {
             completableFuture.complete(getData(op.getPlayer()));
         else if (OctoCore.getServerManager().isPlayerOnline(name)) {
             Tasks.runAsync(() -> {
-                OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonChain().addProperty("name", name).get());
+                OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonBuilder().addProperty("name", name).get());
                 PlayerData data = null;
                 int tries = 0;
                 while (data == null) {
                     try {
                         Thread.sleep(40);
                         if (tries == 5) //maybe the packet was dropped
-                            OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonChain().addProperty("name", name).get());
+                            OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonBuilder().addProperty("name", name).get());
                         if (Bukkit.getPlayer(name) != null) {
                             data = getData(Bukkit.getPlayer(name));
                             break;
@@ -195,7 +198,7 @@ public class PlayerManager extends Manager {
                     Thread.sleep(50);//oh no
                     tries++;
                     if (!a) {
-                        OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_SWITCH, new JsonChain().addProperty("uuid", uuid.toString()).get());
+                        OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_SWITCH, new JsonBuilder().addProperty("uuid", uuid.toString()).get());
                         a = true;
                     }
                 } else {
@@ -509,21 +512,11 @@ public class PlayerManager extends Manager {
 
     public static void sendStaffAlert(AlertType type, String... placeholders) {
         if (type == AlertType.JOIN) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", placeholders[0]);
-            jsonObject.addProperty("server", placeholders[1]);
-            OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_CONNECT, jsonObject);
+            new StaffConnectPacket(placeholders[0],placeholders[1]).send();
         } else if (type == AlertType.LEAVE) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", placeholders[0]);
-            jsonObject.addProperty("server", placeholders[1]);
-            OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_DISCONNECT, jsonObject);
+            new StaffLeavePacket(placeholders[0],placeholders[1]).send();
         } else if (type == AlertType.SWITCH) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", placeholders[0]);
-            jsonObject.addProperty("from", placeholders[1]);
-            jsonObject.addProperty("to", placeholders[2]);
-            OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_SWITCH, jsonObject);
+            new StaffSwitchPacket(placeholders[0],placeholders[1],placeholders[2]).send();
         }
     }
 
