@@ -17,6 +17,8 @@ import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.common.object.redis.JedisAction;
+import net.octopvp.octocore.paper.database.redis.packets.staff.DiscordAdminChatPacket;
+import net.octopvp.octocore.paper.database.redis.packets.staff.DiscordStaffChatPacket;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.AuditLogEntry;
 import net.octopvp.octocore.common.util.Logger;
@@ -57,7 +59,9 @@ public class JDAManager extends Manager {
                         jsonObject.addProperty("message",event.getMessage().getContentDisplay());
                         jsonObject.addProperty("role",getHighestRole(event.getMember()));
                         jsonObject.addProperty("tag",event.getAuthor().getAsTag());
-                        OctoCore.getInstance().getRedisData().write(JedisAction.DISCORD_STAFF_CHAT,jsonObject);
+                        new DiscordStaffChatPacket(
+                                jsonObject
+                        ).send();
                     }
                     if(event.getMessage().getChannel().getIdLong() == 808700037290786886l) {
                         JsonObject jsonObject = new JsonObject();
@@ -66,7 +70,9 @@ public class JDAManager extends Manager {
                         jsonObject.addProperty("message",event.getMessage().getContentDisplay());
                         jsonObject.addProperty("role",getHighestRole(event.getMember()));
                         jsonObject.addProperty("tag",event.getAuthor().getAsTag());
-                        OctoCore.getInstance().getRedisData().write(JedisAction.DISCORD_ADMIN_CHAT,jsonObject);
+                        new DiscordAdminChatPacket(
+                                jsonObject
+                        ).send();
                     }
                 }
             }

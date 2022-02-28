@@ -50,64 +50,6 @@ public class GlobalSubscription implements JedisHandle {
             return;
         }
         RedisListenerManager.handleMessage(payload, data);
-        if (payload == JedisAction.STAFF_CHAT) {
-            String name = data.get("name").getAsString();
-            String server = data.get("server").getAsString();
-            String message = data.get("message").getAsString();
-            String msg = Lang.STAFF_CHAT_FORMAT.getMsg(name, server, message);
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (player.hasPermission(Permission.STAFFCHAT.getNode())) {
-                    player.sendMessage(msg);
-                }
-            }
-            if (OctoCore.isMaster()) {
-                JDAManager.sendDiscordSC(name, server, message);
-            }
-            return;
-        }
-        if (payload == JedisAction.ADMIN_CHAT) {
-            String name = data.get("name").getAsString();
-            String server = data.get("server").getAsString();
-            String message = data.get("message").getAsString();
-            String msg = Lang.ADMIN_CHAT_FORMAT.getMsg(name, server, message);
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (player.hasPermission(Permission.ADMINCHAT.getNode())) {
-                    player.sendMessage(msg);
-                }
-            }
-            if (OctoCore.isMaster()) {
-                JDAManager.sendDiscordAC(name, server, message);
-            }
-            return;
-        }
-        if (payload == JedisAction.DISCORD_STAFF_CHAT) {
-            String name = data.get("name").getAsString();
-            String message = data.get("message").getAsString();
-            String msg = Lang.DISCORD_STAFF_CHAT_FORMAT.getMsg(name, message);
-            String role = data.get("role").getAsString();
-            String tag = data.get("tag").getAsString();
-            TextComponent mainComponent = new TextComponent(msg);
-            mainComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rank: " + role + "\nUser: " + tag).create()));
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (player.hasPermission(Permission.STAFFCHAT.getNode()))
-                    player.sendMessage(mainComponent);
-            }
-            return;
-        }
-        if (payload == JedisAction.DISCORD_ADMIN_CHAT) {
-            String name = data.get("name").getAsString();
-            String message = data.get("message").getAsString();
-            String msg = Lang.DISCORD_ADMIN_CHAT_FORMAT.getMsg(name, message);
-            String role = data.get("role").getAsString();
-            String tag = data.get("tag").getAsString();
-            TextComponent mainComponent = new TextComponent(msg);
-            mainComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rank: " + role + "\nUser: " + tag).create()));
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (player.hasPermission(Permission.ADMINCHAT.getNode()))
-                    player.sendMessage(mainComponent);
-            }
-            return;
-        }
         if (payload == JedisAction.ADMIN_ALERT) {
             String message = data.get("message").getAsString();
             String msg = Lang.ADMIN_ALERTS.getMsg(message);
@@ -187,22 +129,6 @@ public class GlobalSubscription implements JedisHandle {
                         playerData.removeTag(TagManager.getTagByName(toRemove).getId());
                     }
                     break;
-            }
-            return;
-        }
-        if (payload == JedisAction.GRANTS_UPDATE) {
-            String name = data.get("name").getAsString();
-            String tochange = data.get("tochange").getAsString();
-            boolean add = data.get("add").getAsBoolean();
-            Player player = Bukkit.getPlayer(name);
-            if (player != null) {
-                PlayerData playerData = PlayerManager.getData(player.getUniqueId());
-                Grant grant = OctoCore.getGson().fromJson(tochange, Grant.class);
-                if (add)
-                    playerData.getGrants().add(grant);
-                else playerData.getGrants().remove(grant);
-                playerData.loadPerms(player);
-                playerData.save();
             }
             return;
         }

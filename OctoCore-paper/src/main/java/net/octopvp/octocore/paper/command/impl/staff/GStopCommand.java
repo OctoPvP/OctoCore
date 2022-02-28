@@ -6,6 +6,7 @@ import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.common.object.redis.JedisAction;
+import net.octopvp.octocore.paper.database.redis.packets.server.GlobalCommandPacket;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -17,7 +18,7 @@ public class GStopCommand extends BaseCommand {
         String command = "stop";
         JsonObject jsonObject = new JsonBuilder().addProperty("command",command).get();
         JsonObject adminAlert = new JsonBuilder().addProperty("message", Lang.ADMIN_ALERT_GLOBAL_EXECUTE.getMsg(sender.getName(),command)).get();
-        OctoCore.getInstance().getRedisData().write(JedisAction.GLOBAL_COMMAND,jsonObject);
+        new GlobalCommandPacket(command).send();
         OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_ALERT,adminAlert);
         return CommandResult.SUCCESS;
     }

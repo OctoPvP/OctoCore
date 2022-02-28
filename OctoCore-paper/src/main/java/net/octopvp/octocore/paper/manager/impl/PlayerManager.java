@@ -22,9 +22,7 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseManager;
-import net.octopvp.octocore.paper.database.redis.packets.staff.StaffConnectPacket;
-import net.octopvp.octocore.paper.database.redis.packets.staff.StaffLeavePacket;
-import net.octopvp.octocore.paper.database.redis.packets.staff.StaffSwitchPacket;
+import net.octopvp.octocore.paper.database.redis.packets.staff.*;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.manager.impl.autoinit.BookManager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
@@ -57,7 +55,7 @@ public class PlayerManager extends Manager {
         return playerProfiles.values().stream().filter(profile -> profile.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
-    public static Map<UUID,PlayerData> getOnlineData(){
+    public static Map<UUID, PlayerData> getOnlineData() {
         return playerProfiles;
     }
 
@@ -66,10 +64,12 @@ public class PlayerManager extends Manager {
         OfflinePlayer op = Bukkit.getOfflinePlayer(name);
         return getOfflineData(op);
     }
+
     public static CompletableFuture<PlayerData> getOfflineData(UUID uuid) {
         OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
         return getOfflineData(op);
     }
+
     public static CompletableFuture<PlayerData> getOfflineData(OfflinePlayer op) {
         CompletableFuture<PlayerData> completableFuture = new CompletableFuture<>();
         String name = op.getName();
@@ -118,13 +118,13 @@ public class PlayerManager extends Manager {
         backupCollection = DatabaseManager.getMongoDatabase().getCollection("backup");
     }
 
-    public static void processJoin(Player player,UUID uuid, String ip) {
+    public static void processJoin(Player player, UUID uuid, String ip) {
         Sentry.addBreadcrumb(player.getName() + " joined");
         Tasks.runAsync(() -> {
             PlayerData profile = playerProfiles.get(uuid);
             if (profile == null) {
                 Logger.debug("Profile is null!");
-                captureSentryEvent("Profile is null!",player.getUniqueId(),player.getName());
+                captureSentryEvent("Profile is null!", player.getUniqueId(), player.getName());
                 return;
             }
             PermissionManager.injectPermissible(player, profile);
@@ -164,11 +164,13 @@ public class PlayerManager extends Manager {
             });
         });
     }
-    public static void captureSentryEvent(String eventName,Player player){
-        captureSentryEvent(eventName,player.getUniqueId(),player.getName());
+
+    public static void captureSentryEvent(String eventName, Player player) {
+        captureSentryEvent(eventName, player.getUniqueId(), player.getName());
     }
-    public static void captureSentryEvent(String eventName,UUID uuid, String name){
-        if (Sentry.isEnabled()){
+
+    public static void captureSentryEvent(String eventName, UUID uuid, String name) {
+        if (Sentry.isEnabled()) {
             SentryEvent event = new SentryEvent();
             event.setLevel(SentryLevel.ERROR);
             event.setMessage(new SentryMessageBuilder().setMessage(eventName).build());
@@ -409,7 +411,8 @@ public class PlayerManager extends Manager {
     public static PlayerData getPlayerData(UUID uuid) {
         return getProfile(uuid);
     }
-    public static PlayerData getData(UUID uuid){
+
+    public static PlayerData getData(UUID uuid) {
         return getPlayerData(uuid);
     }
 
@@ -512,20 +515,16 @@ public class PlayerManager extends Manager {
 
     public static void sendStaffAlert(AlertType type, String... placeholders) {
         if (type == AlertType.JOIN) {
-            new StaffConnectPacket(placeholders[0],placeholders[1]).send();
+            new StaffConnectPacket(placeholders[0], placeholders[1]).send();
         } else if (type == AlertType.LEAVE) {
-            new StaffLeavePacket(placeholders[0],placeholders[1]).send();
+            new StaffLeavePacket(placeholders[0], placeholders[1]).send();
         } else if (type == AlertType.SWITCH) {
-            new StaffSwitchPacket(placeholders[0],placeholders[1],placeholders[2]).send();
+            new StaffSwitchPacket(placeholders[0], placeholders[1], placeholders[2]).send();
         }
     }
 
     public static void sendStaffChat(String player, String message, String server) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("name", player);
-        jsonObject.addProperty("message", message);
-        jsonObject.addProperty("server", server);
-        OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_CHAT, jsonObject);
+        new StaffChatPacket(player, message, server).send();
     }
 
     public static void sendAdminChat(String player, String message, String server) {
@@ -533,27 +532,17 @@ public class PlayerManager extends Manager {
         jsonObject.addProperty("name", player);
         jsonObject.addProperty("message", message);
         jsonObject.addProperty("server", server);
-        OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_CHAT, jsonObject);
+        new AdminChatPacket(player, server, message).send();
     }
 
     public static void sendStaffChat(Player p, String message, String server) {
-        JsonObject jsonObject = new JsonObject();
         String player = PlayerManager.getPrefix(p.getUniqueId()) + " " + p.getName();
-        jsonObject.addProperty("name", player);
-        jsonObject.addProperty("message", message);
-        jsonObject.addProperty("server", server);
-        jsonObject.addProperty("uuid", p.getUniqueId() + "");
-        OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_CHAT, jsonObject);
+        new StaffChatPacket(player, message, server, p.getUniqueId()).send();
     }
 
     public static void sendAdminChat(Player p, String message, String server) {
-        JsonObject jsonObject = new JsonObject();
         String player = PlayerManager.getPrefix(p.getUniqueId()) + " " + p.getName();
-        jsonObject.addProperty("name", player);
-        jsonObject.addProperty("message", message);
-        jsonObject.addProperty("server", server);
-        jsonObject.addProperty("uuid", p.getUniqueId() + "");
-        OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_CHAT, jsonObject);
+        new AdminChatPacket(player, server, message, p.getUniqueId()).send();
     }
 
     public static List<String> getOnlinePlayersString() {
@@ -571,7 +560,8 @@ public class PlayerManager extends Manager {
             return serializeProfileToJson(getProfileFromDB(name));
         return null;
     }
-    public static String getFixedName(String name){
+
+    public static String getFixedName(String name) {
         Document document = pdataCollection.find(Filters.eq("lowerName", name.toLowerCase())).first();
         if (document == null) return name;
         return document.getString("name");

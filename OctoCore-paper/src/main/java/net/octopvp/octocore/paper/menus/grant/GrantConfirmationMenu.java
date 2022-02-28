@@ -7,6 +7,7 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.PlayerGrantEvent;
+import net.octopvp.octocore.paper.database.redis.packets.other.GrantsUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
@@ -111,9 +112,13 @@ public class GrantConfirmationMenu extends Menu {
                     //data.getGrants().add(grant);
                     data.applyGrant(grant);
                     data.save();
-                }else{
+                } else {
                     if (globalPlayer != null) {
-                        OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonBuilder().addProperty("name", targetData.get().getName()).addProperty("add", true).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
+                        new GrantsUpdatePacket(
+                                targetData.get().getName(),
+                                OctoCore.getGson().toJson(grant),
+                                true
+                        ).send();
                     } else {
                         PlayerData data = PlayerManager.getProfile(targetData.get().getUuid());
                         if (data == null)
