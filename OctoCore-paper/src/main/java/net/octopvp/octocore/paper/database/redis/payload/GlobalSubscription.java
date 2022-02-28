@@ -1,34 +1,34 @@
 package net.octopvp.octocore.paper.database.redis.payload;
 
 import com.google.gson.JsonObject;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.object.redis.JedisHandle;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.api.events.GlobalPlayerCreateEvent;
-import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.paper.listeners.redis.PunishmentRedisHandler;
-import net.octopvp.octocore.paper.manager.impl.*;
-import net.octopvp.octocore.paper.objects.*;
+import net.octopvp.octocore.paper.manager.impl.JDAManager;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.manager.impl.RedisListenerManager;
+import net.octopvp.octocore.paper.manager.impl.TagManager;
+import net.octopvp.octocore.paper.objects.Broadcast;
+import net.octopvp.octocore.paper.objects.PlayerData;
+import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
 import net.octopvp.octocore.paper.objects.enums.DataUpdateReason;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
-import net.octopvp.octocore.paper.utils.GsonSerializer;
 import net.octopvp.octocore.paper.utils.chat.Clickable;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class GlobalSubscription implements JedisHandle {
@@ -50,18 +50,6 @@ public class GlobalSubscription implements JedisHandle {
             return;
         }
         RedisListenerManager.handleMessage(payload, data);
-
-        if (payload == JedisAction.SEND_DISCORD_MESSAGE) {
-            if (OctoCore.isMaster()) {
-                if (!JDAManager.isEnabled())
-                    return;
-                String json = data.get("messagejson").getAsString();
-                String channel = data.get("channel").getAsString();
-                EmbedBuilder embedBuilder = OctoCore.getGson().fromJson(json, EmbedBuilder.class);
-                JDAManager.getJda().getTextChannelById(channel).sendMessage(embedBuilder.build()).queue();
-            }
-            return;
-        }
         if (payload == JedisAction.STAFF_CHAT) {
             String name = data.get("name").getAsString();
             String server = data.get("server").getAsString();

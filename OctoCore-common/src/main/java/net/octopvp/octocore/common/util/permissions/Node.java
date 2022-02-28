@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.ServerContext;
 
-import java.util.Locale;
-
 @Getter
 @Setter
 @AllArgsConstructor
