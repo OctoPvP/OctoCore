@@ -9,6 +9,7 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -38,7 +39,7 @@ public class RemoveTagCommand extends BaseCommand {
             }else{
                 //on some other network server
                 JsonObject jsonObject = new JsonBuilder().addProperty("reason", DataUpdateReason.TAGS_UPDATE_REMOVE.name()).addProperty("target",target).addProperty("remove",tag).get();
-                OctoCore.getInstance().getRedisData().write(JedisAction.PDATA_UPDATE,jsonObject);
+                new PlayerDataUpdatePacket(jsonObject).send();
                 sender.sendMessage(CC.GREEN + "Requested pdata update for " + target + " reason: update owned tags");
             }
         }else {

@@ -10,6 +10,7 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseManager;
+import net.octopvp.octocore.paper.database.redis.packets.server.ReloadTagsPacket;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
@@ -44,7 +45,7 @@ public class TagManager extends Manager {
 
     public static void deleteTag(UUID id) {
         tagsCollection.deleteOne(Filters.eq("id", id.toString()));
-        OctoCore.getInstance().getRedisData().write(JedisAction.RELOAD_TAGS, new JsonBuilder().addProperty("a", "dummy").get());
+        new ReloadTagsPacket().send();
         //reloadTags();
     }
 
@@ -56,14 +57,14 @@ public class TagManager extends Manager {
     public static void saveTag(PlayerTag tag) {
         String json = OctoCore.getGson().toJson(tag);
         tagsCollection.replaceOne(Filters.eq("id", tag.getId().toString()), Document.parse(json), new ReplaceOptions().upsert(true));
-        OctoCore.getInstance().getRedisData().write(JedisAction.RELOAD_TAGS, new JsonBuilder().addProperty("a", "dummy").get());
+        new ReloadTagsPacket().send();
         //reloadTags();
     }
 
     public static void createTag(PlayerTag tag) {
         String json = OctoCore.getGson().toJson(tag);
         tagsCollection.insertOne(Document.parse(json));
-        OctoCore.getInstance().getRedisData().write(JedisAction.RELOAD_TAGS, new JsonBuilder().addProperty("a", "dummy").get());
+        new ReloadTagsPacket().send();
         //reloadTags();
     }
 

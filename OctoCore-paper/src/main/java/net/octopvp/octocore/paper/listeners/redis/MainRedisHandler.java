@@ -12,13 +12,4 @@ public class MainRedisHandler {
     @Getter
     private static final Set saving = new HashSet();
 
-    @RedisHandler(jedisAction = JedisAction.SAVE_REQUEST_SWITCH)
-    public void onSaveReq(JsonObject data) {
-
-    }
-
-    @RedisHandler(jedisAction = JedisAction.TAG_UPDATE)
-    public static void onTagUpdate(JsonObject data) {
-
-    }
 }

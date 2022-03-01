@@ -22,6 +22,8 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseManager;
+import net.octopvp.octocore.paper.database.redis.packets.server.SaveRequestMiscPacket;
+import net.octopvp.octocore.paper.database.redis.packets.server.SaveRequestSwitchPacket;
 import net.octopvp.octocore.paper.database.redis.packets.staff.*;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.manager.impl.autoinit.BookManager;
@@ -77,14 +79,14 @@ public class PlayerManager extends Manager {
             completableFuture.complete(getData(op.getPlayer()));
         else if (OctoCore.getServerManager().isPlayerOnline(name)) {
             Tasks.runAsync(() -> {
-                OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonBuilder().addProperty("name", name).get());
+                new SaveRequestMiscPacket(new JsonBuilder().addProperty("name", name)).send();
                 PlayerData data = null;
                 int tries = 0;
                 while (data == null) {
                     try {
                         Thread.sleep(40);
                         if (tries == 5) //maybe the packet was dropped
-                            OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonBuilder().addProperty("name", name).get());
+                            new SaveRequestMiscPacket(new JsonBuilder().addProperty("name", name)).send();
                         if (Bukkit.getPlayer(name) != null) {
                             data = getData(Bukkit.getPlayer(name));
                             break;
@@ -200,7 +202,7 @@ public class PlayerManager extends Manager {
                     Thread.sleep(50);//oh no
                     tries++;
                     if (!a) {
-                        OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_SWITCH, new JsonBuilder().addProperty("uuid", uuid.toString()).get());
+                        new SaveRequestSwitchPacket(uuid).send();
                         a = true;
                     }
                 } else {

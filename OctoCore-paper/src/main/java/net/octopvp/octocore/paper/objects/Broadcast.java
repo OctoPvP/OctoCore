@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.paper.database.redis.packets.server.GlobalBroadcastPacket;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
@@ -30,29 +31,7 @@ public class Broadcast {
     }
     //builders are cool :D
     public Broadcast send(){
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("message",message);
-        jsonObject.addProperty("origin", OctoCore.getServerName());
-        jsonObject.addProperty("id",broadcastId.toString());
-        if (player != null){
-            jsonObject.addProperty("player",true);
-        }
-        OctoCore.getInstance().getRedisData().write(JedisAction.GLOBAL_BROADCAST,jsonObject);
-        Tasks.runLater(()->{
-            AtomicInteger players = new AtomicInteger();
-            AtomicInteger servers = new AtomicInteger();
-            responses.forEach((k,v)->{
-                players.set(players.get() + v);
-                servers.getAndIncrement();
-            });
-            String message = Lang.BROADCAST_RESPONSE.getMsg(players.get(),servers.get());
-            if (player != null){
-                Player p = Bukkit.getPlayer(player);
-                if (p != null)
-                    p.sendMessage(message);
-            }
-            Logger.info(message);
-        },15l);
+        new GlobalBroadcastPacket(message).send();
         return this;
     }
     public Broadcast setMessage(String message){

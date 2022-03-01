@@ -4,6 +4,7 @@ import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.staff.PunishedJoinPacket;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
@@ -69,7 +70,6 @@ public class PunishmentListener implements Listener {
                                         punishment.getNiceExpire(),punishment.getNiceDuration()) : Lang.PERM_ENTRY),
                                 true)).toString()
         );
-        OctoCore.getInstance().getRedisData().write(JedisAction.PUNISHED_JOIN,new JsonBuilder().addProperty("name",event.getName()).addProperty("type", "Blacklisted").get());
-
+        new PunishedJoinPacket(new JsonBuilder().addProperty("name",event.getName()).addProperty("type", "Blacklisted")).send();
     }
 }
