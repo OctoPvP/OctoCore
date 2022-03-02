@@ -2,10 +2,9 @@ package net.octopvp.octocore.paper.menus.grant;
 
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonChain;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.other.GrantsUpdatePacket;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
@@ -29,12 +28,14 @@ import java.util.List;
 
 public class GrantsMenu extends PaginatedMenu {
     private final PlayerData targetData;
-    public GrantsMenu(PlayerData data){
+
+    public GrantsMenu(PlayerData data) {
         this.targetData = data;
     }
 
     private boolean all = true;
     private final Comparator<Grant> GRANT_COMPARATOR = Comparator.comparingLong(Grant::getAddedAt).reversed();
+
     @Override
     public String getPagesTitle(Player player) {
         return CC.GREEN + targetData.getName() + "'s grants";
@@ -43,14 +44,15 @@ public class GrantsMenu extends PaginatedMenu {
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
-        if (!all){
+        if (!all) {
             this.targetData.getGrants().stream().sorted(GRANT_COMPARATOR).filter(grant -> !grant.hasExpired()).forEach(grant -> buttons.add(new GrantEntryButton(grant)));
-        }else this.targetData.getGrants().stream().sorted(GRANT_COMPARATOR).forEach(grant -> buttons.add(new GrantEntryButton(grant)));
-        if (buttons.isEmpty()){
+        } else
+            this.targetData.getGrants().stream().sorted(GRANT_COMPARATOR).forEach(grant -> buttons.add(new GrantEntryButton(grant)));
+        if (buttons.isEmpty()) {
             buttons.add(new Button() {
                 @Override
                 public ItemStack getItem(Player player) {
-                    return new ItemBuilder(Material.BEDROCK).name(CC.RED + "No grants!").lore("",CC.RED + "This player does not",CC.RED + " have any grants!").build();
+                    return new ItemBuilder(Material.BEDROCK).name(CC.RED + "No grants!").lore("", CC.RED + "This player does not", CC.RED + " have any grants!").build();
                 }
 
                 @Override
@@ -64,7 +66,7 @@ public class GrantsMenu extends PaginatedMenu {
 
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
-        return Lists.newArrayList(new PlayerInfoButton(targetData,4),new Placeholder());
+        return Lists.newArrayList(new PlayerInfoButton(targetData, 4), new Placeholder());
     }
 
     @Override
@@ -87,20 +89,23 @@ public class GrantsMenu extends PaginatedMenu {
             }
         };
     }
-    private class Placeholder extends PlaceholderButton{
+
+    private class Placeholder extends PlaceholderButton {
         @Override
         public int[] getSlots() {
-            return new int[]{0,1,2,3,5,6,7,8,38,41,42,43};
+            return new int[]{0, 1, 2, 3, 5, 6, 7, 8, 38, 41, 42, 43};
         }
     }
+
     private class FilterButton extends net.octopvp.octocore.paper.utils.menu.buttons.impl.FilterButton {
 
         @Override
         public ItemStack getItem(Player player) {
             ItemBuilder ib = new ItemBuilder(Material.HOPPER).name(CC.GREEN + "Filter");
             if (all)
-                ib.lore(CC.AQUA + "Currently Showing " + CC.U + "ALL" + CC.R + CC.AQUA + " active grants.","",CC.YELLOW + "Click to change to active only!");
-            else ib.lore(CC.AQUA + "Currently Showing " + CC.U + "Active Only" + CC.R + CC.AQUA + " grants.","",CC.YELLOW + "Click to change to all!");
+                ib.lore(CC.AQUA + "Currently Showing " + CC.U + "ALL" + CC.R + CC.AQUA + " active grants.", "", CC.YELLOW + "Click to change to active only!");
+            else
+                ib.lore(CC.AQUA + "Currently Showing " + CC.U + "Active Only" + CC.R + CC.AQUA + " grants.", "", CC.YELLOW + "Click to change to all!");
             return ib.build();
         }
 
@@ -111,10 +116,13 @@ public class GrantsMenu extends PaginatedMenu {
             SoundUtil.playPing(player);
         }
     }
+
     private static int i = 0;
+
     @RequiredArgsConstructor
-    private class GrantEntryButton extends Button{
+    private class GrantEntryButton extends Button {
         private final Grant grant;
+
         @Override
         public ItemStack getItem(Player player) {
             ItemBuilder ib = new ItemBuilder(Material.WOOL)
@@ -128,8 +136,8 @@ public class GrantsMenu extends PaginatedMenu {
                                     (!grant.hasExpired() ? CC.GREEN + "Yes" : CC.RED + "No"))
                      */
             Rank rank = grant.getRank();
-            if (rank != null){
-                ib.lore( CC.SEPARATOR,
+            if (rank != null) {
+                ib.lore(CC.SEPARATOR,
                         CC.AQUA + "Rank&7: " + grant.getRank().getDisplayName(),
                         CC.AQUA + "Added By&7: " + CC.YELLOW + grant.getAddedBy(),
                         CC.AQUA + "Added Date&7: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
@@ -140,18 +148,18 @@ public class GrantsMenu extends PaginatedMenu {
                         CC.AQUA + "Active&7: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
                         CC.AQUA + "Expires&7: " + CC.YELLOW + grant.getNiceExpire()
                 );
-                if (grant.getRemovedBy() != null){
+                if (grant.getRemovedBy() != null) {
                     ib.lore(
                             CC.AQUA + "Removed By&7: " + CC.YELLOW + grant.getRemovedBy(),
                             CC.AQUA + "Removed At&7: " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt())
                     );
                 }
-                if (!grant.hasExpired() && !rank.isDefaultRank()){
-                    ib.lore("",CC.YELLOW + "Click to remove this grant.");
+                if (!grant.hasExpired() && !rank.isDefaultRank()) {
+                    ib.lore("", CC.YELLOW + "Click to remove this grant.");
                 }
                 ib.lore(CC.SEPARATOR);
-            }else{
-                ib.lore(CC.SEPARATOR,CC.RED + "Rank was deleted!",
+            } else {
+                ib.lore(CC.SEPARATOR, CC.RED + "Rank was deleted!",
                         CC.AQUA + "Rank&7: " + grant.getRankName(),
                         CC.AQUA + "Added By&7: " + CC.YELLOW + grant.getAddedBy(),
                         CC.AQUA + "Added Date&7: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
@@ -163,7 +171,7 @@ public class GrantsMenu extends PaginatedMenu {
                         CC.AQUA + "Expires&7 " + CC.YELLOW + grant.getNiceExpire(),
                         CC.SEPARATOR
                 );
-                if (grant.getRemovedBy() != null){
+                if (grant.getRemovedBy() != null) {
                     ib.lore(
                             CC.AQUA + "Removed By&7 " + CC.YELLOW + grant.getRemovedBy(),
                             CC.AQUA + "Removed At&7 " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt()),
@@ -190,7 +198,7 @@ public class GrantsMenu extends PaginatedMenu {
             if (!targetData.isOnline()) {
                 targetData.save();
             }
-            OctoCore.getInstance().getRedisData().write(JedisAction.GRANTS_UPDATE, new JsonChain().addProperty("name", targetData.getName()).addProperty("add", false).addProperty("tochange", OctoCore.getGson().toJson(grant)).get());
+            new GrantsUpdatePacket(targetData.getName(), OctoCore.getGson().toJson(grant), false).send();
             update(player);
         }
     }

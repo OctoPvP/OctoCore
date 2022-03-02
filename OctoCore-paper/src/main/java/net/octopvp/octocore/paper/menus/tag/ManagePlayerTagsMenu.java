@@ -3,8 +3,9 @@ package net.octopvp.octocore.paper.menus.tag;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.player.TagUpdatePacket;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
@@ -71,7 +72,7 @@ public class ManagePlayerTagsMenu extends PaginatedMenu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             super.onClick(player, slot, clickType, event);
             if (clickType == ClickType.SHIFT_RIGHT) {
-                OctoCore.getInstance().getRedisData().write(JedisAction.TAG_UPDATE, new JsonChain().addProperty("uuid", data.getUuid().toString()).addProperty("type", "REMOVE_TAG").addProperty("tagId", tag.getId().toString()).get());
+                new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "REMOVE_TAG").addProperty("tagId", tag.getId().toString())).send();
                 SoundUtil.playPing(player);
                 player.closeInventory();
             }

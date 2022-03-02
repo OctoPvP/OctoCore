@@ -1,13 +1,20 @@
 package net.octopvp.octocore.paper.manager.impl;
 
-import com.google.gson.JsonObject;
-import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.database.redis.RedisData;
-import net.octopvp.octocore.common.object.redis.JedisAction;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
-import net.octopvp.octocore.paper.manager.Manager;
+import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.api.events.RedisPacketRecieveEvent;
+import net.octopvp.octocore.paper.database.redis.RedisData;
+import net.octopvp.octocore.paper.database.redis.packets.server.ServerOfflinePacket;
+import net.octopvp.octocore.paper.database.redis.packets.server.ServerOnlinePacket;
+import net.octopvp.octocore.paper.manager.Manager;
+import net.octopvp.octocore.paper.utils.ReflectionUtils;
+import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import redis.clients.jedis.Jedis;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class RedisManager extends Manager {
     //Load after db manager start
@@ -17,29 +24,42 @@ public class RedisManager extends Manager {
         JedisSettings jedisSettings = new JedisSettings();
         jedisSettings.setAddress(getConfig().getString("database.redis.host"));
         jedisSettings.setPort(getConfig().getInt("database.redis.port"));
-        if(getConfig().getBoolean("database.redis.auth")) {
+        if (getConfig().getBoolean("database.redis.auth")) {
             jedisSettings.setAuth(true);
             jedisSettings.setPassword(getConfig().getString("database.redis.auth.password"));
         }
         OctoCore.getInstance().setRedisData(new RedisData(jedisSettings));
+        OctoCore.getInstance().setRedisHandler(new RedisHandler("net.octopvp.octocore.paper.database.redis.packets", jedisSettings,
+                (runnable) -> {
+            Tasks.runAsync(runnable);
+            return null;
+        }, (p) -> {
+            RedisPacketRecieveEvent event = new RedisPacketRecieveEvent(p.getValue0(), p.getValue1());
+            OctoCore.getInstance().getServer().getPluginManager().callEvent(event);
+            return !event.isCancelled();
+        }, (pack) -> ReflectionUtils.getClassesInPackage(plugin, pack)));
+        OctoCore.getInstance().getRedisHandler().connect();
+        OctoCoreCommon.setRedisHandler(OctoCore.getInstance().getRedisHandler());
+        try {
+            OctoCore.getInstance().getRedisHandler().setupPackets();
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+            e.printStackTrace();
+        }
         if (OctoCore.getInstance().getRedisData() == null)
             Logger.error("Could not connect to redis!");
-        else{
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("server",OctoCore.getServerName());
-            OctoCore.getInstance().getRedisData().write(JedisAction.SERVER_ONLINE,jsonObject);
+        else {
+            new ServerOnlinePacket(OctoCore.getServerName()).send();
         }
     }
 
     @Override
     public void disable() {
-        if (OctoCore.getInstance().getRedisData() != null){
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("server",OctoCore.getServerName());
-            OctoCore.getInstance().getRedisData().write(JedisAction.SERVER_OFFLINE,jsonObject);
+        if (OctoCore.getInstance().getRedisData() != null) {
+            new ServerOfflinePacket(OctoCore.getServerName()).send();
         }
     }
-    public static Jedis getJedis(){
+
+    public static Jedis getJedis() {
         return OctoCore.getInstance().getRedisData().getJedis();
     }
 }

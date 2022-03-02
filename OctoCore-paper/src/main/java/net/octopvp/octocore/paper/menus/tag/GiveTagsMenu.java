@@ -2,8 +2,9 @@ package net.octopvp.octocore.paper.menus.tag;
 
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.player.TagUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
@@ -68,7 +69,7 @@ public class GiveTagsMenu extends PaginatedMenu {
                 return;
             }
             SoundUtil.playPing(player);
-            OctoCore.getInstance().getRedisData().write(JedisAction.TAG_UPDATE, new JsonChain().addProperty("uuid", data.getUuid().toString()).addProperty("type", "GIVE_TAG").addProperty("tagId", tag.getId().toString()).get());
+            new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "GIVE_TAG").addProperty("tagId", tag.getId().toString())).send();
             player.closeInventory();
             player.sendMessage(CC.GREEN + "Gave " + data.getName() + " the " + tag.getName() + " tag!");
         }

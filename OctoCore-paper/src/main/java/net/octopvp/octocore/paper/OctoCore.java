@@ -15,6 +15,7 @@ import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.ServerInfo;
 import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.Settings;
+import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.command.CommandFramework;
@@ -61,6 +62,9 @@ public final class OctoCore extends JavaPlugin {
     @Getter
     @Setter
     private RedisData redisData;
+    @Getter
+    @Setter
+    private RedisHandler redisHandler;
     @Getter
     private static boolean master;
     @Getter
@@ -186,6 +190,8 @@ public final class OctoCore extends JavaPlugin {
                 return Bukkit.getCommitBranch();
             }
         });
+        OctoCoreCommon.setGson(gson);
+        OctoCoreCommon.setPluginClassLoader(getClassLoader());
         try {
             serverType = ServerType.valueOf(getConfig().getString("server-type").toUpperCase());
             master = (serverType == ServerType.MASTER);
@@ -207,7 +213,6 @@ public final class OctoCore extends JavaPlugin {
         Logger.info("Starting OctoCore");
         if (!getDataFolder().exists())
             getDataFolder().mkdirs();
-        Logger.info("aaa");
         new SetupConfig().setup(this);
         //Logger.info("Starting ConnectionPoolManager");
         //initdb();
@@ -215,7 +220,6 @@ public final class OctoCore extends JavaPlugin {
         //    Logger.error("Could not connect to database!");
         Logger.info("Setting up internal files");
         Logger.info("Setting up listeners");
-        Logger.info("lmfao");
         new SetupListeners().setup(this);
         Logger.info("Setting up managers");
         setupManager.setup(this);
@@ -251,34 +255,6 @@ public final class OctoCore extends JavaPlugin {
             throwables.printStackTrace();
         }
          */
-    }
-
-    private void initdb() {
-        try {
-            String url = getConfig().getString("database.sql.url"),
-                    port = getConfig().getString("database.sql.port"),
-                    db = getConfig().getString("database.sql.db"),
-                    username = getConfig().getString("database.sql.username"),
-                    password = getConfig().getString("database.sql.password");
-            Logger.info("Logging into SQL:\nURL: " + url + "\nPort: " + port + "\nDB: " + db + "\nUsername: " + username + "\nPasssword: " + password);
-            connectionPoolManager = new ConnectionPoolManager(url, port, db, username, password,
-                    10,
-                    10,
-                    500l,
-                    "",
-                    Bukkit.getLogger()
-            );
-            connection = connectionPoolManager.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            connection.prepareStatement(DatabaseHelper.CREATE_BLACKLIST_WORD_TABLE.getSql()).executeUpdate();
-            connection.prepareStatement(DatabaseHelper.CREATE_DISABLED_COMMANDS_TABLE.getSql()).executeUpdate();
-            connection.prepareStatement(DatabaseHelper.CREATE_SETTINGS_TABLE.getSql()).executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     public static boolean isVaultEnabled() {

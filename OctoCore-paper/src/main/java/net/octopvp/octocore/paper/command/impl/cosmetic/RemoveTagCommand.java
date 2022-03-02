@@ -4,11 +4,12 @@ import com.google.gson.JsonObject;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -37,8 +38,8 @@ public class RemoveTagCommand extends BaseCommand {
                 return CommandResult.SUCCESS;
             }else{
                 //on some other network server
-                JsonObject jsonObject = new JsonChain().addProperty("reason", DataUpdateReason.TAGS_UPDATE_REMOVE.name()).addProperty("target",target).addProperty("remove",tag).get();
-                OctoCore.getInstance().getRedisData().write(JedisAction.PDATA_UPDATE,jsonObject);
+                JsonObject jsonObject = new JsonBuilder().addProperty("reason", DataUpdateReason.TAGS_UPDATE_REMOVE.name()).addProperty("target",target).addProperty("remove",tag).get();
+                new PlayerDataUpdatePacket(jsonObject).send();
                 sender.sendMessage(CC.GREEN + "Requested pdata update for " + target + " reason: update owned tags");
             }
         }else {

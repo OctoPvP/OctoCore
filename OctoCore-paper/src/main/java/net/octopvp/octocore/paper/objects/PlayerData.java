@@ -146,11 +146,11 @@ public class PlayerData {
         PlayerManager.saveProfile(this);
     }
 
-    public String getFormattedName(boolean nicked, Player player) {
+    public String getFormattedName(boolean nicked, Player player,boolean... showtag) {
         String prefix = getHighestRank().getPrefix();
-        if (nicked)
-            return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (tag != null ? " " + getTagString() : "");
-        return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getName() : " " + player.getName())) + (tag != null ? " " + getTagString() : "");
+        boolean shouldShowTag = showtag.length == 0 || showtag[0];
+        if (nicked) return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (tag != null && shouldShowTag ? " " + getTagString() : "");
+        return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).equals("") ? player.getName() : " " + player.getName())) + (tag != null && shouldShowTag ? " " + getTagString() : "");
         /*
         if (nicked)
             return CC.translate((this.isNicked() ? nickPrefix : getHighestRank().getPrefix()) + (this.isNicked() ? nickColor : getCurrentColor()) + " " + (this.isNicked() ? nick : lastKnownName)) + (tag != null ? " " + getTagString() : "");

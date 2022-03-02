@@ -2,15 +2,14 @@ package net.octopvp.octocore.paper.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.redis.JedisAction;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.staff.PunishedJoinPacket;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,7 +19,6 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class PunishmentListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -72,7 +70,6 @@ public class PunishmentListener implements Listener {
                                         punishment.getNiceExpire(),punishment.getNiceDuration()) : Lang.PERM_ENTRY),
                                 true)).toString()
         );
-        OctoCore.getInstance().getRedisData().write(JedisAction.PUNISHED_JOIN,new JsonChain().addProperty("name",event.getName()).addProperty("type", "Blacklisted").get());
-
+        new PunishedJoinPacket(new JsonBuilder().addProperty("name",event.getName()).addProperty("type", "Blacklisted")).send();
     }
 }

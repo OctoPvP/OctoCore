@@ -4,8 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.redis.JedisAction;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.player.PlayerMessagePacket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +33,8 @@ public class GlobalPlayer {
                         .contains(name.toLowerCase())).findFirst().orElse(null) != null;
     }
     public void sendMessage(String message) {
-        OctoCore.getInstance().getRedisData().write(JedisAction.PLAYER_MESSAGE,
-                new JsonChain().addProperty("name", this.name).addProperty("message", message).get());
-    }
+        new PlayerMessagePacket(name,message).send();
+     }
     public UUID getUniqueId(){
         return uuid;
     }

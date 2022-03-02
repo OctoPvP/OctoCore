@@ -1,9 +1,5 @@
 package net.octopvp.octocore.paper.module.impl.punishments.player;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
@@ -11,11 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.json.JsonChain;
-import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

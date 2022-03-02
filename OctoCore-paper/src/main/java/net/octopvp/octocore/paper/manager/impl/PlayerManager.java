@@ -17,11 +17,13 @@ import net.octopvp.octocore.common.object.HashedAddress;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.builder.SentryMessageBuilder;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.json.JsonChain;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseManager;
+import net.octopvp.octocore.paper.database.redis.packets.server.SaveRequestMiscPacket;
+import net.octopvp.octocore.paper.database.redis.packets.server.SaveRequestSwitchPacket;
+import net.octopvp.octocore.paper.database.redis.packets.staff.*;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.manager.impl.autoinit.BookManager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
@@ -54,7 +56,7 @@ public class PlayerManager extends Manager {
         return playerProfiles.values().stream().filter(profile -> profile.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
-    public static Map<UUID,PlayerData> getOnlineData(){
+    public static Map<UUID, PlayerData> getOnlineData() {
         return playerProfiles;
     }
 
@@ -63,10 +65,12 @@ public class PlayerManager extends Manager {
         OfflinePlayer op = Bukkit.getOfflinePlayer(name);
         return getOfflineData(op);
     }
+
     public static CompletableFuture<PlayerData> getOfflineData(UUID uuid) {
         OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
         return getOfflineData(op);
     }
+
     public static CompletableFuture<PlayerData> getOfflineData(OfflinePlayer op) {
         CompletableFuture<PlayerData> completableFuture = new CompletableFuture<>();
         String name = op.getName();
@@ -74,14 +78,14 @@ public class PlayerManager extends Manager {
             completableFuture.complete(getData(op.getPlayer()));
         else if (OctoCore.getServerManager().isPlayerOnline(name)) {
             Tasks.runAsync(() -> {
-                OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonChain().addProperty("name", name).get());
+                new SaveRequestMiscPacket(new JsonBuilder().addProperty("name", name)).send();
                 PlayerData data = null;
                 int tries = 0;
                 while (data == null) {
                     try {
                         Thread.sleep(40);
                         if (tries == 5) //maybe the packet was dropped
-                            OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_MISC, new JsonChain().addProperty("name", name).get());
+                            new SaveRequestMiscPacket(new JsonBuilder().addProperty("name", name)).send();
                         if (Bukkit.getPlayer(name) != null) {
                             data = getData(Bukkit.getPlayer(name));
                             break;
@@ -115,13 +119,13 @@ public class PlayerManager extends Manager {
         backupCollection = DatabaseManager.getMongoDatabase().getCollection("backup");
     }
 
-    public static void processJoin(Player player,UUID uuid, String ip) {
+    public static void processJoin(Player player, UUID uuid, String ip) {
         Sentry.addBreadcrumb(player.getName() + " joined");
         Tasks.runAsync(() -> {
             PlayerData profile = playerProfiles.get(uuid);
             if (profile == null) {
                 Logger.debug("Profile is null!");
-                captureSentryEvent("Profile is null!",player.getUniqueId(),player.getName());
+                captureSentryEvent("Profile is null!", player.getUniqueId(), player.getName());
                 return;
             }
             PermissionManager.injectPermissible(player, profile);
@@ -161,11 +165,13 @@ public class PlayerManager extends Manager {
             });
         });
     }
-    public static void captureSentryEvent(String eventName,Player player){
-        captureSentryEvent(eventName,player.getUniqueId(),player.getName());
+
+    public static void captureSentryEvent(String eventName, Player player) {
+        captureSentryEvent(eventName, player.getUniqueId(), player.getName());
     }
-    public static void captureSentryEvent(String eventName,UUID uuid, String name){
-        if (Sentry.isEnabled()){
+
+    public static void captureSentryEvent(String eventName, UUID uuid, String name) {
+        if (Sentry.isEnabled()) {
             SentryEvent event = new SentryEvent();
             event.setLevel(SentryLevel.ERROR);
             event.setMessage(new SentryMessageBuilder().setMessage(eventName).build());
@@ -195,7 +201,7 @@ public class PlayerManager extends Manager {
                     Thread.sleep(50);//oh no
                     tries++;
                     if (!a) {
-                        OctoCore.getInstance().getRedisData().write(JedisAction.SAVE_REQUEST_SWITCH, new JsonChain().addProperty("uuid", uuid.toString()).get());
+                        new SaveRequestSwitchPacket(uuid).send();
                         a = true;
                     }
                 } else {
@@ -406,7 +412,8 @@ public class PlayerManager extends Manager {
     public static PlayerData getPlayerData(UUID uuid) {
         return getProfile(uuid);
     }
-    public static PlayerData getData(UUID uuid){
+
+    public static PlayerData getData(UUID uuid) {
         return getPlayerData(uuid);
     }
 
@@ -498,6 +505,7 @@ public class PlayerManager extends Manager {
                 getProfile(uuid).getPrefix();
     }
 
+
     public static String getPrefix(PlayerData pdata) {
         if (pdata.isNicked()) {
             return pdata.getNickPrefix();
@@ -509,58 +517,24 @@ public class PlayerManager extends Manager {
 
     public static void sendStaffAlert(AlertType type, String... placeholders) {
         if (type == AlertType.JOIN) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", placeholders[0]);
-            jsonObject.addProperty("server", placeholders[1]);
-            OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_CONNECT, jsonObject);
+            new StaffConnectPacket(placeholders[0], placeholders[1]).send();
         } else if (type == AlertType.LEAVE) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", placeholders[0]);
-            jsonObject.addProperty("server", placeholders[1]);
-            OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_DISCONNECT, jsonObject);
+            new StaffLeavePacket(placeholders[0], placeholders[1]).send();
         } else if (type == AlertType.SWITCH) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", placeholders[0]);
-            jsonObject.addProperty("from", placeholders[1]);
-            jsonObject.addProperty("to", placeholders[2]);
-            OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_SWITCH, jsonObject);
+            new StaffSwitchPacket(placeholders[0], placeholders[1], placeholders[2]).send();
         }
     }
 
-    public static void sendStaffChat(String player, String message, String server) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("name", player);
-        jsonObject.addProperty("message", message);
-        jsonObject.addProperty("server", server);
-        OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_CHAT, jsonObject);
-    }
-
-    public static void sendAdminChat(String player, String message, String server) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("name", player);
-        jsonObject.addProperty("message", message);
-        jsonObject.addProperty("server", server);
-        OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_CHAT, jsonObject);
-    }
-
     public static void sendStaffChat(Player p, String message, String server) {
-        JsonObject jsonObject = new JsonObject();
-        String player = PlayerManager.getPrefix(p.getUniqueId()) + " " + p.getName();
-        jsonObject.addProperty("name", player);
-        jsonObject.addProperty("message", message);
-        jsonObject.addProperty("server", server);
-        jsonObject.addProperty("uuid", p.getUniqueId() + "");
-        OctoCore.getInstance().getRedisData().write(JedisAction.STAFF_CHAT, jsonObject);
+        PlayerData pdata = getProfile(p);
+        String player = pdata.getFormattedName(false,p,false);
+        new StaffChatPacket(player, server, message, p.getUniqueId()).send();
     }
 
     public static void sendAdminChat(Player p, String message, String server) {
-        JsonObject jsonObject = new JsonObject();
-        String player = PlayerManager.getPrefix(p.getUniqueId()) + " " + p.getName();
-        jsonObject.addProperty("name", player);
-        jsonObject.addProperty("message", message);
-        jsonObject.addProperty("server", server);
-        jsonObject.addProperty("uuid", p.getUniqueId() + "");
-        OctoCore.getInstance().getRedisData().write(JedisAction.ADMIN_CHAT, jsonObject);
+        PlayerData pdata = getProfile(p);
+        String player = pdata.getFormattedName(false,p,false);
+        new AdminChatPacket(player, server, message, p.getUniqueId()).send();
     }
 
     public static List<String> getOnlinePlayersString() {
@@ -578,7 +552,8 @@ public class PlayerManager extends Manager {
             return serializeProfileToJson(getProfileFromDB(name));
         return null;
     }
-    public static String getFixedName(String name){
+
+    public static String getFixedName(String name) {
         Document document = pdataCollection.find(Filters.eq("lowerName", name.toLowerCase())).first();
         if (document == null) return name;
         return document.getString("name");

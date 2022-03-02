@@ -30,8 +30,9 @@ public class ChatManager extends Manager {
         PlayerData profile = PlayerManager.getProfile(player);
         if(profile == null)
             return null;
+        String name = profile.getFormattedName(true,player);
         if(translateColor)
-            return profile.getFormattedName(true,player) + CC.WHITE + ": " + CC.translate(message);
-        else return profile.getFormattedName(true,player) + CC.WHITE + ": " + message;
+            return name + CC.WHITE + ": " + CC.translate(message);
+        else return name + CC.WHITE + ": " + message;
     }
 }
