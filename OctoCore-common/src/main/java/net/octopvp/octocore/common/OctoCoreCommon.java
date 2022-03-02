@@ -1,5 +1,6 @@
 package net.octopvp.octocore.common;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.ServerInfo;
@@ -11,6 +12,12 @@ public class OctoCoreCommon {
     @Setter
     @Getter
     private static RedisHandler redisHandler;
+    @Getter
+    @Setter
+    private static Gson gson;
+    @Getter
+    @Setter
+    private static ClassLoader pluginClassLoader;
     @Getter
     @Setter
     private static boolean disabling = false;

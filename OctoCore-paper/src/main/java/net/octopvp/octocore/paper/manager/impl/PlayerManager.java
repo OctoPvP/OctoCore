@@ -17,7 +17,6 @@ import net.octopvp.octocore.common.object.HashedAddress;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.builder.SentryMessageBuilder;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
@@ -506,6 +505,7 @@ public class PlayerManager extends Manager {
                 getProfile(uuid).getPrefix();
     }
 
+
     public static String getPrefix(PlayerData pdata) {
         if (pdata.isNicked()) {
             return pdata.getNickPrefix();
@@ -525,25 +525,15 @@ public class PlayerManager extends Manager {
         }
     }
 
-    public static void sendStaffChat(String player, String message, String server) {
-        new StaffChatPacket(player, message, server).send();
-    }
-
-    public static void sendAdminChat(String player, String message, String server) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("name", player);
-        jsonObject.addProperty("message", message);
-        jsonObject.addProperty("server", server);
-        new AdminChatPacket(player, server, message).send();
-    }
-
     public static void sendStaffChat(Player p, String message, String server) {
-        String player = PlayerManager.getPrefix(p.getUniqueId()) + " " + p.getName();
-        new StaffChatPacket(player, message, server, p.getUniqueId()).send();
+        PlayerData pdata = getProfile(p);
+        String player = pdata.getFormattedName(false,p,false);
+        new StaffChatPacket(player, server, message, p.getUniqueId()).send();
     }
 
     public static void sendAdminChat(Player p, String message, String server) {
-        String player = PlayerManager.getPrefix(p.getUniqueId()) + " " + p.getName();
+        PlayerData pdata = getProfile(p);
+        String player = pdata.getFormattedName(false,p,false);
         new AdminChatPacket(player, server, message, p.getUniqueId()).send();
     }
 

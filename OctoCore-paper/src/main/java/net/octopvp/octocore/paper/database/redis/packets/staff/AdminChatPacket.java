@@ -60,6 +60,6 @@ public class AdminChatPacket extends RedisPacket {
 
     @Override
     public String getName() {
-        return "StaffChatPacket";
+        return "AdminChatPacket";
     }
 }

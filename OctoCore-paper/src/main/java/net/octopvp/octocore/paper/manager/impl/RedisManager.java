@@ -1,18 +1,16 @@
 package net.octopvp.octocore.paper.manager.impl;
 
-import com.google.gson.JsonObject;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
 import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.RedisPacketRecieveEvent;
 import net.octopvp.octocore.paper.database.redis.RedisData;
-import net.octopvp.octocore.paper.database.redis.RedisPackets;
 import net.octopvp.octocore.paper.database.redis.packets.server.ServerOfflinePacket;
 import net.octopvp.octocore.paper.database.redis.packets.server.ServerOnlinePacket;
 import net.octopvp.octocore.paper.manager.Manager;
+import net.octopvp.octocore.paper.utils.ReflectionUtils;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import redis.clients.jedis.Jedis;
 
@@ -31,14 +29,15 @@ public class RedisManager extends Manager {
             jedisSettings.setPassword(getConfig().getString("database.redis.auth.password"));
         }
         OctoCore.getInstance().setRedisData(new RedisData(jedisSettings));
-        OctoCore.getInstance().setRedisHandler(new RedisHandler(new RedisPackets(), jedisSettings, (runnable) -> {
+        OctoCore.getInstance().setRedisHandler(new RedisHandler("net.octopvp.octocore.paper.database.redis.packets", jedisSettings,
+                (runnable) -> {
             Tasks.runAsync(runnable);
             return null;
         }, (p) -> {
-            RedisPacketRecieveEvent event = new RedisPacketRecieveEvent(p.getValue0(),p.getValue1());
+            RedisPacketRecieveEvent event = new RedisPacketRecieveEvent(p.getValue0(), p.getValue1());
             OctoCore.getInstance().getServer().getPluginManager().callEvent(event);
             return !event.isCancelled();
-        }));
+        }, (pack) -> ReflectionUtils.getClassesInPackage(plugin, pack)));
         OctoCore.getInstance().getRedisHandler().connect();
         OctoCoreCommon.setRedisHandler(OctoCore.getInstance().getRedisHandler());
         try {

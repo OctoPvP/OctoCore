@@ -14,57 +14,65 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"unused", "FieldAccessedSynchronizedAndUnsynchronized"})
-public class Tasks <T> {
+public class Tasks<T> {
     private static Plugin plugin;
-    public static void init(Plugin plugin1){
+
+    public static void init(Plugin plugin1) {
         plugin = plugin1;
     }
 
-    public static void run( Runnable callable) {
+    public static void run(Runnable callable) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         }
         Bukkit.getScheduler().runTask(plugin, callable);
     }
-    public static void runSync(Runnable callable){
+
+    public static void runSync(Runnable callable) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         }
         run(callable);
     }
 
-    public static void runAsync( Runnable callable) {
+    public static void runAsync(Runnable callable) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
-        } Bukkit.getScheduler().runTaskAsynchronously(plugin, callable);
+        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, callable);
     }
 
-    public static void runLater( Runnable callable, long delay) {
+    public static void runLater(Runnable callable, long delay) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
-        }   Bukkit.getScheduler().runTaskLater(plugin, callable, delay);
+        }
+        Bukkit.getScheduler().runTaskLater(plugin, callable, delay);
     }
 
-    public static void runAsyncLater( Runnable callable, long delay) {
+    public static void runAsyncLater(Runnable callable, long delay) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
-        }  Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, callable, delay);
+        }
+        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, callable, delay);
     }
 
-    public static void runTimer( Runnable callable, long delay, long interval) {
+    public static void runTimer(Runnable callable, long delay, long interval) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
-        }  Bukkit.getScheduler().runTaskTimer(plugin, callable, delay, interval);
+        }
+        Bukkit.getScheduler().runTaskTimer(plugin, callable, delay, interval);
     }
 
-    public static void runAsyncTimer( Runnable callable, long delay, long interval) {
+    public static void runAsyncTimer(Runnable callable, long delay, long interval) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
-        }  Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, callable, delay, interval);
+        }
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, callable, delay, interval);
     }
 
 
     /* https://gist.githubusercontent.com/aikar/77f8caee3c153074c99b/raw/2b7f9491ad7dc34ab3f4a9db0adf57c9e5cdee15/TaskChain.java */
+
     /**
      * A useless example of registering multiple task signatures and states
      */
@@ -144,6 +152,7 @@ public class Tasks <T> {
 
     /**
      * Util method for example logging
+     *
      * @param log
      */
     private static void log(String log) {
@@ -151,6 +160,7 @@ public class Tasks <T> {
             Logger.info(s);
         }
     }
+
     public static void logError(String log) {
         for (String s : log.split("\n")) {
             Logger.error(s);
@@ -175,7 +185,7 @@ public class Tasks <T> {
     @SuppressWarnings("WeakerAccess") // IDE is wrong, can't be private
     protected Runnable doneCallback;
     protected BiConsumer<Exception, Task<?, ?>> errorHandler;
-    private final ConcurrentLinkedQueue<TaskHolder<?,?>> chainQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<TaskHolder<?, ?>> chainQueue = new ConcurrentLinkedQueue<>();
 
     /**
      * =============================================================================================
@@ -183,6 +193,7 @@ public class Tasks <T> {
 
     /**
      * Starts a new chain.
+     *
      * @return
      */
     public static <T> Tasks<T> newChain() {
@@ -197,10 +208,10 @@ public class Tasks <T> {
      * an already executing chain. This allows you to assure a sequence of events to only
      * execute one at a time, but may be registered and executed from multiple execution points
      * or threads.
-     *
+     * <p>
      * Task Data is not shared between chains of the same name. The only thing that is shared
      * is execution order, in that 2 sequences of events can not run at the same time.
-     *
+     * <p>
      * If 2 chains are created at same time under same name, the first chain will execute fully before the 2nd chain will start, no matter how long
      *
      * @param name
@@ -233,10 +244,11 @@ public class Tasks <T> {
 
     /**
      * Creates a shared chain bound to a specific player with default name
-     * @see #newSharedChain(String) for full documentation
+     *
      * @param player
      * @param <T>
      * @return
+     * @see #newSharedChain(String) for full documentation
      */
     public static <T> Tasks<T> newSharedChain(Player player) {
         return newSharedChain(player, "__MAIN__");
@@ -244,11 +256,12 @@ public class Tasks <T> {
 
     /**
      * Creates a shared chain bound to a specific player with specified name
-     * @see #newSharedChain(String) for full documentation
+     *
      * @param player
      * @param name
      * @param <T>
      * @return
+     * @see #newSharedChain(String) for full documentation
      */
     public static <T> Tasks<T> newSharedChain(Player player, String name) {
         return newSharedChain(player.getUniqueId() + "__PlayerChain__" + name);
@@ -268,6 +281,7 @@ public class Tasks <T> {
 
     /**
      * Checks if the chain has a value saved for the specified key.
+     *
      * @param key
      * @return
      */
@@ -288,7 +302,7 @@ public class Tasks <T> {
 
     /**
      * Saves a value for this chain so that a task furthur up the chain can access it.
-     *
+     * <p>
      * Useful for passing multiple values to the next (or furthur) tasks.
      *
      * @param key
@@ -317,8 +331,9 @@ public class Tasks <T> {
 
     /**
      * Checks if the previous task return was null.
-     *
+     * <p>
      * If not null, the previous task return will forward to the next task.
+     *
      * @return
      */
     public Tasks<T> abortIfNull() {
@@ -328,8 +343,9 @@ public class Tasks <T> {
     /**
      * Checks if the previous task return was null, and aborts if it was, optionally
      * sending a message to the player.
-     *
+     * <p>
      * If not null, the previous task return will forward to the next task.
+     *
      * @param player
      * @param msg
      * @return
@@ -363,7 +379,7 @@ public class Tasks <T> {
 
     /**
      * Reads the specified key from Task Data, and passes it to the next task.
-     *
+     * <p>
      * Will need to pass expected type such as chain.<Foo>returnData("key")
      *
      * @param key
@@ -393,13 +409,13 @@ public class Tasks <T> {
 
     /**
      * Execute a task on the main thread, with no previous input, and a callback to return the response to.
-     *
+     * <p>
      * It's important you don't perform blocking operations in this method. Only use this if
      * the task will be scheduling a different sync operation outside of the Taskss scope.
-     *
+     * <p>
      * Usually you could achieve the same design with a blocking API by switching to an async task
      * for the next task and running it there.
-     *
+     * <p>
      * This method would primarily be for cases where you need to use an API that ONLY provides
      * a callback style API.
      *
@@ -412,20 +428,20 @@ public class Tasks <T> {
     }
 
     /**
-     * @see #syncFirstCallback(AsyncExecutingFirstTask) but ran off main thread
      * @param task
      * @param <R>
      * @return
+     * @see #syncFirstCallback(AsyncExecutingFirstTask) but ran off main thread
      */
     public <R> Tasks<R> asyncFirstCallback(AsyncExecutingFirstTask<R> task) {
         return add0(new TaskHolder<>(this, true, task));
     }
 
     /**
-     * @see #syncFirstCallback(AsyncExecutingFirstTask) but ran on current thread the Chain was created on
      * @param task
      * @param <R>
      * @return
+     * @see #syncFirstCallback(AsyncExecutingFirstTask) but ran on current thread the Chain was created on
      */
     public <R> Tasks<R> currentFirstCallback(AsyncExecutingFirstTask<R> task) {
         return add0(new TaskHolder<>(this, null, task));
@@ -433,13 +449,13 @@ public class Tasks <T> {
 
     /**
      * Execute a task on the main thread, with the last output, and a callback to return the response to.
-     *
+     * <p>
      * It's important you don't perform blocking operations in this method. Only use this if
      * the task will be scheduling a different sync operation outside of the Taskss scope.
-     *
+     * <p>
      * Usually you could achieve the same design with a blocking API by switching to an async task
      * for the next task and running it there.
-     *
+     * <p>
      * This method would primarily be for cases where you need to use an API that ONLY provides
      * a callback style API.
      *
@@ -456,38 +472,38 @@ public class Tasks <T> {
     }
 
     /**
-     * @see #syncCallback(AsyncExecutingTask) but ran off main thread
      * @param task
      * @param <R>
      * @return
+     * @see #syncCallback(AsyncExecutingTask) but ran off main thread
      */
     public <R> Tasks<R> asyncCallback(AsyncExecutingTask<R, T> task) {
         return add0(new TaskHolder<>(this, true, task));
     }
 
     /**
-     * @see #syncCallback(AsyncExecutingTask) but ran off main thread
      * @param task
      * @return
+     * @see #syncCallback(AsyncExecutingTask) but ran off main thread
      */
     public Tasks<?> asyncCallback(AsyncExecutingGenericTask task) {
         return add0(new TaskHolder<>(this, true, task));
     }
 
     /**
-     * @see #syncCallback(AsyncExecutingTask) but ran on current thread the Chain was created on
      * @param task
      * @param <R>
      * @return
+     * @see #syncCallback(AsyncExecutingTask) but ran on current thread the Chain was created on
      */
     public <R> Tasks<R> currentCallback(AsyncExecutingTask<R, T> task) {
         return add0(new TaskHolder<>(this, null, task));
     }
 
     /**
-     * @see #syncCallback(AsyncExecutingTask) but ran on current thread the Chain was created on
      * @param task
      * @return
+     * @see #syncCallback(AsyncExecutingTask) but ran on current thread the Chain was created on
      */
     public Tasks<?> currentCallback(AsyncExecutingGenericTask task) {
         return add0(new TaskHolder<>(this, null, task));
@@ -495,6 +511,7 @@ public class Tasks <T> {
 
     /**
      * Execute task on main thread, with no input, returning an output
+     *
      * @param task
      * @param <R>
      * @return
@@ -504,20 +521,20 @@ public class Tasks <T> {
     }
 
     /**
-     * @see #syncFirst(FirstTask) but ran off main thread
      * @param task
      * @param <R>
      * @return
+     * @see #syncFirst(FirstTask) but ran off main thread
      */
     public <R> Tasks<R> asyncFirst(FirstTask<R> task) {
         return add0(new TaskHolder<>(this, true, task));
     }
 
     /**
-     * @see #syncFirst(FirstTask) but ran on current thread the Chain was created on
      * @param task
      * @param <R>
      * @return
+     * @see #syncFirst(FirstTask) but ran on current thread the Chain was created on
      */
     public <R> Tasks<R> currentFirst(FirstTask<R> task) {
         return add0(new TaskHolder<>(this, null, task));
@@ -525,6 +542,7 @@ public class Tasks <T> {
 
     /**
      * Execute task on main thread, with the last returned input, returning an output
+     *
      * @param task
      * @param <R>
      * @return
@@ -535,6 +553,7 @@ public class Tasks <T> {
 
     /**
      * Execute task on main thread, with no input or output
+     *
      * @param task
      * @return
      */
@@ -543,36 +562,38 @@ public class Tasks <T> {
     }
 
     /**
-     * @see #sync(Task) but ran off main thread
      * @param task
      * @param <R>
      * @return
+     * @see #sync(Task) but ran off main thread
      */
     public <R> Tasks<R> async(Task<R, T> task) {
         return add0(new TaskHolder<>(this, true, task));
     }
+
     /**
-     * @see #sync(GenericTask) but ran off main thread
      * @param task
      * @return
+     * @see #sync(GenericTask) but ran off main thread
      */
     public Tasks<?> async(GenericTask task) {
         return add0(new TaskHolder<>(this, true, task));
     }
 
     /**
-     * @see #sync(Task) but ran on current thread the Chain was created on
      * @param task
      * @param <R>
      * @return
+     * @see #sync(Task) but ran on current thread the Chain was created on
      */
     public <R> Tasks<R> current(Task<R, T> task) {
         return add0(new TaskHolder<>(this, null, task));
     }
+
     /**
-     * @see #sync(GenericTask) but ran on current thread the Chain was created on
      * @param task
      * @return
+     * @see #sync(GenericTask) but ran on current thread the Chain was created on
      */
     public Tasks<?> current(GenericTask task) {
         return add0(new TaskHolder<>(this, null, task));
@@ -581,6 +602,7 @@ public class Tasks <T> {
 
     /**
      * Execute task on main thread, with the last output, and no furthur output
+     *
      * @param task
      * @return
      */
@@ -589,18 +611,18 @@ public class Tasks <T> {
     }
 
     /**
-     * @see #syncLast(LastTask) but ran off main thread
      * @param task
      * @return
+     * @see #syncLast(LastTask) but ran off main thread
      */
     public Tasks<?> asyncLast(LastTask<T> task) {
         return add0(new TaskHolder<>(this, true, task));
     }
 
     /**
-     * @see #syncLast(LastTask) but ran on current thread the Chain was created on
      * @param task
      * @return
+     * @see #syncLast(LastTask) but ran on current thread the Chain was created on
      */
     public Tasks<?> currentLast(LastTask<T> task) {
         return add0(new TaskHolder<>(this, null, task));
@@ -613,6 +635,7 @@ public class Tasks <T> {
     public void execute() {
         execute0();
     }
+
     protected void execute0() {
         synchronized (this) {
             if (this.executed) {
@@ -626,6 +649,7 @@ public class Tasks <T> {
         async = !Bukkit.isPrimaryThread();
         nextTask();
     }
+
     public void executeNext() {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this::execute, 1);
     }
@@ -634,10 +658,12 @@ public class Tasks <T> {
         this.doneCallback = done;
         execute();
     }
+
     public void execute(BiConsumer<Exception, Task<?, ?>> errorHandler) {
         this.errorHandler = errorHandler;
         execute();
     }
+
     public void execute(Runnable done, BiConsumer<Exception, Task<?, ?>> errorHandler) {
         this.doneCallback = done;
         this.errorHandler = errorHandler;
@@ -657,7 +683,7 @@ public class Tasks <T> {
     }
 
     @SuppressWarnings("rawtypes")
-    protected Tasks add0(TaskHolder<?,?> task) {
+    protected Tasks add0(TaskHolder<?, ?> task) {
         synchronized (this) {
             if (!this.shared && this.executed) {
                 throw new RuntimeException("Tasks is executing and not shared");
@@ -715,6 +741,7 @@ public class Tasks <T> {
     /**
      * Provides foundation of a task with what the previous task type should return
      * to pass to this and what this task will return.
+     *
      * @param <R> Return Type
      * @param <A> Argument Type Expected
      */
@@ -796,18 +823,21 @@ public class Tasks <T> {
     }
 
     @SuppressWarnings("PublicInnerClass,WeakerAccess")
-    public static class AbortChainException extends Throwable {}
+    public static class AbortChainException extends Throwable {
+    }
 
     /**
      * Generic task with synchronous return (but may execute on any thread)
+     *
      * @param <R>
      * @param <A>
      */
     @SuppressWarnings("WeakerAccess")
-    public interface Task <R, A> {
+    public interface Task<R, A> {
         /**
          * Gets the current chain that is executing this task. This method should only be called on the same thread
          * that is executing the task.
+         *
          * @return
          */
         public default Tasks<?> getCurrentChain() {
@@ -822,8 +852,9 @@ public class Tasks <T> {
         /**
          * Gets the current chain that is executing this task. This method should only be called on the same thread
          * that is executing the task.
-         *
+         * <p>
          * Since this is an AsyncExecutingTask, You must call this method BEFORE passing control to another thread.
+         *
          * @return
          */
         default Tasks<?> getCurrentChain() {
@@ -838,8 +869,9 @@ public class Tasks <T> {
 
         void runAsync(A input, Consumer<R> next) throws AbortChainException;
     }
+
     @SuppressWarnings("WeakerAccess")
-    public interface FirstTask <R> extends Task<R, Object> {
+    public interface FirstTask<R> extends Task<R, Object> {
         @Override
         default R run(Object input) throws AbortChainException {
             return run();
@@ -847,6 +879,7 @@ public class Tasks <T> {
 
         R run() throws AbortChainException;
     }
+
     @SuppressWarnings("WeakerAccess")
     public interface AsyncExecutingFirstTask<R> extends AsyncExecutingTask<R, Object> {
         @Override
@@ -862,15 +895,18 @@ public class Tasks <T> {
 
         void run(Consumer<R> next) throws AbortChainException;
     }
+
     @SuppressWarnings("WeakerAccess")
-    public interface LastTask <A> extends Task<Object, A> {
+    public interface LastTask<A> extends Task<Object, A> {
         @Override
         default Object run(A input) throws AbortChainException {
             runLast(input);
             return null;
         }
+
         void runLast(A input) throws AbortChainException;
     }
+
     @SuppressWarnings("WeakerAccess")
     public interface GenericTask extends Task<Object, Object> {
         @Override
@@ -878,14 +914,17 @@ public class Tasks <T> {
             runGeneric();
             return null;
         }
+
         void runGeneric() throws AbortChainException;
     }
+
     @SuppressWarnings("WeakerAccess")
     public interface AsyncExecutingGenericTask extends AsyncExecutingTask<Object, Object> {
         @Override
         default Object run(Object input) throws AbortChainException {
             return null;
         }
+
         @Override
         default void runAsync(Object input, Consumer<Object> next) throws AbortChainException {
             run(() -> next.accept(null));
@@ -894,8 +933,9 @@ public class Tasks <T> {
         void run(Runnable next) throws AbortChainException;
     }
 
-    private static class SharedTasks<R>  extends Tasks<R> {
+    private static class SharedTasks<R> extends Tasks<R> {
         private final Tasks<R> backingChain;
+
         private SharedTasks(Tasks<R> backingChain) {
             this.backingChain = backingChain;
         }

@@ -11,6 +11,13 @@ import net.octopvp.octocore.common.object.redis.JedisSettings;
 import net.octopvp.octocore.common.object.tuple.Pair;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.callback.TypeCallback;
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -18,8 +25,8 @@ import redis.clients.jedis.JedisPubSub;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Modifier;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
 @RequiredArgsConstructor
@@ -36,10 +43,12 @@ public class RedisHandler {
     @Getter
     private JedisPubSub pubsub;
 
-    private final Packets packets;
+    //private final Packets packets;
+    private final String packets;
     private final JedisSettings credentials;
     private final TypeCallback<Void, Runnable> runAsync;
     private final TypeCallback<Boolean, Pair<RedisPacket, JsonObject>> onPacketReceive;
+    private final TypeCallback<Collection<Class<?>>, String> getClasses;
     private final Map<String, RedisPacket> packetData = new HashMap<>();
 
     public void connect() {
@@ -80,7 +89,7 @@ public class RedisHandler {
                 if (channel.equalsIgnoreCase(channel)) {
                     JsonObject json;
                     try {
-                        json = JsonParser.parseString(message).getAsJsonObject();
+                        json = OctoCoreCommon.getGson().fromJson(message, JsonObject.class);
                     } catch (JsonSyntaxException e) {
                         e.printStackTrace();
                         return;
@@ -136,6 +145,7 @@ public class RedisHandler {
 
     public void setupPackets() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         int i = 0;
+        /*
         for (Field field : this.packets.getClass().getDeclaredFields()) {
             if (RedisPacket.class.isAssignableFrom(field.getType()) && field.getType().getSuperclass() == RedisPacket.class) {
                 boolean accessible = field.isAccessible();
@@ -148,6 +158,18 @@ public class RedisHandler {
                 field.setAccessible(accessible);
 
                 this.packetData.put(packet.getName(), packet);
+                i++;
+            }
+        }
+         */
+
+        for (Class<?> aClass : getClasses.callback(packets)) {
+            //check if the class extends RedisPacket
+            if (RedisPacket.class.isAssignableFrom(aClass)) {
+                if (Modifier.isAbstract(aClass.getModifiers()))
+                    continue;
+                RedisPacket packet = (RedisPacket) aClass.getDeclaredConstructor().newInstance();
+                packetData.put(packet.getName(), packet);
                 i++;
             }
         }
@@ -188,7 +210,7 @@ public class RedisHandler {
     public void sendRequest(String channel, JsonObject object) {
         try {
             if (object == null) {
-                throw new IllegalStateException("Object that was beging sent was null!");
+                throw new IllegalStateException("Object that was being sent was null!");
             }
 
             try (Jedis jedis = this.publisherPool.getResource()) {
