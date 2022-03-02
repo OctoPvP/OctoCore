@@ -1,12 +1,12 @@
 package net.octopvp.octocore.paper.command.impl.punishments.undo;
 
 import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.database.redis.packets.player.ExecuteUnbanPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
@@ -85,7 +85,7 @@ public class UnBanCommand extends BaseCommand {
             jsonBuilder.addProperty("silent", punishment.isRemovedSilent());
             jsonBuilder.addProperty("reason", reason);
 
-            plugin.getRedisData().write(JedisAction.EXECUTE_UNBAN, jsonBuilder.get());
+            new ExecuteUnbanPacket(jsonBuilder).send();
 
             punishment.save(true);
 

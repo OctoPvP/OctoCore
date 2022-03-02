@@ -1,12 +1,12 @@
 package net.octopvp.octocore.paper.command.impl.punishments.undo;
 
 import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.database.redis.packets.player.ExecuteUnmutePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
@@ -79,7 +79,8 @@ public class UnMuteCommand extends BaseCommand {
             } else {
                 jsonChain.addProperty("senderDisplay", sender.getName());
             }
-            plugin.getRedisData().write(JedisAction.EXECUTE_UNMUTE, jsonChain.get());
+
+            new ExecuteUnmutePacket(jsonChain).send();
 
             punishment.save(true);
 

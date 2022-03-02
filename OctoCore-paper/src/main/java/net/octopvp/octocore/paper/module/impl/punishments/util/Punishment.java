@@ -8,10 +8,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.player.ExecutePunishmentPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
@@ -178,7 +178,7 @@ public class Punishment {
         jsonChain.addProperty("warns", warns.size());
         jsonChain.addProperty("alts", StringUtils.getStringFromList(this.playerData.getAlts().stream().map(Alt::getName).collect(Collectors.toList())));
 
-        this.getPlugin().getRedisData().write(JedisAction.EXECUTE_PUNISHMENT, jsonChain);
+        new ExecutePunishmentPacket(jsonChain).send();
     }
 
     @Override

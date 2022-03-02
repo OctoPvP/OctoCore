@@ -1,11 +1,11 @@
 package net.octopvp.octocore.paper.command.impl.punishments.undo;
 
 import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.database.redis.packets.player.ExecuteUnblacklistPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
@@ -27,7 +27,6 @@ public class UnBlacklistCommand extends BaseCommand {
             return CommandResult.INVALID_ARGS;
         }
         Tasks.runAsync(() -> {
-
             OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
 
             PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
@@ -80,7 +79,7 @@ public class UnBlacklistCommand extends BaseCommand {
                 jsonChain.addProperty("senderDisplay", sender.getName());
             }
 
-            plugin.getRedisData().write(JedisAction.EXECUTE_UNBLACKLIST, jsonChain.get());
+            new ExecuteUnblacklistPacket(jsonChain).send();
 
             punishment.save(true);
 

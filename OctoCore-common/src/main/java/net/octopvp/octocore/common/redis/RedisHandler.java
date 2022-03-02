@@ -25,7 +25,7 @@ import java.util.concurrent.ForkJoinPool;
 @RequiredArgsConstructor
 public class RedisHandler {
     @Getter
-    private static String channel = "OCTO";
+    private static final String channel = "OCTO";
 
     @Getter
     private JedisPool subscriberPool, publisherPool;
@@ -40,7 +40,7 @@ public class RedisHandler {
     private final JedisSettings credentials;
     private final TypeCallback<Void, Runnable> runAsync;
     private final TypeCallback<Boolean, Pair<RedisPacket, JsonObject>> onPacketReceive;
-    private Map<String, RedisPacket> packetData = new HashMap<>();
+    private final Map<String, RedisPacket> packetData = new HashMap<>();
 
     public void connect() {
         String host = credentials.getAddress();
@@ -49,7 +49,9 @@ public class RedisHandler {
         int port = credentials.getPort();
         Logger.info("Attempting to connect to redis...");
         try {
-            this.subscriberPool = this.publisherPool = new JedisPool(new JedisPoolConfig(), host, port,
+            this.subscriberPool = new JedisPool(new JedisPoolConfig(), host, port,
+                    30_000, !hasPassword ? null : password, 0, null);
+            this.publisherPool = new JedisPool(new JedisPoolConfig(), host, port,
                     30_000, !hasPassword ? null : password, 0, null);
 
             this.subscriberPool.getResource();
