@@ -26,14 +26,6 @@ public class NickManager extends Manager {
 
     }
 
-    public static boolean isNicked(UUID uuid){
-        try {
-            PreparedStatement ps = OctoCore.getConnection().prepareStatement("SELECT * FROM ");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return false;
-    }
     public static void addNick(PlayerData profile, String nick){
         if(!nicked.containsKey(profile))
             nicked.put(profile, nick);

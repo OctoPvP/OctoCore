@@ -10,7 +10,6 @@ import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
-import net.octopvp.octocore.common.database.ConnectionPoolManager;
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.ServerInfo;
 import net.octopvp.octocore.common.object.ServerType;
@@ -42,8 +41,6 @@ public final class OctoCore extends JavaPlugin {
     public static String prefix = "[OctoCore] ";
     private static Chat chat;
     private static Permission perms = null;
-    private static ConnectionPoolManager connectionPoolManager;
-    private static Connection connection;
     private static OctoCore instance;
     private static CommandFramework commandFramework;
     private static Location spawn;
@@ -77,10 +74,6 @@ public final class OctoCore extends JavaPlugin {
 
     public static Chat getChat() {
         return OctoCore.chat;
-    }
-
-    public static Connection getConnection() {
-        return OctoCore.connection;
     }
 
     public static OctoCore getInstance() {
