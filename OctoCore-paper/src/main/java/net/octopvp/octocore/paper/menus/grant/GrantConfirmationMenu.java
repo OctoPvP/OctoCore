@@ -1,10 +1,8 @@
 package net.octopvp.octocore.paper.menus.grant;
 
 import com.google.common.collect.Lists;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.PlayerGrantEvent;
 import net.octopvp.octocore.paper.database.redis.packets.other.GrantsUpdatePacket;

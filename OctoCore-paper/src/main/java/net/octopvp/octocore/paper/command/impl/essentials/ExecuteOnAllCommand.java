@@ -1,16 +1,12 @@
 package net.octopvp.octocore.paper.command.impl.essentials;
 
-import com.google.gson.JsonObject;
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.database.redis.packets.server.GlobalCommandPacket;
 import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.common.object.Permission;
 

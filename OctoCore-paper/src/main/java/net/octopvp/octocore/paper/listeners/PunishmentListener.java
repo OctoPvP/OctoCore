@@ -1,9 +1,7 @@
 package net.octopvp.octocore.paper.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
-import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.staff.PunishedJoinPacket;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;

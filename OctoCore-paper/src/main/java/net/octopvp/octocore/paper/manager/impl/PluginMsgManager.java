@@ -4,7 +4,6 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.database.redis.publisher.BungeeFallback;
 import net.octopvp.octocore.paper.manager.Manager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -34,7 +33,6 @@ public class PluginMsgManager extends Manager implements PluginMessageListener {
         String subChannel = in.readUTF();
         switch (subChannel){
             case PluginMsgChannels.SubChannels.SYNC:
-                new BungeeFallback().process(bytes);
                 break;
         }
     }

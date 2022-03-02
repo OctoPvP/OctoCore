@@ -25,7 +25,6 @@ public class BungeeRedisManager {
         if (config.getBoolean("redis.auth.enabled")) {
             settings.setPassword(config.getString("redis.auth.password"));
         }
-        OctoCoreWaterfall.getInstance().setRedisData(new BungeeRedisData(settings));
         OctoCoreWaterfall.getInstance().setRedisHandler(new RedisHandler("net.octopvp.octocore.waterfall.redis.packet.impl", settings, (runnable) -> {
             ProxyServer.getInstance().getScheduler().runAsync(OctoCoreWaterfall.getInstance(), runnable);
             return null;

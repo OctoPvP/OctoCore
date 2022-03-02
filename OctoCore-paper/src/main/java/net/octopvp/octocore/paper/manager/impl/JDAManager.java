@@ -16,7 +16,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.common.object.redis.JedisAction;
 import net.octopvp.octocore.paper.database.redis.packets.staff.DiscordAdminChatPacket;
 import net.octopvp.octocore.paper.database.redis.packets.staff.DiscordStaffChatPacket;
 import net.octopvp.octocore.paper.manager.Manager;

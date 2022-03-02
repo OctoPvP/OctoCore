@@ -16,7 +16,6 @@ import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
 import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
 import net.octopvp.octocore.waterfall.listeners.*;
-import net.octopvp.octocore.waterfall.redis.BungeeRedisData;
 import net.octopvp.octocore.waterfall.redis.BungeeRedisManager;
 
 import java.io.File;
@@ -31,10 +30,6 @@ public final class OctoCoreWaterfall extends Plugin {
     private static OctoCoreWaterfall instance;
     @Getter
     private static Configuration config;
-
-    @Getter
-    @Setter
-    private BungeeRedisData redisData;
 
     @Getter
     @Setter
