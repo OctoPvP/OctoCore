@@ -229,6 +229,7 @@ public class RedisHandler {
             e.printStackTrace();
         }
     }
-
-
+    public Jedis getJedis() {
+        return this.publisherPool.getResource();
+    }
 }

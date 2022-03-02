@@ -19,9 +19,7 @@ import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.command.CommandFramework;
-import net.octopvp.octocore.paper.database.DatabaseHelper;
 import net.octopvp.octocore.paper.database.DatabaseManager;
-import net.octopvp.octocore.paper.database.redis.RedisData;
 import net.octopvp.octocore.paper.manager.impl.*;
 import net.octopvp.octocore.paper.setup.*;
 import net.octopvp.octocore.paper.utils.PacketUtil;
@@ -38,7 +36,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.UUID;
 
 public final class OctoCore extends JavaPlugin {
@@ -59,9 +56,6 @@ public final class OctoCore extends JavaPlugin {
 
     @Getter
     private static String serverName;
-    @Getter
-    @Setter
-    private RedisData redisData;
     @Getter
     @Setter
     private RedisHandler redisHandler;
