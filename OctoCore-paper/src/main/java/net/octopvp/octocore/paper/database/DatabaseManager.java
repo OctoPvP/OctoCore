@@ -63,7 +63,7 @@ public class DatabaseManager extends Manager {
     }
 
     public static Jedis getJedis(){
-        return OctoCore.getInstance().getRedisData().getPool().getResource();
+        return OctoCore.getInstance().getRedisHandler().getJedis();
     }
 
 

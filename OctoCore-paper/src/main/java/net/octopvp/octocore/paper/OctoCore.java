@@ -10,7 +10,6 @@ import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
-import net.octopvp.octocore.common.database.ConnectionPoolManager;
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.ServerInfo;
 import net.octopvp.octocore.common.object.ServerType;
@@ -19,9 +18,7 @@ import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.command.CommandFramework;
-import net.octopvp.octocore.paper.database.DatabaseHelper;
 import net.octopvp.octocore.paper.database.DatabaseManager;
-import net.octopvp.octocore.paper.database.redis.RedisData;
 import net.octopvp.octocore.paper.manager.impl.*;
 import net.octopvp.octocore.paper.setup.*;
 import net.octopvp.octocore.paper.utils.PacketUtil;
@@ -38,15 +35,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.UUID;
 
 public final class OctoCore extends JavaPlugin {
     public static String prefix = "[OctoCore] ";
     private static Chat chat;
     private static Permission perms = null;
-    private static ConnectionPoolManager connectionPoolManager;
-    private static Connection connection;
     private static OctoCore instance;
     private static CommandFramework commandFramework;
     private static Location spawn;
@@ -59,9 +53,6 @@ public final class OctoCore extends JavaPlugin {
 
     @Getter
     private static String serverName;
-    @Getter
-    @Setter
-    private RedisData redisData;
     @Getter
     @Setter
     private RedisHandler redisHandler;
@@ -83,10 +74,6 @@ public final class OctoCore extends JavaPlugin {
 
     public static Chat getChat() {
         return OctoCore.chat;
-    }
-
-    public static Connection getConnection() {
-        return OctoCore.connection;
     }
 
     public static OctoCore getInstance() {

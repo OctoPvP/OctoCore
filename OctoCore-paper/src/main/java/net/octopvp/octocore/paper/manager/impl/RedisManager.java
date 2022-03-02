@@ -6,7 +6,6 @@ import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.RedisPacketRecieveEvent;
-import net.octopvp.octocore.paper.database.redis.RedisData;
 import net.octopvp.octocore.paper.database.redis.packets.server.ServerOfflinePacket;
 import net.octopvp.octocore.paper.database.redis.packets.server.ServerOnlinePacket;
 import net.octopvp.octocore.paper.manager.Manager;
@@ -28,7 +27,6 @@ public class RedisManager extends Manager {
             jedisSettings.setAuth(true);
             jedisSettings.setPassword(getConfig().getString("database.redis.auth.password"));
         }
-        OctoCore.getInstance().setRedisData(new RedisData(jedisSettings));
         OctoCore.getInstance().setRedisHandler(new RedisHandler("net.octopvp.octocore.paper.database.redis.packets", jedisSettings,
                 (runnable) -> {
             Tasks.runAsync(runnable);
@@ -60,6 +58,6 @@ public class RedisManager extends Manager {
     }
 
     public static Jedis getJedis() {
-        return OctoCore.getInstance().getRedisData().getJedis();
+        return OctoCore.getInstance().getRedisHandler().getJedis();
     }
 }
