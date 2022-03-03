@@ -68,6 +68,6 @@ public class PunishmentListener implements Listener {
                                         punishment.getNiceExpire(),punishment.getNiceDuration()) : Lang.PERM_ENTRY),
                                 true)).toString()
         );
-        new PunishedJoinPacket(new JsonBuilder().addProperty("name",event.getName()).addProperty("type", "Blacklisted")).send();
+        new PunishedJoinPacket(new JsonBuilder().addProperty("name",event.getName()).addProperty("type", "blacklisted")).send();
     }
 }

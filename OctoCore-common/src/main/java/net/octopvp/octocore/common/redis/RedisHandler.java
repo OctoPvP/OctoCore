@@ -11,6 +11,7 @@ import net.octopvp.octocore.common.object.redis.JedisSettings;
 import net.octopvp.octocore.common.object.tuple.Pair;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.callback.TypeCallback;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
@@ -194,7 +195,10 @@ public class RedisHandler {
     public void sendRequest(RedisPacket packet, boolean here) {
         if (!isRedisConnected() || here) {
             try {
-                packet.onReceive(packet.getData().get());
+                JsonBuilder d = packet.getData();
+                if (d == null)
+                    d = new JsonBuilder();
+                packet.onReceive(d.get());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -202,7 +206,10 @@ public class RedisHandler {
         }
         JsonObject object = new JsonObject();
         object.addProperty("name", packet.getName());
-        object.add("data", packet.getData().get());
+        JsonBuilder b = packet.getData();
+        if (b == null)
+            b = new JsonBuilder();
+        object.add("data", b.get());
 
         this.sendRequest(channel, object);
     }

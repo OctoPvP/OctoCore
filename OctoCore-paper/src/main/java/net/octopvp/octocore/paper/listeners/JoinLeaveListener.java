@@ -115,7 +115,7 @@ public class JoinLeaveListener implements Listener {
                                     true)).toString()
             );
             new PunishedJoinPacket(
-                    new JsonBuilder().addProperty("name",name).addProperty("type", "Banned").addProperty("more",true).addProperty("expires",activeBan.getNiceExpire()).addProperty("addedBy",activeBan.getAddedByName())
+                    new JsonBuilder().addProperty("name",name).addProperty("type", "banned").addProperty("more",true).addProperty("expires",activeBan.getNiceExpire()).addProperty("addedBy",activeBan.getAddedByName())
             ).send();
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
             return;
@@ -144,6 +144,7 @@ public class JoinLeaveListener implements Listener {
                                     (temp ? Lang.TEMP : ""),
                                     "BANNED",
                                     "Banned",
+                                    activeBan.getAddedByName(),
                                     activeBan.getReason(),
                                     (temp ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
                                             activeBan.getNiceExpire(),activeBan.getNiceDuration()) : Lang.PERM_ENTRY),

@@ -208,13 +208,13 @@ public class ExecutePunishmentPacket extends RedisPacket {
             String typeStr;
             switch (type) {
                 case BAN:
-                    typeStr = "banned";
+                    typeStr = (IPRelative ? "ip-" : "") + "banned";
                     break;
                 case KICK:
                     typeStr = "kicked";
                     break;
                 case MUTE:
-                    typeStr = "muted";
+                    typeStr = (IPRelative ? "ip-" : "") + "muted";
                     break;
                 case WARN:
                     typeStr = "warned";

@@ -37,11 +37,8 @@ public class AltsMenu extends PaginatedMenu {
             @Override
             public ItemStack getItem(Player player) {
                 ItemBuilder item = new ItemBuilder(Material.PAPER);
-                item.setName(CC.MAIN + "About");
-                item.addLoreLine(" ");
-                item.addLoreLine("&7This menu is showing all &f" + playerData.getPlayerName() + "'s &7alts");
-                item.addLoreLine("&7that are recorded on the last ip of the user.");
-                item.addLoreLine(" ");
+                item.setName(CC.MAIN + playerData.getPlayerName() + "'s possible alts");
+                item.addLoreLine("");
                 item.addLoreLine(CC.VALUE + "Alts amount&7: " + CC.SECONDARY + playerData.getAlts().size());
                 item.addLoreLine(CC.VALUE + "Banned alts&7: " + CC.SECONDARY + playerData.getAlts().stream().filter(Alt::isBanned).collect(Collectors.toList()).size());
                 item.addLoreLine(" ");

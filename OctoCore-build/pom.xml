@@ -79,6 +79,12 @@
                 <version>2.3.1</version>
                 <configuration>
                     <outputDirectory>C:\Users\evanl\OctoPvP\Network\lobby\plugins</outputDirectory>
+                    <archive>
+                        <index>true</index>
+                        <manifestEntries>
+                            <Built-By>OctoDev</Built-By>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>

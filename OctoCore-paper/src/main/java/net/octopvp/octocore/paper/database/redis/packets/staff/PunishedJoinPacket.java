@@ -20,7 +20,7 @@ public class PunishedJoinPacket extends RedisPacket {
         String type = data.get("type").getAsString(),
                 name = data.get("name").getAsString();
         Clickable clickable;
-        if (data.get("more").getAsBoolean()) {
+        if (data.has("more") && data.get("more").getAsBoolean()) {
             String expire = data.get("expires").getAsString(),
                     addedBy = data.get("addedBy").getAsString();
             clickable = new Clickable(Lang.PUNISH_JOIN_ALERT.getMsg(name, type), Lang.PUNISH_JOIN_ALERT_HOVER.getMsg(expire, addedBy), "/history " + name);

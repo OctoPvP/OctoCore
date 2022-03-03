@@ -31,18 +31,31 @@ public class ExecuteAltKickPacket extends RedisPacket {
             Player target = Bukkit.getPlayer(name);
             if (target != null) {
                 if (type.equalsIgnoreCase("BAN")) {
-                    new DisconnectReason(
-                            Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                    (!permanent ? Lang.TEMP : ""),
-                                    "BANNED",
-                                    "Banned",
-                                    sender,
-                                    reason,
-                                    (!permanent ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
-                                            expire, niceDuration) : Lang.PERM_ENTRY),
-                                    true)).toString();
+                    target.kickBungee(
+                            new DisconnectReason(
+                                    Lang.PUNISH_KICK_MESSAGE.getMsg(
+                                            (!permanent ? Lang.TEMP : ""),
+                                            "BANNED",
+                                            "Banned",
+                                            sender,
+                                            reason,
+                                            (!permanent ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
+                                                    expire, niceDuration) : Lang.PERM_ENTRY),
+                                            true)).toString()
+                    );
                 } else if (type.equalsIgnoreCase("BLACKLIST")) {
-
+                    target.kickBungee(
+                            new DisconnectReason(
+                                    Lang.PUNISH_KICK_MESSAGE.getMsg(
+                                            (!permanent ? Lang.TEMP : ""),
+                                            "BLACKLISTED",
+                                            "Blacklisted",
+                                            sender,
+                                            reason,
+                                            (!permanent ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
+                                                    expire, niceDuration) : Lang.PERM_ENTRY),
+                                            true)).toString()
+                    );
                 }
             }
         });
