@@ -34,7 +34,7 @@ public class ExecuteAltKickPacket extends RedisPacket {
                     target.kickBungee(
                             new DisconnectReason(
                                     Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                            (!permanent ? Lang.TEMP : ""),
+                                            (!permanent ? Lang.TEMP : Lang.PERM),
                                             "BANNED",
                                             "Banned",
                                             sender,
@@ -47,7 +47,7 @@ public class ExecuteAltKickPacket extends RedisPacket {
                     target.kickBungee(
                             new DisconnectReason(
                                     Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                            (!permanent ? Lang.TEMP : ""),
+                                            (!permanent ? Lang.TEMP : Lang.PERM),
                                             "BLACKLISTED",
                                             "Blacklisted",
                                             sender,

@@ -36,9 +36,8 @@ public class Punishment {
     private final PunishmentType punishmentType;
 
     private boolean active = true, permanent = true, silent = false, removedSilent = false, last = false, IPRelative = false;
-    private long addedAt = -5L;
-    private long durationTime = -5L, whenRemoved;
-    private String reason = "", removedBy = "", enteredDuration = "", removedFor = "",addedByName = "", name = "";
+    private long addedAt = -5L, durationTime = -5L, whenRemoved;
+    private String reason = "", removedBy = "", enteredDuration = "", removedFor = "", addedByName = "", name = "";
     private UUID addedBy;
 
     public boolean isTemporary(){
@@ -65,7 +64,7 @@ public class Punishment {
             document.put("whenRemoved", this.whenRemoved);
             document.put("last", this.last);
             document.put("IPRelative", this.IPRelative);
-            document.put("BannedIP", this.playerData.getAddress());
+            document.put("IPAddress", this.playerData.getAddress());
             document.put("addedByName",this.addedByName);
             Logger.debug("c");
             if (replace) {

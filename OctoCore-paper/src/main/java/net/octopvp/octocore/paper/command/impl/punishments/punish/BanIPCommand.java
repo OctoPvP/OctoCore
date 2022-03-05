@@ -30,19 +30,19 @@ public class BanIPCommand extends BaseCommand {
                 return;
             }
 
-            OfflinePlayer target = Bukkit.getOfflinePlayer( PunishModule.getInstance().getProfileManager().correctName(args[0]));
+            OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
 
-            PunishPlayerData targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
 
             if (targetData == null || !target.isOnline()) {
-                 PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
+                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
                 targetData.getPunishData().load();
                 targetData.load();
             }
             if (targetData.getPunishData().isBanned()) {
-                sender.sendMessage(Lang.ALREADY_BANNED.toString().replace("<user>", target.getName()));
-                 PunishModule.getInstance().getProfileManager().unloadData(target);
+                sender.sendMessage(Lang.ALREADY_BANNED.toString().replace("%name%", target.getName()));
+                PunishModule.getInstance().getProfileManager().unloadData(target);
                 return;
             }
 
@@ -50,13 +50,13 @@ public class BanIPCommand extends BaseCommand {
             int reasonStart = 2;
             boolean durationCorrect = false;
 
-            if(args[1].equalsIgnoreCase("perm") || args[1].equalsIgnoreCase("permanent")) {
+            if (args[1].equalsIgnoreCase("perm") || args[1].equalsIgnoreCase("permanent")) {
                 duration = -5L;
             } else {
                 try {
                     duration = DateUtils.parseDateDiff(args[1], true);
                     durationCorrect = true;
-                } catch(Exception e) {
+                } catch (Exception e) {
                     reasonStart = 1;
                 }
             }
@@ -66,7 +66,7 @@ public class BanIPCommand extends BaseCommand {
             }
             StringBuilder reasonBuilder = new StringBuilder();
 
-            for(int i = reasonStart; i < args.length; ++i) {
+            for (int i = reasonStart; i < args.length; ++i) {
                 reasonBuilder.append(args[i]).append(" ");
             }
             if (reasonBuilder.length() == 0) reasonBuilder.append("Banned");
@@ -74,9 +74,9 @@ public class BanIPCommand extends BaseCommand {
             String reason = reasonBuilder.toString().trim();
             boolean silent = reason.contains("-silent") || reason.contains("-s");
 
-            if(reason.contains("-silent")) {
+            if (reason.contains("-silent")) {
                 reason = reason.replace("-silent", "");
-            } else if(reason.contains("-s")) {
+            } else if (reason.contains("-s")) {
                 reason = reason.replace("-s", "");
             }
 

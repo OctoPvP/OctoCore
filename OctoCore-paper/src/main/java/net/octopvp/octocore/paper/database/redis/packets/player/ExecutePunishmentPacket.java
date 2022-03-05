@@ -50,7 +50,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                     if (player != null) {
                         player.kickBungee(new DisconnectReason(
                                 Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                        (temp ? Lang.TEMP : ""),
+                                        (temp ? Lang.TEMP : Lang.PERM),
                                         "BANNED",
                                         "Banned",
                                         addedByName,
@@ -86,7 +86,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                         player.kickBungee(
                                 new DisconnectReason(
                                         Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                                (temp ? Lang.TEMP : ""),
+                                                (temp ? Lang.TEMP : Lang.PERM),
                                                 "BLACKLISTED",
                                                 "Blacklisted",
                                                 addedByName,
@@ -98,7 +98,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                        /*
                        player.kickBungee(new DisconnectReason(
                                Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                       (temp ? Lang.TEMP : ""),
+                                       (temp ? Lang.TEMP : Lang.PERM),
                                        "BLACKLISTED",
                                        reason,
                                        (temp ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
@@ -139,6 +139,15 @@ public class ExecutePunishmentPacket extends RedisPacket {
                             (!permanent ? Lang.TEMP_MUTE_ENTRY_MESSAGE.getMsg(niceExpire) : ""));
                     player.sendMessage(CC.translate(message));
                 }
+                StringUtils.getListFromString(alts).forEach(alt -> {
+                    Player p = Bukkit.getPlayer(uuid);
+                    if (p != null) {
+                        String message = Lang.MUTE_MESSAGE.getMsg(
+                                (permanent ? Lang.PERM : Lang.TEMP), reason,
+                                (!permanent ? Lang.TEMP_MUTE_ENTRY_MESSAGE.getMsg(niceExpire) : ""));
+                        p.sendMessage(CC.translate(message));
+                    }
+                });
             }
             if (type == PunishmentType.WARN) {
                 Player player = Bukkit.getPlayer(uuid);
@@ -157,7 +166,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                     player.kickBungee(
                             new DisconnectReason(
                                     Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                            (temp ? Lang.TEMP : ""),
+                                            (temp ? Lang.TEMP : Lang.PERM),
                                             "BANNED",
                                             "Banned",
                                             addedByName,
@@ -191,7 +200,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                     player.kickBungee(
                             new DisconnectReason(
                                     Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                            (temp ? Lang.TEMP : ""),
+                                            (temp ? Lang.TEMP : Lang.PERM),
                                             "BLACKLISTED",
                                             "Blacklisted",
                                             addedByName,
@@ -208,13 +217,13 @@ public class ExecutePunishmentPacket extends RedisPacket {
             String typeStr;
             switch (type) {
                 case BAN:
-                    typeStr = (IPRelative ? "ip-" : "") + "banned";
+                    typeStr = (temp ? Lang.TEMP : Lang.PERM) + " " + (IPRelative ? "ip-" : "") + "banned";
                     break;
                 case KICK:
                     typeStr = "kicked";
                     break;
                 case MUTE:
-                    typeStr = (IPRelative ? "ip-" : "") + "muted";
+                    typeStr = (temp ? Lang.TEMP : Lang.PERM) + " " + (IPRelative ? "ip-" : "") + "muted";
                     break;
                 case WARN:
                     typeStr = "warned";

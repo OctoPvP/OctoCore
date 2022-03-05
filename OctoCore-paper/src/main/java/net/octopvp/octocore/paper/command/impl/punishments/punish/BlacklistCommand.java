@@ -29,24 +29,24 @@ public class BlacklistCommand extends BaseCommand {
                 return;
             }
 
-            OfflinePlayer target = Bukkit.getOfflinePlayer( PunishModule.getInstance().getProfileManager().correctName(args[0]));
+            OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
 
-            PunishPlayerData targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
 
             if (targetData == null || !target.isOnline()) {
-                 PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
+                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
                 targetData.getPunishData().load();
                 targetData.load();
             }
             if (targetData.getPunishData().isBlacklisted()) {
-                sender.sendMessage(Lang.BLACKLIST_ALREADY_BLACKLISTED.toString().replace("<user>", target.getName()));
-                 PunishModule.getInstance().getProfileManager().unloadData(target);
+                sender.sendMessage(Lang.BLACKLIST_ALREADY_BLACKLISTED.toString().replace("%name%", target.getName()));
+                PunishModule.getInstance().getProfileManager().unloadData(target);
                 return;
             }
             StringBuilder reasonBuilder = new StringBuilder();
 
-            for(int i = 1; i < args.length; ++i) {
+            for (int i = 1; i < args.length; ++i) {
                 reasonBuilder.append(args[i]).append(" ");
             }
             if (reasonBuilder.length() == 0) reasonBuilder.append("Blacklisted");
@@ -54,13 +54,13 @@ public class BlacklistCommand extends BaseCommand {
             String reason = reasonBuilder.toString().trim();
             boolean silent = reason.contains("-silent") || reason.contains("-s");
 
-            if(reason.contains("-silent")) {
+            if (reason.contains("-silent")) {
                 reason = reason.replace("-silent", "");
-            } else if(reason.contains("-s")) {
+            } else if (reason.contains("-s")) {
                 reason = reason.replace("-s", "");
             }
 
-            Punishment punishment = new Punishment( targetData, PunishmentType.BLACKLIST);
+            Punishment punishment = new Punishment(targetData, PunishmentType.BLACKLIST);
             punishment.setSilent(silent);
             punishment.setPermanent(true);
             punishment.setIPRelative(true);

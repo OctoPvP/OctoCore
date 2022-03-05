@@ -32,13 +32,13 @@ public class WarnCommand extends BaseCommand {
                 return;
             }
 
-            OfflinePlayer target = Bukkit.getOfflinePlayer( PunishModule.getInstance().getProfileManager().correctName(args[0]));
+            OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
 
-            PunishPlayerData targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
 
             if (targetData == null || !target.isOnline()) {
-                 PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
+                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
                 targetData.getPunishData().load();
             }
 
@@ -118,7 +118,7 @@ public class WarnCommand extends BaseCommand {
                 playerData.getPunishmentsExecuted().add(punishHistory);
             }
 
-             PunishModule.getInstance().getProfileManager().unloadData(target);
+            PunishModule.getInstance().getProfileManager().unloadData(target);
         });
         return CommandResult.SUCCESS;
     }

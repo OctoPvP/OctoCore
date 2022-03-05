@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.module.impl.punishments.util;
 
-public enum  PunishmentType {
+public enum PunishmentType {
 
     BAN, BLACKLIST,
     MUTE,
