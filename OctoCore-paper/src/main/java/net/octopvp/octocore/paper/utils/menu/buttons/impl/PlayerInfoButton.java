@@ -52,7 +52,6 @@ public class PlayerInfoButton extends Button {
                 CC.AQUA + "Name&7: &b" + playerData.getName(),
                 CC.AQUA + "UUID&7: &b" + playerData.getUuid(),
                 CC.AQUA + "Rank&7: &b" + playerData.getHighestRank().getDisplayColor() + playerData.getHighestRank().getName(),
-                CC.AQUA + "Current Rank&7: &b" + playerData.getHighestRank().getName(),
                 CC.AQUA + "Current Tag&7: &b" + playerData.getTagString());
         Player onlinePlayer = Bukkit.getPlayer(playerData.getName());
         if (onlinePlayer != null) {

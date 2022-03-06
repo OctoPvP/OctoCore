@@ -44,17 +44,20 @@ public class PunishData {
     public boolean isIPBanned() {
         return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.BAN).findFirst().orElse(null) != null;
     }
+    public boolean isIPMuted() {
+        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.MUTE).findFirst().orElse(null) != null;
+    }
 
     public boolean isBlacklisted() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.BLACKLIST).findFirst().orElse(null) != null;
     }
 
-    public boolean isWarned() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.WARN).findFirst().orElse(null) != null;
+    public boolean isMuted() {
+        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.MUTE).findFirst().orElse(null) != null;
     }
 
-    public boolean isMuted() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.MUTE).findFirst().orElse(null) != null;
+    public boolean isWarned() {
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.WARN).findFirst().orElse(null) != null;
     }
 
 
@@ -141,6 +144,17 @@ public class PunishData {
         List<Document> blacklists = PunishModule.getBlacklists().find().filter(Filters.eq("uuid", uuid.toString())).into(new ArrayList<>());
         blacklists.forEach(saved -> {
             Punishment punishment = new Punishment(this.playerData, PunishmentType.BLACKLIST);
+            punishment.load(saved);
+
+            this.punishments.add(punishment);
+        });
+    }
+    public void forceLoadMutes(UUID uuid) {
+        this.punishments.removeIf(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE);
+
+        List<Document> mutes = PunishModule.getMutes().find().filter(Filters.eq("uuid", uuid.toString())).into(new ArrayList<>());
+        mutes.forEach(saved -> {
+            Punishment punishment = new Punishment(this.playerData, PunishmentType.MUTE);
             punishment.load(saved);
 
             this.punishments.add(punishment);

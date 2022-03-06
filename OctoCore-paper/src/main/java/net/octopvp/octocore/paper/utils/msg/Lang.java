@@ -171,15 +171,15 @@ public enum Lang {
     PERM("permanently"),
     PUNISH_KICK_TEMP_ENTRY("\n" + CC.RED + "Expires: %1\n" + CC.RED + "Duration: %2"),
     PUNISH_KICK_MESSAGE(
-            CC.RED + "You are currently%1 &r&4&l%2\n\n&c%3 By: %4\n&cReason: %5%6"
+            CC.RED + "You are %1 &r&4&l%2\n\n&c%3 By: %4\n&cReason: %5%6"
     ),
     PERM_ENTRY("\n" + CC.RED + "Duration: permanent"),
     PUNISH_JOIN_ALERT(
             CC.RED + "%1 tried to join but is %2."
     ),
     PUNISH_JOIN_ALERT_HOVER(
-            "$mExpires: $s%1",
-                  "$mAdded By: $s%2",
+            "&aExpires: &b%1",
+                  "&aAdded By: &b%2",
                   CC.YELLOW + "Click to vew punishments!"
     )
     ;

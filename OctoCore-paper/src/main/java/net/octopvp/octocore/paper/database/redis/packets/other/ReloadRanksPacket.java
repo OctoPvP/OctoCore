@@ -21,6 +21,6 @@ public class ReloadRanksPacket extends RedisPacket {
 
     @Override
     public String getName() {
-        return null;
+        return "ReloadTanksPacket";
     }
 }

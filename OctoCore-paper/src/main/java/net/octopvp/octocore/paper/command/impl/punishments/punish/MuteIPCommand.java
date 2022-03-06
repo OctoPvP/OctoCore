@@ -20,13 +20,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-public class MuteCommand extends BaseCommand {
-
-    @Command(name = "mute", permission = Permission.PUNISHMENT_MUTE, aliases = "tempmute")
+public class MuteIPCommand extends BaseCommand {
+    @Command(name = "muteip", permission = Permission.PUNISHMENT_MUTE, aliases = {"tempipmute", "ipmute", "tempmuteip"})
     public CommandResult execute(Sender sender, String[] args) {
+        if (true) {
+            sender.sendMessage(CC.RED + "This command is still being implemented.");
+            return CommandResult.SUCCESS;
+        }
         Tasks.runAsync(() -> {
             if (args.length < 2) {
-                sender.sendMessage(CC.translate("&cUsage: /mute <player> [duration] <reason> [-s]"));
+                sender.sendMessage(CC.translate("&cUsage: /muteip <player> [duration] <reason> [-s]"));
                 return;
             }
 
@@ -49,9 +52,7 @@ public class MuteCommand extends BaseCommand {
             int reasonStart = 2;
             boolean durationCorrect = false;
 
-            if (args[1].equalsIgnoreCase("perm") || args[1].equalsIgnoreCase("permanent")) {
-                duration = -5L;
-            } else {
+            if (!args[1].equalsIgnoreCase("perm") && !args[1].equalsIgnoreCase("permanent")) {
                 try {
                     duration = DateUtils.parseDateDiff(args[1], true);
                     durationCorrect = true;
@@ -92,6 +93,7 @@ public class MuteCommand extends BaseCommand {
             punishment.setLast(true);
             punishment.setAddedBy(sender.getUniqueId());
             punishment.setAddedByName(sender.getName());
+            punishment.setIPRelative(true);
             punishment.setAddedAt(System.currentTimeMillis());
             punishment.setReason(reason);
 

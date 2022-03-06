@@ -36,14 +36,14 @@ public class HistoryMenu extends Menu {
 
     @Override
     public String getName(Player player) {
-        return CC.translate( punishData.getPlayerData().getPlayerName() + "'s punishments");
+        return CC.translate(punishData.getPlayerData().getPlayerName() + "'s punishments");
     }
 
     @Override
     public List<Button> getButtons(Player player) {
         List<Button> slots = new ArrayList<>();
 
-        slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(), 4));
+        slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(), 13));
 
         slots.add(new BansButton(punishData.getPlayerData()));
         slots.add(new BlacklistsButton(punishData.getPlayerData()));
@@ -53,15 +53,19 @@ public class HistoryMenu extends Menu {
 
         slots.add(new AltsButton(punishData.getPlayerData()));
 
+        slots.add(new PlaceholderBtn());
+
         //slots.add(new PlaceholderBtn());
         return slots;
     }
+
     private class PlaceholderBtn extends PlaceholderButton {
         @Override
         public int[] getSlots() {
-            return genPlaceholderSpots(IntStream.range(0,44));
+            return genPlaceholderSpots(IntStream.range(0,44),13,22,21,23,30,31,32);
         }
     }
+
     @AllArgsConstructor
     private class BansButton extends Button {
         private PunishPlayerData playerData;
@@ -82,7 +86,7 @@ public class HistoryMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 18;
+            return 22;
         }
 
         @Override
@@ -113,7 +117,7 @@ public class HistoryMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 20;
+            return 21;
         }
 
         @Override
@@ -145,7 +149,7 @@ public class HistoryMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 22;
+            return 23;
         }
 
         @Override
@@ -175,7 +179,7 @@ public class HistoryMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 26;
+            return 30;
         }
 
         @Override
@@ -206,7 +210,7 @@ public class HistoryMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 24;
+            return 31;
         }
 
         @Override
@@ -223,7 +227,7 @@ public class HistoryMenu extends Menu {
 
         @Override
         public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.ANVIL);
+            ItemBuilder item = new ItemBuilder(Material.SKULL);
             item.setName(CC.MAIN + "Alts &7(" + CC.SECONDARY + playerData.getPotentialAlts().size() + " potential&7, " + CC.SECONDARY + playerData.getAlts().size() + " on last ip&7)");
             item.addLoreLine("&7(&cBanned&7, &aOnline&7, &eOffline&7)");
             item.addLoreLine(" ");
@@ -247,7 +251,7 @@ public class HistoryMenu extends Menu {
 
         @Override
         public int getSlot() {
-            return 40;
+            return 32;
         }
 
         @Override

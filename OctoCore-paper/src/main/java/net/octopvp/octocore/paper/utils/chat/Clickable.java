@@ -42,7 +42,7 @@ public class Clickable {
         TextComponent message = new TextComponent(CC.translate(msg));
 
         if (hoverMsg != null) {
-            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(CC.translate(hoverMsg)).create()));
+            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(CC.translate(hoverMsg).trim()).create()));
         }
 
         if (clickString != null) {

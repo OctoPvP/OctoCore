@@ -24,13 +24,11 @@ public class BanCommand extends BaseCommand {
 
     @Command(name = "ban", permission = Permission.PUNISHMENT_BAN, aliases = {"tempban"}, usage = "[-s] <player> [duration] <reason>")
     public CommandResult execute(Sender sender, String[] args) {
-
         if (args.length < 2) {
             return CommandResult.INVALID_ARGS;
         }
         Tasks.runAsync(() -> {
             OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
-            Logger.debug("Target: %1 | %2", target.getName(), target.getUniqueId());
             PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
             if (targetData == null || !target.isOnline()) {
                 Logger.debug("Target Data is null");
@@ -38,7 +36,6 @@ public class BanCommand extends BaseCommand {
                 targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
                 targetData.getPunishData().load();
             }
-            Logger.debug("TData: %1 | %2", target.getName(), targetData.getUniqueId());
             if (targetData.getPunishData().isBanned()) {
                 Logger.debug("Target is already banned");
                 sender.sendMessage(Lang.ALREADY_BANNED.getMsg(targetData.getPlayerName()));

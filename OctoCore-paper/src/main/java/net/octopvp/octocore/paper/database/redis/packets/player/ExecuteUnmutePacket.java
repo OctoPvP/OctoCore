@@ -27,7 +27,7 @@ public class ExecuteUnmutePacket extends RedisPacket {
         boolean silent = data.get("silent").getAsBoolean(), coloredNameEnabled = data.has("coloredName");
         String coloredName = sender;
         if (coloredNameEnabled)
-            coloredName = data.get("coloredName").getAsString() + sender;
+            coloredName = data.get("coloredName").getAsString();
 
         Clickable clickable = new Clickable((silent ? Lang.PUNISHMENT_SILENT.toString() : "") + Lang.PUNISHMENT_UNDO.getMsg(
                 target,

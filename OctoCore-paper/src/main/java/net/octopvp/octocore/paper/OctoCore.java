@@ -48,7 +48,6 @@ public final class OctoCore extends JavaPlugin {
     @Getter
     private static Settings settings = new Settings();
 
-    @Getter
     private ConversationFactory conversationFactory = new ConversationFactory(this);
 
     @Getter
