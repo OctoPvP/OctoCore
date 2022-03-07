@@ -128,14 +128,6 @@ public enum Lang {
     PUNISHMENT_UNDO("&c%1&c was un-%2 by %3&c for &7%4"),
     //PUNISHMENT_UNDO("$s%1$m was $sun%2 $mby $s%3 $mfor $v%4"),
     PUNISHMENT_DO("&c%1&c was &4%2&c by %3 for &7%4"),
-    //PUNISHMENT_DO("$s%1&c was $s%2 &cby $s%3 &cfor $v%4"),
-
-    //PUNISHMENT_UNBAN("$s%1$m was $sun-blacklisted $mby $s%2 $mfor $v%3"),
-    //PUNISHMENT_UNMUTE("$s%1$m was $sunmuted $mby $s%2 $mfor $v%3"),
-    //PUNISHMENT_UNBAN_HOVER("$mReason: $s%2"),
-    //PUNISHMENT_UNBLACKLIST_HOVER("$mReason: $s%2"),
-    //PUNISHMENT_UNMUTE_HOVER("$mReason: $s%2"),
-    //PUNISHMENT_UNBLACKLIST("$s%1$m was $sunblacklisted $mby $s%2 $mfor $v%3"),
 
     MUTE_MESSAGE("&cYou have been &4%1&c muted for &e%2.%3"),
     TEMP_MUTE_ENTRY_MESSAGE("\n&cExpires: &e%1"),
@@ -171,18 +163,25 @@ public enum Lang {
     PERM("permanently"),
     PUNISH_KICK_TEMP_ENTRY("\n" + CC.RED + "Expires: %1\n" + CC.RED + "Duration: %2"),
     PUNISH_KICK_MESSAGE(
-            CC.RED + "You are %1 &r&4&l%2\n\n&c%3 By: %4\n&cReason: %5%6"
+            CC.RED + "You are %1 &r&4&l%2&r&c!\n\n&c%3 By: %4\n&cReason: %5%6"
     ),
     PERM_ENTRY("\n" + CC.RED + "Duration: permanent"),
     PUNISH_JOIN_ALERT(
             CC.RED + "%1 tried to join but is %2."
     ),
     PUNISH_JOIN_ALERT_HOVER(
-            "&aExpires: &b%1",
-                  "&aAdded By: &b%2",
-                  CC.YELLOW + "Click to vew punishments!"
-    )
-    ;
+            "&aExpires: &e%1",
+            "&aAdded By: &e%2",
+            "",
+            CC.YELLOW + "Click to vew punishments!"
+    ),
+    PUNISH_HOVER(
+            "&aExpires: &e%1",
+            "&aAdded By: &e%2",
+            "&aDuration: &e%3",
+            "",
+            CC.YELLOW + "Click to vew punishments!"
+    );
     private final String msg;
 
     Lang(String msg) {

@@ -17,12 +17,13 @@ public class NextPageButton extends Button {
 
     @Override
     public ItemStack getItem(Player player) {
-        ItemBuilder item = new ItemBuilder(Material.ARROW);
-        if (this.paginatedMenu.getPage() < this.paginatedMenu.getPages(player)) { //next page
+        boolean next = this.paginatedMenu.getPage() < this.paginatedMenu.getPages(player);
+        ItemBuilder item = new ItemBuilder(Material.ARROW);//next ? new ItemBuilder(Material.ARROW) : new ItemBuilder(GLASS);
+        if (next) { //next page
             item.lore(
                     CC.GREEN + "Click to go to the next page"
             );
-        }else item.lore(CC.RED + "This is the last page!");
+        } else item.lore(CC.RED + "This is the last page!");
         item.name(CC.GREEN + "Next Page");
         return item.build();
     }

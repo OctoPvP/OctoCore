@@ -71,7 +71,7 @@ public abstract class Menu {
     public void open(Player player) {
         try {
             Menu previous = MenuManager.getOpenedMenus().get(player.getUniqueId());
-            if (previous != null && previous != this) {
+            if (previous != null && previous != this && previous.getClass().equals(this.getClass())) {
                 setPrevious(previous);
                 previous.onCloseReserved(player);
                 MenuManager.getOpenedMenus().remove(player.getUniqueId());

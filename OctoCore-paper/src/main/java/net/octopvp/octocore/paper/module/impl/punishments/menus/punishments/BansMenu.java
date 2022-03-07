@@ -40,7 +40,7 @@ public class BansMenu extends PaginatedMenu {
         List<Button> slots = new ArrayList<>();
 
         slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(),4));
-        
+
         return slots;
     }
 
@@ -70,21 +70,21 @@ public class BansMenu extends PaginatedMenu {
         public ItemStack getItem(Player player) {
             ItemBuilder item = new ItemBuilder(Material.WOOL);
             item.setDurability(punishment.isActive() ? WoolUtils.convertChatColorToWoolData(ChatColor.GREEN) : WoolUtils.convertChatColorToWoolData(ChatColor.RED));
-            item.setName(CC.MAIN + "#" + order + " &7(" + CC.SECONDARY + DateUtils.getDate(punishment.getAddedAt()) + "&7)");
+            item.setName(CC.GREEN + "#" + order + " &7(" + CC.YELLOW + DateUtils.getDate(punishment.getAddedAt()) + "&7)");
             item.addLoreLine(CC.SEPARATOR);
-            item.addLoreLine(CC.MAIN + "Added by&7: " + CC.SECONDARY + punishment.getAddedByName());
-            item.addLoreLine(CC.MAIN + "Duration&7: " + CC.SECONDARY + punishment.getNiceDuration());
-            item.addLoreLine(CC.MAIN + "Expire&7: " + CC.SECONDARY + punishment.getNiceExpire());
-            item.addLoreLine(CC.MAIN + "Reason&7: " + CC.SECONDARY + punishment.getReason());
+            item.addLoreLine(CC.GREEN + "Added by&7: " + CC.YELLOW + punishment.getAddedByName());
+            item.addLoreLine(CC.GREEN + "Duration&7: " + CC.YELLOW + punishment.getNiceDuration());
+            item.addLoreLine(CC.GREEN + "Expire&7: " + CC.YELLOW + punishment.getNiceExpire());
+            item.addLoreLine(CC.GREEN + "Reason&7: " + CC.YELLOW + punishment.getReason());
             item.addLoreLine("");
-            item.addLoreLine(CC.MAIN + "Permanent&7: " + (punishment.isPermanent() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.MAIN + "Active&7: " + (!punishment.hasExpired() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.MAIN + "Silent&7: " + (punishment.isSilent() ? "&aYes" : "&cNo"));
+            item.addLoreLine(CC.GREEN + "Permanent&7: " + (punishment.isPermanent() ? "&aYes" : "&cNo"));
+            item.addLoreLine(CC.GREEN + "Active&7: " + (!punishment.hasExpired() ? "&aYes" : "&cNo"));
+            item.addLoreLine(CC.GREEN + "Silent&7: " + (punishment.isSilent() ? "&aYes" : "&cNo"));
             if (!punishment.getRemovedBy().equalsIgnoreCase("")) {
                 item.addLoreLine("");
-                item.addLoreLine(CC.MAIN + "Removed by&7: " + CC.SECONDARY + punishment.getRemovedBy());
-                item.addLoreLine(CC.MAIN + "Reason&7: " + CC.SECONDARY + punishment.getRemovedFor());
-                item.addLoreLine(CC.MAIN + "Date&7: " + CC.SECONDARY + DateUtils.getDate(punishment.getWhenRemoved()));
+                item.addLoreLine(CC.GREEN + "Removed by&7: " + CC.YELLOW + punishment.getRemovedBy());
+                item.addLoreLine(CC.GREEN + "Reason&7: " + CC.YELLOW + punishment.getRemovedFor());
+                item.addLoreLine(CC.GREEN + "Date&7: " + CC.YELLOW + DateUtils.getDate(punishment.getWhenRemoved()));
             }
             item.addLoreLine(CC.SEPARATOR);
             return item.toItemStack();

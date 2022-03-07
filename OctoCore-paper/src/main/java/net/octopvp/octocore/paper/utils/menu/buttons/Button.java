@@ -37,12 +37,15 @@ public abstract class Button {
                 .findFirst().orElse(null) != null;
     }
 
+    public static ItemBuilder GLASS_BUILDER = new ItemBuilder(Material.STAINED_GLASS_PANE).durability((short) 7);
+    public static ItemStack GLASS = GLASS_BUILDER.build();
+
     public static Button getGlass(int slot) {
         return new Button() {
 
             @Override
             public ItemStack getItem(Player player) {
-                return new ItemBuilder(Material.STAINED_GLASS_PANE).durability((short) 7).build();
+                return GLASS;
             }
 
             @Override
