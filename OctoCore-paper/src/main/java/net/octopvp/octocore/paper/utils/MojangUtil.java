@@ -5,13 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -19,9 +14,9 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class MojangUtil {
-    public static CompletableFuture<Boolean> doesPlayerExist(String username){
+    public static CompletableFuture<Boolean> doesPlayerExist(String username) {
         CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
-        Tasks.runAsync(()->{
+        Tasks.runAsync(() -> {
             try {
                 completableFuture.complete(readStringFromURL("https://api.mojang.com/users/profiles/minecraft/" + username).contains("name"));
             } catch (IOException e) {
@@ -32,17 +27,18 @@ public class MojangUtil {
         });
         return completableFuture;
     }
-    public static CompletableFuture<String> uuidToName(UUID uuid1){
+
+    public static CompletableFuture<String> uuidToName(UUID uuid1) {
         CompletableFuture<String> completableFuture = new CompletableFuture<>();
-        Tasks.runAsync(()->{
-            try{
-                URL url = new URL( "https://api.mojang.com/user/profiles/" + uuid1.toString().replace("-", "") + "/names");
+        Tasks.runAsync(() -> {
+            try {
+                URL url = new URL("https://api.mojang.com/user/profiles/" + uuid1.toString().replace("-", "") + "/names");
                 String response = readStringFromURL(url.toString());
                 Logger.debug(response);
                 JsonArray namev = new JsonParser().parse(response).getAsJsonArray();
                 String slot = namev.get(namev.size() - 1).toString();
                 JsonObject nameObject = new JsonParser().parse(slot).getAsJsonObject();
-                completableFuture.complete(nameObject.get("name").toString().replace("\"",""));
+                completableFuture.complete(nameObject.get("name").toString().replace("\"", ""));
             } catch (IOException e) {
                 e.printStackTrace();
                 completableFuture.complete("Error Resolving Name");
@@ -51,9 +47,9 @@ public class MojangUtil {
         return completableFuture;
     }
 
-    public static CompletableFuture<UUID> nameToUUID(String name){
+    public static CompletableFuture<UUID> nameToUUID(String name) {
         CompletableFuture<UUID> completableFuture = new CompletableFuture<>();
-        Tasks.runAsync(()->{
+        Tasks.runAsync(() -> {
             try {
                 String response = readStringFromURL("https://api.mojang.com/users/profiles/minecraft/" + name);
                 JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();

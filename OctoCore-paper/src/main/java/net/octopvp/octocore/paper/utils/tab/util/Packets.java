@@ -17,6 +17,7 @@ import java.util.List;
 public class Packets {
     /**
      * Creates a PLAYER_INFO packet from the params.
+     *
      * @param action
      * @param data
      * @return
@@ -24,8 +25,10 @@ public class Packets {
     public static PacketContainer getPacket(PlayerInfoAction action, PlayerInfoData data) {
         return getPacket(action, Collections.singletonList(data));
     }
+
     /**
      * Creates a PLAYER_INFO packet from the params.
+     *
      * @param action
      * @param data
      * @return
@@ -40,6 +43,7 @@ public class Packets {
 
     /**
      * Sends a list of ProtocolLib packets to a player.
+     *
      * @param player
      * @param packets
      * @return

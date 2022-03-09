@@ -1,12 +1,6 @@
 package net.octopvp.octocore.common;
 
 public class PluginMsgChannels {
-    public class SubChannels{
-        public static final String SYNC = "SYNC";
-        public static final String PERMISSIONS = "permissions";
-        public static final String FREEZE = "freeze";
-        public static final String TEST = "TEST";
-    }
     /*
     public static final String SPIGOT_TO_BUNGEE = "OCTO|1";
     public static final String BUNGEE_TO_SPIGOT = "OCTO|2";
@@ -15,4 +9,11 @@ public class PluginMsgChannels {
     public static final String PERMISSIONS = PLUGIN_MSG;
     public static final String BUNGEE = "BungeeCord";
     public static final String LUNAR_CLIENT = "Lunar-Client";
+
+    public class SubChannels {
+        public static final String SYNC = "SYNC";
+        public static final String PERMISSIONS = "permissions";
+        public static final String FREEZE = "freeze";
+        public static final String TEST = "TEST";
+    }
 }

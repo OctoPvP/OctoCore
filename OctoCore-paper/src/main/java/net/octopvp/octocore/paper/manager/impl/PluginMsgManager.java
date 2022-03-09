@@ -12,12 +12,13 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import java.util.Arrays;
 
 public class PluginMsgManager extends Manager implements PluginMessageListener {
-    private static String[] in = new String[]{/*PluginMsgChannels.PLUGIN_MSG,PluginMsgChannels.LUNAR_CLIENT,PluginMsgChannels.BUNGEE*/};
-    private static String[] out = new String[]{/*PluginMsgChannels.PLUGIN_MSG,PluginMsgChannels.LUNAR_CLIENT,PluginMsgChannels.BUNGEE*/};
+    private static final String[] in = new String[]{/*PluginMsgChannels.PLUGIN_MSG,PluginMsgChannels.LUNAR_CLIENT,PluginMsgChannels.BUNGEE*/};
+    private static final String[] out = new String[]{/*PluginMsgChannels.PLUGIN_MSG,PluginMsgChannels.LUNAR_CLIENT,PluginMsgChannels.BUNGEE*/};
+
     @Override
     public void init(OctoCore plugin) {
-        Arrays.asList(out).forEach(m -> Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(OctoCore.getInstance(),m));
-        Arrays.asList(in).forEach(m-> Bukkit.getServer().getMessenger().registerIncomingPluginChannel(OctoCore.getInstance(), m,this));
+        Arrays.asList(out).forEach(m -> Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(OctoCore.getInstance(), m));
+        Arrays.asList(in).forEach(m -> Bukkit.getServer().getMessenger().registerIncomingPluginChannel(OctoCore.getInstance(), m, this));
     }
 
     @Override
@@ -27,11 +28,11 @@ public class PluginMsgManager extends Manager implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] bytes) {
-        if(!Arrays.asList(in).contains(channel))
+        if (!Arrays.asList(in).contains(channel))
             return;
-        ByteArrayDataInput in = ByteStreams.newDataInput( bytes );
+        ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         String subChannel = in.readUTF();
-        switch (subChannel){
+        switch (subChannel) {
             case PluginMsgChannels.SubChannels.SYNC:
                 break;
         }

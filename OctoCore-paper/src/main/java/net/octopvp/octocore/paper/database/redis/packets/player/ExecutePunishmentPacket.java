@@ -25,6 +25,20 @@ import java.util.stream.Collectors;
 public class ExecutePunishmentPacket extends RedisPacket {
     private JsonBuilder data;
 
+    public static void altKick(String alts, String name, String type, boolean permanent, String niceDuration, String reason, String sender, String expire) {
+        StringUtils.getListFromString(alts).forEach(alt -> {
+            new ExecuteAltKickPacket(new JsonBuilder()
+                    .addProperty("alt", name)
+                    .addProperty("type", type)
+                    .addProperty("permanent", permanent)
+                    .addProperty("duration", niceDuration)
+                    .addProperty("expire", expire)
+                    .addProperty("reason", reason)
+                    .addProperty("sender", sender)
+                    .addProperty("name", alt)).send();
+        });
+    }
+
     @Override
     public void onReceive(JsonObject data) throws Exception {
         try {
@@ -268,19 +282,5 @@ public class ExecutePunishmentPacket extends RedisPacket {
     @Override
     public String getName() {
         return "ExecutePunishmentPacket";
-    }
-
-    public static void altKick(String alts, String name, String type, boolean permanent, String niceDuration, String reason, String sender, String expire) {
-        StringUtils.getListFromString(alts).forEach(alt -> {
-            new ExecuteAltKickPacket(new JsonBuilder()
-                    .addProperty("alt", name)
-                    .addProperty("type", type)
-                    .addProperty("permanent", permanent)
-                    .addProperty("duration", niceDuration)
-                    .addProperty("expire", expire)
-                    .addProperty("reason", reason)
-                    .addProperty("sender", sender)
-                    .addProperty("name", alt)).send();
-        });
     }
 }

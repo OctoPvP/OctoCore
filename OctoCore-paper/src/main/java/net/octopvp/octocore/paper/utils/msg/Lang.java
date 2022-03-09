@@ -179,10 +179,9 @@ public enum Lang {
     ),
     PUNISH_JOIN_ALERT_HOVER(
             "&aExpires: &b%1",
-                  "&aAdded By: &b%2",
-                  CC.YELLOW + "Click to vew punishments!"
-    )
-    ;
+            "&aAdded By: &b%2",
+            CC.YELLOW + "Click to vew punishments!"
+    );
     private final String msg;
 
     Lang(String msg) {

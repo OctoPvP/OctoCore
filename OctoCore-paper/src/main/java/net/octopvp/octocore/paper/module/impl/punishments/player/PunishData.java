@@ -2,16 +2,12 @@ package net.octopvp.octocore.paper.module.impl.punishments.player;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
-import net.octopvp.octocore.paper.objects.PlayerData;
 import org.bson.Document;
 
 import java.util.*;
@@ -19,16 +15,15 @@ import java.util.stream.Collectors;
 
 @Getter
 public class PunishData {
-    private OctoCore plugin = OctoCore.getInstance();
-
     private final PunishPlayerData playerData;
+    private final OctoCore plugin = OctoCore.getInstance();
+    private final Set<Punishment> punishments = new HashSet<>();
 
-    private Set<Punishment> punishments = new HashSet<>();
-
-    public PunishData(PunishPlayerData data){
+    public PunishData(PunishPlayerData data) {
         this.playerData = data;
     }
-    public PunishData(PunishPlayerData data, JsonArray punishments){
+
+    public PunishData(PunishPlayerData data, JsonArray punishments) {
         this.playerData = data;
         this.punishments.clear();
         for (JsonElement entry : punishments) {
@@ -44,6 +39,7 @@ public class PunishData {
     public boolean isIPBanned() {
         return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.BAN).findFirst().orElse(null) != null;
     }
+
     public boolean isIPMuted() {
         return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.MUTE).findFirst().orElse(null) != null;
     }
@@ -134,7 +130,8 @@ public class PunishData {
             this.punishments.add(punishment);
         });
     }
-    public void save(){
+
+    public void save() {
         this.punishments.forEach(Punishment::save);
     }
 
@@ -149,6 +146,7 @@ public class PunishData {
             this.punishments.add(punishment);
         });
     }
+
     public void forceLoadMutes(UUID uuid) {
         this.punishments.removeIf(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE);
 

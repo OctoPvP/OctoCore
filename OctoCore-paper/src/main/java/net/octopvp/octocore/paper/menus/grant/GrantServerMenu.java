@@ -26,6 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GrantServerMenu extends PaginatedMenu {
     private final PlayerData d;
+    private int i = 0;
+
     @Override
     public String getPagesTitle(Player player) {
         return "Choose active server";
@@ -35,7 +37,7 @@ public class GrantServerMenu extends PaginatedMenu {
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
         buttons.add(new GlobalButton());
-        OctoCore.getServerManager().getConnectedServers().forEach(server ->buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
+        OctoCore.getServerManager().getConnectedServers().forEach(server -> buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
         return buttons;
     }
 
@@ -49,15 +51,15 @@ public class GrantServerMenu extends PaginatedMenu {
         return new BackButton.DefaultBackButton(previous);
     }
 
-    private int i = 0;
     @RequiredArgsConstructor
-    private class ServerButton extends Button{
+    private class ServerButton extends Button {
         private final ServerData serverData;
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.PAPER).name(serverData.getServerName()).lore(CC.SEPARATOR,CC.GREEN + "Click to select " + serverData.getServerName() + " as the server to grant the rank on.").build();
+            return new ItemBuilder(Material.PAPER).name(serverData.getServerName()).lore(CC.SEPARATOR, CC.GREEN + "Click to select " + serverData.getServerName() + " as the server to grant the rank on.").build();
         }
+
         @Override
         public int getSlot() {
             return i++;
@@ -83,7 +85,7 @@ public class GrantServerMenu extends PaginatedMenu {
     }
 
 
-    private class GlobalButton extends Button{
+    private class GlobalButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {

@@ -43,8 +43,8 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu {
         AtomicInteger order = new AtomicInteger(1);
         PunishHistory.getPunishments(playerData, this.punishmentType, this.activeOnly)
                 .stream().sorted(Comparator.comparingLong(PunishHistory::getAddedAt).reversed()).forEach(punishHistory -> {
-            slots.add(new PunishButton(punishHistory, order.getAndIncrement()));
-        });
+                    slots.add(new PunishButton(punishHistory, order.getAndIncrement()));
+                });
 
         return slots;
     }
@@ -82,7 +82,7 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu {
     }
 
     @AllArgsConstructor
-    private class PunishButton extends  Button {
+    private class PunishButton extends Button {
         private PunishHistory punishHistory;
         private int order;
 

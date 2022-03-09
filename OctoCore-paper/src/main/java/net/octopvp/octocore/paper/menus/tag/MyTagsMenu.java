@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyTagsMenu extends PaginatedMenu { //TODO back button
+    private static int i = 0;
     private final List<PlayerTag> currentTags;
     private final Player player;
 
@@ -62,11 +63,9 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
         }
     }
 
-    private static int i = 0;
-
     public class TagButton extends Button {
-        private boolean a;
         private final PlayerTag tag;
+        private boolean a;
 
         public TagButton(PlayerTag tag, Player player) {
             this.tag = tag;

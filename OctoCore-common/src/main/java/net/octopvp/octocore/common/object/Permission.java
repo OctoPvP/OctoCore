@@ -1,12 +1,12 @@
 package net.octopvp.octocore.common.object;
 
-public enum Permission  {
+public enum Permission {
     NOTHING(""),
 
     ADMIN("octocore.admin"),
 
     COMMAND_NICK("octocore.command.nick"),
-    COMMAND_UNNICK( "octocore.command.unnick"),
+    COMMAND_UNNICK("octocore.command.unnick"),
     COMMAND_NICK_OTHERS("octocore.command.nick.others"),
     COMMAND_UNNICK_OTHERS("octocore.command.unnick.others"),
     COMMAND_PERMISSION_INFO("octocore.command.perminfo"),

@@ -42,8 +42,8 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 public class PlayerData {
-    private static transient Plugin plugin = OctoCore.getInstance();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+    private static transient Plugin plugin = OctoCore.getInstance();
     //TODO set defaults for this so theres no errors when using/loading old data from older updates (idk if this makes sense lol)
     private UUID uuid;
     private double dataVersion = 0.0;
@@ -146,10 +146,11 @@ public class PlayerData {
         PlayerManager.saveProfile(this);
     }
 
-    public String getFormattedName(boolean nicked, Player player,boolean... showtag) {
+    public String getFormattedName(boolean nicked, Player player, boolean... showtag) {
         String prefix = getHighestRank().getPrefix();
         boolean shouldShowTag = showtag.length == 0 || showtag[0];
-        if (nicked) return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (tag != null && shouldShowTag ? " " + getTagString() : "");
+        if (nicked)
+            return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (tag != null && shouldShowTag ? " " + getTagString() : "");
         return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).equals("") ? player.getName() : " " + player.getName())) + (tag != null && shouldShowTag ? " " + getTagString() : "");
         /*
         if (nicked)
@@ -551,16 +552,16 @@ public class PlayerData {
         allowedTags = null; // Reset cache
     }
 
+    @Override
+    public String toString() {
+        return OctoCore.getGson().toJson(this);
+    }
+
     public enum SaveState {
         SAVED, SAVING
     }
 
     public enum LoadNote {
 
-    }
-
-    @Override
-    public String toString() {
-        return OctoCore.getGson().toJson(this);
     }
 }

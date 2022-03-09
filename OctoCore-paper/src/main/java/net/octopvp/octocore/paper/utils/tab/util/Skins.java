@@ -33,7 +33,7 @@ import java.util.logging.Level;
  */
 public class Skins {
     public static final List<Skin> DOT_SKINS;
-    public static final ArrayListMultimap<EntityType,Skin> MOB_SKINS;
+    public static final ArrayListMultimap<EntityType, Skin> MOB_SKINS;
     public static final Skin DEFAULT_SKIN;
 
     public static final Skin DECOR_TV;
@@ -117,6 +117,7 @@ public class Skins {
 
     /**
      * Get a skin from an entity type.
+     *
      * @param type
      * @return
      */
@@ -126,6 +127,7 @@ public class Skins {
 
     /**
      * Get a skin from an entity type and alternate form number.
+     *
      * @param type
      * @param alternateForm Used if multiple versions of this mob exist (wither skeleton = 1, ender guardian = 1)
      * @return
@@ -141,6 +143,7 @@ public class Skins {
 
     /**
      * Get a cool skin based on a chat color (grey square with a colored dot).
+     *
      * @param color
      * @return
      */
@@ -150,6 +153,7 @@ public class Skins {
 
     /**
      * Get a skin from an online player.
+     *
      * @param player
      * @return
      */
@@ -163,6 +167,7 @@ public class Skins {
 
     /**
      * Get a Minecraft user's skin.
+     *
      * @param username
      * @return
      */
@@ -176,6 +181,7 @@ public class Skins {
 
     /**
      * Get a Minecraft user's skin.
+     *
      * @param uuid
      * @return
      */

@@ -4,9 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Hashing {
-    public static String hashString(String in){
+    public static String hashString(String in) {
         String generatedString = null;
-        try{
+        try {
             // Create MessageDigest instance for MD5
             MessageDigest md = MessageDigest.getInstance("MD5");
             //Add password bytes to digest
@@ -16,8 +16,7 @@ public class Hashing {
             //This bytes[] has bytes in decimal format;
             //Convert it to hexadecimal format
             StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++)
-            {
+            for (int i = 0; i < bytes.length; i++) {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
             //Get complete hashed password in hex format

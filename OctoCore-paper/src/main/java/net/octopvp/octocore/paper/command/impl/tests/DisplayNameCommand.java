@@ -8,7 +8,7 @@ import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 
 public class DisplayNameCommand extends BaseCommand {
-    @Command(name = "whatsmydisplayname",playerOnly = true)
+    @Command(name = "whatsmydisplayname", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         sender.sendMessage(sender.getPlayer().getDisplayName());
         PlayerData data = PlayerManager.getData(sender.getPlayer());

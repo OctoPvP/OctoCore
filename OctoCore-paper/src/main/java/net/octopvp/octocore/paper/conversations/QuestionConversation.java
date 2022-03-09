@@ -11,7 +11,8 @@ import org.bukkit.entity.Player;
 @RequiredArgsConstructor
 public class QuestionConversation extends StringPrompt {
     private final String prompt;
-    private final TypeCallback<Prompt,String> callback;
+    private final TypeCallback<Prompt, String> callback;
+
     @Override
     public String getPromptText(ConversationContext conversationContext) {
         return prompt;

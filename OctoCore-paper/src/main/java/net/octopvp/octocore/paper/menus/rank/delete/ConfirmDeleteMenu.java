@@ -22,17 +22,35 @@ import java.util.stream.IntStream;
 
 public class ConfirmDeleteMenu extends Menu {
     private final Rank toDelete;
+    private int counter = 5;
 
     public ConfirmDeleteMenu(Rank toDelete) {
         this.toDelete = toDelete;
         counter();
     }
-    private int counter = 5;
+
     public void counter() {
         new Count(5).start();
     }
 
-    class Count extends Countdown{
+    @Override
+    public List<Button> getButtons(Player player) {
+        List<Button> buttons = new ArrayList<>();
+        buttons.add(new PlaceHolderButton());
+        buttons.add(new NoButton());
+        if (counter <= 0) {
+            buttons.add(new ConfirmButton());
+        } else buttons.add(new WaitButton());
+        buttons.add(new InfoButton());
+        return buttons;
+    }
+
+    @Override
+    public String getName(Player player) {
+        return CC.RED + "Confirm Delete ";
+    }
+
+    class Count extends Countdown {
 
         public Count(int time) {
             super(time);
@@ -43,23 +61,7 @@ public class ConfirmDeleteMenu extends Menu {
             counter = current;
         }
     }
-    @Override
-    public List<Button> getButtons(Player player) {
-        List<Button> buttons = new ArrayList<>();
-        buttons.add(new PlaceHolderButton());
-        buttons.add(new NoButton());
-        if (counter <= 0){
-            buttons.add(new ConfirmButton());
-        }
-        else buttons.add(new WaitButton());
-        buttons.add(new InfoButton());
-        return buttons;
-    }
 
-    @Override
-    public String getName(Player player) {
-        return CC.RED + "Confirm Delete ";
-    }
     public class ConfirmButton extends Button {
 
         @Override
@@ -79,6 +81,7 @@ public class ConfirmDeleteMenu extends Menu {
             player.closeInventory();
         }
     }
+
     public class NoButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
@@ -96,6 +99,7 @@ public class ConfirmDeleteMenu extends Menu {
             player.sendMessage(CC.RED + "Canceled!");
         }
     }
+
     public class InfoButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
@@ -114,6 +118,7 @@ public class ConfirmDeleteMenu extends Menu {
             return 13;
         }
     }
+
     public class WaitButton extends Button {
 
         @Override
@@ -126,16 +131,17 @@ public class ConfirmDeleteMenu extends Menu {
             return 11;
         }
     }
+
     public class PlaceHolderButton extends PlaceholderButton {
 
         @Override
         public int[] getSlots() {
             List<Integer> a = new ArrayList<>();
-            IntStream.range(0,27).forEach((i)->{
+            IntStream.range(0, 27).forEach((i) -> {
                 if (!(i == 11 || i == 13 || i == 15))
                     a.add(i);
             });
-            return a.stream().mapToInt(i ->i).toArray();
+            return a.stream().mapToInt(i -> i).toArray();
         }
     }
 }

@@ -6,9 +6,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 
 public class Config extends YamlConfiguration {
-    private String fileName;
+    private final String fileName;
 
-    private JavaPlugin javaPlugin;
+    private final JavaPlugin javaPlugin;
 
     public Config(JavaPlugin javaPlugin, String fileName) {
         this.javaPlugin = javaPlugin;
@@ -30,13 +30,15 @@ public class Config extends YamlConfiguration {
                 load(file);
                 save(file);
             }
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 
     public void save() {
         File folder = this.javaPlugin.getDataFolder();
         try {
             save(new File(folder, this.fileName));
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 }

@@ -12,10 +12,10 @@ import org.bson.Document;
 @Getter
 public class PunishModule implements Module {
 
-    @Getter private static PunishModule instance;
-
-    private PunishmentsProfileManager profileManager;
-    @Getter private static MongoCollection<Document>
+    @Getter
+    private static PunishModule instance;
+    @Getter
+    private static MongoCollection<Document>
             bans,
             mutes,
             kicks,
@@ -24,8 +24,9 @@ public class PunishModule implements Module {
             punishPlayerData,
             punishHistory,
             notes;
+    private PunishmentsProfileManager profileManager;
 
-    public static void postDbInit(MongoDatabase database){
+    public static void postDbInit(MongoDatabase database) {
         bans = database.getCollection("bans");
         mutes = database.getCollection("mutes");
         kicks = database.getCollection("kicks");

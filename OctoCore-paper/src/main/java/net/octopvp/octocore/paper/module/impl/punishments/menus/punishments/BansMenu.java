@@ -39,8 +39,8 @@ public class BansMenu extends PaginatedMenu {
     public List<Button> getEveryMenuSlots(Player player) {
         List<Button> slots = new ArrayList<>();
 
-        slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(),4));
-        
+        slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(), 4));
+
         return slots;
     }
 

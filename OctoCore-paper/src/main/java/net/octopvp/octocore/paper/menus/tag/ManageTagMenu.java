@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class ManageTagMenu extends Menu {
+    private final PlayerTagBuilder builder;
+    private final ManageTagProcess process;
     private boolean edit = false;
     private Menu prev = null;
 
@@ -26,16 +28,12 @@ public class ManageTagMenu extends Menu {
         process = new ManageTagProcess(player);
         builder = process.getBuilder();
     }
-
     public ManageTagMenu(Menu prev, PlayerTagBuilder builder, ManageTagProcess process) {
         this.builder = builder;
         this.process = process;
         this.prev = prev;
         edit = true;
     }
-
-    private final PlayerTagBuilder builder;
-    private final ManageTagProcess process;
 
     @Override
     public List<Button> getButtons(Player player) {
@@ -63,7 +61,8 @@ public class ManageTagMenu extends Menu {
     public int getInventorySize(List<Button> buttons) {
         return 27;
     }
-    public class BuildTagButton extends Button{
+
+    public class BuildTagButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
@@ -83,11 +82,14 @@ public class ManageTagMenu extends Menu {
             process.build();
         }
     }
-    public class TagNameButton extends Button{
-        public TagNameButton(String name){
+
+    public class TagNameButton extends Button {
+        String name;
+
+        public TagNameButton(String name) {
             this.name = name;
         }
-        String name;
+
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Tag name").lore(
@@ -110,11 +112,14 @@ public class ManageTagMenu extends Menu {
             process.setNameProcess((builder) -> open(player));
         }
     }
-    public class TagDescButton extends Button{
-        public TagDescButton(String desc){
+
+    public class TagDescButton extends Button {
+        String desc;
+
+        public TagDescButton(String desc) {
             this.desc = desc;
         }
-        String desc;
+
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Tag description").lore(
@@ -139,11 +144,14 @@ public class ManageTagMenu extends Menu {
             });
         }
     }
-    public class TagButton extends Button{
-        public TagButton(String tag){
+
+    public class TagButton extends Button {
+        String tag;
+
+        public TagButton(String tag) {
             this.tag = tag;
         }
-        String tag;
+
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.NAME_TAG).name(CC.AQUA + "Tag").lore(
@@ -169,7 +177,8 @@ public class ManageTagMenu extends Menu {
             });
         }
     }
-    public class PlaceHolderButton extends PlaceholderButton{
+
+    public class PlaceHolderButton extends PlaceholderButton {
 
         @Override
         public int[] getSlots() {

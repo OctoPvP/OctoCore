@@ -25,11 +25,12 @@ import java.util.function.Consumer;
 public class ChooseColorMenu extends PaginatedMenu {
     private final RankBuilder builder;
     private final Consumer<RankBuilder> callback;
+    private int i = 0;
+
     @Override
     public String getPagesTitle(Player player) {
         return CC.GREEN + "Choose color";
     }
-
 
     @Override
     public List<Button> getPaginatedButtons(Player player) {
@@ -55,13 +56,13 @@ public class ChooseColorMenu extends PaginatedMenu {
         };
     }
 
-    private int i = 0;
     @RequiredArgsConstructor
-    private class ColorButton extends Button{
+    private class ColorButton extends Button {
         private final ChatColor chatColor;
+
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.WOOL).durability(WoolUtils.convertChatColorToWoolData(chatColor)).name(chatColor + StringUtils.capatalizeFirstDeep(chatColor.name().replace("_"," "))).lore(CC.AQUA + "Click to select this as the color.").build();
+            return new ItemBuilder(Material.WOOL).durability(WoolUtils.convertChatColorToWoolData(chatColor)).name(chatColor + StringUtils.capatalizeFirstDeep(chatColor.name().replace("_", " "))).lore(CC.AQUA + "Click to select this as the color.").build();
         }
 
         @Override

@@ -20,10 +20,8 @@ public class CompatibilityUtils {
 
     public static final String OBC_DIR = Bukkit.getServer().getClass().getPackage().getName();
     public static final String NMS_DIR = OBC_DIR.replaceFirst("org.bukkit.craftbukkit", "net.minecraft.server");
-
-    private static Class<? extends Enum> soundCategoryClass;
     private static final HashMap<String, Method> playSoundMethod = new HashMap<>();
-
+    private static Class<? extends Enum> soundCategoryClass;
     private static float serverVersion = -1;
 
     /**

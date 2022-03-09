@@ -13,10 +13,14 @@ import org.bukkit.event.HandlerList;
 @RequiredArgsConstructor
 @Getter
 public class GlobalPlayerDestroyEvent extends Event implements Cancellable {
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private final GlobalPlayer globalPlayer;
 
     private boolean cancelled;
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
     @Override
     public boolean isCancelled() {
@@ -30,10 +34,6 @@ public class GlobalPlayerDestroyEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

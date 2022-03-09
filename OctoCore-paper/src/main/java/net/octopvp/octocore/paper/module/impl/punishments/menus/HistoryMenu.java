@@ -62,7 +62,7 @@ public class HistoryMenu extends Menu {
     private class PlaceholderBtn extends PlaceholderButton {
         @Override
         public int[] getSlots() {
-            return genPlaceholderSpots(IntStream.range(0,44),13,22,21,23,30,31,32);
+            return genPlaceholderSpots(IntStream.range(0, 44), 13, 22, 21, 23, 30, 31, 32);
         }
     }
 

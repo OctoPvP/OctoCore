@@ -9,6 +9,30 @@ import org.bukkit.entity.Player;
  * A tab item that represents a player.
  */
 public class PlayerTabItem implements TabItem {
+    private static final PlayerProvider<String> NAME_PROVIDER = new PlayerProvider<String>() {
+        @Override
+        public String get(Player player) {
+            return player.getName();
+        }
+    };
+    private static final PlayerProvider<String> DISPLAY_NAME_PROVIDER = new PlayerProvider<String>() {
+        @Override
+        public String get(Player player) {
+            return player.getDisplayName();
+        }
+    };
+    private static final PlayerProvider<String> LIST_NAME_PROVIDER = new PlayerProvider<String>() {
+        @Override
+        public String get(Player player) {
+            return player.getPlayerListName();
+        }
+    };
+    private static final PlayerProvider<Skin> SKIN_PROVIDER = new PlayerProvider<Skin>() {
+        @Override
+        public Skin get(Player player) {
+            return Skins.getPlayer(player);
+        }
+    };
     private final Player player;
     private final PlayerProvider<String> textProvider;
     private final PlayerProvider<Skin> skinProvider;
@@ -78,34 +102,6 @@ public class PlayerTabItem implements TabItem {
         }
     }
 
-    private static PlayerProvider<String> NAME_PROVIDER = new PlayerProvider<String>() {
-        @Override
-        public String get(Player player) {
-            return player.getName();
-        }
-    };
-
-    private static PlayerProvider<String> DISPLAY_NAME_PROVIDER = new PlayerProvider<String>() {
-        @Override
-        public String get(Player player) {
-            return player.getDisplayName();
-        }
-    };
-
-    private static PlayerProvider<String> LIST_NAME_PROVIDER = new PlayerProvider<String>() {
-        @Override
-        public String get(Player player) {
-            return player.getPlayerListName();
-        }
-    };
-
-    private static PlayerProvider<Skin> SKIN_PROVIDER = new PlayerProvider<Skin>() {
-        @Override
-        public Skin get(Player player) {
-            return Skins.getPlayer(player);
-        }
-    };
-
     public String toString() {
         return "PlayerTabItem(player=" + this.player + ", textProvider=" + this.textProvider + ", skinProvider=" + this.skinProvider + ", text=" + this.text + ", ping=" + this.ping + ", skin=" + this.skin + ")";
     }
@@ -134,15 +130,15 @@ public class PlayerTabItem implements TabItem {
         return this.skin;
     }
 
-    public interface PlayerProvider<T> {
-        T get(Player player);
-    }
-
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof PlayerTabItem))
             return false;
         PlayerTabItem other = (PlayerTabItem) object;
         return this.text.equals(other.getText()) && this.skin.equals(other.getSkin()) && this.ping == other.getPing();
+    }
+
+    public interface PlayerProvider<T> {
+        T get(Player player);
     }
 }

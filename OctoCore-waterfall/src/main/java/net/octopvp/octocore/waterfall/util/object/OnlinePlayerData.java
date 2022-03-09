@@ -15,20 +15,23 @@ import java.util.*;
 public class OnlinePlayerData {
     private final UUID uuid;
     private Set<Node> nodes = new HashSet<>();
-    private Map<String,Boolean> cachedPermResults = new HashMap<>();
+    private Map<String, Boolean> cachedPermResults = new HashMap<>();
     private boolean frozen = false;
-    public boolean hasPermission(String perm){
+
+    public boolean hasPermission(String perm) {
         boolean result = false;
         if (cachedPermResults.containsKey(perm.toLowerCase()))
             return cachedPermResults.get(perm);
-        result = PermissionCalculator.hasPermissionResult(perm,nodes).allowed();
-        cachedPermResults.put(perm.toLowerCase(),result);
+        result = PermissionCalculator.hasPermissionResult(perm, nodes).allowed();
+        cachedPermResults.put(perm.toLowerCase(), result);
         return result;
     }
-    public boolean isPermSet(String perm){
+
+    public boolean isPermSet(String perm) {
         return nodes.stream().anyMatch(node -> node.getPermission().equalsIgnoreCase(perm));
     }
-    public void unSetPerm(String perm){
+
+    public void unSetPerm(String perm) {
         nodes.removeIf(node -> node.getPermission().equalsIgnoreCase(perm));
     }
 

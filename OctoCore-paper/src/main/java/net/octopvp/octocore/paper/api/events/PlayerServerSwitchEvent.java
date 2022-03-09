@@ -10,5 +10,5 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PlayerServerSwitchEvent extends SimpleEvent {
     private final UUID uuid;
-    private final String to,from;
+    private final String to, from;
 }

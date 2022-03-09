@@ -9,8 +9,8 @@ import java.util.Objects;
  * Represents the skin/avatar of a tab item.
  */
 public class Skin {
-    private final WrappedSignedProperty property;
     public static final String TEXTURE_KEY = "textures";
+    private final WrappedSignedProperty property;
 
     public Skin(String value, String signature) {
         this(new WrappedSignedProperty(TEXTURE_KEY, value, signature));

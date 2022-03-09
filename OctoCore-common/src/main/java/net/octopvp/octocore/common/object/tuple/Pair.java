@@ -2,19 +2,22 @@ package net.octopvp.octocore.common.object.tuple;
 
 /**
  * pair of two types
+ *
  * @param <A> value 1
  * @param <B> value 2
  */
-public class Pair<A,B>{
-    private A value0;
-    private B value1;
-    public Pair(final A v0,B v1){
+public class Pair<A, B> {
+    private final A value0;
+    private final B value1;
+
+    public Pair(final A v0, B v1) {
         this.value0 = v0;
         this.value1 = v1;
     }
 
     /**
      * gets the first value
+     *
      * @return
      */
     public A getValue0() {
@@ -23,6 +26,7 @@ public class Pair<A,B>{
 
     /**
      * gets the second value
+     *
      * @return
      */
     public B getValue1() {

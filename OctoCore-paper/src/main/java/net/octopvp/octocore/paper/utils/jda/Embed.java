@@ -11,28 +11,36 @@ import java.util.Date;
 
 public class Embed {
     public static final String footer = "OctoCore V." + OctoCore.getInstance().getDescription().getVersion();
-    public TemporalAccessor getTemporalAccessor(){
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").parse(new Date().toString());
+
+    public static EmbedBuilder info() {
+        return new EmbedBuilder().setColor(new Color(54, 57, 63).getRGB()).setFooter(footer);
     }
-    public static EmbedBuilder info(){
-        return new EmbedBuilder().setColor(new Color(54,57,63).getRGB()).setFooter(footer);
-    }
-    public static EmbedBuilder warn(){
+
+    public static EmbedBuilder warn() {
         return new EmbedBuilder().setColor(Color.ORANGE.getRGB()).setFooter(footer);
     }
-    public static EmbedBuilder error(){
+
+    public static EmbedBuilder error() {
         return new EmbedBuilder().setColor(Color.RED.getRGB()).setFooter(footer);
     }
-    public static EmbedBuilder red(){
+
+    public static EmbedBuilder red() {
         return new EmbedBuilder().setColor(Color.RED.getRGB()).setFooter(footer);
     }
-    public static EmbedBuilder green(){
-        return new EmbedBuilder().setColor(new Color(0,255,68).getRGB()).setFooter(footer);
+
+    public static EmbedBuilder green() {
+        return new EmbedBuilder().setColor(new Color(0, 255, 68).getRGB()).setFooter(footer);
     }
-    public static EmbedBuilder transparent(){
-        return new EmbedBuilder().setColor(new Color(54,57,63).getRGB()).setFooter(footer);
+
+    public static EmbedBuilder transparent() {
+        return new EmbedBuilder().setColor(new Color(54, 57, 63).getRGB()).setFooter(footer);
     }
-    public static EmbedBuilder setTimestamp(EmbedBuilder builder){
+
+    public static EmbedBuilder setTimestamp(EmbedBuilder builder) {
         return builder.setTimestamp(ZonedDateTime.now());
+    }
+
+    public TemporalAccessor getTemporalAccessor() {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").parse(new Date().toString());
     }
 }

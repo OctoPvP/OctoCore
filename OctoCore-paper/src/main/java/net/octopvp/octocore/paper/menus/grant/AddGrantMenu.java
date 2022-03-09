@@ -42,7 +42,7 @@ public class AddGrantMenu extends PaginatedMenu {
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
-        RankManager.getRanks().stream().sorted(Comparator.comparingInt(Rank::getWeight).reversed()).forEach(rank -> buttons.add(new RankButton(rank,data)));
+        RankManager.getRanks().stream().sorted(Comparator.comparingInt(Rank::getWeight).reversed()).forEach(rank -> buttons.add(new RankButton(rank, data)));
         return buttons;
     }
 
@@ -50,7 +50,7 @@ public class AddGrantMenu extends PaginatedMenu {
     public List<Button> getEveryMenuSlots(Player player) {
         List<Button> slots = new ArrayList<>();
 
-        slots.add(new PlayerInfoButton(data,4));
+        slots.add(new PlayerInfoButton(data, 4));
 
         return slots;
     }
@@ -88,8 +88,8 @@ public class AddGrantMenu extends PaginatedMenu {
             ItemBuilder item = new ItemBuilder(Material.WOOL);
             item.setName(rankData.getDisplayName());
             item.durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())));
-            item.lore(CC.SEPARATOR,CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(),CC.AQUA + "Inherited: " + CC.YELLOW + StringUtils.join(rankData.getInheritedRanksName(),", "),CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
-                    CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(),CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(),CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
+            item.lore(CC.SEPARATOR, CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(), CC.AQUA + "Inherited: " + CC.YELLOW + StringUtils.join(rankData.getInheritedRanksName(), ", "), CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
+                    CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(), CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(), CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
                     CC.SEPARATOR
             );
             return item.build();

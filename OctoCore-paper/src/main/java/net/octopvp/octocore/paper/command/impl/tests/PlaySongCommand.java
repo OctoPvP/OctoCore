@@ -13,9 +13,9 @@ import net.octopvp.octocore.paper.utils.Sender;
 import java.io.File;
 
 public class PlaySongCommand extends BaseCommand {
-    @Command(name = "playsong",aliases = {"playnbssong"},playerOnly = true)
+    @Command(name = "playsong", aliases = {"playnbssong"}, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        if (args.length == 1){
+        if (args.length == 1) {
             File file = new File(OctoCore.getInstance().getDataFolder().getAbsolutePath() + "/nbs/" + args[0]);
             RadioSongPlayer alreadyPlaying = SongManager.getSongPlayerMap().get(sender.getPlayer().getUniqueId());
             if (alreadyPlaying != null)
@@ -25,7 +25,7 @@ public class PlaySongCommand extends BaseCommand {
             RadioSongPlayer rsp = new RadioSongPlayer(song);
             rsp.addPlayer(sender.getPlayer());
             rsp.setPlaying(true);
-            SongManager.getSongPlayerMap().put(sender.getPlayer().getUniqueId(),rsp);
+            SongManager.getSongPlayerMap().put(sender.getPlayer().getUniqueId(), rsp);
         }
         return CommandResult.SUCCESS;
     }

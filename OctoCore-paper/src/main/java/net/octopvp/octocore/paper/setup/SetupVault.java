@@ -1,18 +1,18 @@
 package net.octopvp.octocore.paper.setup;
 
 import net.milkbowl.vault.chat.Chat;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.VaultManager;
-import net.octopvp.octocore.common.util.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class SetupVault implements Setup{
+public class SetupVault implements Setup {
     @Override
     public void setup(OctoCore plugin) {
-        if(Bukkit.getPluginManager().isPluginEnabled("Vault")){
+        if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
             VaultManager.setChatHookEnabled(setupChat());
-            if(VaultManager.isChatHookEnabled())
+            if (VaultManager.isChatHookEnabled())
                 Logger.info("Setup Vault Chat hook");
         }
     }
@@ -22,7 +22,7 @@ public class SetupVault implements Setup{
 
     }
 
-    private boolean setupChat(){
+    private boolean setupChat() {
         RegisteredServiceProvider<Chat> rsp = Bukkit.getServer().getServicesManager().getRegistration(Chat.class);
         if (rsp == null)
             return false;

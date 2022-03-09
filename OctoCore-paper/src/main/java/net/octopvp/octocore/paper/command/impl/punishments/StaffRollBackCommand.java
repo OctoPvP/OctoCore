@@ -62,7 +62,7 @@ public class StaffRollBackCommand extends BaseCommand {
                     }
                 });
                 if (expired.get() + active.get() == 0) {
-                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(),"bans"));
+                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(), "bans"));
                     return;
                 }
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPED.getMsg(
@@ -95,7 +95,7 @@ public class StaffRollBackCommand extends BaseCommand {
                     }
                 });
                 if (expired.get() + active.get() == 0) {
-                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(),"mutes"));
+                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(), "mutes"));
                     return;
                 }
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPED.getMsg(
@@ -128,7 +128,7 @@ public class StaffRollBackCommand extends BaseCommand {
                     }
                 });
                 if (expired.get() + active.get() == 0) {
-                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(),"blacklists"));
+                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(), "blacklists"));
                     return;
                 }
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPED.getMsg(
@@ -161,7 +161,7 @@ public class StaffRollBackCommand extends BaseCommand {
                     }
                 });
                 if (expired.get() + active.get() == 0) {
-                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(),"warns"));
+                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(), "warns"));
                     return;
                 }
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPED.getMsg(

@@ -1,7 +1,6 @@
 package net.octopvp.octocore.paper.objects.scoreboard;
 
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.scoreboard.common.EntryBuilder;
@@ -15,6 +14,7 @@ import java.util.List;
 public class DefaultScoreboardHandler implements ScoreboardHandler {
     boolean a = false;
     int i = 0;
+
     @Override
     public String getTitle(Player player) {
         return CC.AQUA + CC.B + "OctoPvP " + CC.GRAY + CC.SPLITTER + CC.WHITE + " " + OctoCore.getServerType();
@@ -23,7 +23,7 @@ public class DefaultScoreboardHandler implements ScoreboardHandler {
     @Override
     public List<Entry> getEntries(Player player) {
         i++;
-        if (i == 2){
+        if (i == 2) {
             i = 0;
             a = !a;
         }

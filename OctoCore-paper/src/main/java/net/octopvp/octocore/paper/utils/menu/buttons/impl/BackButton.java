@@ -28,6 +28,7 @@ public abstract class BackButton extends Button {
     }
 
     public abstract void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event);
+
     @RequiredArgsConstructor
     public static class DefaultBackButton extends BackButton {
         private final Menu menu;

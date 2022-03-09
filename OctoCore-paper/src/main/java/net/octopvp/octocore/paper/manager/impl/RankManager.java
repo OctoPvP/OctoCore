@@ -35,20 +35,6 @@ public class RankManager extends Manager {
     @Getter
     private static Set<Rank> ranks = new HashSet<>();
 
-    @Override
-    public void init(OctoCore plugin) {
-        loadRanks();
-        if (OctoCore.isMaster()) {
-            if (getDefaultRank() == null)
-                createDefaultRank();
-        }
-    }
-
-    @Override
-    public void disable() {
-
-    }
-
     public static void loadRanks() {
         Logger.info("Loading ranks...");
         for (Document document : ranksCollection.find()) {
@@ -77,16 +63,6 @@ public class RankManager extends Manager {
 
     public static Rank getDefaultRank() {
         return ranks.stream().filter(Rank::isDefaultRank).findFirst().orElse(null);
-    }
-
-    public void createDefaultRank() {
-        Rank defaultRank = getDefaultRank();
-        if (defaultRank == null) {
-            RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(1).setRankType(RankType.DEFAULT);
-            Rank r = rank.build();
-            ranks.add(r);
-            r.save();
-        }
     }
 
     public static void save(Rank rank) {
@@ -134,6 +110,30 @@ public class RankManager extends Manager {
     public static void delete(Rank rank) {
         ranksCollection.findOneAndDelete(Filters.eq("rankId", rank.getRankId().toString()));
         broadcastReload();
+    }
+
+    @Override
+    public void init(OctoCore plugin) {
+        loadRanks();
+        if (OctoCore.isMaster()) {
+            if (getDefaultRank() == null)
+                createDefaultRank();
+        }
+    }
+
+    @Override
+    public void disable() {
+
+    }
+
+    public void createDefaultRank() {
+        Rank defaultRank = getDefaultRank();
+        if (defaultRank == null) {
+            RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(1).setRankType(RankType.DEFAULT);
+            Rank r = rank.build();
+            ranks.add(r);
+            r.save();
+        }
     }
 
 }

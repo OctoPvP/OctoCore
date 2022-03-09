@@ -16,7 +16,8 @@ public class Node {
     private ServerContext scope;
     private boolean allowed;
     private int weight;
-    public ServerContext getServer(){
+
+    public ServerContext getServer() {
         return scope;
     }
 
@@ -27,7 +28,8 @@ public class Node {
     public boolean isNegated() {
         return !allowed;
     }
-    public boolean isWildCard(){
+
+    public boolean isWildCard() {
         return permission.equalsIgnoreCase("*") || permission.endsWith(".*");
     }
 }

@@ -18,28 +18,12 @@ import java.util.stream.IntStream;
 
 public class TestMenu extends Menu {
     private boolean a = true;
-    public TestMenu(boolean b){
+    private boolean b = true;
+
+    public TestMenu(boolean b) {
         this.a = b;
     }
-    private boolean b = true;
-    private class UpdateButton extends Button {
 
-        @Override
-        public ItemStack getItem(Player player) {
-            return new ItemBuilder((b ? Material.EMERALD : Material.REDSTONE)).name((b ? CC.GREEN + "Test" : CC.RED + "Test")).build();
-        }
-
-        @Override
-        public int getSlot() {
-            return 4;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            b = !b;
-            update(player);
-        }
-    }
     @Override
     public List<Button> getButtons(Player player) {
         return Lists.newArrayList(new UpdateButton(), new PlaceholderButton1(), new Button() {
@@ -60,21 +44,6 @@ public class TestMenu extends Menu {
             }
         });
     }
-    private class PlaceholderButton1 extends net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton{
-        @Override
-        public int[] getSlots() {
-            if (a)
-                return genPlaceholderSpots(IntStream.range(0,26),4);
-            else{
-                List<Integer> a = new ArrayList<>();
-                IntStream.range(0,26).forEach(i ->{
-                    if (i != 4)
-                        a.add(i);
-                });
-                return a.stream().mapToInt(i ->i).toArray();
-            }
-        }
-    }
 
     @Override
     public String getName(Player player) {
@@ -94,5 +63,40 @@ public class TestMenu extends Menu {
                 return 18;
             }
         };
+    }
+
+    private class UpdateButton extends Button {
+
+        @Override
+        public ItemStack getItem(Player player) {
+            return new ItemBuilder((b ? Material.EMERALD : Material.REDSTONE)).name((b ? CC.GREEN + "Test" : CC.RED + "Test")).build();
+        }
+
+        @Override
+        public int getSlot() {
+            return 4;
+        }
+
+        @Override
+        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            b = !b;
+            update(player);
+        }
+    }
+
+    private class PlaceholderButton1 extends net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton {
+        @Override
+        public int[] getSlots() {
+            if (a)
+                return genPlaceholderSpots(IntStream.range(0, 26), 4);
+            else {
+                List<Integer> a = new ArrayList<>();
+                IntStream.range(0, 26).forEach(i -> {
+                    if (i != 4)
+                        a.add(i);
+                });
+                return a.stream().mapToInt(i -> i).toArray();
+            }
+        }
     }
 }

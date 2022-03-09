@@ -9,11 +9,13 @@ public enum Client {
     FORGE("Forge"),
     OCTOPVP_STAFF_CLIENT("OctoPvP Staff Client"),
     OTHER("Other");
-    private String friendlyName;
-    Client(String friendlyName){
+    private final String friendlyName;
+
+    Client(String friendlyName) {
         this.friendlyName = friendlyName;
     }
-    public String getFriendlyName(){
+
+    public String getFriendlyName() {
         return friendlyName;
     }
 

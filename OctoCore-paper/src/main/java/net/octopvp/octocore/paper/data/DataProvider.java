@@ -6,9 +6,12 @@ import java.util.UUID;
 
 public interface DataProvider {
     void init();
+
     void disable();
 
     PlayerData getPlayerData(UUID uuid);
+
     void saveData(PlayerData data);
-    PlayerData createNewProfile(UUID uuid,String name);
+
+    PlayerData createNewProfile(UUID uuid, String name);
 }

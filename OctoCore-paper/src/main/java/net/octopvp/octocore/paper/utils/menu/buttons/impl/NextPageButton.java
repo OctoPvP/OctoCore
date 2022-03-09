@@ -22,7 +22,7 @@ public class NextPageButton extends Button {
             item.lore(
                     CC.GREEN + "Click to go to the next page"
             );
-        }else item.lore(CC.RED + "This is the last page!");
+        } else item.lore(CC.RED + "This is the last page!");
         item.name(CC.GREEN + "Next Page");
         return item.build();
     }

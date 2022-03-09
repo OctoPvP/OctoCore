@@ -14,9 +14,10 @@ public class PacketUtil {
     @Getter
     @Setter
     private static ProtocolManager protocolManager;
-    public static void updateCurrentOpenInvTitle(final Player p,final String title) {
-        Tasks.runAsync(()->{
-            EntityPlayer ep = ((CraftPlayer)p).getHandle();
+
+    public static void updateCurrentOpenInvTitle(final Player p, final String title) {
+        Tasks.runAsync(() -> {
+            EntityPlayer ep = ((CraftPlayer) p).getHandle();
             PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId, "minecraft:chest", new ChatMessage(title), p.getOpenInventory().getTopInventory().getSize());
             ep.playerConnection.sendPacket(packet);
             /*

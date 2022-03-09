@@ -8,27 +8,53 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class StringUtils {
+    private static final Map<ChatColor, ColorSet<Integer, Integer, Integer>> colorMap = new HashMap<ChatColor, ColorSet<Integer, Integer, Integer>>();
+
+    static {
+        colorMap.put(ChatColor.BLACK, new ColorSet<>(0, 0, 0));
+        colorMap.put(ChatColor.DARK_BLUE, new ColorSet<>(0, 0, 170));
+        colorMap.put(ChatColor.DARK_GREEN, new ColorSet<>(0, 170, 0));
+        colorMap.put(ChatColor.DARK_AQUA, new ColorSet<>(0, 170, 170));
+        colorMap.put(ChatColor.DARK_RED, new ColorSet<>(170, 0, 0));
+        colorMap.put(ChatColor.DARK_PURPLE, new ColorSet<>(170, 0, 170));
+        colorMap.put(ChatColor.GOLD, new ColorSet<>(255, 170, 0));
+        colorMap.put(ChatColor.GRAY, new ColorSet<>(170, 170, 170));
+        colorMap.put(ChatColor.DARK_GRAY, new ColorSet<>(85, 85, 85));
+        colorMap.put(ChatColor.BLUE, new ColorSet<>(85, 85, 255));
+        colorMap.put(ChatColor.GREEN, new ColorSet<>(85, 255, 85));
+        colorMap.put(ChatColor.AQUA, new ColorSet<>(85, 255, 255));
+        colorMap.put(ChatColor.RED, new ColorSet<>(255, 85, 85));
+        colorMap.put(ChatColor.LIGHT_PURPLE, new ColorSet<>(255, 85, 255));
+        colorMap.put(ChatColor.YELLOW, new ColorSet<>(255, 255, 85));
+        colorMap.put(ChatColor.WHITE, new ColorSet<>(255, 255, 255));
+    }
+
     public static String centerText(String text) {
         int maxWidth = 72, //TODO tweak this
-                spaces = (int) Math.round((maxWidth-1.4*ChatColor.stripColor(text).length())/2);
-        return org.apache.commons.lang3.StringUtils.repeat(" ", spaces)+text;
+                spaces = (int) Math.round((maxWidth - 1.4 * ChatColor.stripColor(text).length()) / 2);
+        return org.apache.commons.lang3.StringUtils.repeat(" ", spaces) + text;
     }
-    public static String arraytoString(String[] args){
+
+    public static String arraytoString(String[] args) {
         StringBuffer sb = new StringBuffer();
-        for(int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             sb.append(args[i] + " ");
         }
         return sb.toString().trim();
     }
-    public static String[] stringToArray(String input,String delim){
+
+    public static String[] stringToArray(String input, String delim) {
         return input.split(delim);
     }
-    public static String replaceIgnoreCase(String what_to_replace,String replace_to,String input){
-        return input.replaceAll("(?i)" + what_to_replace,replace_to);
+
+    public static String replaceIgnoreCase(String what_to_replace, String replace_to, String input) {
+        return input.replaceAll("(?i)" + what_to_replace, replace_to);
     }
-    public static boolean isUuid(String s){
+
+    public static boolean isUuid(String s) {
         return UUID.fromString(s).toString() == s;
     }
+
     public static List<String> getListFromString(String source) {
         if (source.equals("Empty")) return new ArrayList<>();
 
@@ -50,9 +76,11 @@ public class StringUtils {
         }
         return builder.toString();
     }
+
     public static String convertFirstUpperCase(String source) {
         return source.substring(0, 1).toUpperCase() + source.substring(1);
     }
+
     public static Object getTime(int seconds) {
         if (seconds < 60) {
             return seconds + "seconds";
@@ -64,10 +92,10 @@ public class StringUtils {
 
         if (minutes < 60) {
             if (secondsLeft > 0) {
-                return String.valueOf(minutes + "minutes " + secondsLeft + "seconds");
+                return minutes + "minutes " + secondsLeft + "seconds";
             }
 
-            return String.valueOf(minutes + "minutes");
+            return minutes + "minutes";
         }
 
         if (minutes < 1440) {
@@ -115,6 +143,7 @@ public class StringUtils {
 
         return time;
     }
+
     private static long convert(int value, char unit) {
         switch (unit) {
 
@@ -147,6 +176,7 @@ public class StringUtils {
             }
         }
     }
+
     public static String getEnchantment(String name) {
         String enchant = name;
 
@@ -228,28 +258,6 @@ public class StringUtils {
 
         return enchant.toUpperCase();
     }
-    public static String buildString(String[] args, int start) {
-        if (start >= args.length) return "";
-        return ChatColor.stripColor(String.join(" ", Arrays.copyOfRange(args, start, args.length)));
-    }
-    public static String replacePlaceholders(final String str, final Object... replace){
-        if (replace == null || replace.length == 0){
-            return str;
-        }
-        int i = 0;
-        String finalReturn = str;
-        if (replace == null || replace.length == 0){
-            return finalReturn;
-        }
-        for (Object s : replace) {
-            i++;
-            String toReplace = "%" + i;
-            if (s == null)
-                continue;
-            finalReturn = finalReturn.replace(toReplace,s.toString());
-        }
-        return finalReturn;
-    }
     /*
     public static StringBuilder appendRandomChatColors(StringBuilder sb, int howmanyper,int howmanytimes){
         List<ChatColor> colors = Arrays.asList(ChatColor.ALL_CHATCOLORS);
@@ -278,57 +286,35 @@ public class StringUtils {
     }
      */
 
-    private static Map<ChatColor, ColorSet<Integer, Integer, Integer>> colorMap = new HashMap<ChatColor, ColorSet<Integer, Integer, Integer>>();
-
-    static {
-        colorMap.put(ChatColor.BLACK, new ColorSet<>(0, 0, 0));
-        colorMap.put(ChatColor.DARK_BLUE, new ColorSet<>(0, 0, 170));
-        colorMap.put(ChatColor.DARK_GREEN, new ColorSet<>(0, 170, 0));
-        colorMap.put(ChatColor.DARK_AQUA, new ColorSet<>(0, 170, 170));
-        colorMap.put(ChatColor.DARK_RED, new ColorSet<>(170, 0, 0));
-        colorMap.put(ChatColor.DARK_PURPLE, new ColorSet<>(170, 0, 170));
-        colorMap.put(ChatColor.GOLD, new ColorSet<>(255, 170, 0));
-        colorMap.put(ChatColor.GRAY, new ColorSet<>(170, 170, 170));
-        colorMap.put(ChatColor.DARK_GRAY, new ColorSet<>(85, 85, 85));
-        colorMap.put(ChatColor.BLUE, new ColorSet<>(85, 85, 255));
-        colorMap.put(ChatColor.GREEN, new ColorSet<>(85, 255, 85));
-        colorMap.put(ChatColor.AQUA, new ColorSet<>(85, 255, 255));
-        colorMap.put(ChatColor.RED, new ColorSet<>(255, 85, 85));
-        colorMap.put(ChatColor.LIGHT_PURPLE, new ColorSet<>(255, 85, 255));
-        colorMap.put(ChatColor.YELLOW, new ColorSet<>(255, 255, 85));
-        colorMap.put(ChatColor.WHITE, new ColorSet<>(255, 255, 255));
+    public static String buildString(String[] args, int start) {
+        if (start >= args.length) return "";
+        return ChatColor.stripColor(String.join(" ", Arrays.copyOfRange(args, start, args.length)));
     }
 
-    public static ChatColor fromHex(int hex){
+    public static String replacePlaceholders(final String str, final Object... replace) {
+        if (replace == null || replace.length == 0) {
+            return str;
+        }
+        int i = 0;
+        String finalReturn = str;
+        if (replace == null || replace.length == 0) {
+            return finalReturn;
+        }
+        for (Object s : replace) {
+            i++;
+            String toReplace = "%" + i;
+            if (s == null)
+                continue;
+            finalReturn = finalReturn.replace(toReplace, s.toString());
+        }
+        return finalReturn;
+    }
+
+    public static ChatColor fromHex(int hex) {
         int r = (hex & 0xFF0000) >> 16;
         int g = (hex & 0xFF00) >> 8;
         int b = (hex & 0xFF);
         return fromRGB(r, g, b);
-    }
-
-    private static class ColorSet<R, G, B> {
-        R red = null;
-        G green = null;
-        B blue = null;
-
-        ColorSet(R red, G green, B blue) {
-            this.red = red;
-            this.green = green;
-            this.blue = blue;
-        }
-
-        public R getRed() {
-            return red;
-        }
-
-        public G getGreen() {
-            return green;
-        }
-
-        public B getBlue() {
-            return blue;
-        }
-
     }
 
     public static ChatColor fromRGB(int r, int g, int b) {
@@ -341,15 +327,17 @@ public class StringUtils {
         });
         return closest.firstEntry().getValue();
     }
-    public static String convertMsToReadableDate(long time){
-        if (time == -1){
+
+    public static String convertMsToReadableDate(long time) {
+        if (time == -1) {
             return "null";
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM dd yyyy");
         return dateFormat.format(time);
     }
-    public static String intMonthToMonth(int month){
-        switch (month){
+
+    public static String intMonthToMonth(int month) {
+        switch (month) {
             case 1:
                 return "January";
             case 2:
@@ -375,14 +363,41 @@ public class StringUtils {
         }
         return month + "";
     }
-    public static String capatalizeFirst(String in){
-        return in.substring(0,1).toUpperCase() + in.substring(1).toLowerCase();
+
+    public static String capatalizeFirst(String in) {
+        return in.substring(0, 1).toUpperCase() + in.substring(1).toLowerCase();
     }
-    public static String capatalizeFirstDeep(String in){
+
+    public static String capatalizeFirstDeep(String in) {
         StringBuilder sb = new StringBuilder();
         for (String s : in.split("\\s+")) {
             sb.append(capatalizeFirst(s)).append(" ");
         }
         return sb.toString().trim();
+    }
+
+    private static class ColorSet<R, G, B> {
+        R red = null;
+        G green = null;
+        B blue = null;
+
+        ColorSet(R red, G green, B blue) {
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+        }
+
+        public R getRed() {
+            return red;
+        }
+
+        public G getGreen() {
+            return green;
+        }
+
+        public B getBlue() {
+            return blue;
+        }
+
     }
 }

@@ -59,7 +59,8 @@ public class ServerUpdatePacket extends RedisPacket {
                     }
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override

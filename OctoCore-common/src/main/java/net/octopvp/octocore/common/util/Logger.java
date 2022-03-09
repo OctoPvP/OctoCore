@@ -9,39 +9,46 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Logger {
-    private java.util.logging.Logger actualLogger;
     private static Logger instance;
     private static String prefix = "[OctoCore] ";
     private static Messenger messenger = new NoOpMessenger();
     @Getter
     private static Set<UUID> debugPlayers = new HashSet<>();
-    public Logger(java.util.logging.Logger logger,String prefix,Messenger messenger){
+    private final java.util.logging.Logger actualLogger;
+
+    public Logger(java.util.logging.Logger logger, String prefix, Messenger messenger) {
         this.actualLogger = logger;
-        this.prefix = prefix;
-        this.messenger = messenger;
+        Logger.prefix = prefix;
+        Logger.messenger = messenger;
         instance = this;
     }
-    public static void info(Object str,Object... placeholders){
-        instance.actualLogger.info(StringUtils.replacePlaceholders(prefix + " " + str,placeholders));
+
+    public static void info(Object str, Object... placeholders) {
+        instance.actualLogger.info(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
     }
-    public static void warn(Object str,Object... placeholders){
-        instance.actualLogger.warning(StringUtils.replacePlaceholders(prefix + " " + str,placeholders));
+
+    public static void warn(Object str, Object... placeholders) {
+        instance.actualLogger.warning(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
     }
-    public static void error(Object str,Object... placeholders){
-        instance.actualLogger.severe(StringUtils.replacePlaceholders(prefix + " " + str,placeholders));
+
+    public static void error(Object str, Object... placeholders) {
+        instance.actualLogger.severe(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
     }
-    public static void debug(Object str,Object... placeholders){
-        if (System.getProperty("octocore.debug","false").equalsIgnoreCase("true")) {
+
+    public static void debug(Object str, Object... placeholders) {
+        if (System.getProperty("octocore.debug", "false").equalsIgnoreCase("true")) {
             StackTraceElement[] elements = Thread.currentThread().getStackTrace();
             String caller = elements[2].getFileName() + ":" + elements[2].getLineNumber();
-            String message = "[DEBUG] " + caller + " | " + StringUtils.replacePlaceholders(str.toString(),placeholders);
+            String message = "[DEBUG] " + caller + " | " + StringUtils.replacePlaceholders(str.toString(), placeholders);
             info(message);
-            messenger.sendMessage(CC.BOLD + CC.YELLOW + "[DEBUG] " + CC.RESET + StringUtils.replacePlaceholders(str.toString(),placeholders),debugPlayers);
+            messenger.sendMessage(CC.BOLD + CC.YELLOW + "[DEBUG] " + CC.RESET + StringUtils.replacePlaceholders(str.toString(), placeholders), debugPlayers);
         }
     }
-    public static interface Messenger {
+
+    public interface Messenger {
         void sendMessage(String message, Collection<UUID> players);
     }
+
     public static class NoOpMessenger implements Messenger {
         @Override
         public void sendMessage(String message, Collection<UUID> uuids) {

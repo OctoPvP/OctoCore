@@ -11,18 +11,18 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import java.io.File;
 
 public class PluginUtil {
-    public static boolean loadPlugin(String name1){
+    public static boolean loadPlugin(String name1) {
         String name = name1;
-        if(!name1.endsWith(".jar"))
+        if (!name1.endsWith(".jar"))
             name = name1 + ".jar";
         Plugin target = null;
         final File pluginDir = new File("plugins");
-        File pluginFile = new File(pluginDir,name);
-        if(!pluginFile.isFile()){
-            for(File f : pluginDir.listFiles()){
+        File pluginFile = new File(pluginDir, name);
+        if (!pluginFile.isFile()) {
+            for (File f : pluginDir.listFiles()) {
                 try {
                     PluginDescriptionFile desc = OctoCore.getInstance().getPluginLoader().getPluginDescription(f);
-                    if(desc.getName().equalsIgnoreCase(name1)) {
+                    if (desc.getName().equalsIgnoreCase(name1)) {
                         pluginFile = f;
                         break;
                     }
@@ -31,7 +31,7 @@ public class PluginUtil {
                 }
             }
         }
-        try{
+        try {
             target = Bukkit.getPluginManager().loadPlugin(pluginFile);
         } catch (InvalidPluginException e) {
             e.printStackTrace();

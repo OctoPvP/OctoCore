@@ -12,13 +12,17 @@ import org.bukkit.event.HandlerList;
 @RequiredArgsConstructor
 @Getter
 public class PlayerGrantEvent extends Event implements Cancellable {
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     private final Grant grant;
     private final PlayerData targetData;
     private final CommandSender executor;
 
     private boolean cancelled;
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
     @Override
     public boolean isCancelled() {
@@ -32,10 +36,6 @@ public class PlayerGrantEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

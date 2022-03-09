@@ -13,12 +13,12 @@ public class VaultManager extends Manager {
         return VaultManager.isChatHookEnabled;
     }
 
-    public static Chat getChat() {
-        return VaultManager.chat;
-    }
-
     public static void setChatHookEnabled(boolean isChatHookEnabled) {
         VaultManager.isChatHookEnabled = isChatHookEnabled;
+    }
+
+    public static Chat getChat() {
+        return VaultManager.chat;
     }
 
     public static void setChat(Chat chat) {

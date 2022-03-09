@@ -10,7 +10,7 @@ import java.util.UUID;
 
 /**
  * Stores information about a minecraft user's skin.
- *
+ * <p>
  * This class does implement ConfigurationSerializable,
  * which means that you can use it to save skins in
  * config, but do however note that for the class to
@@ -33,8 +33,8 @@ public class Skin implements ConfigurationSerializable {
     /**
      * Initializes this class with the specified skin.
      *
-     * @param uuid The uuid of the user who this skin belongs to
-     * @param base64 the base64 data of the skin, as returned by Mojang's servers.
+     * @param uuid         The uuid of the user who this skin belongs to
+     * @param base64       the base64 data of the skin, as returned by Mojang's servers.
      * @param signedBase64 the signed data of the skin, as returned by Mojang's servers.
      */
     public Skin(UUID uuid, String base64, String signedBase64) {
@@ -45,7 +45,16 @@ public class Skin implements ConfigurationSerializable {
         this.signedBase64 = signedBase64;
     }
 
-    private Skin() {}
+    private Skin() {
+    }
+
+    public static Skin deserialize(Map<String, Object> map) {
+        if (map.containsKey("empty")) {
+            return EMPTY_SKIN;
+        } else {
+            return new Skin(UUID.fromString((String) map.get("uuid")), (String) map.get("base64"), (map.containsKey("signedBase64") ? (String) map.get("signedBase64") : null));
+        }
+    }
 
     public boolean hasSignedBase64() {
         return signedBase64 != null;
@@ -101,13 +110,5 @@ public class Skin implements ConfigurationSerializable {
             }
         }
         return map;
-    }
-
-    public static Skin deserialize(Map<String, Object> map) {
-        if (map.containsKey("empty")) {
-            return EMPTY_SKIN;
-        } else {
-            return new Skin(UUID.fromString((String) map.get("uuid")), (String) map.get("base64"), (map.containsKey("signedBase64") ? (String) map.get("signedBase64") : null));
-        }
     }
 }

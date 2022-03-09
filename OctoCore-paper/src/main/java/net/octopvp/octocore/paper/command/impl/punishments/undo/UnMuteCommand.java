@@ -23,25 +23,25 @@ import org.bukkit.entity.Player;
 public class UnMuteCommand extends BaseCommand {
 
     @Command(name = "unmute", permission = Permission.PUNISHMENT_UNMUTE)
-    public CommandResult execute(Sender sender,String[] args) {
+    public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {
             if (args.length < 2) {
                 sender.sendMessage(CC.translate("&cUsage: /unmute <player> <reason> [-s]"));
                 return;
             }
 
-            OfflinePlayer target = Bukkit.getOfflinePlayer( PunishModule.getInstance().getProfileManager().correctName(args[0]));
+            OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
 
-            PunishPlayerData targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
 
             if (targetData == null || !target.isOnline()) {
-                 PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
+                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
                 targetData.getPunishData().load();
             }
             if (!targetData.getPunishData().isMuted()) {
                 sender.sendMessage(Lang.MUTE_NOT_MUTED.toString());
-                 PunishModule.getInstance().getProfileManager().unloadData(target);
+                PunishModule.getInstance().getProfileManager().unloadData(target);
                 return;
             }
 
@@ -98,7 +98,7 @@ public class UnMuteCommand extends BaseCommand {
                 });
             }
 
-             PunishModule.getInstance().getProfileManager().unloadData(target);
+            PunishModule.getInstance().getProfileManager().unloadData(target);
         });
         return CommandResult.SUCCESS;
     }

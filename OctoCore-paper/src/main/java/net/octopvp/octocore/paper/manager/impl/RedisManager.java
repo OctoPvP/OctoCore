@@ -16,6 +16,10 @@ import redis.clients.jedis.Jedis;
 import java.lang.reflect.InvocationTargetException;
 
 public class RedisManager extends Manager {
+    public static Jedis getJedis() {
+        return OctoCore.getInstance().getRedisHandler().getJedis();
+    }
+
     //Load after db manager start
     @Override
     public void init(OctoCore plugin) {
@@ -29,9 +33,9 @@ public class RedisManager extends Manager {
         }
         OctoCore.getInstance().setRedisHandler(new RedisHandler("net.octopvp.octocore.paper.database.redis.packets", jedisSettings,
                 (runnable) -> {
-            Tasks.runAsync(runnable);
-            return null;
-        }, (p) -> {
+                    Tasks.runAsync(runnable);
+                    return null;
+                }, (p) -> {
             RedisPacketRecieveEvent event = new RedisPacketRecieveEvent(p.getValue0(), p.getValue1());
             OctoCore.getInstance().getServer().getPluginManager().callEvent(event);
             return !event.isCancelled();
@@ -56,9 +60,5 @@ public class RedisManager extends Manager {
             new ServerOfflinePacket(OctoCore.getServerName()).send();
             OctoCore.getInstance().getRedisHandler().close();
         }
-    }
-
-    public static Jedis getJedis() {
-        return OctoCore.getInstance().getRedisHandler().getJedis();
     }
 }

@@ -1,18 +1,18 @@
 package net.octopvp.octocore.paper.command.impl.utils;
 
 import net.octopvp.octocore.common.HardwareUtils;
+import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.common.object.Permission;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class SysInfo extends BaseCommand {
-    @Command(name = "sysinfo",permission = Permission.SYS_INFO,cooldown = 1)
+    @Command(name = "sysinfo", permission = Permission.SYS_INFO, cooldown = 1)
     public CommandResult execute(Sender sender, String[] args) {
         StringBuilder msg = new StringBuilder(CC.SEPARATOR + CC.NL);
         msg.append(CC.GREEN + "OS: " + HardwareUtils.getSystemInfo().getOperatingSystem().getFamily()).append(CC.NL);

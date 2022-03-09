@@ -1,11 +1,11 @@
 package net.octopvp.octocore.paper.database.redis.packets.server;
 
 import com.google.gson.JsonObject;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
@@ -18,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class SaveRequestSwitchPacket extends RedisPacket {
     private UUID uuid;
+
     @Override
     public void onReceive(JsonObject data) throws Exception {
         String id = data.get("uuid").getAsString();

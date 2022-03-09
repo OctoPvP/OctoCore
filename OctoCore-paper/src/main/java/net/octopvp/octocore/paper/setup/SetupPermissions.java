@@ -1,13 +1,12 @@
 package net.octopvp.octocore.paper.setup;
 
-import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.paper.OctoCore;
 import org.bukkit.Bukkit;
 
 import java.util.List;
 
-public class SetupPermissions implements Setup{
+public class SetupPermissions implements Setup {
 
     @Override
     public void setup(OctoCore plugin) {
@@ -15,10 +14,10 @@ public class SetupPermissions implements Setup{
         List<String> perms = Bukkit.getPluginManager().getPermissionsString();
         for (Permission permission : permissions) {
             String node = permission.getNode();
-            if(node == ""){
+            if (node == "") {
                 continue;
             }
-            if(perms.contains(node)) {
+            if (perms.contains(node)) {
                 //Logger.debug("Not registering permission \"" + node + "\" because it already is.");
                 continue;
             }

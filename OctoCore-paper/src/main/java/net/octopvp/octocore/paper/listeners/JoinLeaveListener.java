@@ -29,10 +29,29 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class JoinLeaveListener implements Listener {
 
+    public static void freezePlayer(Player player) {
+        Tasks.runSync(() -> {
+            player.setWalkSpeed(0.0F);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10000, 128, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000, 128, true, false));
+        });
+    }
+
+    public static void unfreezePlayer(Player player) {
+        Tasks.runSync(() -> {
+            player.setWalkSpeed(0.2F);
+            player.removePotionEffect(PotionEffectType.JUMP);
+            player.removePotionEffect(PotionEffectType.SPEED);
+        });
+    }
+
+    public static void init() {
+    }
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
         if (!OctoCore.getInstance().isEnabled()) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,new DisconnectReason("The server hasn't started yet!").toString());
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("The server hasn't started yet!").toString());
             return;
         }
         UUID uuid = event.getUniqueId();
@@ -205,24 +224,5 @@ public class JoinLeaveListener implements Listener {
         if (MainRedisHandler.getSaving().contains(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
         }
-    }
-
-    public static void freezePlayer(Player player) {
-        Tasks.runSync(() -> {
-            player.setWalkSpeed(0.0F);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10000, 128, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000, 128, true, false));
-        });
-    }
-
-    public static void unfreezePlayer(Player player) {
-        Tasks.runSync(() -> {
-            player.setWalkSpeed(0.2F);
-            player.removePotionEffect(PotionEffectType.JUMP);
-            player.removePotionEffect(PotionEffectType.SPEED);
-        });
-    }
-
-    public static void init() {
     }
 }

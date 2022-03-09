@@ -9,7 +9,7 @@ public class VoidChunkGenerator extends ChunkGenerator {
     public byte[][] generateBlockSections(final World world, final Random random, final int chunkX, final int chunkZ, final ChunkGenerator.BiomeGrid biomeGrid) {
         final byte[][] result = new byte[world.getMaxHeight() / 16][];
         if (chunkX == 0 && chunkZ == 0) {
-            this.setBlock(result, 0, 64, 0, (byte)7);
+            this.setBlock(result, 0, 64, 0, (byte) 7);
         }
         return result;
     }

@@ -14,12 +14,12 @@ public class BungeeHasPermissionCommand extends Command {
 
     @Override
     public void execute(CommandSender commandSender, String[] args) {
-        if (commandSender instanceof ProxiedPlayer){
+        if (commandSender instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) commandSender;
             OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
-            if (args.length == 1){
+            if (args.length == 1) {
                 player.sendMessage(data.hasPermission(args[0]) + "");
-            }else{
+            } else {
                 player.sendMessage(CC.RED + "Usage: /bhasperm <permission>");
             }
         }

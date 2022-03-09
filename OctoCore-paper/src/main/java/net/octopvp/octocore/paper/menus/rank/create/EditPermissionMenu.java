@@ -30,16 +30,18 @@ public class EditPermissionMenu extends Menu {
     private final boolean create;
     private final Consumer<NodeBuilder> callback;
     private final Menu previous;
+
     @SneakyThrows
-    public EditPermissionMenu(NodeBuilder nodeBuilder, boolean create, Menu previous, Consumer<NodeBuilder> callback){
+    public EditPermissionMenu(NodeBuilder nodeBuilder, boolean create, Menu previous, Consumer<NodeBuilder> callback) {
         this.nodeBuilder = nodeBuilder.clone();
         this.create = create;
         this.callback = callback;
         this.previous = previous;
     }
+
     @Override
     public List<Button> getButtons(Player player) {
-        return Lists.newArrayList(new PermissionInfoButton(),new PermissionButton(),new AllowedButton(),new ScopeButton(),new PlaceholderButton(),new CreateButton());
+        return Lists.newArrayList(new PermissionInfoButton(), new PermissionButton(), new AllowedButton(), new ScopeButton(), new PlaceholderButton(), new CreateButton());
     }
 
     @Override
@@ -61,11 +63,12 @@ public class EditPermissionMenu extends Menu {
     public String getName(Player player) {
         return CC.AQUA + (create ? "Create" : "Edit") + " permission";
     }
+
     //permission info / permission / allowed/negated / scope
     private class PermissionInfoButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.LEVER).name((nodeBuilder.isAllowed() ? CC.GREEN : CC.RED) + nodeBuilder.getPermission()).lore(CC.AQUA + "Allowed: " + (nodeBuilder.isAllowed() ? CC.GREEN + "Yes" : CC.RED + "No"),CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().getServer(),CC.AQUA + "Permission: " + CC.YELLOW + nodeBuilder.getPermission()).build();
+            return new ItemBuilder(Material.LEVER).name((nodeBuilder.isAllowed() ? CC.GREEN : CC.RED) + nodeBuilder.getPermission()).lore(CC.AQUA + "Allowed: " + (nodeBuilder.isAllowed() ? CC.GREEN + "Yes" : CC.RED + "No"), CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().getServer(), CC.AQUA + "Permission: " + CC.YELLOW + nodeBuilder.getPermission()).build();
         }
 
         @Override
@@ -73,12 +76,13 @@ public class EditPermissionMenu extends Menu {
             return 4;
         }
     }
+
     private class PermissionButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.REDSTONE_TORCH_ON).name(CC.translate("&bPermission")).lore(
-                    CC.SEPARATOR,CC.AQUA + "Permission: " + CC.YELLOW + nodeBuilder.getPermission(),
+                    CC.SEPARATOR, CC.AQUA + "Permission: " + CC.YELLOW + nodeBuilder.getPermission(),
                     CC.SEPARATOR,
                     CC.YELLOW + "Click to set permission!"
             ).build();
@@ -104,12 +108,11 @@ public class EditPermissionMenu extends Menu {
                     player.sendMessage(CC.RED + "Canceled!");
                     return Prompt.END_OF_CONVERSATION;
                 }
-                if (s.contains(" ")){
+                if (s.contains(" ")) {
                     player.sendMessage(CC.RED + "There may not be spaces in the permission!");
                     prompt(player);
                     return Prompt.END_OF_CONVERSATION;
-                }
-                else if (FilterManager.containsUnicode(s)){
+                } else if (FilterManager.containsUnicode(s)) {
                     player.sendMessage(CC.RED + "You may not use unicode!");
                     prompt(player);
                     return Prompt.END_OF_CONVERSATION;
@@ -122,6 +125,7 @@ public class EditPermissionMenu extends Menu {
             })).buildConversation(player).begin();
         }
     }
+
     private class AllowedButton extends Button {
 
         @Override
@@ -148,10 +152,11 @@ public class EditPermissionMenu extends Menu {
             SoundUtil.playPing(player);
         }
     }
+
     private class ScopeButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Scope").lore(CC.SEPARATOR,CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().getServer(),CC.SEPARATOR,CC.YELLOW + "Click to set scope!").build();
+            return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Scope").lore(CC.SEPARATOR, CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().getServer(), CC.SEPARATOR, CC.YELLOW + "Click to set scope!").build();
         }
 
         @Override
@@ -168,6 +173,7 @@ public class EditPermissionMenu extends Menu {
             }).open(player);
         }
     }
+
     private class CreateButton extends Button {
 
         @Override
@@ -191,16 +197,17 @@ public class EditPermissionMenu extends Menu {
             callback.accept(nodeBuilder);
         }
     }
+
     private class PlaceholderButton extends net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton {
         @Override
         public int[] getSlots() {
             List<Integer> a = new ArrayList<>();
-            IntStream.range(0,26).forEach((i)->{
-                if (i != 13 && i != 12 && i != 14 && i != 4){
+            IntStream.range(0, 26).forEach((i) -> {
+                if (i != 13 && i != 12 && i != 14 && i != 4) {
                     a.add(i);
                 }
             });
-            return a.stream().mapToInt(i->i).toArray();
+            return a.stream().mapToInt(i -> i).toArray();
         }
     }
 }

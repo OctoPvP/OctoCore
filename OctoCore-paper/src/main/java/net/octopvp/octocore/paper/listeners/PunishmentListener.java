@@ -22,9 +22,28 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PunishmentListener implements Listener {
+    public static void disallowBlacklist(AsyncPlayerPreLoginEvent event, Punishment punishment) {
+        boolean temp = punishment.isTemporary();
+        event.disallow(
+                AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
+                new DisconnectReason(
+                        Lang.PUNISH_KICK_MESSAGE.getMsg(
+                                (temp ? Lang.TEMP : Lang.PERM),
+                                "BLACKLISTED",
+                                "Blacklisted",
+                                punishment.getAddedByName(),
+                                punishment.getReason(),
+                                (temp ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
+                                        punishment.getNiceExpire(), punishment.getNiceDuration()) : Lang.PERM_ENTRY),
+                                true)).toString()
+        );
+        new PunishedJoinPacket(new JsonBuilder().addProperty("name", event.getName()).addProperty("type", "blacklisted")).send();
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
@@ -69,8 +88,9 @@ public class PunishmentListener implements Listener {
             player.sendMessage(Lang.MUTE_CANT_TALK_TEMP.getMsg(mute.getNiceExpire()));
         }
     }
+
     @EventHandler
-    public void onQuit(PlayerQuitEvent event){
+    public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         PunishPlayerData playerData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(player.getUniqueId());
         UUID uuid = player.getUniqueId();
@@ -81,22 +101,5 @@ public class PunishmentListener implements Listener {
             playerData.save();
             PunishModule.getInstance().getProfileManager().unloadData(uuid);
         });
-    }
-    public static void disallowBlacklist(AsyncPlayerPreLoginEvent event,Punishment punishment){
-        boolean temp = punishment.isTemporary();
-        event.disallow(
-                AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
-                new DisconnectReason(
-                        Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                (temp ? Lang.TEMP : Lang.PERM),
-                                "BLACKLISTED",
-                                "Blacklisted",
-                                punishment.getAddedByName(),
-                                punishment.getReason(),
-                                (temp ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
-                                        punishment.getNiceExpire(),punishment.getNiceDuration()) : Lang.PERM_ENTRY),
-                                true)).toString()
-        );
-        new PunishedJoinPacket(new JsonBuilder().addProperty("name",event.getName()).addProperty("type", "blacklisted")).send();
     }
 }

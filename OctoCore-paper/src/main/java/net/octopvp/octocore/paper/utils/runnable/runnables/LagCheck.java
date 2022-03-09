@@ -4,10 +4,10 @@ import com.google.common.collect.ImmutableList;
 import net.octopvp.octocore.paper.api.events.ServerLaggedOutEvent;
 import net.octopvp.octocore.paper.protocol.PingAdapter;
 import net.octopvp.octocore.paper.utils.PlayerUtils;
-import org.bukkit.scheduler.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class LagCheck extends BukkitRunnable {
     public void run() {
@@ -21,7 +21,7 @@ public class LagCheck extends BukkitRunnable {
             }
             final double percentage = playersLagging * 100 / players.size();
             if (Math.abs(percentage) >= 30.0) {
-                Bukkit.getPluginManager().callEvent((Event)new ServerLaggedOutEvent(PingAdapter.getAveragePing()));
+                Bukkit.getPluginManager().callEvent(new ServerLaggedOutEvent(PingAdapter.getAveragePing()));
             }
         }
     }

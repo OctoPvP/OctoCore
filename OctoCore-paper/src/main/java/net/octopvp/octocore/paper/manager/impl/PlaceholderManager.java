@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 import java.util.HashMap;
 
 public class PlaceholderManager extends Manager {
-    private static HashMap<String, String> placeholders = new HashMap<>();
+    private static final HashMap<String, String> placeholders = new HashMap<>();
 
     public static String replacePlaceholders(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);

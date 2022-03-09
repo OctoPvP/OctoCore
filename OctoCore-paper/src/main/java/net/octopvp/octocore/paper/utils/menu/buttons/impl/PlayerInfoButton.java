@@ -16,30 +16,32 @@ import java.util.UUID;
 
 public class PlayerInfoButton extends Button {
     private PlayerData playerData;
-    private int slot;
+    private final int slot;
 
     public PlayerInfoButton(PlayerData playerData, int slot) {
         this.playerData = playerData;
         this.slot = slot;
     }
+
     public PlayerInfoButton(UUID uuid, int slot) {
         this.slot = slot;
         playerData = null;
-        PlayerManager.getOfflineData(uuid).thenAcceptAsync((data)->{
+        PlayerManager.getOfflineData(uuid).thenAcceptAsync((data) -> {
             this.playerData = data;
         });
     }
+
     public PlayerInfoButton(String name, int slot) {
         this.slot = slot;
         playerData = null;
-        PlayerManager.getOfflineData(name).thenAcceptAsync((data)->{
+        PlayerManager.getOfflineData(name).thenAcceptAsync((data) -> {
             this.playerData = data;
         });
     }
 
     @Override
     public ItemStack getItem(Player player) {
-        if(playerData == null) {
+        if (playerData == null) {
             ItemBuilder builder = new ItemBuilder(Material.SKULL_ITEM);
             builder.setName(CC.GRAY + "Loading...");
             return builder.build();

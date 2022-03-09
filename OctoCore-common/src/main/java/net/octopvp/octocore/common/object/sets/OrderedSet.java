@@ -7,7 +7,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class OrderedSet<E> implements Set {
-    private List<E> listBack = new CopyOnWriteArrayList<>();
+    private final List<E> listBack = new CopyOnWriteArrayList<>();
+
     @Override
     public int size() {
         return 0;

@@ -13,6 +13,20 @@ public class KaboomTroll implements Troll {
     private KaboomTroll() {
     }
 
+    public static void kaboom(Player player) {
+        player.getWorld().strikeLightningEffect(player.getLocation());
+        player.setVelocity(new Vector(0, 64, 0));
+        player.setFallDistance(-65.0F);
+        player.sendMessage(Lang.KABOOM.getMsg());
+    }
+
+    public static void kaboom(Player player, int i) {
+        player.getWorld().strikeLightningEffect(player.getLocation());
+        player.setVelocity(new Vector(0, i - 1, 0));
+        player.setFallDistance(-i);
+        player.sendMessage(Lang.KABOOM.getMsg());
+    }
+
     @Override
     public void activate(Player player) {
         int a = Utils.getBlockAbove(player);
@@ -22,17 +36,5 @@ public class KaboomTroll implements Troll {
         } else {
             kaboom(player, a - 1);
         }
-    }
-    public static void kaboom(Player player){
-        player.getWorld().strikeLightningEffect(player.getLocation());
-        player.setVelocity(new Vector(0, 64, 0));
-        player.setFallDistance(-65.0F);
-        player.sendMessage(Lang.KABOOM.getMsg());
-    }
-    public static void kaboom(Player player,int i){
-        player.getWorld().strikeLightningEffect(player.getLocation());
-        player.setVelocity(new Vector(0, i - 1, 0));
-        player.setFallDistance(-i);
-        player.sendMessage(Lang.KABOOM.getMsg());
     }
 }

@@ -18,13 +18,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class AuthMapManager extends MapRenderer {
-    private Player player;
-    private byte[] bytes;
-    public AuthMapManager(Player player,byte[] bytes){
+    private final Player player;
+    private final byte[] bytes;
+
+    public AuthMapManager(Player player, byte[] bytes) {
         this.player = player;
         this.bytes = bytes;
     }
-    public void giveMap(){
+
+    public void giveMap() {
         ItemStack i = new ItemBuilder(Material.MAP).name(CC.GREEN + "2fa QR Code").build();
         MapView view = Bukkit.createMap(player.getWorld());
         for (MapRenderer renderer : view.getRenderers()) {
@@ -41,16 +43,16 @@ public class AuthMapManager extends MapRenderer {
         BufferedImage resized = null;
         try {
             image = ImageIO.read(new ByteArrayInputStream(bytes));
-            resized = new BufferedImage(128,128, BufferedImage.TYPE_INT_ARGB);
+            resized = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
             final Graphics2D g = resized.createGraphics();
-            g.drawImage(image, 0, 0, 128,128, null);
+            g.drawImage(image, 0, 0, 128, 128, null);
             g.dispose();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if(!(resized == null))
-            mapCanvas.drawImage(0,0,resized);
-        else mapCanvas.drawText(1,1, MinecraftFont.Font,"Error!");
+        if (!(resized == null))
+            mapCanvas.drawImage(0, 0, resized);
+        else mapCanvas.drawText(1, 1, MinecraftFont.Font, "Error!");
     }
 }

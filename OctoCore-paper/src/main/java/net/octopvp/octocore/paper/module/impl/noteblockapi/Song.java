@@ -11,7 +11,6 @@ import java.util.HashMap;
 @Deprecated
 public class Song implements Cloneable {
 
-    private HashMap<Integer, Layer> layerHashMap = new HashMap<Integer, Layer>();
     private final short songHeight;
     private final short length;
     private final String title;
@@ -22,6 +21,7 @@ public class Song implements Cloneable {
     private final float delay;
     private final CustomInstrument[] customInstruments;
     private final int firstCustomInstrumentIndex;
+    private HashMap<Integer, Layer> layerHashMap = new HashMap<Integer, Layer>();
 
     /**
      * Create Song instance by copying other Song parameters

@@ -20,7 +20,7 @@ public class Replacement {
 
     public String toString() {
         replacements.keySet().forEach(current -> this.message = this.message.replace(String.valueOf(current), String.valueOf(replacements.get(current))));
-        return ChatColor.translateAlternateColorCodes('&',this.message);
+        return ChatColor.translateAlternateColorCodes('&', this.message);
     }
 
     public String toString(boolean ignored) {
@@ -32,12 +32,12 @@ public class Replacement {
         return this.replacements;
     }
 
-    public String getMessage() {
-        return this.message;
-    }
-
     public void setReplacements(Map<Object, Object> replacements) {
         this.replacements = replacements;
+    }
+
+    public String getMessage() {
+        return this.message;
     }
 
     public void setMessage(String message) {

@@ -8,9 +8,9 @@ import org.bukkit.potion.PotionEffect;
 
 public class DeathListener implements Listener {
     @EventHandler
-    public void onDeath(PlayerDeathEvent e){
-        if(e.getEntity().isDead()){
-            if(OctoCore.getInstance().getConfig().getBoolean("settings.auto-respawn")) {
+    public void onDeath(PlayerDeathEvent e) {
+        if (e.getEntity().isDead()) {
+            if (OctoCore.getInstance().getConfig().getBoolean("settings.auto-respawn")) {
                 e.getEntity().setFireTicks(0);
                 for (PotionEffect activePotionEffect : e.getEntity().getActivePotionEffects()) {
                     e.getEntity().removePotionEffect(activePotionEffect.getType());

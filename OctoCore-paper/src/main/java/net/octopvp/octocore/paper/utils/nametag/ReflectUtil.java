@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * <p>
  * Partly inspired by I Al Istannen's ReflectionUtil:
  * https://github.com/PerceiveDev/PerceiveCore/blob/master/Reflection/src/main/java/com/perceivedev/perceivecore/reflection/ReflectionUtil.java
- *
+ * <p>
  * All the return types for methods in this class are wrapped inside ReflectionResponse class. This is to handle any reflective exceptions
  * that may occur. If an exception occurs, it will be caught and put inside the ReflectionResponse to allow the caller to handle it properly
  * using the ReflectionResponse#hasResult(), ReflectionResponse#getValue() and ReflectionResponse#getException() methods. There is also
@@ -75,7 +75,7 @@ public class ReflectUtil {
      *
      * @param majorVersion the major version to check against
      * @param minorVersion the minor version to check against
-     * @param build the build to check against
+     * @param build        the build to check against
      * @return true, only if the current version is greater than the one specified
      */
     public static boolean isVersionHigherThan(int majorVersion, int minorVersion, int build) {
@@ -136,9 +136,9 @@ public class ReflectUtil {
     /**
      * Gets the specified constructor
      *
-     * @param clazz the class which has the constructor
+     * @param clazz  the class which has the constructor
      * @param params the types of the parameters the constructor takes
-     * @param <T> the constructor type
+     * @param <T>    the constructor type
      * @return the constructor
      */
     public static <T> ReflectionResponse<Constructor<T>> getConstructor(Class<T> clazz, Class<?>... params) {
@@ -154,7 +154,7 @@ public class ReflectUtil {
     /**
      * Gets the specified field.
      *
-     * @param clazz the class which has the field
+     * @param clazz     the class which has the field
      * @param fieldName the name of the field
      * @return the field
      */
@@ -171,7 +171,7 @@ public class ReflectUtil {
     /**
      * Gets the specified declared field.
      *
-     * @param clazz the class which has the field
+     * @param clazz     the class which has the field
      * @param fieldName the name of the field
      * @return the field
      */
@@ -182,8 +182,8 @@ public class ReflectUtil {
     /**
      * Gets the specified declared field.
      *
-     * @param clazz the class which has the field
-     * @param fieldName the name of the field
+     * @param clazz         the class which has the field
+     * @param fieldName     the name of the field
      * @param setAccessible whether to forcefully make this field accessible
      * @return the field
      */
@@ -203,7 +203,7 @@ public class ReflectUtil {
      * Gets the specified field by its type.
      *
      * @param clazz the class which has this field
-     * @param type the type of the field
+     * @param type  the type of the field
      * @param index the index of the field in the class
      *              relative to all other fields with the
      *              same return type
@@ -216,7 +216,7 @@ public class ReflectUtil {
     /**
      * Gets a static final field and uses a hack to make it modifiable.
      *
-     * @param clazz the class which has the field
+     * @param clazz     the class which has the field
      * @param fieldName the name of the field
      * @return the field
      */
@@ -236,8 +236,8 @@ public class ReflectUtil {
     /**
      * Gets a declared static final field and uses a hack to make it modifiable.
      *
-     * @param clazz the class which has the field
-     * @param fieldName the name of the field
+     * @param clazz         the class which has the field
+     * @param fieldName     the name of the field
      * @param setAccessible whether or not to forcefully make the field accessible
      * @return the field
      */
@@ -271,7 +271,7 @@ public class ReflectUtil {
      * Gets a declared field by its type.
      *
      * @param clazz the class which has the field
-     * @param type the type of the field
+     * @param type  the type of the field
      * @param index the index of the field in the class
      *              relative to all the other fields in
      *              the class with the same type
@@ -284,11 +284,11 @@ public class ReflectUtil {
     /**
      * Gets a declared field by its type.
      *
-     * @param clazz the class which has the field
-     * @param type the type of the field
-     * @param index the index of the field in the class
-     *              relative to all the other fields in
-     *              the class with the same type
+     * @param clazz         the class which has the field
+     * @param type          the type of the field
+     * @param index         the index of the field in the class
+     *                      relative to all the other fields in
+     *                      the class with the same type
      * @param setAccessible whether or not to forcefully make the field accessible
      * @return the field
      */
@@ -298,19 +298,18 @@ public class ReflectUtil {
 
     /**
      * Gets a field by the specified predicate.
-     *
+     * <p>
      * You can either write your own Predicate, or use the
      * convenient FieldPredicate class which contains
      * various methods for finding fields.
      *
-     * @see FieldPredicate
-     *
-     * @param clazz the class which contains the field
+     * @param clazz     the class which contains the field
      * @param predicate the predicate which matches the field
-     * @param index the index of the field relative to
-     *              all other fields which match the same
-     *              predicate in the class
+     * @param index     the index of the field relative to
+     *                  all other fields which match the same
+     *                  predicate in the class
      * @return the field
+     * @see FieldPredicate
      */
     public static ReflectionResponse<Field> getFieldByPredicate(Class<?> clazz, Predicate<Field> predicate, int index) {
         Validate.notNull(clazz, "clazz cannot be null");
@@ -329,19 +328,18 @@ public class ReflectUtil {
 
     /**
      * Gets a declared field by the specified predicate.
-     *
+     * <p>
      * You can either write your own Predicate, or use the
      * convenient FieldPredicate class which contains
      * various methods for finding fields.
      *
-     * @see FieldPredicate
-     *
-     * @param clazz the class which contains the field
+     * @param clazz     the class which contains the field
      * @param predicate the predicate which matches the field
-     * @param index the index of the field relative to
-     *              all other fields which match the same
-     *              predicate in the class
+     * @param index     the index of the field relative to
+     *                  all other fields which match the same
+     *                  predicate in the class
      * @return the field
+     * @see FieldPredicate
      */
     public static ReflectionResponse<Field> getDeclaredFieldByPredicate(Class<?> clazz, Predicate<Field> predicate, int index) {
         return getDeclaredFieldByPredicate(clazz, predicate, false, index);
@@ -349,20 +347,19 @@ public class ReflectUtil {
 
     /**
      * Gets a declared field by the specified predicate.
-     *
+     * <p>
      * You can either write your own Predicate, or use the
      * convenient FieldPredicate class which contains
      * various methods for finding fields.
      *
-     * @see FieldPredicate
-     *
-     * @param clazz the class which contains the field
-     * @param predicate the predicate which matches the field
+     * @param clazz         the class which contains the field
+     * @param predicate     the predicate which matches the field
      * @param setAccessible whether or not to forcefully make the field accessible
-     * @param index the index of the field relative to
-     *              all other fields which match the same
-     *              predicate in the class
+     * @param index         the index of the field relative to
+     *                      all other fields which match the same
+     *                      predicate in the class
      * @return the field
+     * @see FieldPredicate
      */
     public static ReflectionResponse<Field> getDeclaredFieldByPredicate(Class<?> clazz, Predicate<Field> predicate, boolean setAccessible, int index) {
         Validate.notNull(clazz, "clazz cannot be null");
@@ -384,9 +381,9 @@ public class ReflectUtil {
     /**
      * Gets the specified method.
      *
-     * @param clazz the class which has the method
+     * @param clazz      the class which has the method
      * @param methodName the name of the method
-     * @param params the parameters of the method
+     * @param params     the parameters of the method
      * @return the method
      */
     public static ReflectionResponse<Method> getMethod(Class<?> clazz, String methodName, Class<?>... params) {
@@ -404,7 +401,7 @@ public class ReflectUtil {
      * Gets the specified method by its return type.
      *
      * @param clazz the class which has the method
-     * @param type the return type
+     * @param type  the return type
      * @param index the index of the method in the class
      *              relative to all the other methods in
      *              the class with the same return type.
@@ -417,10 +414,10 @@ public class ReflectUtil {
     /**
      * Gets the specified method by its parameters.
      *
-     * @param clazz the class which has the method
-     * @param index the index of the method in the class
-     *              relative to all the other methods in
-     *              the class with the same parameters.
+     * @param clazz  the class which has the method
+     * @param index  the index of the method in the class
+     *               relative to all the other methods in
+     *               the class with the same parameters.
      * @param params the parameters
      * @return the method
      */
@@ -431,12 +428,12 @@ public class ReflectUtil {
     /**
      * Gets the specified method by both its return type and parameters.
      *
-     * @param clazz the class which has the method
-     * @param type the return type
-     * @param index the index of the method in the class
-     *              relative to all the other methods in
-     *              the class with the same return type
-     *              and parameters.
+     * @param clazz  the class which has the method
+     * @param type   the return type
+     * @param index  the index of the method in the class
+     *               relative to all the other methods in
+     *               the class with the same return type
+     *               and parameters.
      * @param params the parameters
      * @return the method
      */
@@ -447,11 +444,11 @@ public class ReflectUtil {
     /**
      * Gets a method by the specified predicate.
      *
-     * @param clazz the class which has the method
+     * @param clazz     the class which has the method
      * @param predicate the predicate to match the method
-     * @param index the index of the method in the class
-     *              relative to all the other methods in
-     *              the class which match the same predicate.
+     * @param index     the index of the method in the class
+     *                  relative to all the other methods in
+     *                  the class which match the same predicate.
      * @return the method
      */
     public static ReflectionResponse<Method> getMethodByPredicate(Class<?> clazz, Predicate<Method> predicate, int index) {
@@ -472,8 +469,8 @@ public class ReflectUtil {
     /**
      * Gets the specified declared method.
      *
-     * @param clazz the class
-     * @param name the name of the method
+     * @param clazz  the class
+     * @param name   the name of the method
      * @param params the parameters of the method
      * @return the method
      */
@@ -484,10 +481,10 @@ public class ReflectUtil {
     /**
      * Gets the specified declared method.
      *
-     * @param clazz the class
-     * @param name the name of the method
+     * @param clazz         the class
+     * @param name          the name of the method
      * @param setAccessible whether to forcefully make the method accessible
-     * @param params the parameters of the method
+     * @param params        the parameters of the method
      * @return the method
      */
     public static ReflectionResponse<Method> getDeclaredMethod(Class<?> clazz, String name, boolean setAccessible, Class<?>... params) {
@@ -507,7 +504,7 @@ public class ReflectUtil {
      * Gets the specified declared method by its return type.
      *
      * @param clazz the class which has the method
-     * @param type the return type
+     * @param type  the return type
      * @param index the index of the method in the class
      *              relative to all the other methods in
      *              the class which have the same return type.
@@ -520,11 +517,11 @@ public class ReflectUtil {
     /**
      * Gets the specified declared method by its return type.
      *
-     * @param clazz the class which has the method
-     * @param type the return type
-     * @param index the index of the method in the class
-     *              relative to all the other methods in
-     *              the class which have the same return type.
+     * @param clazz         the class which has the method
+     * @param type          the return type
+     * @param index         the index of the method in the class
+     *                      relative to all the other methods in
+     *                      the class which have the same return type.
      * @param setAccessible whether to forcefully make the method accessible
      * @return the method
      */
@@ -535,11 +532,11 @@ public class ReflectUtil {
     /**
      * Gets a declared method by the specified predicate.
      *
-     * @param clazz the class which has the method
-     * @param predicate the predicate to match the field
-     * @param index the index of the method in the class
-     *              relative to all the other methods in
-     *              the class which match the same predicate.
+     * @param clazz         the class which has the method
+     * @param predicate     the predicate to match the field
+     * @param index         the index of the method in the class
+     *                      relative to all the other methods in
+     *                      the class which match the same predicate.
      * @param setAccessible whether to forcefully make the field accessible
      * @return the field
      */
@@ -564,7 +561,7 @@ public class ReflectUtil {
      * Gets a field value.
      *
      * @param object the object to get the value from, or null if the field is static
-     * @param field the field
+     * @param field  the field
      * @return the value
      */
     public static ReflectionResponse<Object> getFieldValue(Object object, Field field) {
@@ -580,7 +577,7 @@ public class ReflectUtil {
     /**
      * Gets an enum constant.
      *
-     * @param clazz the enum class
+     * @param clazz    the enum class
      * @param constant the name of the constant to get
      * @return the constant
      */
@@ -599,8 +596,8 @@ public class ReflectUtil {
     /**
      * Sets a field value.
      *
-     * @param object the object to set the field value to, or null if the field is static
-     * @param field the field
+     * @param object   the object to set the field value to, or null if the field is static
+     * @param field    the field
      * @param newValue the value to set to the field
      * @return void
      */
@@ -638,8 +635,8 @@ public class ReflectUtil {
      * Invokes a constructor.
      *
      * @param constructor the constructor to invoke
-     * @param params the params to pass to the constructor
-     * @param <T> the constructor type
+     * @param params      the params to pass to the constructor
+     * @param <T>         the constructor type
      * @return the newly instantiated object returned by the constructor
      */
     public static <T> ReflectionResponse<T> invokeConstructor(Constructor<T> constructor, Object... params) {
@@ -656,12 +653,12 @@ public class ReflectUtil {
      * Gets the printable fields of an object using reflection.
      * The method will attempt to use the toString() on objects
      * which have it overridden.
-     *
+     * <p>
      * This method recurses deeply, and doesn't stop until
      * the object has a toString() implementation not contained
      * in the toStringExceptions list.
      *
-     * @param object the object
+     * @param object             the object
      * @param toStringExceptions exceptions on which to not use toString(), even if they have it overridden
      * @return a Map keyed by the field name, and the value is the string representation of the object the field contains
      */
@@ -673,15 +670,15 @@ public class ReflectUtil {
      * Gets the printable fields of an object using reflection.
      * The method will attempt to use the toString() on objects
      * which have it overridden.
-     *
+     * <p>
      * This method recurses deeply, and doesn't stop until
      * the object has a toString() implementation which it
      * is configured to use.
      *
-     * @param object the object
-     * @param useToString whether or not to use toString() methods
-     *                    if they are overridden from the standard
-     *                    implementation contained in the Object class.
+     * @param object             the object
+     * @param useToString        whether or not to use toString() methods
+     *                           if they are overridden from the standard
+     *                           implementation contained in the Object class.
      * @param toStringExceptions exceptions on which to not use toString(), even if they have it overridden,
      *                           or the exact reverse if useToString is false.
      * @return a Map keyed by the field name, and the value is the string representation of the object the field contains
@@ -734,15 +731,15 @@ public class ReflectUtil {
      * Gets a string representation of an object using reflection.
      * The method will attempt to use the toString() on objects
      * which have it overridden.
-     *
+     * <p>
      * This method recurses deeply, and doesn't stop until
      * the object has a toString() implementation which it
      * is configured to use.
      *
-     * @param object the object
-     * @param useToString whether or not to use toString() methods
-     *                    if they are overridden from the standard
-     *                    implementation contained in the Object class.
+     * @param object             the object
+     * @param useToString        whether or not to use toString() methods
+     *                           if they are overridden from the standard
+     *                           implementation contained in the Object class.
      * @param toStringExceptions exceptions on which to not use toString(), even if they have it overridden,
      *                           or the exact reverse if useToString is false.
      * @return the string representation of the object
@@ -836,14 +833,14 @@ public class ReflectUtil {
 
     /**
      * Gets the pretty print string representation of an object.
-     *
+     * <p>
      * This method is functionally the same as #getStringRepresentation(),
      * but includes line breaks and indentation for easier readability.
      *
-     * @param object the object
-     * @param useToString whether or not to use toString() methods
-     *                    if they are overridden from the standard
-     *                    implementation contained in the Object class.
+     * @param object             the object
+     * @param useToString        whether or not to use toString() methods
+     *                           if they are overridden from the standard
+     *                           implementation contained in the Object class.
      * @param toStringExceptions exceptions on which to not use toString(), even if they have it overridden,
      *                           or the exact reverse if useToString is false.
      * @return the pretty print string representation
@@ -1010,10 +1007,9 @@ public class ReflectUtil {
         /**
          * Matches methods with the specified modifiers.
          *
-         * @see Modifier
-         *
          * @param modifiers the modifiers
          * @return this instance, for convenience
+         * @see Modifier
          */
         public MethodPredicate withModifiers(int... modifiers) {
             this.withModifiers = Arrays.stream(modifiers).boxed().collect(Collectors.toList());
@@ -1023,10 +1019,9 @@ public class ReflectUtil {
         /**
          * Matches methods with the specified modifiers.
          *
-         * @see Modifier
-         *
          * @param modifiers the modifiers
          * @return this instance, for convenience
+         * @see Modifier
          */
         public MethodPredicate withModifiers(Collection<Integer> modifiers) {
             this.withModifiers = new ArrayList<>(modifiers);
@@ -1036,10 +1031,9 @@ public class ReflectUtil {
         /**
          * Matches methods without the specified modifiers.
          *
-         * @see Modifier
-         *
          * @param modifiers the modifiers
          * @return this instance, for convenience
+         * @see Modifier
          */
         public MethodPredicate withoutModifiers(int... modifiers) {
             this.withoutModifiers = Arrays.stream(modifiers).boxed().collect(Collectors.toList());
@@ -1049,10 +1043,9 @@ public class ReflectUtil {
         /**
          * Matches methods without the specified modifiers.
          *
-         * @see Modifier
-         *
          * @param modifiers the modifiers
          * @return this instance, for convenience
+         * @see Modifier
          */
         public MethodPredicate withoutModifiers(Collection<Integer> modifiers) {
             this.withoutModifiers = new ArrayList<>(modifiers);
@@ -1167,10 +1160,9 @@ public class ReflectUtil {
         /**
          * Matches fields with the specified modifiers
          *
-         * @see Modifier
-         *
          * @param modifiers the modifiers
          * @return this instance, for convenience
+         * @see Modifier
          */
         public FieldPredicate withModifiers(int... modifiers) {
             this.withModifiers = Arrays.stream(modifiers).boxed().collect(Collectors.toList());
@@ -1180,10 +1172,9 @@ public class ReflectUtil {
         /**
          * Matches fields with the specified modifiers
          *
-         * @see Modifier
-         *
          * @param modifiers the modifiers
          * @return this instance, for convenience
+         * @see Modifier
          */
         public FieldPredicate withModifiers(Collection<Integer> modifiers) {
             this.withModifiers = new ArrayList<>(modifiers);
@@ -1193,10 +1184,9 @@ public class ReflectUtil {
         /**
          * Matches fields without the specified modifiers
          *
-         * @see Modifier
-         *
          * @param modifiers the modifiers
          * @return this instance, for convenience
+         * @see Modifier
          */
         public FieldPredicate withoutModifiers(int... modifiers) {
             this.withoutModifiers = Arrays.stream(modifiers).boxed().collect(Collectors.toList());
@@ -1206,10 +1196,9 @@ public class ReflectUtil {
         /**
          * Matches fields without the specified modifiers
          *
-         * @see Modifier
-         *
          * @param modifiers the modifiers
          * @return this instance, for convenience
+         * @see Modifier
          */
         public FieldPredicate withoutModifiers(Collection<Integer> modifiers) {
             this.withoutModifiers = new ArrayList<>(modifiers);

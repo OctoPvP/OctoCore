@@ -8,22 +8,23 @@ import net.octopvp.octocore.paper.objects.OctoPermissible;
 import net.octopvp.octocore.paper.utils.Sender;
 
 public class UseOldPermissibleCommand extends BaseCommand {
-    @Command(name = "useoldpermissible",playerOnly = true)
+    @Command(name = "useoldpermissible", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        if (sender.getPlayer().getPermissibleBase() instanceof OctoPermissible){
+        if (sender.getPlayer().getPermissibleBase() instanceof OctoPermissible) {
             sender.getPlayer().setPermissibleBase(((OctoPermissible) sender.getPlayer().getPermissibleBase()).getOldPermissibleBase());
             sender.sendMessage(CC.GREEN + "Done!");
-        }else{
+        } else {
             sender.sendMessage(CC.RED + "Permissible isn't an OctoPermissible!");
         }
         return CommandResult.SUCCESS;
     }
-    @Command(name = "delpermcache",playerOnly = true)
+
+    @Command(name = "delpermcache", playerOnly = true)
     public CommandResult cache(Sender sender, String[] args) {
-        if (sender.getPlayer().getPermissibleBase() instanceof OctoPermissible){
+        if (sender.getPlayer().getPermissibleBase() instanceof OctoPermissible) {
             sender.getPlayer().getPermissibleBase().recalculatePermissions();
             sender.sendMessage(CC.GREEN + "Done!");
-        }else{
+        } else {
             sender.sendMessage(CC.RED + "Permissible isn't an OctoPermissible!");
         }
         return CommandResult.SUCCESS;

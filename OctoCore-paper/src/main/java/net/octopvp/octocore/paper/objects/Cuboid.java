@@ -1,13 +1,16 @@
 package net.octopvp.octocore.paper.objects;
 
-import org.bukkit.block.*;
-import org.bukkit.configuration.serialization.*;
-import java.util.*;
-import org.bukkit.entity.*;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Entity;
 
-public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable
-{
+import java.util.*;
+
+public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable {
     protected final String worldName;
     protected final int x1;
     protected final int y1;
@@ -15,7 +18,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     protected final int x2;
     protected final int y2;
     protected final int z2;
-    
+
     public Cuboid(final Location l1, final Location l2) {
         if (!l1.getWorld().equals(l2.getWorld())) {
             throw new IllegalArgumentException("Locations must be on the same world");
@@ -28,15 +31,15 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         this.y2 = Math.max(l1.getBlockY(), l2.getBlockY());
         this.z2 = Math.max(l1.getBlockZ(), l2.getBlockZ());
     }
-    
+
     public Cuboid(final Location l1) {
         this(l1, l1);
     }
-    
+
     public Cuboid(final Cuboid other) {
         this(other.getWorld().getName(), other.x1, other.y1, other.z1, other.x2, other.y2, other.z2);
     }
-    
+
     public Cuboid(final World world, final int x1, final int y1, final int z1, final int x2, final int y2, final int z2) {
         this.worldName = world.getName();
         this.x1 = Math.min(x1, x2);
@@ -46,7 +49,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         this.z1 = Math.min(z1, z2);
         this.z2 = Math.max(z1, z2);
     }
-    
+
     private Cuboid(final String worldName, final int x1, final int y1, final int z1, final int x2, final int y2, final int z2) {
         this.worldName = worldName;
         this.x1 = Math.min(x1, x2);
@@ -56,7 +59,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         this.z1 = Math.min(z1, z2);
         this.z2 = Math.max(z1, z2);
     }
-    
+
     public Cuboid(final Map<String, Object> map) {
         this.worldName = (String) map.get("worldName");
         this.x1 = (int) map.get("x1");
@@ -66,7 +69,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         this.z1 = (int) map.get("z1");
         this.z2 = (int) map.get("z2");
     }
-    
+
     public Map<String, Object> serialize() {
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put("worldName", this.worldName);
@@ -78,15 +81,15 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         map.put("z2", this.z2);
         return map;
     }
-    
+
     public Location getLowerNE() {
-        return new Location(this.getWorld(), (double)this.x1, (double)this.y1, (double)this.z1);
+        return new Location(this.getWorld(), this.x1, this.y1, this.z1);
     }
-    
+
     public Location getUpperSW() {
-        return new Location(this.getWorld(), (double)this.x2, (double)this.y2, (double)this.z2);
+        return new Location(this.getWorld(), this.x2, this.y2, this.z2);
     }
-    
+
     public List<Block> getBlocks() {
         final Iterator<Block> blockI = this.iterator();
         final List<Block> copy = new ArrayList<Block>();
@@ -95,14 +98,14 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         }
         return copy;
     }
-    
+
     public Location getCenter() {
         final int x1 = this.getUpperX() + 1;
         final int y1 = this.getUpperY() + 1;
         final int z1 = this.getUpperZ() + 1;
         return new Location(this.getWorld(), this.getLowerX() + (x1 - this.getLowerX()) / 2.0, this.getLowerY() + (y1 - this.getLowerY()) / 2.0, this.getLowerZ() + (z1 - this.getLowerZ()) / 2.0);
     }
-    
+
     public World getWorld() {
         final World world = Bukkit.getServer().getWorld(this.worldName);
         if (world == null) {
@@ -110,43 +113,43 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         }
         return world;
     }
-    
+
     public int getSizeX() {
         return this.x2 - this.x1 + 1;
     }
-    
+
     public int getSizeY() {
         return this.y2 - this.y1 + 1;
     }
-    
+
     public int getSizeZ() {
         return this.z2 - this.z1 + 1;
     }
-    
+
     public int getLowerX() {
         return this.x1;
     }
-    
+
     public int getLowerY() {
         return this.y1;
     }
-    
+
     public int getLowerZ() {
         return this.z1;
     }
-    
+
     public int getUpperX() {
         return this.x2;
     }
-    
+
     public int getUpperY() {
         return this.y2;
     }
-    
+
     public int getUpperZ() {
         return this.z2;
     }
-    
+
     public Block[] corners() {
         final Block[] res = new Block[8];
         final World w = this.getWorld();
@@ -160,14 +163,14 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         res[7] = w.getBlockAt(this.x2, this.y2, this.z2);
         return res;
     }
-    
+
     public Block[] minCorners() {
         final Block[] res = new Block[4];
         final World w = this.getWorld();
         res[0] = w.getBlockAt(this.x1, this.y1, this.z1);
         return res;
     }
-    
+
     public Cuboid expand(final CuboidDirection dir, final int amount) {
         switch (dir) {
             case NORTH: {
@@ -193,11 +196,11 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             }
         }
     }
-    
+
     public Cuboid shift(final CuboidDirection dir, final int amount) {
         return this.expand(dir, amount).expand(dir.opposite(), -amount);
     }
-    
+
     public Cuboid outset(final CuboidDirection dir, final int amount) {
         Cuboid c = null;
         switch (dir) {
@@ -219,35 +222,35 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         }
         return c;
     }
-    
+
     public Cuboid inset(final CuboidDirection dir, final int amount) {
         return this.outset(dir, -amount);
     }
-    
+
     public boolean contains(final int x, final int y, final int z) {
         return x >= this.x1 && x <= this.x2 && y >= this.y1 && y <= this.y2 && z >= this.z1 && z <= this.z2;
     }
-    
+
     public boolean contains(final Block b) {
         return this.contains(b.getLocation());
     }
-    
+
     public boolean contains(final Location l) {
         return this.worldName.equals(l.getWorld().getName()) && this.contains(l.getBlockX(), l.getBlockY(), l.getBlockZ());
     }
-    
+
     public boolean contains(final Entity e) {
         return this.contains(e.getLocation());
     }
-    
+
     public Cuboid grow(final int i) {
         return this.expand(CuboidDirection.NORTH, i).expand(CuboidDirection.SOUTH, i).expand(CuboidDirection.EAST, i).expand(CuboidDirection.WEST, i);
     }
-    
+
     public int getVolume() {
         return this.getSizeX() * this.getSizeY() * this.getSizeZ();
     }
-    
+
     public byte getAverageLightLevel() {
         long total = 0L;
         int n = 0;
@@ -257,13 +260,13 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
                 ++n;
             }
         }
-        return (byte)((n > 0) ? ((byte)(total / n)) : 0);
+        return (byte) ((n > 0) ? ((byte) (total / n)) : 0);
     }
-    
+
     public Cuboid contract() {
         return this.contract(CuboidDirection.DOWN).contract(CuboidDirection.SOUTH).contract(CuboidDirection.EAST).contract(CuboidDirection.UP).contract(CuboidDirection.NORTH).contract(CuboidDirection.WEST);
     }
-    
+
     public Cuboid contract(final CuboidDirection dir) {
         Cuboid face = this.getFace(dir.opposite());
         switch (dir) {
@@ -308,7 +311,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             }
         }
     }
-    
+
     public Cuboid getFace(final CuboidDirection dir) {
         switch (dir) {
             case DOWN: {
@@ -334,7 +337,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             }
         }
     }
-    
+
     public boolean containsOnly(final int blockId) {
         for (final Block b : this) {
             if (b.getTypeId() != blockId) {
@@ -343,7 +346,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         }
         return true;
     }
-    
+
     public Cuboid getBoundingCuboid(final Cuboid other) {
         if (other == null) {
             return this;
@@ -356,15 +359,15 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         final int zMax = Math.max(this.getUpperZ(), other.getUpperZ());
         return new Cuboid(this.worldName, xMin, yMin, zMin, xMax, yMax, zMax);
     }
-    
+
     public Block getRelativeBlock(final int x, final int y, final int z) {
         return this.getWorld().getBlockAt(this.x1 + x, this.y1 + y, this.z1 + z);
     }
-    
+
     public Block getRelativeBlock(final World w, final int x, final int y, final int z) {
         return w.getBlockAt(this.x1 + x, this.y1 + y, this.z1 + z);
     }
-    
+
     public List<Chunk> getChunks() {
         final List<Chunk> res = new ArrayList<Chunk>();
         final World w = this.getWorld();
@@ -379,25 +382,25 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         }
         return res;
     }
-    
+
     @Override
     public Iterator<Block> iterator() {
         return new CuboidIterator(this.getWorld(), this.x1, this.y1, this.z1, this.x2, this.y2, this.z2);
     }
-    
+
     public Cuboid clone() {
         return new Cuboid(this);
     }
-    
+
     @Override
     public String toString() {
-        return new String("Cuboid: " + this.worldName + "," + this.x1 + "," + this.y1 + "," + this.z1 + "=>" + this.x2 + "," + this.y2 + "," + this.z2);
+        return "Cuboid: " + this.worldName + "," + this.x1 + "," + this.y1 + "," + this.z1 + "=>" + this.x2 + "," + this.y2 + "," + this.z2;
     }
-    
+
     public List<Block> getWalls() {
         final List<Block> blocks = new ArrayList<Block>();
-        final Location min = new Location(this.getWorld(), (double)this.x1, (double)this.y1, (double)this.z1);
-        final Location max = new Location(this.getWorld(), (double)this.x2, (double)this.y2, (double)this.z2);
+        final Location min = new Location(this.getWorld(), this.x1, this.y1, this.z1);
+        final Location max = new Location(this.getWorld(), this.x2, this.y2, this.z2);
         final int minX = min.getBlockX();
         final int minY = min.getBlockY();
         final int minZ = min.getBlockZ();
@@ -406,27 +409,27 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         final int maxZ = max.getBlockZ();
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
-                final Location minLoc = new Location(this.getWorld(), (double)x, (double)y, (double)minZ);
-                final Location maxLoc = new Location(this.getWorld(), (double)x, (double)y, (double)maxZ);
+                final Location minLoc = new Location(this.getWorld(), x, y, minZ);
+                final Location maxLoc = new Location(this.getWorld(), x, y, maxZ);
                 blocks.add(minLoc.getBlock());
                 blocks.add(maxLoc.getBlock());
             }
         }
         for (int y2 = minY; y2 <= maxY; ++y2) {
             for (int z = minZ; z <= maxZ; ++z) {
-                final Location minLoc = new Location(this.getWorld(), (double)minX, (double)y2, (double)z);
-                final Location maxLoc = new Location(this.getWorld(), (double)maxX, (double)y2, (double)z);
+                final Location minLoc = new Location(this.getWorld(), minX, y2, z);
+                final Location maxLoc = new Location(this.getWorld(), maxX, y2, z);
                 blocks.add(minLoc.getBlock());
                 blocks.add(maxLoc.getBlock());
             }
         }
         return blocks;
     }
-    
+
     public List<Block> getFaces() {
         final List<Block> blocks = new ArrayList<Block>();
-        final Location min = new Location(this.getWorld(), (double)this.x1, (double)this.y1, (double)this.z1);
-        final Location max = new Location(this.getWorld(), (double)this.x2, (double)this.y2, (double)this.z2);
+        final Location min = new Location(this.getWorld(), this.x1, this.y1, this.z1);
+        final Location max = new Location(this.getWorld(), this.x2, this.y2, this.z2);
         final int minX = min.getBlockX();
         final int minY = min.getBlockY();
         final int minZ = min.getBlockZ();
@@ -435,38 +438,37 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         final int maxZ = max.getBlockZ();
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
-                blocks.add(new Location(this.getWorld(), (double)x, (double)y, (double)minZ).getBlock());
-                blocks.add(new Location(this.getWorld(), (double)x, (double)y, (double)maxZ).getBlock());
+                blocks.add(new Location(this.getWorld(), x, y, minZ).getBlock());
+                blocks.add(new Location(this.getWorld(), x, y, maxZ).getBlock());
             }
         }
         for (int y2 = minY; y2 <= maxY; ++y2) {
             for (int z = minZ; z <= maxZ; ++z) {
-                blocks.add(new Location(this.getWorld(), (double)minX, (double)y2, (double)z).getBlock());
-                blocks.add(new Location(this.getWorld(), (double)maxX, (double)y2, (double)z).getBlock());
+                blocks.add(new Location(this.getWorld(), minX, y2, z).getBlock());
+                blocks.add(new Location(this.getWorld(), maxX, y2, z).getBlock());
             }
         }
         for (int z2 = minZ; z2 <= maxZ; ++z2) {
             for (int x2 = minX; x2 <= maxX; ++x2) {
-                blocks.add(new Location(this.getWorld(), (double)x2, (double)minY, (double)z2).getBlock());
-                blocks.add(new Location(this.getWorld(), (double)x2, (double)maxY, (double)z2).getBlock());
+                blocks.add(new Location(this.getWorld(), x2, minY, z2).getBlock());
+                blocks.add(new Location(this.getWorld(), x2, maxY, z2).getBlock());
             }
         }
         return blocks;
     }
-    
-    public enum CuboidDirection
-    {
-        NORTH, 
-        EAST, 
-        SOUTH, 
-        WEST, 
-        UP, 
-        DOWN, 
-        HORIZONTAL, 
-        VERTICAL, 
-        BOTH, 
+
+    public enum CuboidDirection {
+        NORTH,
+        EAST,
+        SOUTH,
+        WEST,
+        UP,
+        DOWN,
+        HORIZONTAL,
+        VERTICAL,
+        BOTH,
         UNKNOWN;
-        
+
         public CuboidDirection opposite() {
             switch (this) {
                 case NORTH: {
@@ -502,20 +504,19 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             }
         }
     }
-    
-    public class CuboidIterator implements Iterator<Block>
-    {
-        private World w;
-        private int baseX;
-        private int baseY;
-        private int baseZ;
+
+    public class CuboidIterator implements Iterator<Block> {
+        private final World w;
+        private final int baseX;
+        private final int baseY;
+        private final int baseZ;
         private int x;
         private int y;
         private int z;
-        private int sizeX;
-        private int sizeY;
-        private int sizeZ;
-        
+        private final int sizeX;
+        private final int sizeY;
+        private final int sizeZ;
+
         public CuboidIterator(final World w, final int x1, final int y1, final int z1, final int x2, final int y2, final int z2) {
             this.w = w;
             this.baseX = Math.min(x1, x2);
@@ -529,12 +530,12 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             this.y = x3;
             this.x = x3;
         }
-        
+
         @Override
         public boolean hasNext() {
             return this.x < this.sizeX && this.y < this.sizeY && this.z < this.sizeZ;
         }
-        
+
         @Override
         public Block next() {
             final Block b = this.w.getBlockAt(this.baseX + this.x, this.baseY + this.y, this.baseZ + this.z);
@@ -547,7 +548,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             }
             return b;
         }
-        
+
         @Override
         public void remove() {
             throw new UnsupportedOperationException();

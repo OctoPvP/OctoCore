@@ -10,22 +10,25 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class BaseCommand {
-    public BaseCommand(){
+    private final String usageMessage = "";
+    public OctoCore plugin = OctoCore.getInstance();
+    public Map<String, SCommand> subCommands = new HashMap<>();
+
+    public BaseCommand() {
         if (this.getClass().isAnnotationPresent(Disable.class))
             return;
         OctoCore.getCommandFramework().registerCommands(this);
     }
-    public OctoCore plugin = OctoCore.getInstance();
-    public Map<String,SCommand> subCommands = new HashMap<>();
-    public abstract CommandResult execute(Sender sender,String[] args);
-    public List<String> tabComplete(Sender sender, String[] args){
+
+    public abstract CommandResult execute(Sender sender, String[] args);
+
+    public List<String> tabComplete(Sender sender, String[] args) {
         return null;
     }
-    public void registerSubCommand(String name,SCommand command){
-        subCommands.put(name,command);
-    }
 
-    private final String usageMessage = "";
+    public void registerSubCommand(String name, SCommand command) {
+        subCommands.put(name, command);
+    }
 
     public String getUsageMessage() {
         return usageMessage;
@@ -33,10 +36,12 @@ public abstract class BaseCommand {
 
     public void setUsageMessage(String usageMessage) {
     }
-    public void sendUsage(Sender sender){
+
+    public void sendUsage(Sender sender) {
         sender.sendMessage(CC.RED + "Usage: /" + getAnnotation().name() + " " + getAnnotation().usage());
     }
-    public Command getAnnotation(){
+
+    public Command getAnnotation() {
         return this.getClass().getAnnotation(Command.class);
     }
 }

@@ -80,20 +80,21 @@ public final class OctoCoreWaterfall extends Plugin {
         new BungeeRedisManager();
         getProxy().registerChannel(PluginMsgChannels.PLUGIN_MSG);
         getProxy().registerChannel(PluginMsgChannels.PERMISSIONS);
-        getProxy().getPluginManager().registerCommand(this,new LobbyCommand());
-        getProxy().getPluginManager().registerCommand(this,new BungeeHasPermissionCommand());
-        getProxy().getPluginManager().registerCommand(this,new BungeeDataCommand("bungeedata"));
-        getProxy().getPluginManager().registerListener(this,new KickListener());
-        getProxy().getPluginManager().registerListener(this,new StaffListener());
-        getProxy().getPluginManager().registerListener(this,new PermissionListener());
-        getProxy().getPluginManager().registerListener(this,new PlayerListener());
+        getProxy().getPluginManager().registerCommand(this, new LobbyCommand());
+        getProxy().getPluginManager().registerCommand(this, new BungeeHasPermissionCommand());
+        getProxy().getPluginManager().registerCommand(this, new BungeeDataCommand("bungeedata"));
+        getProxy().getPluginManager().registerListener(this, new KickListener());
+        getProxy().getPluginManager().registerListener(this, new StaffListener());
+        getProxy().getPluginManager().registerListener(this, new PermissionListener());
+        getProxy().getPluginManager().registerListener(this, new PlayerListener());
         Logger.debug(Arrays.toString(config.getList("motd").toArray()));
         Logger.debug(config.getBoolean("protocol.enabled"));
         Logger.debug(config.getString("protocol.version"));
-        getProxy().getPluginManager().registerListener(this,new PingEvent());
+        getProxy().getPluginManager().registerListener(this, new PingEvent());
         Logger.debug("OctoBungee Started! " + (System.currentTimeMillis() - start) + "ms");
     }
-    public Configuration getConfig(){
+
+    public Configuration getConfig() {
         return config;
     }
 

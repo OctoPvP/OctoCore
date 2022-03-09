@@ -21,9 +21,11 @@ public class OctoCoreCommon {
     @Getter
     @Setter
     private static boolean disabling = false;
+
     public static void init(ServerInfo info) {
         OctoCoreCommon.info = info;
     }
+
     public static String getServerName() {
         return info.getServerName();
     }

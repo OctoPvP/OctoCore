@@ -43,30 +43,33 @@ public class ManageTagProcess {
     public void setDescProcess(ReturnableTypeCallback<PlayerTagBuilder> done) {
         if (builder == null)
             return;
-        OctoCore.getConversationFactory().withFirstPrompt(new SetDescConversation((s)->{
+        OctoCore.getConversationFactory().withFirstPrompt(new SetDescConversation((s) -> {
             if (!s.equalsIgnoreCase("cancel"))
                 builder.setTagDesc(s);
             done.call(builder);
         })).withLocalEcho(false).buildConversation(player).begin();
     }
-    public void setTagProcess( ReturnableTypeCallback<PlayerTagBuilder> done){
+
+    public void setTagProcess(ReturnableTypeCallback<PlayerTagBuilder> done) {
         if (builder == null)
             return;
-        OctoCore.getConversationFactory().withFirstPrompt(new SetTagConversation((s)->{
+        OctoCore.getConversationFactory().withFirstPrompt(new SetTagConversation((s) -> {
             if (!s.equalsIgnoreCase("cancel"))
                 builder.setTag(s);
             done.call(builder);
         })).withLocalEcho(false).buildConversation(player).begin();
     }
-    public void setMaterial(ReturnableTypeCallback<PlayerTagBuilder> done){
+
+    public void setMaterial(ReturnableTypeCallback<PlayerTagBuilder> done) {
         if (builder == null)
             return;
-        OctoCore.getConversationFactory().withFirstPrompt(new SetMaterialConversation((s)->{
+        OctoCore.getConversationFactory().withFirstPrompt(new SetMaterialConversation((s) -> {
             if (!s.equalsIgnoreCase("cancel"))
                 builder.setMaterial(Material.matchMaterial(s)); //TODO use gui
             done.call(builder);
         })).withLocalEcho(false).buildConversation(player).begin();
     }
+
     public void build() {
         if (builder == null)
             return;

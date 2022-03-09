@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 public class GrantReasonConversation extends StringPrompt {
     private final PlayerData playerData;
     private final Player player;
+
     @Override
     public String getPromptText(ConversationContext conversationContext) {
         Logger.debug("1");

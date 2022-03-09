@@ -13,7 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PermissionInfoCommand extends BaseCommand {
-    @Command(name = "haspermission",aliases = {"permissioninfo","perminfo"},permission = Permission.COMMAND_PERMISSION_INFO,usage = "<permission> [player]",description = "Shows information about a player's permission")
+    @Command(name = "haspermission", aliases = {"permissioninfo", "perminfo"}, permission = Permission.COMMAND_PERMISSION_INFO, usage = "<permission> [player]", description = "Shows information about a player's permission")
     public CommandResult execute(Sender sender, String[] args) {
         String target = "", permission = "";
         if (args.length == 0) {
@@ -26,7 +26,7 @@ public class PermissionInfoCommand extends BaseCommand {
             target = args[1];
         }
         if (args.length == 1) {
-            if (!sender.isPlayer()){
+            if (!sender.isPlayer()) {
                 return CommandResult.INVALID_ARGS;
             }
             permission = args[0];

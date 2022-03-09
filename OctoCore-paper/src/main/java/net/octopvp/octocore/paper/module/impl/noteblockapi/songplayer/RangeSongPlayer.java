@@ -43,6 +43,10 @@ public abstract class RangeSongPlayer extends SongPlayer {
         }
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
     /**
      * Sets distance in blocks where would be player able to hear sound.
      *
@@ -51,10 +55,6 @@ public abstract class RangeSongPlayer extends SongPlayer {
     public void setDistance(int distance) {
         this.distance = distance;
         CallUpdate("distance", distance);
-    }
-
-    public int getDistance() {
-        return distance;
     }
 
     /**

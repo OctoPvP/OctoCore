@@ -39,7 +39,7 @@ public class KicksMenu extends PaginatedMenu {
     public List<Button> getEveryMenuSlots(Player player) {
         List<Button> slots = new ArrayList<>();
 
-        slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(),4));
+        slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(), 4));
 
         return slots;
     }
@@ -60,6 +60,7 @@ public class KicksMenu extends PaginatedMenu {
     public Button getBackButton(Player player) {
         return new BackButton.DefaultBackButton(this);
     }
+
     @AllArgsConstructor
     private class PunishmentButton extends Button {
         private Punishment punishment;

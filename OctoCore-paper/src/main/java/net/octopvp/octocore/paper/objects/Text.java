@@ -7,11 +7,13 @@ import lombok.Setter;
 @Setter
 public class Text {
 
-    private String text,hover;
-    public Text(String t){
+    private String text, hover;
+
+    public Text(String t) {
         this.text = t;
     }
-    public Text(String t, String hover){
+
+    public Text(String t, String hover) {
 
     }
 }

@@ -40,6 +40,7 @@ public class ServerManager extends Manager {
         }
         return i;
     }
+
     public GlobalPlayer getGlobalPlayer(String name) {
         GlobalPlayer globalPlayerReturn = null;
         for (ServerData server : this.connectedServers) {
@@ -51,15 +52,17 @@ public class ServerManager extends Manager {
         }
         return globalPlayerReturn;
     }
-    public boolean isPlayerOnline(String name){
+
+    public boolean isPlayerOnline(String name) {
         boolean r = false;
         for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
-            if(globalPlayer.getName().equalsIgnoreCase(name)){
+            if (globalPlayer.getName().equalsIgnoreCase(name)) {
                 r = true;
             }
         }
         return r;
     }
+
     @Override
     public void init(OctoCore plugin) {
 

@@ -53,7 +53,7 @@ public class PunishPlayerData {
         document.put("punishments", gson.toJson(arr));F
          */
         PunishModule.getPunishPlayerData().replaceOne(Filters.eq("uuid", this.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
-        Logger.debug("Saving Punish Data: %1",document.toJson());
+        Logger.debug("Saving Punish Data: %1", document.toJson());
     }
 
     public boolean hasPlayedBefore() {

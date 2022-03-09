@@ -22,7 +22,7 @@ public class BaseProfiler implements Profiler {
         StackTraceElement stack = Thread.currentThread().getStackTrace()[2];
         start(stack.getMethodName());
 
-        if(start == 0) start = System.currentTimeMillis();
+        if (start == 0) start = System.currentTimeMillis();
     }
 
     @Override
@@ -30,12 +30,12 @@ public class BaseProfiler implements Profiler {
         Timing timing = getTiming(name);
         timing.lastCall = System.nanoTime();
 
-        if(start == 0) start = System.currentTimeMillis();
+        if (start == 0) start = System.currentTimeMillis();
     }
 
     @Override
     public void stop() {
-        if(System.currentTimeMillis() - lastReset < 100L) return;
+        if (System.currentTimeMillis() - lastReset < 100L) return;
         long extense = System.nanoTime();
         StackTraceElement stack = Thread.currentThread().getStackTrace()[2];
         stop(stack.getMethodName(), extense);
@@ -54,18 +54,18 @@ public class BaseProfiler implements Profiler {
     public Map<String, Pair<Integer, Double>> results(ResultsType type) {
         Map<String, Pair<Integer, Double>> toReturn = new HashMap<>();
         Map<String, Timing> currentResults = new HashMap<>(timingsMap);
-        switch(type) {
+        switch (type) {
             case TOTAL: {
                 for (String key : currentResults.keySet()) {
                     Timing timing = currentResults.get(key);
 
                     toReturn.put(key, new Pair<>(timing.calls, timing.average.getTotal()
-                            / (double)timing.calls));
+                            / (double) timing.calls));
                 }
                 break;
             }
             case AVERAGE: {
-                for(String key : currentResults.keySet()) {
+                for (String key : currentResults.keySet()) {
                     Timing timing = currentResults.get(key);
 
                     toReturn.put(key, new Pair<>(timing.calls, timing.average.getAverage()));
@@ -73,10 +73,10 @@ public class BaseProfiler implements Profiler {
                 break;
             }
             case SAMPLES: {
-                for(String key : currentResults.keySet()) {
+                for (String key : currentResults.keySet()) {
                     Timing timing = currentResults.get(key);
 
-                    toReturn.put(key, new Pair<>(timing.calls, (double)timing.call));
+                    toReturn.put(key, new Pair<>(timing.calls, (double) timing.call));
                 }
                 break;
             }
@@ -86,7 +86,7 @@ public class BaseProfiler implements Profiler {
                 for (String key : currentResults.keySet()) {
                     Timing timing = currentResults.get(key);
 
-                    toReturn.put(key, new Pair<>(timing.calls, timing.total / (double)ticks));
+                    toReturn.put(key, new Pair<>(timing.calls, timing.total / (double) ticks));
                 }
                 break;
             }
@@ -94,7 +94,7 @@ public class BaseProfiler implements Profiler {
                 for (String key : currentResults.keySet()) {
                     Timing timing = currentResults.get(key);
 
-                    toReturn.put(key, new Pair<>(timing.calls, timing.total / (double)timing.calls));
+                    toReturn.put(key, new Pair<>(timing.calls, timing.total / (double) timing.calls));
                 }
                 break;
             }
@@ -105,13 +105,13 @@ public class BaseProfiler implements Profiler {
     @Override
     public void stop(String name) {
         long ts = System.currentTimeMillis();
-        if(ts - lastReset < 100L) return;
+        if (ts - lastReset < 100L) return;
         long extense = System.nanoTime();
         Timing timing = getTiming(name);
         long time = (System.nanoTime() - timing.lastCall) - (System.nanoTime() - extense);
         timing.average.add(time);
         timing.stdDev = Math.abs(time - timing.average.getAverage());
-        timing.total+= time;
+        timing.total += time;
         timing.call = time;
         timing.calls++;
         totalCalls++;
@@ -121,13 +121,13 @@ public class BaseProfiler implements Profiler {
     @Override
     public void stop(String name, long extense) {
         long ts = System.currentTimeMillis();
-        if(ts - lastReset < 100L) return;
+        if (ts - lastReset < 100L) return;
         Timing timing = getTiming(name);
         long time = (System.nanoTime() - timing.lastCall) - (System.nanoTime() - extense);
 
         timing.average.add(time);
         timing.stdDev = Math.abs(time - timing.average.getAverage());
-        timing.total+= time;
+        timing.total += time;
         timing.call = time;
         timing.calls++;
         totalCalls++;

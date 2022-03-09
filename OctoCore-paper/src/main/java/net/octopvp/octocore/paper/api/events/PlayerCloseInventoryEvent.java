@@ -7,19 +7,19 @@ import org.bukkit.event.player.PlayerEvent;
 public class PlayerCloseInventoryEvent extends PlayerEvent {
     private static HandlerList handlerList;
 
-    public PlayerCloseInventoryEvent(final Player player) {
-        super(player);
+    static {
+        PlayerCloseInventoryEvent.handlerList = new HandlerList();
     }
 
-    public HandlerList getHandlers() {
-        return PlayerCloseInventoryEvent.handlerList;
+    public PlayerCloseInventoryEvent(final Player player) {
+        super(player);
     }
 
     public static HandlerList getHandlerList() {
         return PlayerCloseInventoryEvent.handlerList;
     }
 
-    static {
-        PlayerCloseInventoryEvent.handlerList = new HandlerList();
+    public HandlerList getHandlers() {
+        return PlayerCloseInventoryEvent.handlerList;
     }
 }

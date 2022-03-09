@@ -10,8 +10,9 @@ import java.util.UUID;
 
 public class OctoPermissible extends PermissibleBase {
     private final UUID uuid;
-    private PermissibleBase oldPermissibleBase;
-    public OctoPermissible(Player player,PermissibleBase old) {
+    private final PermissibleBase oldPermissibleBase;
+
+    public OctoPermissible(Player player, PermissibleBase old) {
         super(player);
         uuid = player.getUniqueId();
         this.oldPermissibleBase = old;

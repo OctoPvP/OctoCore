@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 @NoArgsConstructor
 public class AdminAlertPacket extends RedisPacket {
     private String message;
+
     @Override
     public void onReceive(JsonObject data) throws Exception {
         String m = data.get("message").getAsString();
@@ -28,7 +29,7 @@ public class AdminAlertPacket extends RedisPacket {
     @Override
     public JsonBuilder getData() {
         return new JsonBuilder()
-                .addProperty("message",message);
+                .addProperty("message", message);
     }
 
     @Override

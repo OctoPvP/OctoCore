@@ -9,10 +9,8 @@ import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;

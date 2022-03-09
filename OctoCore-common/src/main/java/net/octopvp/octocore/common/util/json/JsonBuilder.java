@@ -3,14 +3,15 @@ package net.octopvp.octocore.common.util.json;
 import com.google.gson.JsonObject;
 
 public class JsonBuilder {
-    public JsonBuilder(){
+    private final JsonObject json;
+
+    public JsonBuilder() {
         this(new JsonObject());
     }
+
     public JsonBuilder(JsonObject json) {
         this.json = json;
     }
-
-    private JsonObject json;
 
     public JsonBuilder addProperty(String property, String value) {
         this.json.addProperty(property, value);
@@ -31,6 +32,7 @@ public class JsonBuilder {
         this.json.addProperty(property, value);
         return this;
     }
+
     public JsonBuilder add(String property, String value) {
         this.json.addProperty(property, value);
         return this;

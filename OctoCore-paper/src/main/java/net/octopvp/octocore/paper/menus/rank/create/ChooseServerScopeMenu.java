@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class ChooseServerScopeMenu extends PaginatedMenu {
     private final Consumer<ServerContext> callback;
+    private int i = 0;
 
     @Override
     public String getPagesTitle(Player player) {
@@ -45,8 +46,6 @@ public class ChooseServerScopeMenu extends PaginatedMenu {
     public List<Button> getEveryMenuSlots(Player player) {
         return Lists.newArrayList(new GlobalButton(), new CustomButton());
     }
-
-    private int i = 0;
 
     @RequiredArgsConstructor
     private class ServerButton extends Button {

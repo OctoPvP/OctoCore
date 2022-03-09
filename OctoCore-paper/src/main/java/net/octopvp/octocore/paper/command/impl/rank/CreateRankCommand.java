@@ -10,12 +10,12 @@ import net.octopvp.octocore.paper.menus.rank.EditRankMenu;
 import net.octopvp.octocore.paper.utils.Sender;
 
 public class CreateRankCommand extends BaseCommand {
-    @Command(name = "createrank",permission = Permission.CREATE_RANK,playerOnly = true)
+    @Command(name = "createrank", permission = Permission.CREATE_RANK, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        if (args.length != 1){
+        if (args.length != 1) {
             sender.sendMessage(CC.RED + "Usage: /createrank <name>\nNote: You may not use spaces or unicode.");
             return CommandResult.SUCCESS;
-        }else {
+        } else {
             if (RankManager.getRankByName(args[0]) != null) {
                 sender.sendMessage(CC.RED + "That rank already exists!");
                 return CommandResult.SUCCESS;

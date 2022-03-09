@@ -18,14 +18,13 @@ import java.util.UUID;
 @Getter
 public class PunishmentsProfileManager {
     private static PunishmentsProfileManager instance;
-    private OctoCore plugin;
+    private final OctoCore plugin;
+    private Map<UUID, PunishPlayerData> playerData = new HashMap<>();
 
     public PunishmentsProfileManager(OctoCore plugin) {
         instance = this;
         this.plugin = plugin;
     }
-
-    private Map<UUID, PunishPlayerData> playerData = new HashMap<>();
 
     public PunishPlayerData getPlayerDataFromUUID(UUID uuid) {
         if (playerData == null) {

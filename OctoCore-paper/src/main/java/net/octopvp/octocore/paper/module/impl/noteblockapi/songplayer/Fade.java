@@ -42,12 +42,8 @@ public class Fade {
         return fadeDone;
     }
 
-    protected void setFadeStart(byte fadeStart) {
-        this.fadeStart = fadeStart;
-    }
-
-    protected void setFadeTarget(byte fadeTarget) {
-        this.fadeTarget = fadeTarget;
+    protected void setFadeDone(int fadeDone) {
+        this.fadeDone = fadeDone;
     }
 
     /**
@@ -90,12 +86,16 @@ public class Fade {
         return fadeStart;
     }
 
+    protected void setFadeStart(byte fadeStart) {
+        this.fadeStart = fadeStart;
+    }
+
     protected byte getFadeTarget() {
         return fadeTarget;
     }
 
-    protected void setFadeDone(int fadeDone) {
-        this.fadeDone = fadeDone;
+    protected void setFadeTarget(byte fadeTarget) {
+        this.fadeTarget = fadeTarget;
     }
 
     public boolean isDone() {

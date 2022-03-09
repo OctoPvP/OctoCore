@@ -13,10 +13,16 @@ import java.lang.annotation.Target;
 @PermissionAnnotation
 public @interface SubCommand {
     String name();
+
     Permission permission() default Permission.NOTHING;
+
     String description() default "Default Description";
+
     String strPermission() default "";
+
     String[] aliases() default {};
+
     boolean playerOnly() default false;
+
     int cooldown() default 0;
 }

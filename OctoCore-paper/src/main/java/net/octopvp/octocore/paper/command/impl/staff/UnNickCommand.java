@@ -15,27 +15,27 @@ import org.bukkit.entity.Player;
 
 @Disable
 public class UnNickCommand extends BaseCommand {
-    @Command(name = "unnick", description = "unnick",permission = Permission.COMMAND_UNNICK)
+    @Command(name = "unnick", description = "unnick", permission = Permission.COMMAND_UNNICK)
     public CommandResult execute(Sender sender, String[] args) {
-        if(args.length == 0){
-            if(sender.getDisplayName() == sender.getName()){
+        if (args.length == 0) {
+            if (sender.getDisplayName() == sender.getName()) {
                 sender.sendMessage(Lang.NOT_NICKED);
                 return CommandResult.OTHER;
             }
             sender.getPlayer().setDisplayName(sender.getName());
             NickManager.removeNick(PlayerManager.getProfile(sender.getPlayer().getUniqueId()));
             NameTagChanger.INSTANCE.resetPlayerName(sender.getPlayer());
-        }else if(args.length == 1){
+        } else if (args.length == 1) {
             Player target = null;
             try {
                 target = Bukkit.getPlayer(args[1]);
             } catch (Exception e) {
                 return CommandResult.PLAYER_NOT_FOUND;
             }
-            if(target.getDisplayName() == target.getName()){
+            if (target.getDisplayName() == target.getName()) {
                 sender.sendMessage(Lang.OTHER_NOT_NICKED.getMsg(target.getName()));
                 return CommandResult.OTHER;
-            }else{
+            } else {
                 target.setDisplayName(target.getName());
                 NameTagChanger.INSTANCE.resetPlayerName(target);
                 NickManager.removeNick(PlayerManager.getProfile(target.getUniqueId()));

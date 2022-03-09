@@ -15,7 +15,7 @@ public class WaitingForCode extends StringPrompt {
 
     @Override
     public Prompt acceptInput(ConversationContext conversationContext, String s) {
-        if(AuthModule.handle2FARequest((Player) conversationContext.getForWhom(),s)){
+        if (AuthModule.handle2FARequest((Player) conversationContext.getForWhom(), s)) {
             return Prompt.END_OF_CONVERSATION;
         }
         return this;

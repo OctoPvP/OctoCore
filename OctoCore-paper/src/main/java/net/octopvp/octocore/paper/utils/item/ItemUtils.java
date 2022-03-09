@@ -17,12 +17,13 @@ public class ItemUtils {
     @Getter
     private static ArrayList<Material> items = new ArrayList<>();
     @Getter
-    private static HashMap<String,Material> itemMap = new HashMap<>();
+    private static HashMap<String, Material> itemMap = new HashMap<>();
+
     static {
         for (Material material : Material.values()) {
             materials.add(material);
-            itemMap.put(material.name(),material);
-            if(material.isBlock())
+            itemMap.put(material.name(), material);
+            if (material.isBlock())
                 blocks.add(material);
         }
     }

@@ -22,30 +22,24 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public abstract class SongPlayer {
 
+    private final Lock lock = new ReentrantLock();
+    private final Random rng = new Random();
     protected Song song;
     protected Playlist playlist;
     protected int actualSong = 0;
-
     protected boolean playing = false;
     protected boolean fading = false;
     protected short tick = -1;
     protected Map<UUID, Boolean> playerList = new ConcurrentHashMap<UUID, Boolean>();
-
     protected boolean autoDestroy = false;
     protected boolean destroyed = false;
-
     protected byte volume = 100;
     protected Fade fadeIn;
     protected Fade fadeOut;
     protected Fade fadeTemp = null;
     protected RepeatMode repeat = RepeatMode.NO;
     protected boolean random = false;
-
     protected Map<Song, Boolean> songQueue = new ConcurrentHashMap<Song, Boolean>(); //True if already played
-
-    private final Lock lock = new ReentrantLock();
-    private final Random rng = new Random();
-
     protected NoteBlockAPI plugin;
 
     protected SoundCategory soundCategory;
@@ -867,16 +861,6 @@ public abstract class SongPlayer {
     }
 
     /**
-     * Sets whether the SongPlayer will loop
-     *
-     * @param loop
-     * @deprecated
-     */
-    public void setLoop(boolean loop) {
-        this.repeat = RepeatMode.ALL;
-    }
-
-    /**
      * Gets whether the SongPlayer will loop
      *
      * @return is loop
@@ -887,12 +871,13 @@ public abstract class SongPlayer {
     }
 
     /**
-     * Sets SongPlayer's {@link RepeatMode}
+     * Sets whether the SongPlayer will loop
      *
-     * @param repeatMode
+     * @param loop
+     * @deprecated
      */
-    public void setRepeatMode(RepeatMode repeatMode) {
-        this.repeat = repeatMode;
+    public void setLoop(boolean loop) {
+        this.repeat = RepeatMode.ALL;
     }
 
     /**
@@ -905,12 +890,12 @@ public abstract class SongPlayer {
     }
 
     /**
-     * Sets whether the SongPlayer will choose next song from player randomly
+     * Sets SongPlayer's {@link RepeatMode}
      *
-     * @param random
+     * @param repeatMode
      */
-    public void setRandom(boolean random) {
-        this.random = random;
+    public void setRepeatMode(RepeatMode repeatMode) {
+        this.repeat = repeatMode;
     }
 
     /**
@@ -920,6 +905,15 @@ public abstract class SongPlayer {
      */
     public boolean isRandom() {
         return random;
+    }
+
+    /**
+     * Sets whether the SongPlayer will choose next song from player randomly
+     *
+     * @param random
+     */
+    public void setRandom(boolean random) {
+        this.random = random;
     }
 
     public ChannelMode getChannelMode() {

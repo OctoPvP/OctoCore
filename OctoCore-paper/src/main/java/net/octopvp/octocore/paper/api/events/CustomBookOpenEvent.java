@@ -13,17 +13,14 @@ import org.bukkit.inventory.ItemStack;
  */
 public class CustomBookOpenEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
-    @Getter
-    @Setter
-    private boolean cancelled;
-
     /**
      * The player
      */
     @Getter
     private final Player player;
-
+    @Getter
+    @Setter
+    private boolean cancelled;
     /**
      * The hand used to open the book (the previous item will be restored after the opening)
      */
@@ -44,12 +41,12 @@ public class CustomBookOpenEvent extends Event implements Cancellable {
         this.hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
     }
 
-    @Override
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 

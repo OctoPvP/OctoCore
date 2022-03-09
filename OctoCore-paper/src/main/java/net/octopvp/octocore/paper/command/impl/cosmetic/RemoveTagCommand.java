@@ -19,29 +19,29 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
 
 public class RemoveTagCommand extends BaseCommand {
-    @Command(name = "removetag",permission = Permission.ADMIN,cooldown = 1,usage = "<player> [tag]")
+    @Command(name = "removetag", permission = Permission.ADMIN, cooldown = 1, usage = "<player> [tag]")
     public CommandResult execute(Sender sender, String[] args) {
-        if (!(args.length >= 2)){
+        if (!(args.length >= 2)) {
             return CommandResult.INVALID_ARGS;
         }
         String target = args[0];
         String tag = args[1];
-        if (OctoCore.getServerManager().isPlayerOnline(target)){
-            if (Bukkit.getPlayer(target) != null){
+        if (OctoCore.getServerManager().isPlayerOnline(target)) {
+            if (Bukkit.getPlayer(target) != null) {
                 //on this server
                 PlayerData profile = PlayerManager.getProfile(Bukkit.getPlayer(target).getUniqueId());
                 PlayerTag tag1 = TagManager.getTagByName(tag);
                 if (!profile.hasTag(tag1.getName()))
                     profile.removeTag(tag1.getId());
-                sender.sendMessage(Lang.TAG_REMOVE_SUCCESS.getMsg(tag1.getName(),profile.getName()));
+                sender.sendMessage(Lang.TAG_REMOVE_SUCCESS.getMsg(tag1.getName(), profile.getName()));
                 return CommandResult.SUCCESS;
-            }else{
+            } else {
                 //on some other network server
-                JsonObject jsonObject = new JsonBuilder().addProperty("reason", DataUpdateReason.TAGS_UPDATE_REMOVE.name()).addProperty("target",target).addProperty("remove",tag).get();
+                JsonObject jsonObject = new JsonBuilder().addProperty("reason", DataUpdateReason.TAGS_UPDATE_REMOVE.name()).addProperty("target", target).addProperty("remove", tag).get();
                 new PlayerDataUpdatePacket(jsonObject).send();
                 sender.sendMessage(CC.GREEN + "Requested pdata update for " + target + " reason: update owned tags");
             }
-        }else {
+        } else {
             //player is offline
             sender.sendMessage(CC.GREEN + "Attempting to load " + target + "'s playerdata");
             PlayerData data = PlayerManager.getProfileFromDB(target);

@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class SimpleAverage {
-    private double total;
-    private int count;
     private final int size;
     private final double initial;
+    private double total;
+    private int count;
 
     public SimpleAverage(int size, double initial) {
         this.size = size;
@@ -16,16 +16,16 @@ public class SimpleAverage {
     }
 
     public void add(double value) {
-        total+= value;
+        total += value;
 
-        if(++count > size) {
-            total-= getAverage();
+        if (++count > size) {
+            total -= getAverage();
             count--;
         }
     }
 
     public double getAverage() {
-        if(count == 0) return initial;
+        if (count == 0) return initial;
         return total / count;
     }
 

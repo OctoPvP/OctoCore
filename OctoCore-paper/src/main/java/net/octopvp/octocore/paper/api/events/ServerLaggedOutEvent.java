@@ -5,22 +5,23 @@ import org.bukkit.event.HandlerList;
 
 public class ServerLaggedOutEvent extends Event {
     private static HandlerList handlerList;
-    private int averagePing;
+
+    static {
+        ServerLaggedOutEvent.handlerList = new HandlerList();
+    }
+
+    private final int averagePing;
 
     public ServerLaggedOutEvent(final int averagePing) {
         super(true);
         this.averagePing = averagePing;
     }
 
-    public HandlerList getHandlers() {
-        return ServerLaggedOutEvent.handlerList;
-    }
-
     public static HandlerList getHandlerList() {
         return ServerLaggedOutEvent.handlerList;
     }
 
-    static {
-        ServerLaggedOutEvent.handlerList = new HandlerList();
+    public HandlerList getHandlers() {
+        return ServerLaggedOutEvent.handlerList;
     }
 }

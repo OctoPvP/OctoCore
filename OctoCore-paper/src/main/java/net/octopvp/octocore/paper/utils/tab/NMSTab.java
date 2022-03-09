@@ -24,7 +24,7 @@ public class NMSTab {
     }
 
     public int getPing(Player p) {
-        return (((CraftPlayer)p).getHandle()).ping;
+        return (((CraftPlayer) p).getHandle()).ping;
     }
 
     public void sendTabHF(Player p, String header, String footer) {
@@ -33,7 +33,7 @@ public class NMSTab {
                 header = "§0§1§2§3§4§5§6§7§8§9" + header;
             PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + header + "\"}"));
             setField(packet, "b", IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + footer + "\"}"));
-            (((CraftPlayer)p).getHandle()).playerConnection.sendPacket((Packet)packet);
+            (((CraftPlayer) p).getHandle()).playerConnection.sendPacket(packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,7 +46,7 @@ public class NMSTab {
             setField(packet, "b", "PingTab");
             setField(packet, "c", Integer.valueOf(score));
             setField(packet, "d", PacketPlayOutScoreboardScore.EnumScoreboardAction.CHANGE);
-            (((CraftPlayer)p).getHandle()).playerConnection.sendPacket((Packet)packet);
+            (((CraftPlayer) p).getHandle()).playerConnection.sendPacket(packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class NMSTab {
             setField(packet, "b", "ms");
             setField(packet, "c", IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
             setField(packet, "d", Integer.valueOf(1));
-            (((CraftPlayer)p).getHandle()).playerConnection.sendPacket((Packet)packet);
+            (((CraftPlayer) p).getHandle()).playerConnection.sendPacket(packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,9 +80,9 @@ public class NMSTab {
             setField(packet3, "b", "ms");
             setField(packet3, "c", IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
             setField(packet3, "d", Integer.valueOf(2));
-            (((CraftPlayer)p).getHandle()).playerConnection.sendPacket((Packet)packet);
-            (((CraftPlayer)p).getHandle()).playerConnection.sendPacket((Packet)packet2);
-            (((CraftPlayer)p).getHandle()).playerConnection.sendPacket((Packet)packet3);
+            (((CraftPlayer) p).getHandle()).playerConnection.sendPacket(packet);
+            (((CraftPlayer) p).getHandle()).playerConnection.sendPacket(packet2);
+            (((CraftPlayer) p).getHandle()).playerConnection.sendPacket(packet3);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,10 +101,10 @@ public class NMSTab {
             setField(packet, "d", suffix);
             Field playerList = packet.getClass().getDeclaredField("g");
             playerList.setAccessible(true);
-            Collection<String> col = (Collection<String>)playerList.get(packet);
+            Collection<String> col = (Collection<String>) playerList.get(packet);
             col.add(member.getName());
             setField(packet, "i", Integer.valueOf(69));
-            (((CraftPlayer)to).getHandle()).playerConnection.sendPacket((Packet)packet);
+            (((CraftPlayer) to).getHandle()).playerConnection.sendPacket(packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,7 +117,7 @@ public class NMSTab {
             setField(packet, "h", Integer.valueOf(1));
             setField(packet, "i", Integer.valueOf(69));
             for (Player all : Bukkit.getOnlinePlayers())
-                (((CraftPlayer)all).getHandle()).playerConnection.sendPacket((Packet)packet);
+                (((CraftPlayer) all).getHandle()).playerConnection.sendPacket(packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,7 +129,7 @@ public class NMSTab {
             setField(packet, "a", team);
             setField(packet, "h", Integer.valueOf(1));
             setField(packet, "i", Integer.valueOf(69));
-            (((CraftPlayer)p).getHandle()).playerConnection.sendPacket((Packet)packet);
+            (((CraftPlayer) p).getHandle()).playerConnection.sendPacket(packet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,7 +149,7 @@ public class NMSTab {
                 setField(packet, "d", suffix);
                 setField(packet, "h", Integer.valueOf(2));
                 setField(packet, "i", Integer.valueOf(69));
-                (((CraftPlayer)all).getHandle()).playerConnection.sendPacket((Packet)packet);
+                (((CraftPlayer) all).getHandle()).playerConnection.sendPacket(packet);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -157,32 +157,32 @@ public class NMSTab {
     }
 
     public Channel getChannel(Player p) {
-        return (((CraftPlayer)p).getHandle()).playerConnection.networkManager.channel;
+        return (((CraftPlayer) p).getHandle()).playerConnection.networkManager.channel;
     }
 
     public void setPlayerListName(Player p, String name) {
         for (Player all : Bukkit.getOnlinePlayers()) {
             String name2 = name;
-            (((CraftPlayer)p).getHandle()).listName = CraftChatMessage.fromString(name2)[0];
-            PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_DISPLAY_NAME, new EntityPlayer[] { ((CraftPlayer)p).getHandle() });
-            (((CraftPlayer)all).getHandle()).playerConnection.sendPacket((Packet)packet);
+            (((CraftPlayer) p).getHandle()).listName = CraftChatMessage.fromString(name2)[0];
+            PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_DISPLAY_NAME, ((CraftPlayer) p).getHandle());
+            (((CraftPlayer) all).getHandle()).playerConnection.sendPacket(packet);
         }
-        (((CraftPlayer)p).getHandle()).listName = CraftChatMessage.fromString(name)[0];
+        (((CraftPlayer) p).getHandle()).listName = CraftChatMessage.fromString(name)[0];
     }
 
     public Object addPlayerToListFor(Player to, Player nev, String name) {
         String name2 = name;
-        (((CraftPlayer)nev).getHandle()).listName = CraftChatMessage.fromString(name2)[0];
-        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, new EntityPlayer[] { ((CraftPlayer)nev).getHandle() });
-        (((CraftPlayer)nev).getHandle()).listName = CraftChatMessage.fromString(name)[0];
+        (((CraftPlayer) nev).getHandle()).listName = CraftChatMessage.fromString(name2)[0];
+        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ((CraftPlayer) nev).getHandle());
+        (((CraftPlayer) nev).getHandle()).listName = CraftChatMessage.fromString(name)[0];
         return packet;
     }
 
     public Object changePlayerListNameFor(Player to, Player changed, String name) {
         String name2 = name;
-        (((CraftPlayer)changed).getHandle()).listName = CraftChatMessage.fromString(name2)[0];
-        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_DISPLAY_NAME, new EntityPlayer[] { ((CraftPlayer)changed).getHandle() });
-        (((CraftPlayer)changed).getHandle()).listName = CraftChatMessage.fromString(name)[0];
+        (((CraftPlayer) changed).getHandle()).listName = CraftChatMessage.fromString(name2)[0];
+        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_DISPLAY_NAME, ((CraftPlayer) changed).getHandle());
+        (((CraftPlayer) changed).getHandle()).listName = CraftChatMessage.fromString(name)[0];
         return packet;
     }
 }

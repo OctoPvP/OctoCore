@@ -30,6 +30,8 @@ import java.util.function.Consumer;
 public class ServerMenu extends PaginatedMenu {
     private final Consumer<ServerContext> callback;
     private final Menu previousMenu;
+    private int i = 0;
+
     @Override
     public String getPagesTitle(Player player) {
         return CC.AQUA + "Choose server scope";
@@ -39,13 +41,13 @@ public class ServerMenu extends PaginatedMenu {
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
         buttons.add(new GlobalButton());
-        OctoCore.getServerManager().getConnectedServers().forEach(server ->buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
+        OctoCore.getServerManager().getConnectedServers().forEach(server -> buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
         return buttons;
     }
 
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
-        return Lists.newArrayList(new GlobalButton(),new CustomButton());
+        return Lists.newArrayList(new GlobalButton(), new CustomButton());
     }
 
     @Override
@@ -58,15 +60,15 @@ public class ServerMenu extends PaginatedMenu {
         };
     }
 
-    private int i = 0;
     @RequiredArgsConstructor
-    private class ServerButton extends Button{
+    private class ServerButton extends Button {
         private final ServerData serverData;
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.PAPER).name(serverData.getServerName()).lore(CC.SEPARATOR,CC.GREEN + "Click to select " + serverData.getServerName() + " as the server to grant the rank on.").build();
+            return new ItemBuilder(Material.PAPER).name(serverData.getServerName()).lore(CC.SEPARATOR, CC.GREEN + "Click to select " + serverData.getServerName() + " as the server to grant the rank on.").build();
         }
+
         @Override
         public int getSlot() {
             return i++;
@@ -80,7 +82,7 @@ public class ServerMenu extends PaginatedMenu {
     }
 
 
-    private class GlobalButton extends Button{
+    private class GlobalButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
@@ -99,7 +101,7 @@ public class ServerMenu extends PaginatedMenu {
         }
     }
 
-    private class CustomButton extends Button{
+    private class CustomButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.SIGN).name(CC.AQUA + "Custom server").lore(CC.YELLOW + "Click to set a custom server scope.").build();

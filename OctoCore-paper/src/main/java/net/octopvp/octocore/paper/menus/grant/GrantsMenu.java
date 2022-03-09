@@ -27,14 +27,14 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GrantsMenu extends PaginatedMenu {
+    private static int i = 0;
     private final PlayerData targetData;
+    private final Comparator<Grant> GRANT_COMPARATOR = Comparator.comparingLong(Grant::getAddedAt).reversed();
+    private boolean all = true;
 
     public GrantsMenu(PlayerData data) {
         this.targetData = data;
     }
-
-    private boolean all = true;
-    private final Comparator<Grant> GRANT_COMPARATOR = Comparator.comparingLong(Grant::getAddedAt).reversed();
 
     @Override
     public String getPagesTitle(Player player) {
@@ -116,8 +116,6 @@ public class GrantsMenu extends PaginatedMenu {
             SoundUtil.playPing(player);
         }
     }
-
-    private static int i = 0;
 
     @RequiredArgsConstructor
     private class GrantEntryButton extends Button {

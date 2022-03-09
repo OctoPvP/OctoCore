@@ -21,6 +21,7 @@ import java.util.logging.Level;
 
 /**
  * The packet handler implementation using ProtocolLib
+ *
  * @author AlvinB
  */
 public class ProtocolLibPacketHandler extends PacketAdapter implements IPacketHandler {
@@ -36,6 +37,16 @@ public class ProtocolLibPacketHandler extends PacketAdapter implements IPacketHa
     ProtocolLibPacketHandler(Plugin plugin) {
         super(plugin, PacketType.Play.Server.PLAYER_INFO, PacketType.Play.Server.SCOREBOARD_TEAM);
         ProtocolLibrary.getProtocolManager().addPacketListener(this);
+    }
+
+    private static WrappedGameProfile getProtocolLibProfileWrapper(GameProfileWrapper wrapper) {
+        WrappedGameProfile wrappedGameProfile = new WrappedGameProfile(wrapper.getUUID(), wrapper.getName());
+        for (Map.Entry<String, Collection<GameProfileWrapper.PropertyWrapper>> entry : wrapper.getProperties().asMap().entrySet()) {
+            for (GameProfileWrapper.PropertyWrapper propertyWrapper : entry.getValue()) {
+                wrappedGameProfile.getProperties().put(entry.getKey(), new WrappedSignedProperty(propertyWrapper.getName(), propertyWrapper.getValue(), propertyWrapper.getSignature()));
+            }
+        }
+        return wrappedGameProfile;
     }
 
     @Override
@@ -112,7 +123,7 @@ public class ProtocolLibPacketHandler extends PacketAdapter implements IPacketHa
     @Override
     public void sendEntityDestroyPacket(Player playerToDestroy, Player seer) {
         PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-        packet.getIntegerArrays().write(0, new int[] {playerToDestroy.getEntityId()});
+        packet.getIntegerArrays().write(0, new int[]{playerToDestroy.getEntityId()});
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(seer, packet);
         } catch (InvocationTargetException e) {
@@ -155,8 +166,8 @@ public class ProtocolLibPacketHandler extends PacketAdapter implements IPacketHa
             doEquipmentPacketSend(entityID, EnumWrappers.ItemSlot.OFFHAND, playerToSpawn.getInventory().getItemInOffHand(), seer);
         }
          */
-        if(playerToSpawn.getInventory().getItemInHand() != null && playerToSpawn.getInventory().getItemInHand().getType() != Material.AIR)
-            doEquipmentPacketSend(entityID,EnumWrappers.ItemSlot.MAINHAND, playerToSpawn.getInventory().getItemInHand(), seer);
+        if (playerToSpawn.getInventory().getItemInHand() != null && playerToSpawn.getInventory().getItemInHand().getType() != Material.AIR)
+            doEquipmentPacketSend(entityID, EnumWrappers.ItemSlot.MAINHAND, playerToSpawn.getInventory().getItemInHand(), seer);
         if (playerToSpawn.getInventory().getBoots() != null && playerToSpawn.getInventory().getBoots().getType() != Material.AIR) {
             doEquipmentPacketSend(entityID, EnumWrappers.ItemSlot.FEET, playerToSpawn.getInventory().getBoots(), seer);
         }
@@ -220,16 +231,6 @@ public class ProtocolLibPacketHandler extends PacketAdapter implements IPacketHa
             }
         }
         return wrapper;
-    }
-
-    private static WrappedGameProfile getProtocolLibProfileWrapper(GameProfileWrapper wrapper) {
-        WrappedGameProfile wrappedGameProfile = new WrappedGameProfile(wrapper.getUUID(), wrapper.getName());
-        for (Map.Entry<String, Collection<GameProfileWrapper.PropertyWrapper>> entry : wrapper.getProperties().asMap().entrySet()) {
-            for (GameProfileWrapper.PropertyWrapper propertyWrapper : entry.getValue()) {
-                wrappedGameProfile.getProperties().put(entry.getKey(), new WrappedSignedProperty(propertyWrapper.getName(), propertyWrapper.getValue(), propertyWrapper.getSignature()));
-            }
-        }
-        return wrappedGameProfile;
     }
 
     @Override

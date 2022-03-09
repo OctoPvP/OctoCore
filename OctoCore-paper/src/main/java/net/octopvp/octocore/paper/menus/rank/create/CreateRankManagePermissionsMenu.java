@@ -26,6 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateRankManagePermissionsMenu extends PaginatedMenu {
+    private final Menu previousMenu;
+    private final RankBuilder builder;
+    private final ReturnableTypeCallback<RankBuilder> callback;
+    private final RankBuilder startBuilder;
+    private final Menu prev = this;
+    private int i = 0;
+
     @SneakyThrows
     public CreateRankManagePermissionsMenu(Menu previousMenu, RankBuilder builder, ReturnableTypeCallback<RankBuilder> callback) {
         this.previousMenu = previousMenu;
@@ -33,13 +40,6 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
         this.callback = callback;
         this.startBuilder = builder.clone();
     }
-
-    private final Menu previousMenu;
-    private final RankBuilder builder;
-    private final ReturnableTypeCallback<RankBuilder> callback;
-
-    private final RankBuilder startBuilder;
-    private final Menu prev = this;
 
     @Override
     public String getPagesTitle(Player player) {
@@ -72,8 +72,6 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu {
     public List<Button> getEveryMenuSlots(Player player) {
         return Lists.newArrayList(new AddPermissionButton(), new DoneButton());
     }
-
-    private int i = 0;
 
     @AllArgsConstructor
     private class PermissionButton extends Button {

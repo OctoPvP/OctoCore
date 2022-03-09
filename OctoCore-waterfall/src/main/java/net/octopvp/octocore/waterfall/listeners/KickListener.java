@@ -8,14 +8,14 @@ import org.apache.commons.lang3.StringUtils;
 
 public class KickListener implements Listener {
     @EventHandler(priority = 64)
-    public void onKick(ServerKickEvent event){
+    public void onKick(ServerKickEvent event) {
         String reason = event.getKickReason();
-        if(StringUtils.containsIgnoreCase(reason,"kicked") ||
-                StringUtils.containsIgnoreCase(reason,"restart") ||
-                StringUtils.containsIgnoreCase(reason,"fallback") ||
-                StringUtils.containsIgnoreCase(reason,"closed") ||
-                StringUtils.containsIgnoreCase(reason,"disconnected") ||
-                StringUtils.containsIgnoreCase(reason,"error")){
+        if (StringUtils.containsIgnoreCase(reason, "kicked") ||
+                StringUtils.containsIgnoreCase(reason, "restart") ||
+                StringUtils.containsIgnoreCase(reason, "fallback") ||
+                StringUtils.containsIgnoreCase(reason, "closed") ||
+                StringUtils.containsIgnoreCase(reason, "disconnected") ||
+                StringUtils.containsIgnoreCase(reason, "error")) {
             event.setCancelled(true);
             SendToRandomLobby.sendToRandomLobby(event.getPlayer());
         }

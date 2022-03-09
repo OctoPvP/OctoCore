@@ -10,9 +10,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class DemoMenuCommand extends BaseCommand {
-    @Command(name = "demomenu",permission = Permission.TROLL_DEMO_MENU)
+    @Command(name = "demomenu", permission = Permission.TROLL_DEMO_MENU)
     public CommandResult execute(Sender sender, String[] args) {
-        if (args.length == 0){
+        if (args.length == 0) {
             DemoMenuTroll.getInstance().activate(sender.getPlayer());
             return CommandResult.SUCCESS;
         }

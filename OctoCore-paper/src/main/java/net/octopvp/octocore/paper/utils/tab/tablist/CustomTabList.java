@@ -18,12 +18,14 @@ public interface CustomTabList extends TabList {
 
     /**
      * Checks for updates to a tab item (text, ping, skin) and then sends packets if necessary.
+     *
      * @param index
      */
     void update(int index);
 
     /**
      * Gets the item at the given index.
+     *
      * @param index
      * @return The item or null if it isn't present.
      */
@@ -31,6 +33,7 @@ public interface CustomTabList extends TabList {
 
     /**
      * Checks if the tab list contains an item at the given index.
+     *
      * @param index
      * @return True if it contains an item, false if not.
      */
@@ -38,12 +41,14 @@ public interface CustomTabList extends TabList {
 
     /**
      * Adds an item to the next available index.
+     *
      * @param item
      */
     void add(TabItem item);
 
     /**
      * Inserts an item at the specified index.
+     *
      * @param index
      * @param item
      */
@@ -51,6 +56,7 @@ public interface CustomTabList extends TabList {
 
     /**
      * Replaces an item at the given index.
+     *
      * @param index
      * @param item
      * @return
@@ -59,6 +65,7 @@ public interface CustomTabList extends TabList {
 
     /**
      * Removes the item that resides at the given index.
+     *
      * @param index
      * @return The item removed or null if it isn't present.
      */
@@ -66,6 +73,7 @@ public interface CustomTabList extends TabList {
 
     /**
      * Removes the given item from the tab list.
+     *
      * @param item
      * @param <T>
      * @return
@@ -74,6 +82,7 @@ public interface CustomTabList extends TabList {
 
     /**
      * Get the next available index.
+     *
      * @return The index or -1 if the list is full.
      */
     int getNextIndex();

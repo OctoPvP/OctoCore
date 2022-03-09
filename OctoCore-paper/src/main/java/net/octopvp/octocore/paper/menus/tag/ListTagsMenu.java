@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ListTagsMenu extends PaginatedMenu {
     private final Menu prev;
+
     @Override
     public String getPagesTitle(Player player) {
         return "Tags";

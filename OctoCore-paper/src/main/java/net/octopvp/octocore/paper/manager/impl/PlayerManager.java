@@ -1,6 +1,5 @@
 package net.octopvp.octocore.paper.manager.impl;
 
-import com.google.gson.JsonObject;
 import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
@@ -44,13 +43,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerManager extends Manager {
-    private static MongoCollection<Document> pdataCollection = null;
-    private static MongoCollection<Document> backupCollection = null;
     @Getter
     private static final Map<UUID, PlayerData> playerProfiles = new ConcurrentHashMap<>();
     private static final JsonWriterSettings settings = JsonWriterSettings.builder()
             .int64Converter((value, writer) -> writer.writeNumber(value.toString()))
             .build();
+    private static MongoCollection<Document> pdataCollection = null;
+    private static MongoCollection<Document> backupCollection = null;
 
     public static PlayerData getPlayerData(String name) {
         return playerProfiles.values().stream().filter(profile -> profile.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
@@ -463,9 +462,19 @@ public class PlayerManager extends Manager {
         return getPdataCollection().find(Filters.eq("name", name)).first() != null;
     }
 
-    @Override
-    public void init(OctoCore plugin) {
-        //LuckpermsManager.getLuckPerms().getEventBus().subscribe(OctoCore.getInstance(),UserDataRecalculateEvent.class, this::onLpDataUpdate);
+    /**
+     * get the prefix of a player
+     *
+     * @param uuid
+     * @return prefix
+     */
+    public static String getPrefix(UUID uuid) {
+        if (getProfile(uuid).isNicked()) {
+            return getProfile(uuid).getNickPrefix();
+        }
+        return (Bukkit.getPluginManager().isPluginEnabled("Vault") && VaultManager.isChatHookEnabled()) ?
+                VaultManager.getChat().getPlayerPrefix(Bukkit.getPlayer(uuid)) :
+                getProfile(uuid).getPrefix();
     }
     /*
     public void onLpDataUpdate(UserDataRecalculateEvent event){
@@ -484,27 +493,6 @@ public class PlayerManager extends Manager {
         profile.setMainColor(LuckpermsManager.getMainColor(uuid));
     }
      */
-
-    @Override
-    public void disable() {
-
-    }
-
-    /**
-     * get the prefix of a player
-     *
-     * @param uuid
-     * @return prefix
-     */
-    public static String getPrefix(UUID uuid) {
-        if (getProfile(uuid).isNicked()) {
-            return getProfile(uuid).getNickPrefix();
-        }
-        return (Bukkit.getPluginManager().isPluginEnabled("Vault") && VaultManager.isChatHookEnabled()) ?
-                VaultManager.getChat().getPlayerPrefix(Bukkit.getPlayer(uuid)) :
-                getProfile(uuid).getPrefix();
-    }
-
 
     public static String getPrefix(PlayerData pdata) {
         if (pdata.isNicked()) {
@@ -527,13 +515,13 @@ public class PlayerManager extends Manager {
 
     public static void sendStaffChat(Player p, String message, String server) {
         PlayerData pdata = getProfile(p);
-        String player = pdata.getFormattedName(false,p,false);
+        String player = pdata.getFormattedName(false, p, false);
         new StaffChatPacket(player, server, message, p.getUniqueId()).send();
     }
 
     public static void sendAdminChat(Player p, String message, String server) {
         PlayerData pdata = getProfile(p);
-        String player = pdata.getFormattedName(false,p,false);
+        String player = pdata.getFormattedName(false, p, false);
         new AdminChatPacket(player, server, message, p.getUniqueId()).send();
     }
 
@@ -567,5 +555,15 @@ public class PlayerManager extends Manager {
 
     public static void saveAllData() {
         Tasks.runAsync(() -> Bukkit.getOnlinePlayers().forEach(player -> saveProfile(getProfile(player))));
+    }
+
+    @Override
+    public void init(OctoCore plugin) {
+        //LuckpermsManager.getLuckPerms().getEventBus().subscribe(OctoCore.getInstance(),UserDataRecalculateEvent.class, this::onLpDataUpdate);
+    }
+
+    @Override
+    public void disable() {
+
     }
 }
