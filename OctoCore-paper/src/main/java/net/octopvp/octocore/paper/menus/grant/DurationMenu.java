@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.objects.GrantProcedure;
 import net.octopvp.octocore.paper.objects.GrantProcedureState;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.common.util.DateUtils;
@@ -97,6 +98,8 @@ public class DurationMenu extends Menu {
                 public Prompt acceptInput(ConversationContext conversationContext, String s) {
                     if (playerData == null || !playerData.isOnlineThisServer())
                         return Prompt.END_OF_CONVERSATION;
+                    if (playerData.getGrantProcedure() == null)
+                        playerData.setGrantProcedure(new GrantProcedure(playerData));
                     if (s.equalsIgnoreCase("perm") || s.equalsIgnoreCase("permanent")) {
                         playerData.getGrantProcedure().setEnteredDuration(-1l);
                         playerData.getGrantProcedure().setPermanent(true);

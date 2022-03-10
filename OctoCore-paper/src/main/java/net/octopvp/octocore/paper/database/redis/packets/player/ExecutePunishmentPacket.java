@@ -255,7 +255,13 @@ public class ExecutePunishmentPacket extends RedisPacket {
                             typeStr,
                             sender,
                             reason
-                    )
+                    ),
+                    Lang.PUNISH_HOVER.getMsg(
+                            niceExpire,
+                            addedByName,
+                            niceDuration
+                    ),
+                    "/history " + name
             );
 
             Bukkit.getConsoleSender().sendMessage(CC.translate(clickable.getText()));

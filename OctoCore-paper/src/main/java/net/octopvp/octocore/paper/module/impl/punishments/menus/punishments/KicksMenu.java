@@ -70,11 +70,11 @@ public class KicksMenu extends PaginatedMenu {
         public ItemStack getItem(Player player) {
             ItemBuilder item = new ItemBuilder(Material.WOOL);
             item.setDurability(punishment.isActive() ? WoolUtils.convertChatColorToWoolData(ChatColor.GREEN) : WoolUtils.convertChatColorToWoolData(ChatColor.RED));
-            item.setName(CC.MAIN + "#" + order + " &7(" + CC.SECONDARY + DateUtils.getDate(punishment.getAddedAt()) + "&7)");
+            item.setName(CC.GREEN + "#" + order + " &7(" + CC.YELLOW + DateUtils.getDate(punishment.getAddedAt()) + "&7)");
             item.addLoreLine(CC.SEPARATOR);
-            item.addLoreLine(CC.MAIN + "Added by&7: " + CC.SECONDARY + punishment.getAddedByName());
-            item.addLoreLine(CC.MAIN + "Reason&7: " + CC.SECONDARY + punishment.getReason());
-            item.addLoreLine(CC.MAIN + "Silent&7: " + (punishment.isSilent() ? "&aYes" : "&cNo"));
+            item.addLoreLine(CC.GREEN + "Added by&7: " + CC.YELLOW + punishment.getAddedByName());
+            item.addLoreLine(CC.GREEN + "Reason&7: " + CC.YELLOW + punishment.getReason());
+            item.addLoreLine(CC.GREEN + "Silent&7: " + (punishment.isSilent() ? "&aYes" : "&cNo"));
             item.addLoreLine(CC.SEPARATOR);
             return item.toItemStack();
         }
