@@ -5,8 +5,8 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.octopvp.octocore.common.RNG;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.Utilities;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class SendToRandomLobby {
             if (StringUtils.containsIgnoreCase(k, "hub"))
                 hubServers.put(k, v);
         });
-        int server = RNG.getRandomInt(0, hubServers.size()); //FIXME might need to minus 1 from the hub servers siz
+        int server = Utilities.getRandomInt(0, hubServers.size()); //FIXME might need to minus 1 from the hub servers siz
         ServerInfo serverInfo;
         try {
             serverInfo = (ServerInfo) hubServers.values().toArray()[server];
@@ -45,7 +45,7 @@ public class SendToRandomLobby {
         serverInfo.ping(((result, error) -> {
             if (error != null) {
                 hubServers.remove(serverInfo.getName());
-                int server1 = RNG.getRandomInt(1, hubServers.size());
+                int server1 = Utilities.getRandomInt(1, hubServers.size());
                 ServerInfo serverInfo1 = (ServerInfo) hubServers.values().toArray()[server1];
                 serverInfo1.ping((result1, error1) -> {
                     if (error1 != null)

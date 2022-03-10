@@ -6,7 +6,7 @@ import lombok.Setter;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.utils.DateUtils;
+import net.octopvp.octocore.common.util.DateUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
 import java.util.List;

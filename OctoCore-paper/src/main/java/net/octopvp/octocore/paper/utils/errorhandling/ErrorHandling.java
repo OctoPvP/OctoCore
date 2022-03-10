@@ -1,7 +1,7 @@
 package net.octopvp.octocore.paper.utils.errorhandling;
 
-import net.octopvp.octocore.common.RNG;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.Utilities;
 
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
@@ -17,7 +17,7 @@ public class ErrorHandling {
 
     public static String[] handleError(ErrorData e) {
         //TODO use logger
-        String rng = RNG.genRandomString(5).toUpperCase();
+        String rng = Utilities.genRandomString(5).toUpperCase();
         e.addData("Time", new Date().toString());
         e.addData("CurrentTimeMillis", System.currentTimeMillis() + "");
         e.addData("ID", rng);

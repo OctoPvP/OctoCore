@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.utils;
+package net.octopvp.octocore.common.util;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;

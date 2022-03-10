@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
-import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
@@ -17,6 +16,7 @@ import net.octopvp.octocore.common.object.Settings;
 import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.paper.command.CommandFramework;
 import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.impl.*;
@@ -203,7 +203,7 @@ public final class OctoCore extends JavaPlugin {
                 getConfig().getDouble("settings.spawn.x"),
                 getConfig().getDouble("settings.spawn.y"),
                 getConfig().getDouble("settings.spawn.z"));
-        HardwareUtils.init();
+        Utilities.init();
         Logger.info("Starting OctoCore");
         if (!getDataFolder().exists())
             getDataFolder().mkdirs();
