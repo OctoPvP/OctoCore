@@ -12,7 +12,6 @@ import io.sentry.SentryLevel;
 import io.sentry.protocol.User;
 import lombok.Getter;
 import net.octopvp.octocore.common.object.AlertType;
-import net.octopvp.octocore.common.object.HashedAddress;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.builder.SentryMessageBuilder;
@@ -131,7 +130,7 @@ public class PlayerManager extends Manager {
             profile.setRankType(profile.getHighestRank().getRankType());
 
             profile.setLastSeenServer(OctoCore.getServerName());
-            profile.setLastSeenIp(new HashedAddress(ip));
+            profile.setLastSeenIp(ip);
             profile.onJoin(player);
 
             GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(player.getName());

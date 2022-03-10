@@ -35,6 +35,6 @@ public class StaffConnectPacket extends RedisPacket {
 
     @Override
     public String getName() {
-        return "ServerConnectPacket";
+        return "StaffConnectPacket";
     }
 }

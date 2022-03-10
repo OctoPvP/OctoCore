@@ -8,13 +8,17 @@ import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.PluginMsgChannels;
-import net.octopvp.octocore.common.object.*;
+import net.octopvp.octocore.common.object.PermUpdateType;
+import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.staff.StaffConnectPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
@@ -62,14 +66,14 @@ public class PlayerData {
             lowerName = name.toLowerCase(),
             server, authSecret, lastSeenServer = "Unknown", rankName = "default",
             lastSeen;
-    private HashedAddress lastAuthedIp = new HashedAddress(""), lastSeenIp = new HashedAddress("");
+    private String lastAuthedIp = "", lastSeenIp = "";
     private transient String lastMessage; //only applies to this server for spam prot (maybe :))
     private List<String> metaDataList = new ArrayList<>();
     private Map<String, String> metaData = new ConcurrentHashMap<>();
     private RankType rankType = RankType.DEFAULT; //player's rank type, defaults to PLAYER (not meant for permission managment)
     private WorldTime worldTime = WorldTime.DAY;
     private PlayerTag tag = null, nickTag = null;
-    private int /**playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/
+    private int /*playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/
             playTime = 0;
     private HashSet<UUID> allowedTagsID = new HashSet<>();
     private transient Set<PlayerTag> allowedTags;
@@ -100,7 +104,7 @@ public class PlayerData {
         this._id = uuid.toString();
         Player player = Bukkit.getPlayer(uuid);
         if (player != null)
-            this.lastSeenIp = new HashedAddress(player.getAddress().getHostName());
+            this.lastSeenIp = player.getAddress().getHostName();
         onLoad();
     }
 
@@ -127,6 +131,9 @@ public class PlayerData {
         name = player.getName();
         lowerName = name.toLowerCase();
         lastKnownName = name;
+
+        if (hasPermission(Permission.SEND_JOIN_MESSAGE.getNode()))
+            new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName()).send();
     }
 
 

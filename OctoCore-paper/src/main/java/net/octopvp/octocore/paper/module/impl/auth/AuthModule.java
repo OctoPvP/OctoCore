@@ -13,7 +13,6 @@ import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.octopvp.octocore.common.object.HashedAddress;
 import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -71,7 +70,7 @@ public class AuthModule implements Module {
     public static void force2fa(Player player) {
         if (isServerAuthEnabled()) {
             PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
-            playerData.setLastAuthedIp(new HashedAddress(player.getAddress().getHostString()));
+            playerData.setLastAuthedIp(player.getAddress().getHostString());
             player.sendMessage(Lang.AUTH_SUCCESS.getMsg());
         }
     }
@@ -83,7 +82,7 @@ public class AuthModule implements Module {
                 PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
                 playerData.setAuthEnabled(true);
                 playerData.setAuthSecret(settingUpAuth.get(player.getUniqueId()));
-                playerData.setLastAuthedIp(new HashedAddress(player.getAddress().getHostString()));
+                playerData.setLastAuthedIp(player.getAddress().getHostString());
                 settingUpAuth.remove(player.getUniqueId());
                 return true;
                 //TODO update globalplayer
@@ -94,7 +93,7 @@ public class AuthModule implements Module {
         if (has2faEnabled(player.getUniqueId()) && !isAuthed(player)) {
             PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
             if (verify(pdata.getAuthSecret(), code)) {
-                pdata.setLastAuthedIp(new HashedAddress(player.getAddress().getHostString()));
+                pdata.setLastAuthedIp(player.getAddress().getHostString());
                 player.sendMessage(Lang.AUTH_SUCCESS.getMsg());
                 triesLeft.remove(player.getUniqueId());
                 return true;
