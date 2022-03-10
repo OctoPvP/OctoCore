@@ -16,7 +16,7 @@ import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.utils.DateUtils;
+import net.octopvp.octocore.common.util.DateUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bson.Document;
 import org.bukkit.command.CommandSender;
@@ -40,13 +40,13 @@ public class Punishment {
     private String reason = "", removedBy = "", enteredDuration = "", removedFor = "", addedByName = "", name = "";
     private UUID addedBy;
 
-    public boolean isTemporary(){
+    public boolean isTemporary() {
         return !this.permanent;
     }
 
     public void save(boolean replace) {
         Logger.debug("b");
-        try{
+        try {
             Document document = new Document();
             document.put("uuid", playerData.getUniqueId().toString());
             document.put("name", playerData.getPlayerName());
@@ -65,7 +65,7 @@ public class Punishment {
             document.put("last", this.last);
             document.put("IPRelative", this.IPRelative);
             document.put("IPAddress", this.playerData.getAddress());
-            document.put("addedByName",this.addedByName);
+            document.put("addedByName", this.addedByName);
             Logger.debug("c");
             if (replace) {
                 this.getCollection().replaceOne(
@@ -80,7 +80,7 @@ public class Punishment {
                         new ReplaceOptions().upsert(true));
             } else {
                 MongoCollection<Document> collection = getCollection();
-                Logger.debug("Collection: %1",collection);
+                Logger.debug("Collection: %1", collection);
                 collection.insertOne(document);
             }
         } catch (Exception e) {

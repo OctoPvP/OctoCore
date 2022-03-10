@@ -19,46 +19,53 @@ public class GlobalPlayer {
     private UUID uuid;
 
     private String name, server, firstJoined, lastServer;
-    private boolean vanished,staffChatAlerts, adminChatAlerts, reportAlerts;
+    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts;
     private long lastSeen, lastActivity = -1L;
     private List<PlayerTag> allTags = new ArrayList<>();
     private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
     private Map<String, ServerContext> negatedPermissions = new ConcurrentHashMap<>();
 
-    public boolean isOnline(){
+    public boolean isOnline() {
         return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData ->
                 serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
                         .contains(name.toLowerCase())).findFirst().orElse(null) != null;
     }
+
     public void sendMessage(String message) {
-        new PlayerMessagePacket(name,message).send();
-     }
-    public UUID getUniqueId(){
+        new PlayerMessagePacket(name, message).send();
+    }
+
+    public UUID getUniqueId() {
         return uuid;
     }
-    public void setUniqueId(UUID u){
+
+    public void setUniqueId(UUID u) {
         uuid = u;
     }
+
     public boolean hasPermission(String permission) {
         if (permissionNegated(permission))
             return false;
         return hasSetPermission(permission);
     }
-    public boolean hasPermission(String permission, String server){
+
+    public boolean hasPermission(String permission, String server) {
         if (negatedPermissions.containsKey(permission))
             return negatedPermissions.get(permission).getServer().equalsIgnoreCase(server) || negatedPermissions.get(permission).isGlobal();
-        if (permissions.containsKey(permission)){
+        if (permissions.containsKey(permission)) {
             return permissions.get(permission).getServer().equalsIgnoreCase(server) || permissions.get(permission).isGlobal();
         }
         return false;
     }
-    public boolean permissionNegated(String permission){
-        if (negatedPermissions.containsKey(permission)){
+
+    public boolean permissionNegated(String permission) {
+        if (negatedPermissions.containsKey(permission)) {
             return negatedPermissions.get(permission).isThisServer();
         }
         return false;
     }
-    public boolean hasSetPermission(String permission){
+
+    public boolean hasSetPermission(String permission) {
         if (permissionNegated(permission))
             return false;
         if (permissions.containsKey(permission)) {

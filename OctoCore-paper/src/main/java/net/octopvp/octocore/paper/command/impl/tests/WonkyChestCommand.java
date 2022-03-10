@@ -17,10 +17,12 @@ public class WonkyChestCommand extends BaseCommand {
         new WonkyMenu().open(sender);
         return CommandResult.SUCCESS;
     }
+
     private class WonkyMenu extends Menu {
-        public WonkyMenu(){
+        public WonkyMenu() {
             setCancel(false);
         }
+
         @Override
         public List<Button> getButtons(Player player) {
             return new ArrayList<>();

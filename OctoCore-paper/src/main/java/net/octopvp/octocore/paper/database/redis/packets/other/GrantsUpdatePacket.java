@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 public class GrantsUpdatePacket extends RedisPacket {
     private String name, toChange;
     private boolean add;
+
     @Override
     public void onReceive(JsonObject data) throws Exception {
         String name = data.get("name").getAsString();

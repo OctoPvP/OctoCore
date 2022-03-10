@@ -19,7 +19,7 @@ public class OldPlayerInfoButton extends Button {
         ItemBuilder item = new ItemBuilder(Material.SKULL_ITEM);
         item.durability(3);
         item.name(CC.AQUA + playerData.getName());
-        item.lore(CC.SEPARATOR,CC.AQUA + "Name: " + playerData.getName(),CC.AQUA + "Current Rank: " + playerData.getHighestRank().getName(),CC.AQUA + "Current Tag: " + playerData.getTagString(),CC.AQUA + "Last Seen: " + playerData.getLastSeenAgo(),CC.SEPARATOR);
+        item.lore(CC.SEPARATOR, CC.AQUA + "Name: " + playerData.getName(), CC.AQUA + "Current Rank: " + playerData.getHighestRank().getName(), CC.AQUA + "Current Tag: " + playerData.getTagString(), CC.AQUA + "Last Seen: " + playerData.getLastSeenAgo(), CC.SEPARATOR);
         return item.toSkullBuilder().withOwner(playerData.getName()).withOwner(playerData.getUuid()).buildSkull();
     }
 

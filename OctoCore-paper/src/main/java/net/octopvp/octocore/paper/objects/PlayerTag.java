@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class PlayerTag {
-    private String name,tag, description;
+    private String name, tag, description;
     private UUID id;
     private Material material = Material.NAME_TAG;
 

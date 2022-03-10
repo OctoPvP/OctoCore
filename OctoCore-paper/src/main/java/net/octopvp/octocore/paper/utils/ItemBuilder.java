@@ -1,12 +1,6 @@
 package net.octopvp.octocore.paper.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-
 import com.google.gson.Gson;
-
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.apache.commons.lang.Validate;
@@ -20,14 +14,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
-import org.bukkit.util.ChatPaginator;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * ItemBuilder - An API class to create an
  * {@link org.bukkit.inventory.ItemStack} with just one line of code!
  *
- * @version 1.8.3
  * @author Acquized
+ * @version 1.8.3
  * @contributor Kev575
  */
 public class ItemBuilder {
@@ -48,7 +46,9 @@ public class ItemBuilder {
     private boolean andSymbol = true;
     private boolean unsafeStackSize = false;
 
-    /** Initalizes the ItemBuilder with {@link org.bukkit.Material} */
+    /**
+     * Initalizes the ItemBuilder with {@link org.bukkit.Material}
+     */
     public ItemBuilder(Material material) {
         if (material == null) {
             material = Material.AIR;
@@ -57,7 +57,9 @@ public class ItemBuilder {
         this.material = material;
     }
 
-    /** Initalizes the ItemBuilder with {@link org.bukkit.Material} and Amount */
+    /**
+     * Initalizes the ItemBuilder with {@link org.bukkit.Material} and Amount
+     */
     public ItemBuilder(Material material, int amount) {
         if (material == null) {
             material = Material.AIR;
@@ -101,7 +103,9 @@ public class ItemBuilder {
         this.displayname = displayname;
     }
 
-    /** Initalizes the ItemBuilder with a {@link org.bukkit.inventory.ItemStack} */
+    /**
+     * Initalizes the ItemBuilder with a {@link org.bukkit.inventory.ItemStack}
+     */
     public ItemBuilder(ItemStack item) {
         Validate.notNull(item, "The item is null.");
         this.item = item;
@@ -135,7 +139,7 @@ public class ItemBuilder {
      * {@link net.octopvp.octocore.paper.utils.ItemBuilder}
      *
      * @deprecated Use the already initalized {@code ItemBuilder} Instance to
-     *             improve performance
+     * improve performance
      */
     @Deprecated
     public ItemBuilder(ItemBuilder builder) {
@@ -151,6 +155,36 @@ public class ItemBuilder {
         this.displayname = builder.displayname;
         this.lore = builder.lore;
         this.flags = builder.flags;
+    }
+
+    /**
+     * Converts the Item to a ConfigStack and writes it to path
+     *
+     * @param cfg     Configuration File to which it should be writed
+     * @param path    Path to which the ConfigStack should be writed
+     * @param builder Which ItemBuilder should be writed
+     */
+    public static void toConfig(FileConfiguration cfg, String path, ItemBuilder builder) {
+        cfg.set(path, builder.build());
+    }
+
+    /**
+     * Converts the ItemBuilder to a JsonItemBuilder
+     *
+     * @param builder Which ItemBuilder should be converted
+     * @return The ItemBuilder as JSON String
+     */
+    public static String toJson(ItemBuilder builder) {
+        return new Gson().toJson(builder);
+    }
+
+    /**
+     * Converts the JsonItemBuilder back to a ItemBuilder
+     *
+     * @param json Which JsonItemBuilder should be converted
+     */
+    public static ItemBuilder fromJson(String json) {
+        return new Gson().fromJson(json, ItemBuilder.class);
     }
 
     /**
@@ -195,19 +229,6 @@ public class ItemBuilder {
      */
     public ItemBuilder durability(short damage) {
         this.damage = damage;
-        return this;
-    }
-    /**
-     * Sets the Durability (Damage) of the ItemStack
-     *
-     * @param damage Damage for the ItemStack
-     */
-    public ItemBuilder setDurability(short damage) {
-        this.damage = damage;
-        return this;
-    }
-    public ItemBuilder setDurability(int damage) {
-        this.damage = (short) damage;
         return this;
     }
 
@@ -288,16 +309,17 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setName(String name){
+    public ItemBuilder setName(String name) {
         this.name(name);
         return this;
     }
 
-    public ItemBuilder wrapLore(boolean wrap){
+    public ItemBuilder wrapLore(boolean wrap) {
         this.wrapLore = wrap;
         return this;
     }
-    public ItemBuilder setWrapSize(int size){
+
+    public ItemBuilder setWrapSize(int size) {
         this.wrapSize = size;
         return this;
     }
@@ -324,25 +346,8 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder addLoreLine(String line){
+    public ItemBuilder addLoreLine(String line) {
         this.lore(line);
-        return this;
-    }
-
-    /**
-     * Adds one or more Lines to the Lore of the ItemStack
-     *
-     * @param lines One or more Strings for the ItemStack Lore
-     * @deprecated Use {@code ItemBuilder#lore}
-     */
-    @Deprecated
-    public ItemBuilder lores(String... lines) {
-        Validate.notNull(lines, "The lines are null.");
-        for (String line : lines) {
-            if (line == null)
-                continue;
-            lore(andSymbol ? ChatColor.translateAlternateColorCodes('&', line) : line);
-        }
         return this;
     }
     /*
@@ -367,6 +372,23 @@ public class ItemBuilder {
     }
 
      */
+
+    /**
+     * Adds one or more Lines to the Lore of the ItemStack
+     *
+     * @param lines One or more Strings for the ItemStack Lore
+     * @deprecated Use {@code ItemBuilder#lore}
+     */
+    @Deprecated
+    public ItemBuilder lores(String... lines) {
+        Validate.notNull(lines, "The lines are null.");
+        for (String line : lines) {
+            if (line == null)
+                continue;
+            lore(andSymbol ? ChatColor.translateAlternateColorCodes('&', line) : line);
+        }
+        return this;
+    }
 
     /**
      * Adds one or more Lines to the Lore of the ItemStack
@@ -425,7 +447,9 @@ public class ItemBuilder {
         return this;
     }
 
-    /** Makes the ItemStack Glow like it had a Enchantment */
+    /**
+     * Makes the ItemStack Glow like it had a Enchantment
+     */
     public ItemBuilder glow() {
         enchant(material != Material.BOW ? Enchantment.ARROW_INFINITE : Enchantment.LUCK, 10);
         flag(ItemFlag.HIDE_ENCHANTS);
@@ -453,7 +477,7 @@ public class ItemBuilder {
      * Get the "Unsafe" class containing NBT methods.
      *
      * @deprecated Avoid using unsafe() if your Spigot version is higher than 1.10
-     *             and be cautious over 1.8.
+     * and be cautious over 1.8.
      */
     @Deprecated
     public Unsafe unsafe() {
@@ -481,7 +505,9 @@ public class ItemBuilder {
         return this;
     }
 
-    /** Toggles replacement of the '&' Character in Strings */
+    /**
+     * Toggles replacement of the '&' Character in Strings
+     */
     public ItemBuilder toggleReplaceAndSymbol() {
         replaceAndSymbol(!andSymbol);
         return this;
@@ -497,23 +523,31 @@ public class ItemBuilder {
         return this;
     }
 
-    /** Toggles allowment of stack sizes under 1 and above 64 */
+    /**
+     * Toggles allowment of stack sizes under 1 and above 64
+     */
     public ItemBuilder toggleUnsafeStackSize() {
         unsafeStackSize(!unsafeStackSize);
         return this;
     }
 
-    /** Returns the Displayname */
+    /**
+     * Returns the Displayname
+     */
     public String getDisplayname() {
         return displayname;
     }
 
-    /** Returns the Amount */
+    /**
+     * Returns the Amount
+     */
     public int getAmount() {
         return amount;
     }
 
-    /** Returns all Enchantments */
+    /**
+     * Returns all Enchantments
+     */
     public Map<Enchantment, Integer> getEnchantments() {
         return enchantments;
     }
@@ -528,37 +562,66 @@ public class ItemBuilder {
         return damage;
     }
 
-    /** Returns the Durability */
+    /**
+     * Returns the Durability
+     */
     public short getDurability() {
         return damage;
     }
 
-    /** Returns the Lores */
+    /**
+     * Sets the Durability (Damage) of the ItemStack
+     *
+     * @param damage Damage for the ItemStack
+     */
+    public ItemBuilder setDurability(short damage) {
+        this.damage = damage;
+        return this;
+    }
+
+    public ItemBuilder setDurability(int damage) {
+        this.damage = (short) damage;
+        return this;
+    }
+
+    /**
+     * Returns the Lores
+     */
     public List<String> getLores() {
         return lore;
     }
 
-    /** Returns if the '&' Character will be replaced */
+    /**
+     * Returns if the '&' Character will be replaced
+     */
     public boolean getAndSymbol() {
         return andSymbol;
     }
 
-    /** Returns all ItemFlags */
+    /**
+     * Returns all ItemFlags
+     */
     public List<ItemFlag> getFlags() {
         return flags;
     }
 
-    /** Returns the Material */
+    /**
+     * Returns the Material
+     */
     public Material getMaterial() {
         return material;
     }
 
-    /** Returns the ItemMeta */
+    /**
+     * Returns the ItemMeta
+     */
     public ItemMeta getMeta() {
         return meta;
     }
 
-    /** Returns the MaterialData */
+    /**
+     * Returns the MaterialData
+     */
     public MaterialData getData() {
         return data;
     }
@@ -595,42 +658,12 @@ public class ItemBuilder {
     }
 
     /**
-     * Converts the Item to a ConfigStack and writes it to path
-     *
-     * @param cfg     Configuration File to which it should be writed
-     * @param path    Path to which the ConfigStack should be writed
-     * @param builder Which ItemBuilder should be writed
-     */
-    public static void toConfig(FileConfiguration cfg, String path, ItemBuilder builder) {
-        cfg.set(path, builder.build());
-    }
-
-    /**
      * Converts the ItemBuilder to a JsonItemBuilder
      *
      * @return The ItemBuilder as JSON String
      */
     public String toJson() {
         return new Gson().toJson(this);
-    }
-
-    /**
-     * Converts the ItemBuilder to a JsonItemBuilder
-     *
-     * @param builder Which ItemBuilder should be converted
-     * @return The ItemBuilder as JSON String
-     */
-    public static String toJson(ItemBuilder builder) {
-        return new Gson().toJson(builder);
-    }
-
-    /**
-     * Converts the JsonItemBuilder back to a ItemBuilder
-     *
-     * @param json Which JsonItemBuilder should be converted
-     */
-    public static ItemBuilder fromJson(String json) {
-        return new Gson().fromJson(json, ItemBuilder.class);
     }
 
     /**
@@ -662,7 +695,9 @@ public class ItemBuilder {
         return this;
     }
 
-    /** Converts the ItemBuilder to a {@link org.bukkit.inventory.ItemStack} */
+    /**
+     * Converts the ItemBuilder to a {@link org.bukkit.inventory.ItemStack}
+     */
     public ItemStack build() {
         item.setType(material);
         item.setAmount(amount);
@@ -688,9 +723,11 @@ public class ItemBuilder {
         item.setItemMeta(meta);
         return item;
     }
-    public ItemStack toItemStack(){
+
+    public ItemStack toItemStack() {
         return build();
     }
+
     public ItemBuilder data(short data) {
         this.durability(data);
         return this;
@@ -701,16 +738,28 @@ public class ItemBuilder {
         return data((short) data);
     }
 
-    /** Contains NBT Tags Methods */
+    public SkullBuilder toSkullBuilder() {
+        return new SkullBuilder(this);
+    }
+
+    /**
+     * Contains NBT Tags Methods
+     */
     public class Unsafe {
 
-        /** Do not access using this Field */
+        /**
+         * Do not access using this Field
+         */
         protected final ReflectionUtils utils = new ReflectionUtils();
 
-        /** Do not access using this Field */
+        /**
+         * Do not access using this Field
+         */
         protected final ItemBuilder builder;
 
-        /** Initalizes the Unsafe Class with a ItemBuilder */
+        /**
+         * Initalizes the Unsafe Class with a ItemBuilder
+         */
         public Unsafe(ItemBuilder builder) {
             this.builder = builder;
         }
@@ -726,7 +775,9 @@ public class ItemBuilder {
             return this;
         }
 
-        /** Returns the String that is saved under the key */
+        /**
+         * Returns the String that is saved under the key
+         */
         public String getString(String key) {
             return utils.getString(builder.item, key);
         }
@@ -742,7 +793,9 @@ public class ItemBuilder {
             return this;
         }
 
-        /** Returns the Integer that is saved under the key */
+        /**
+         * Returns the Integer that is saved under the key
+         */
         public int getInt(String key) {
             return utils.getInt(builder.item, key);
         }
@@ -758,7 +811,9 @@ public class ItemBuilder {
             return this;
         }
 
-        /** Returns the Double that is saved under the key */
+        /**
+         * Returns the Double that is saved under the key
+         */
         public double getDouble(String key) {
             return utils.getDouble(builder.item, key);
         }
@@ -774,17 +829,23 @@ public class ItemBuilder {
             return this;
         }
 
-        /** Returns the Boolean that is saved under the key */
+        /**
+         * Returns the Boolean that is saved under the key
+         */
         public boolean getBoolean(String key) {
             return utils.getBoolean(builder.item, key);
         }
 
-        /** Returns a Boolean if the Item contains the NBT Tag named key */
+        /**
+         * Returns a Boolean if the Item contains the NBT Tag named key
+         */
         public boolean containsKey(String key) {
             return utils.hasKey(builder.item, key);
         }
 
-        /** Accesses back the ItemBuilder and exists the Unsafe Class */
+        /**
+         * Accesses back the ItemBuilder and exists the Unsafe Class
+         */
         public ItemBuilder builder() {
             return builder;
         }
@@ -981,9 +1042,7 @@ public class ItemBuilder {
             }
         }
     }
-    public SkullBuilder toSkullBuilder() {
-        return new SkullBuilder(this);
-    }
+
     /**
      * A simple builder for a skull with owner
      * <p>
@@ -992,10 +1051,10 @@ public class ItemBuilder {
     public class SkullBuilder {
 
         // Fundamentals
-        private ItemBuilder stackBuilder;
+        private final ItemBuilder stackBuilder;
 
         // Meta
-        private String owner,base64;
+        private String owner, base64;
         private UUID ownerUUID = UUID.randomUUID();
 
         private SkullBuilder(ItemBuilder stackBuilder) {
@@ -1007,15 +1066,16 @@ public class ItemBuilder {
             this.owner = ownerName;
             return this;
         }
-        public SkullBuilder base64Skin(String base64){
+
+        public SkullBuilder base64Skin(String base64) {
             this.base64 = base64;
             return this;
         }
-        public SkullBuilder withOwner(UUID uuid){
+
+        public SkullBuilder withOwner(UUID uuid) {
             this.ownerUUID = uuid;
             return this;
         }
-
 
 
         /**
@@ -1033,7 +1093,7 @@ public class ItemBuilder {
             // Edit skull meta
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(owner);
-            if (base64 != null && base64 != ""){
+            if (base64 != null && base64 != "") {
                 GameProfile profile = new GameProfile(ownerUUID, "");
                 profile.getProperties().put("textures", new Property("textures", base64));
                 Field profileField = null;

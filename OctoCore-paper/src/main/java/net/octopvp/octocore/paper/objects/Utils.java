@@ -4,11 +4,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class Utils {
-    public static int getBlockAbove(Player player){
+    public static int getBlockAbove(Player player) {
         int a = 256;
         for (int i = 0; i < player.getLocation().getBlockY(); i++) {
-            Block block = player.getLocation().clone().add(0,i,0).getBlock();
-            if (!block.isEmpty()){
+            Block block = player.getLocation().clone().add(0, i, 0).getBlock();
+            if (!block.isEmpty()) {
                 a = i;
                 break;
             }

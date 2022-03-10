@@ -23,6 +23,7 @@ import java.util.stream.IntStream;
 
 public class MainTagMenu extends Menu {
     private final Menu instance = this;
+
     @Override
     public List<Button> getButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
@@ -38,11 +39,12 @@ public class MainTagMenu extends Menu {
     public String getName(Player player) {
         return "Tags";
     }
-    public class BuyTagsButton extends Button{
+
+    public class BuyTagsButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.GOLD_BARDING).name(CC.AQUA + "Buy Tags").lore(CC.SEPARATOR,CC.AQUA + "Click here to buy new tags!",CC.SEPARATOR).build();
+            return new ItemBuilder(Material.GOLD_BARDING).name(CC.AQUA + "Buy Tags").lore(CC.SEPARATOR, CC.AQUA + "Click here to buy new tags!", CC.SEPARATOR).build();
         }
 
         @Override
@@ -56,11 +58,12 @@ public class MainTagMenu extends Menu {
             player.sendMessage(Lang.FEATURE_NOT_IMPLEMENTED.getMsg());
         }
     }
-    public class ViewAllTagsButton extends Button{
+
+    public class ViewAllTagsButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.GOLDEN_CARROT).name(CC.GOLD + "View All Tags").lore(CC.SEPARATOR,CC.AQUA + "Click here to view all tags!",CC.SEPARATOR).build();
+            return new ItemBuilder(Material.GOLDEN_CARROT).name(CC.GOLD + "View All Tags").lore(CC.SEPARATOR, CC.AQUA + "Click here to view all tags!", CC.SEPARATOR).build();
         }
 
         @Override
@@ -73,11 +76,12 @@ public class MainTagMenu extends Menu {
             new ListTagsMenu(instance).open(player);
         }
     }
-    public class ViewYourTagsButton extends Button{
+
+    public class ViewYourTagsButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.CHEST).name(CC.GREEN + "My Tags").lore(CC.SEPARATOR,CC.AQUA + "Click here to view all tags you own!",CC.SEPARATOR).build();
+            return new ItemBuilder(Material.CHEST).name(CC.GREEN + "My Tags").lore(CC.SEPARATOR, CC.AQUA + "Click here to view all tags you own!", CC.SEPARATOR).build();
         }
 
         @Override
@@ -97,6 +101,7 @@ public class MainTagMenu extends Menu {
             new MyTagsMenu(tags, player).open(player);
         }
     }
+
     public class PlaceHolderButton extends PlaceholderButton {
 
         @Override

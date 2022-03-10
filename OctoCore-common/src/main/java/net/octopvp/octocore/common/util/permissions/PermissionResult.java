@@ -1,13 +1,16 @@
 package net.octopvp.octocore.common.util.permissions;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @RequiredArgsConstructor
 @Getter
 @Setter
 public class PermissionResult {
     @NonNull
-    private String permission,data;
+    private String permission, data;
     @NonNull
     private PermissionReason reason;
     private long timestamp = System.currentTimeMillis();
@@ -22,7 +25,8 @@ public class PermissionResult {
                 ", timestamp:" + timestamp +
                 '}';
     }
-    public boolean allowed(){
+
+    public boolean allowed() {
         return reason == PermissionReason.ALLOWED || reason == PermissionReason.ALLOWED_WILDCARD || reason == PermissionReason.ALLOWED_SUB_WILDCARD;
     }
 }

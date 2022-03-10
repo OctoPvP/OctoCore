@@ -1,25 +1,20 @@
 package net.octopvp.octocore.paper.setup;
 
-import com.lunarclient.bukkitapi.cooldown.LCCooldown;
-import com.lunarclient.bukkitapi.cooldown.LunarClientAPICooldown;
 import lombok.Getter;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.utils.ReflectionUtils;
-import org.bukkit.Material;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 @Getter
 public class SetupManager implements Setup {
 
-    private ArrayList<Manager> managers = new ArrayList<>();
-
     public static SetupManager instance;
+    private final ArrayList<Manager> managers = new ArrayList<>();
 
     @Override
     public void setup(OctoCore plugin) {
@@ -48,7 +43,7 @@ public class SetupManager implements Setup {
         }
         /*
         for (Manager manager : managers) {
-            
+
         }
          */
         //managers.forEach(manager -> manager.init(plugin));

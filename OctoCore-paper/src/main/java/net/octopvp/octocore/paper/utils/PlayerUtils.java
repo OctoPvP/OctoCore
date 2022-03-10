@@ -87,12 +87,12 @@ public final class PlayerUtils {
     }
 
     public static boolean isLagging(Player player) {
-        return (!PingAdapter.getLastReply().containsKey(player.getUniqueId()) || MinecraftServer.currentTick - ((Integer) PingAdapter.getLastReply().get(player.getUniqueId())).intValue() > 40);
+        return (!PingAdapter.getLastReply().containsKey(player.getUniqueId()) || MinecraftServer.currentTick - PingAdapter.getLastReply().get(player.getUniqueId()).intValue() > 40);
     }
 
     public static void animateDeath(Player player) {
         int entityId = EntityUtils.getFakeEntityId();
-        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn((EntityHuman) ((CraftPlayer) player).getHandle());
+        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(((CraftPlayer) player).getHandle());
         PacketPlayOutEntityStatus statusPacket = new PacketPlayOutEntityStatus();
         try {
             SPAWN_PACKET_ID_FIELD.set(spawnPacket, Integer.valueOf(entityId));
@@ -112,7 +112,7 @@ public final class PlayerUtils {
             }
             Bukkit.getScheduler().runTaskLater(OctoCore.getInstance(), () -> {
                 for (Player watcher : sentTo) {
-                    (((CraftPlayer) watcher).getHandle()).playerConnection.sendPacket(new PacketPlayOutEntityDestroy(new int[]{entityId}));
+                    (((CraftPlayer) watcher).getHandle()).playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entityId));
                 }
             }, 40L);
         } catch (Exception e) {
@@ -122,7 +122,7 @@ public final class PlayerUtils {
 
     public static void animateDeath(Player player, Player watcher) {
         int entityId = EntityUtils.getFakeEntityId();
-        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn((EntityHuman) ((CraftPlayer) player).getHandle());
+        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(((CraftPlayer) player).getHandle());
         PacketPlayOutEntityStatus statusPacket = new PacketPlayOutEntityStatus();
         try {
             SPAWN_PACKET_ID_FIELD.set(spawnPacket, entityId);
@@ -130,7 +130,7 @@ public final class PlayerUtils {
             STATUS_PACKET_STATUS_FIELD.set(statusPacket, (byte) 3);
             (((CraftPlayer) watcher).getHandle()).playerConnection.sendPacket(spawnPacket);
             (((CraftPlayer) watcher).getHandle()).playerConnection.sendPacket(statusPacket);
-            Bukkit.getScheduler().runTaskLater(OctoCore.getInstance(), () -> (((CraftPlayer) watcher).getHandle()).playerConnection.sendPacket(new PacketPlayOutEntityDestroy(new int[]{entityId})), 40L);
+            Bukkit.getScheduler().runTaskLater(OctoCore.getInstance(), () -> (((CraftPlayer) watcher).getHandle()).playerConnection.sendPacket(new PacketPlayOutEntityDestroy(entityId)), 40L);
         } catch (Exception e) {
             e.printStackTrace();
         }

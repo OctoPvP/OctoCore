@@ -12,18 +12,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * {@link HashMap} but with 2 values
  * <b>I know it's not the right terminology dont bully me</b>
+ *
  * @param <K> key
  * @param <V> value1
  * @param <M> value2
  */
-public class HashPairMap<K,V,M> implements PairMap{
-    Map<K, Pair<V,M>> base = new ConcurrentHashMap<>();
-    transient Set<Entry<K,V,M>> entrySet;
+public class HashPairMap<K, V, M> implements PairMap {
+    Map<K, Pair<V, M>> base = new ConcurrentHashMap<>();
+    transient Set<Entry<K, V, M>> entrySet;
 
     @Override
     public Set<Entry> entrySet() {
         Set<Entry> set = new HashSet<>();
-        base.forEach((k,pair) -> set.add(new Entry() {
+        base.forEach((k, pair) -> set.add(new Entry() {
             @Override
             public Object getKey() {
                 return k;
@@ -59,7 +60,7 @@ public class HashPairMap<K,V,M> implements PairMap{
 
     @Override
     public void putAll(PairMap e) {
-        e.forEach((k,v,m)->base.put((K) k,new Pair<>((V)v,(M)m)));
+        e.forEach((k, v, m) -> base.put((K) k, new Pair<>((V) v, (M) m)));
     }
 
     @Override
@@ -69,7 +70,7 @@ public class HashPairMap<K,V,M> implements PairMap{
 
     @Override
     public Object put(Object key, Object value1, Object value2) {
-        return base.put((K)key,new Pair<>((V)value1,(M)value2));
+        return base.put((K) key, new Pair<>((V) value1, (M) value2));
     }
 
     @Override
@@ -80,7 +81,7 @@ public class HashPairMap<K,V,M> implements PairMap{
     @Override
     public boolean containsValue(Object val) {
         AtomicBoolean contains = new AtomicBoolean(false);
-        base.forEach((k,pair)->{
+        base.forEach((k, pair) -> {
             if (pair.getValue1() == val || pair.getValue0() == val)
                 contains.set(true);
         });

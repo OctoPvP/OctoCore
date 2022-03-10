@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.utils;
+package net.octopvp.octocore.common.util;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class DateUtils {
 
-    private static Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", 2);
+    private static final Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", 2);
 
     public static String removeTimePattern(String input) {
         return timePattern.matcher(input).replaceFirst("").trim();
@@ -298,7 +298,7 @@ public class DateUtils {
             if (diff <= 0) continue;
 
             ++accuracy;
-            sb.append(" ").append(diff).append("").append(names[i * 2 + (diff > 1 ? 1 : 0)]);
+            sb.append(" ").append(diff).append(names[i * 2 + (diff > 1 ? 1 : 0)]);
         }
 
         return sb.length() == 0 ? "now" : sb.toString().trim();
@@ -311,7 +311,7 @@ public class DateUtils {
         int day = 24 * hour;
         long ms = time;
 
-        StringBuilder text = new StringBuilder("");
+        StringBuilder text = new StringBuilder();
 
         if (time > day) {
             text.append(time / day).append(time / day > 1 ? "days " : "day ");
@@ -324,7 +324,7 @@ public class DateUtils {
         }
 
         if (ms > minute) {
-            text.append(ms / minute).append(ms /minute > 1 ? "minutes " : "minute ");
+            text.append(ms / minute).append(ms / minute > 1 ? "minutes " : "minute ");
             ms %= minute;
         }
 

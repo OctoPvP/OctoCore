@@ -52,9 +52,7 @@ public class Debugger {
             Statement statement = new Statement(this, name, args);
             print("Running the expression \"" + ChatColor.AQUA + cmd + ChatColor.RESET + "\"...");
             statement.execute();
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             print("Error: the expression \"" + ChatColor.AQUA + cmd + ChatColor.RESET + "\" failed to execute.");
             print(e.toString());
         }
@@ -72,11 +70,13 @@ public class Debugger {
 
                 try {
                     obj = Double.parseDouble(value);
-                } catch (NumberFormatException ignored) { }
+                } catch (NumberFormatException ignored) {
+                }
 
                 try {
                     obj = Integer.parseInt(value);
-                } catch (NumberFormatException ignored) { }
+                } catch (NumberFormatException ignored) {
+                }
 
                 if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
                     obj = Boolean.parseBoolean(value);
@@ -88,19 +88,22 @@ public class Debugger {
 
         return list.toArray();
     }
-    public void unfreezeme(){
-        if (sender instanceof Player){
+
+    public void unfreezeme() {
+        if (sender instanceof Player) {
             JoinLeaveListener.unfreezePlayer(((Player) sender));
             sender.sendMessage(CC.GREEN + "Done!");
         }
     }
-    public void freezeme(){
-        if (sender instanceof Player){
+
+    public void freezeme() {
+        if (sender instanceof Player) {
             JoinLeaveListener.freezePlayer(((Player) sender));
             sender.sendMessage(CC.GREEN + "Done!");
         }
     }
-    public void createTestRank(){
+
+    public void createTestRank() {
         RankBuilder rankBuilder = new RankBuilder("test");
         rankBuilder.build().save();
     }

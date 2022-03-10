@@ -20,29 +20,16 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TabManager extends Manager {
-    private static String value_color = CC.B + CC.GRAY;
-    private static String title_color = CC.B + CC.AQUA;
+    private static final String value_color = CC.B + CC.GRAY;
+    private static final String title_color = CC.B + CC.AQUA;
     //private static Skin skin = Skins.getDot(ChatColor.GRAY);
     private static String header = "";
     private static String footer = "";
-    private static HashMap<UUID, TableTabList> tablists = new HashMap<>();
-    private static Map<UUID,TabHandler> customHandlers = new HashMap<>();
+    private static final HashMap<UUID, TableTabList> tablists = new HashMap<>();
+    private static final Map<UUID, TabHandler> customHandlers = new HashMap<>();
     @Getter
     @Setter
     private static TabHandler defaultTabHandler = new DefaultTabHandler();
-    @Override
-    public void init(OctoCore plugin) {
-        header = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.header")).replace("\\n","\n");
-        footer = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.footer").replace("\\n","\n"));
-        if(plugin.getConfig().getBoolean("default-tab")){
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCore.getInstance(), TabManager::update,0L, OctoCore.getInstance().getConfig().getLong("update-tab-interval"));
-        }
-    }
-
-    @Override
-    public void disable() {
-
-    }
 
     private static void sendTab(Player p, TabHandler handler) {
         AtomicReference<TableTabList> tab = new AtomicReference<>(tablists.get(p.getUniqueId()));
@@ -56,24 +43,26 @@ public class TabManager extends Manager {
         }
         PairMap<Integer, Integer, TabItem> map = handler.getTabItems(p);
         map.forEach((k, v, m) -> tab.get().set(k, v, m));
-        String header = handler.getHeader(p).replace("\\n","\n"),footer = handler.getFooter(p).replace("\\n","\n");
-        tab.get().setHeaderFooter(header,footer);
+        String header = handler.getHeader(p).replace("\\n", "\n"), footer = handler.getFooter(p).replace("\\n", "\n");
+        tab.get().setHeaderFooter(header, footer);
     }
-    public static void update(){
-        PlayerManager.getPlayerProfiles().forEach((uuid,profile)->{
+
+    public static void update() {
+        PlayerManager.getPlayerProfiles().forEach((uuid, profile) -> {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null)
                 return;
             TabHandler handler = getTabHandler(player);
             if (handler == null)
                 return;
-            sendTab(player,handler);
+            sendTab(player, handler);
         });
     }
-    public static void onJoin(Player p){
-        if(OctoCore.getInstance().getConfig().getBoolean("default-tab")) {
-            if(PlayerManager.getPlayerProfiles().containsKey(p.getUniqueId())){
-                sendTab(p,getTabHandler(p));
+
+    public static void onJoin(Player p) {
+        if (OctoCore.getInstance().getConfig().getBoolean("default-tab")) {
+            if (PlayerManager.getPlayerProfiles().containsKey(p.getUniqueId())) {
+                sendTab(p, getTabHandler(p));
             }
         }
         /*
@@ -81,17 +70,34 @@ public class TabManager extends Manager {
             p.setScoreboard(SetupOther.getScoreboard());
          */
     }
-    public static TabHandler getTabHandler(Player p){
+
+    public static TabHandler getTabHandler(Player p) {
         TabHandler tabHandler = defaultTabHandler;
         if (customHandlers.get(p.getUniqueId()) != null)
             tabHandler = customHandlers.get(p.getUniqueId());
         return tabHandler;
     }
+
     public static void onLeave(Player p) {
         tablists.remove(p.getUniqueId());
         customHandlers.remove(p.getUniqueId());
     }
-    public static void setCustomTabHandler(Player player,TabHandler tabHandler){
-        customHandlers.put(player.getUniqueId(),tabHandler);
+
+    public static void setCustomTabHandler(Player player, TabHandler tabHandler) {
+        customHandlers.put(player.getUniqueId(), tabHandler);
+    }
+
+    @Override
+    public void init(OctoCore plugin) {
+        header = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.header")).replace("\\n", "\n");
+        footer = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.footer").replace("\\n", "\n"));
+        if (plugin.getConfig().getBoolean("default-tab")) {
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCore.getInstance(), TabManager::update, 0L, OctoCore.getInstance().getConfig().getLong("update-tab-interval"));
+        }
+    }
+
+    @Override
+    public void disable() {
+
     }
 }

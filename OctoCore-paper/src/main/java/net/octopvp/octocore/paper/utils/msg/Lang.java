@@ -173,14 +173,14 @@ public enum Lang {
             "&aExpires: &e%1",
             "&aAdded By: &e%2",
             "",
-            CC.YELLOW + "Click to vew punishments!"
+            CC.YELLOW + "Click to view punishments!"
     ),
     PUNISH_HOVER(
             "&aExpires: &e%1",
             "&aAdded By: &e%2",
             "&aDuration: &e%3",
             "",
-            CC.YELLOW + "Click to vew punishments!"
+            CC.YELLOW + "Click to view punishments!"
     );
     private final String msg;
 

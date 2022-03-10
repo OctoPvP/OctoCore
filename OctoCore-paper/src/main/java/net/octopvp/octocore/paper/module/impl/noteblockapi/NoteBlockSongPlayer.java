@@ -112,6 +112,10 @@ public class NoteBlockSongPlayer extends SongPlayer {
         }
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
     /**
      * Sets distance in blocks where would be player able to hear sound.
      *
@@ -122,11 +126,6 @@ public class NoteBlockSongPlayer extends SongPlayer {
         CallUpdate("distance", distance);
     }
 
-    public int getDistance() {
-        return distance;
-    }
-
-
     /**
      * Returns true if the Player is able to hear the current NoteBlockSongPlayer
      *
@@ -135,6 +134,6 @@ public class NoteBlockSongPlayer extends SongPlayer {
      */
     @Deprecated
     public boolean isPlayerInRange(Player player) {
-		return !(player.getLocation().distance(noteBlock.getLocation()) > getDistance());
+        return !(player.getLocation().distance(noteBlock.getLocation()) > getDistance());
     }
 }

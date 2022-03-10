@@ -26,18 +26,21 @@ import java.util.stream.IntStream;
 
 public abstract class Menu {
     public OctoCore plugin = OctoCore.getInstance();
-
+    @Getter
+    @Setter
+    public Menu previous;
     @Getter
     private List<Button> buttons = new ArrayList<>();
-
     @Getter
     @Setter
     private boolean autoUpdate = false;
-
     @Getter
     @Setter
     @Deprecated
     private boolean updateAsynchronously = false;
+    @Getter
+    @Setter
+    private boolean cancel = true;
 
     public abstract List<Button> getButtons(Player player);
 
@@ -54,15 +57,6 @@ public abstract class Menu {
             list.add(backButton);
         return list;
     }
-
-    @Getter
-    @Setter
-    private boolean cancel = true;
-
-
-    @Getter
-    @Setter
-    public Menu previous;
 
     public void open(Sender sender) {
         open(sender.getPlayer());
@@ -188,7 +182,7 @@ public abstract class Menu {
             }
 
             if (currentName != title)
-                PacketUtil.updateCurrentOpenInvTitle(player,title);
+                PacketUtil.updateCurrentOpenInvTitle(player, title);
 
             onOpenReserved(player);
             this.onOpen(player);
@@ -250,6 +244,7 @@ public abstract class Menu {
     public void onClose(Player player) {
 
     }
+
     public void onClose(Player player, InventoryCloseEvent event) {
 
     }

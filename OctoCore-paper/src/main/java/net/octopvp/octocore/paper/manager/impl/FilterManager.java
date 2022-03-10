@@ -11,31 +11,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FilterManager extends Manager {
-    private static HashMap<String, Boolean> blacklist = new HashMap();
+    private static final Pattern UNICODE_PATTERN = Pattern.compile("[^a-z0-9~!@#$%^&*()_+-={}\\[\\]|:\";'<>?,./\\\\    ]", Pattern.CASE_INSENSITIVE);
+    private static final HashMap<String, Boolean> blacklist = new HashMap();
 
     public static HashMap<String, Boolean> getBlacklist() {
         return FilterManager.blacklist;
-    }
-
-    @Override
-    public void init(OctoCore plugin) {
-        /*
-        ResultSet rs = null;
-        try {
-            rs = OctoCore.getConnection().prepareStatement(DatabaseHelper.GET_BLAKLIST_WORDS.getSql()).executeQuery();
-            while(rs.next()){
-                blacklist.put(rs.getString("WORD"),(rs.getInt("REPORT") == 1));
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            Logger.warn("Unable to load blacklisted words from database!");
-        }
-         */
-    }
-
-    @Override
-    public void disable() {
-
     }
 
     public static String process(String message1, Player player) {
@@ -65,10 +45,29 @@ public class FilterManager extends Manager {
         player.sendMessage(CC.SEPARATOR);
     }
 
-    private static final Pattern UNICODE_PATTERN = Pattern.compile("[^a-z0-9~!@#$%^&*()_+-={}\\[\\]|:\";'<>?,./\\\\    ]", Pattern.CASE_INSENSITIVE);
-
     public static boolean containsUnicode(String message) {
         Matcher m = UNICODE_PATTERN.matcher(message);
         return m.find();
+    }
+
+    @Override
+    public void init(OctoCore plugin) {
+        /*
+        ResultSet rs = null;
+        try {
+            rs = OctoCore.getConnection().prepareStatement(DatabaseHelper.GET_BLAKLIST_WORDS.getSql()).executeQuery();
+            while(rs.next()){
+                blacklist.put(rs.getString("WORD"),(rs.getInt("REPORT") == 1));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            Logger.warn("Unable to load blacklisted words from database!");
+        }
+         */
+    }
+
+    @Override
+    public void disable() {
+
     }
 }

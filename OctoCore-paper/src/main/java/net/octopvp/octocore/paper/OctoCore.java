@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
-import net.octopvp.octocore.common.HardwareUtils;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
@@ -17,6 +16,7 @@ import net.octopvp.octocore.common.object.Settings;
 import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.paper.command.CommandFramework;
 import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.impl.*;
@@ -34,7 +34,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
 import java.util.UUID;
 
 public final class OctoCore extends JavaPlugin {
@@ -47,14 +46,8 @@ public final class OctoCore extends JavaPlugin {
 
     @Getter
     private static Settings settings = new Settings();
-
-    private ConversationFactory conversationFactory = new ConversationFactory(this);
-
     @Getter
     private static String serverName;
-    @Getter
-    @Setter
-    private RedisHandler redisHandler;
     @Getter
     private static boolean master;
     @Getter
@@ -63,31 +56,17 @@ public final class OctoCore extends JavaPlugin {
     @Getter
     @Setter
     private static ServerType serverType;
-    private static SetupModules setupModules = new SetupModules();
+    private static final SetupModules setupModules = new SetupModules();
     @Getter
     private static Gson gson = new Gson();    // https://stackoverflow.com/a/44800004/11588583
     private static Tab tab;
     //Setup Start
     @Getter
     SetupManager setupManager = new SetupManager();
-
-    public static Chat getChat() {
-        return OctoCore.chat;
-    }
-
-    public static OctoCore getInstance() {
-        return OctoCore.instance;
-    }
-
-    public static CommandFramework getCommandFramework() {
-        return OctoCore.commandFramework;
-    }
-
-    public static Tab getTab() {
-        return OctoCore.tab;
-    }
-    //Setup End
-
+    private final ConversationFactory conversationFactory = new ConversationFactory(this);
+    @Getter
+    @Setter
+    private RedisHandler redisHandler;
     //they init from up to down
     @Getter
     private DatabaseManager databaseManager;
@@ -97,6 +76,7 @@ public final class OctoCore extends JavaPlugin {
     private FilterManager filterManager;
     @Getter
     private NickManager nickManager;
+    //Setup End
     @Getter
     private RankManager rankManager;
     @Getter
@@ -119,6 +99,34 @@ public final class OctoCore extends JavaPlugin {
     private ScoreBoardManager scoreBoardManager;
     @Getter
     private TagManager tagManager;
+
+    public static Chat getChat() {
+        return OctoCore.chat;
+    }
+
+    public static OctoCore getInstance() {
+        return OctoCore.instance;
+    }
+
+    public static CommandFramework getCommandFramework() {
+        return OctoCore.commandFramework;
+    }
+
+    public static Tab getTab() {
+        return OctoCore.tab;
+    }
+
+    public static boolean isVaultEnabled() {
+        return Bukkit.getPluginManager().isPluginEnabled("Vault");
+    }
+
+    public static boolean vault() {
+        return isVaultEnabled();
+    }
+
+    public static ConversationFactory getConversationFactory() {
+        return instance.conversationFactory;
+    }
 
     @Override
     public void onLoad() {
@@ -195,7 +203,7 @@ public final class OctoCore extends JavaPlugin {
                 getConfig().getDouble("settings.spawn.x"),
                 getConfig().getDouble("settings.spawn.y"),
                 getConfig().getDouble("settings.spawn.z"));
-        HardwareUtils.init();
+        Utilities.init();
         Logger.info("Starting OctoCore");
         if (!getDataFolder().exists())
             getDataFolder().mkdirs();
@@ -241,18 +249,6 @@ public final class OctoCore extends JavaPlugin {
             throwables.printStackTrace();
         }
          */
-    }
-
-    public static boolean isVaultEnabled() {
-        return Bukkit.getPluginManager().isPluginEnabled("Vault");
-    }
-
-    public static boolean vault() {
-        return isVaultEnabled();
-    }
-
-    public static ConversationFactory getConversationFactory() {
-        return instance.conversationFactory;
     }
 
     public void setupVault() {

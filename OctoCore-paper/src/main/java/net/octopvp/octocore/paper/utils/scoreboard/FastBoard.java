@@ -99,7 +99,7 @@ public class FastBoard {
     private final String id;
 
     private String title = ChatColor.RESET.toString();
-    private List<String> lines = new ArrayList<>();
+    private final List<String> lines = new ArrayList<>();
 
     private boolean deleted = false;
 

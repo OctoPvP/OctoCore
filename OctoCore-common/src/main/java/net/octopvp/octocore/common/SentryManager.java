@@ -4,8 +4,6 @@ import io.sentry.Sentry;
 import io.sentry.SentryEvent;
 import io.sentry.SentryLevel;
 import io.sentry.protocol.Message;
-import lombok.Getter;
-import net.dv8tion.jda.api.managers.Manager;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -39,7 +37,7 @@ public class SentryManager {
                         e.setMessage(message);
                         Sentry.captureEvent(e);
                     }
-                    if (event.getLevel() == Level.FATAL){
+                    if (event.getLevel() == Level.FATAL) {
                         SentryEvent e = new SentryEvent();
                         Message message = new Message();
                         message.setMessage(event.getRenderedMessage());
@@ -58,7 +56,8 @@ public class SentryManager {
                 }
 
                 @Override
-                public void close() {}
+                public void close() {
+                }
 
                 @Override
                 public boolean requiresLayout() {
@@ -67,6 +66,7 @@ public class SentryManager {
             });
         }
     }
+
     public static boolean isEnabled() {
         return Sentry.isEnabled();
     }

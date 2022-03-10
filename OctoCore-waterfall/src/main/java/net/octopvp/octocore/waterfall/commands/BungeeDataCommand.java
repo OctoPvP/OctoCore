@@ -13,10 +13,10 @@ public class BungeeDataCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] strings) {
-        if (sender instanceof ProxiedPlayer){
+        if (sender instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) sender;
             OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
-            if (strings.length > 0){
+            if (strings.length > 0) {
                 data.getCachedPermResults().clear();
             }
             player.sendMessage(data.toString());

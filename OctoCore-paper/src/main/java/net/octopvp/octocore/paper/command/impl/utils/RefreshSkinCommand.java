@@ -9,10 +9,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class RefreshSkinCommand extends BaseCommand {
-    @Command(name = "refreshskin",permission = Permission.REFRESH_SKIN,playerOnly = true)
+    @Command(name = "refreshskin", permission = Permission.REFRESH_SKIN, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.canSee(sender.getPlayer())){ //prevent players from seeing vanished
+            if (onlinePlayer.canSee(sender.getPlayer())) { //prevent players from seeing vanished
                 onlinePlayer.hidePlayer(sender.getPlayer());
                 onlinePlayer.showPlayer(sender.getPlayer());
             }

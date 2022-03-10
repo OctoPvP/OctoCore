@@ -14,22 +14,6 @@ import java.util.List;
 
 public abstract class Button {
 
-    public abstract ItemStack getItem(Player player);
-    public abstract int getSlot();
-
-    public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-
-    }
-
-    public int[] getSlots() {
-        return null;
-    }
-
-
-    public boolean hasSlot(int slot) {
-        return slot == this.getSlot() || this.getSlots() != null && Arrays.stream(this.getSlots()).anyMatch(i -> i == slot);
-    }
-
     public static boolean hasSlot(List<Button> buttons, int value) {
         return buttons.stream()
                 .filter(slot -> slot.getSlot() == value || slot.getSlots() != null
@@ -73,5 +57,21 @@ public abstract class Button {
                 consumer.accept(player, slot, clickType, event);
             }
         };
+    }
+
+    public abstract ItemStack getItem(Player player);
+
+    public abstract int getSlot();
+
+    public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+
+    }
+
+    public int[] getSlots() {
+        return null;
+    }
+
+    public boolean hasSlot(int slot) {
+        return slot == this.getSlot() || this.getSlots() != null && Arrays.stream(this.getSlots()).anyMatch(i -> i == slot);
     }
 }

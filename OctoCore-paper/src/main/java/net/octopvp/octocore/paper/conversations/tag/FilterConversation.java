@@ -7,10 +7,12 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 
 public class FilterConversation extends StringPrompt {
-    private ReturnableTypeCallback<String> callback;
-    public FilterConversation(ReturnableTypeCallback<String> callback){
+    private final ReturnableTypeCallback<String> callback;
+
+    public FilterConversation(ReturnableTypeCallback<String> callback) {
         this.callback = callback;
     }
+
     @Override
     public String getPromptText(ConversationContext conversationContext) {
         return CC.GREEN + "Please enter the phrase you want to filter by";

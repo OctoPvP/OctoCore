@@ -25,18 +25,19 @@ public class MainGrantMenu extends Menu {
 
     @Override
     public List<Button> getButtons(Player player) {
-        return Lists.newArrayList(new ViewGrantsButton(),new AddGrantButton(),new PlaceHolderButton());
+        return Lists.newArrayList(new ViewGrantsButton(), new AddGrantButton(), new PlaceHolderButton());
     }
 
     @Override
     public String getName(Player player) {
         return CC.GREEN + "Choose an action.";
     }
-    public class ViewGrantsButton extends Button{
+
+    public class ViewGrantsButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.PAPER).name(CC.AQUA + "View " + playerData.getName() + "'s grants").lore("",CC.SEPARATOR,CC.YELLOW + playerData.getActiveGrants().size() + CC.GREEN + " currently active grants.",CC.YELLOW + playerData.getGrants().size() + CC.GREEN + " total grants",CC.SEPARATOR).build();
+            return new ItemBuilder(Material.PAPER).name(CC.AQUA + "View " + playerData.getName() + "'s grants").lore("", CC.SEPARATOR, CC.YELLOW + playerData.getActiveGrants().size() + CC.GREEN + " currently active grants.", CC.YELLOW + playerData.getGrants().size() + CC.GREEN + " total grants", CC.SEPARATOR).build();
         }
 
         @Override
@@ -49,7 +50,8 @@ public class MainGrantMenu extends Menu {
             new GrantsMenu(playerData).open(player);
         }
     }
-    public class AddGrantButton extends Button{
+
+    public class AddGrantButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
@@ -66,10 +68,11 @@ public class MainGrantMenu extends Menu {
             new AddGrantMenu(playerData).open(player);
         }
     }
+
     public class PlaceHolderButton extends PlaceholderButton {
         @Override
         public int[] getSlots() {
-            return genPlaceholderSpots(IntStream.range(0,27),11,15);
+            return genPlaceholderSpots(IntStream.range(0, 27), 11, 15);
             /*
             List<Integer> a = new ArrayList<>();
             IntStream.range(0,27).forEach((i)->{

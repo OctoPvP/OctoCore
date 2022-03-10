@@ -34,18 +34,6 @@ public class TextTabItem implements TabItem {
         updateSkin();
     }
 
-    public void setText(String text) {
-        this.newText = text;
-    }
-
-    public void setPing(int ping) {
-        this.newPing = ping;
-    }
-
-    public void setSkin(Skin skin) {
-        this.newSkin = skin;
-    }
-
     @Override
     public boolean updateText() {
         boolean update = !Objects.equals(this.text, this.newText);
@@ -83,11 +71,23 @@ public class TextTabItem implements TabItem {
         return this.text;
     }
 
+    public void setText(String text) {
+        this.newText = text;
+    }
+
     public int getPing() {
         return this.ping;
     }
 
+    public void setPing(int ping) {
+        this.newPing = ping;
+    }
+
     public Skin getSkin() {
         return this.skin;
+    }
+
+    public void setSkin(Skin skin) {
+        this.newSkin = skin;
     }
 }

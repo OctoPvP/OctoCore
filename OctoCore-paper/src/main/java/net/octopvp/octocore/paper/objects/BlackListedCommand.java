@@ -8,9 +8,10 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class BlackListedCommand {
-    private String cmd,servers,disabledBy;
+    private String cmd, servers, disabledBy;
     private long disabledOn, disabledUntil;
-    public BlackListedCommand(String cmd){
+
+    public BlackListedCommand(String cmd) {
         this.cmd = cmd;
         this.disabledOn = System.currentTimeMillis();
         this.servers = "GLOBAL";

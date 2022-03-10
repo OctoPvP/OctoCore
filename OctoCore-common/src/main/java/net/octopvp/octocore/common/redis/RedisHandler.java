@@ -1,7 +1,6 @@
 package net.octopvp.octocore.common.redis;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,38 +11,22 @@ import net.octopvp.octocore.common.object.tuple.Pair;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.callback.TypeCallback;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPubSub;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
 @RequiredArgsConstructor
 public class RedisHandler {
     @Getter
     private static final String channel = "OCTO";
-
-    @Getter
-    private JedisPool subscriberPool, publisherPool;
-
-    @Getter
-    private long lastConnect = -1;
-
-    @Getter
-    private JedisPubSub pubsub;
-
     //private final Packets packets;
     private final String packets;
     private final JedisSettings credentials;
@@ -51,6 +34,12 @@ public class RedisHandler {
     private final TypeCallback<Boolean, Pair<RedisPacket, JsonObject>> onPacketReceive;
     private final TypeCallback<Collection<Class<?>>, String> getClasses;
     private final Map<String, RedisPacket> packetData = new HashMap<>();
+    @Getter
+    private JedisPool subscriberPool, publisherPool;
+    @Getter
+    private long lastConnect = -1;
+    @Getter
+    private JedisPubSub pubsub;
 
     public void connect() {
         String host = credentials.getAddress();
@@ -108,7 +97,7 @@ public class RedisHandler {
                                     e.printStackTrace();
                                 }
                             } else {
-                                if (packet.getClass().isAnnotationPresent(Sync.class)){
+                                if (packet.getClass().isAnnotationPresent(Sync.class)) {
                                     if (onPacketReceive.callback(new Pair<>(packet, data)))
                                         try {
                                             if (onPacketReceive.callback(new Pair<>(packet, data)))
@@ -117,7 +106,7 @@ public class RedisHandler {
                                             e.printStackTrace();
                                             Logger.error("Could not parse packet %1, %2", name, data);
                                         }
-                                }else {
+                                } else {
                                     runAsync.callback(() -> {
                                         try {
                                             if (onPacketReceive.callback(new Pair<>(packet, data)))
@@ -236,6 +225,7 @@ public class RedisHandler {
             e.printStackTrace();
         }
     }
+
     public Jedis getJedis() {
         return this.publisherPool.getResource();
     }

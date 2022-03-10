@@ -15,7 +15,27 @@ import java.util.function.Consumer;
 
 @SuppressWarnings({"unused", "FieldAccessedSynchronizedAndUnsynchronized"})
 public class Tasks<T> {
+    /**
+     * =============================================================================================
+     */
+    private static final Map<String, Tasks<?>> sharedChains = new HashMap<>();
+    private static final ThreadLocal<Tasks<?>> currentChain = new ThreadLocal<>();
     private static Plugin plugin;
+    private final Map<String, Object> taskMap = new HashMap<>(0);
+    private final ConcurrentLinkedQueue<TaskHolder<?, ?>> chainQueue = new ConcurrentLinkedQueue<>();
+    @SuppressWarnings("WeakerAccess") // IDE is wrong, can't be private
+    protected Runnable doneCallback;
+    protected BiConsumer<Exception, Task<?, ?>> errorHandler;
+    private boolean shared = false;
+    private boolean done = false;
+
+
+    /* https://gist.githubusercontent.com/aikar/77f8caee3c153074c99b/raw/2b7f9491ad7dc34ab3f4a9db0adf57c9e5cdee15/TaskChain.java */
+    private boolean executed = false;
+    private boolean async;
+    private String sharedName;
+    private Object previous;
+    private TaskHolder<?, ?> currentHolder;
 
     public static void init(Plugin plugin1) {
         plugin = plugin1;
@@ -69,9 +89,6 @@ public class Tasks<T> {
         }
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, callable, delay, interval);
     }
-
-
-    /* https://gist.githubusercontent.com/aikar/77f8caee3c153074c99b/raw/2b7f9491ad7dc34ab3f4a9db0adf57c9e5cdee15/TaskChain.java */
 
     /**
      * A useless example of registering multiple task signatures and states
@@ -166,26 +183,6 @@ public class Tasks<T> {
             Logger.error(s);
         }
     }
-
-    /**
-     * =============================================================================================
-     */
-    private static final Map<String, Tasks<?>> sharedChains = new HashMap<>();
-    private static final ThreadLocal<Tasks<?>> currentChain = new ThreadLocal<>();
-
-    private boolean shared = false;
-    private boolean done = false;
-    private boolean executed = false;
-    private boolean async;
-    private String sharedName;
-    private Object previous;
-    private final Map<String, Object> taskMap = new HashMap<>(0);
-
-    private TaskHolder<?, ?> currentHolder;
-    @SuppressWarnings("WeakerAccess") // IDE is wrong, can't be private
-    protected Runnable doneCallback;
-    protected BiConsumer<Exception, Task<?, ?>> errorHandler;
-    private final ConcurrentLinkedQueue<TaskHolder<?, ?>> chainQueue = new ConcurrentLinkedQueue<>();
 
     /**
      * =============================================================================================
@@ -387,7 +384,7 @@ public class Tasks<T> {
      * @return
      */
     public <R> Tasks<R> returnData(String key) {
-        return currentFirst(() -> (R) getTaskData(key));
+        return currentFirst(() -> getTaskData(key));
     }
 
     public Tasks<Tasks<?>> returnChain() {
@@ -739,94 +736,6 @@ public class Tasks<T> {
     }
 
     /**
-     * Provides foundation of a task with what the previous task type should return
-     * to pass to this and what this task will return.
-     *
-     * @param <R> Return Type
-     * @param <A> Argument Type Expected
-     */
-    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
-    private static class TaskHolder<R, A> {
-        private final Tasks<?> chain;
-        private final Task<R, A> task;
-        public final Boolean async;
-
-        private boolean executed = false;
-        private boolean aborted = false;
-
-        private TaskHolder(Tasks<?> chain, Boolean async, Task<R, A> task) {
-            this.task = task;
-            this.chain = chain;
-            this.async = async;
-        }
-
-
-        /**
-         * Called internally by Task Chain to facilitate executing the task and then the next task.
-         */
-        private void run() {
-            final Object arg = this.chain.previous;
-            this.chain.previous = null;
-            final R res;
-            try {
-                currentChain.set(this.chain);
-                if (this.task instanceof AsyncExecutingTask) {
-                    ((AsyncExecutingTask<R, A>) this.task).runAsync((A) arg, this::next);
-                } else {
-                    next(this.task.run((A) arg));
-                }
-            } catch (AbortChainException ignored) {
-                this.abort();
-            } catch (Exception e) {
-                if (this.chain.errorHandler != null) {
-                    this.chain.errorHandler.accept(e, this.task);
-                } else {
-                    logError("Tasks Exception on " + this.task.getClass().getName());
-                    logError(ExceptionUtils.getFullStackTrace(e));
-                }
-                this.abort();
-            } finally {
-                currentChain.remove();
-            }
-        }
-
-        /**
-         * Abort the chain, and clear tasks for GC.
-         */
-        private synchronized void abort() {
-            this.aborted = true;
-            this.chain.previous = null;
-            this.chain.chainQueue.clear();
-            this.chain.done();
-        }
-
-        /**
-         * Accepts result of previous task and executes the next
-         */
-        private void next(Object resp) {
-            synchronized (this) {
-                if (this.aborted) {
-                    this.chain.done();
-                    return;
-                }
-                if (this.executed) {
-                    this.chain.done();
-                    throw new RuntimeException("This task has already been executed.");
-                }
-                this.executed = true;
-            }
-
-            this.chain.async = !Bukkit.isPrimaryThread(); // We don't know where the task called this from.
-            this.chain.previous = resp;
-            this.chain.nextTask();
-        }
-    }
-
-    @SuppressWarnings("PublicInnerClass,WeakerAccess")
-    public static class AbortChainException extends Throwable {
-    }
-
-    /**
      * Generic task with synchronous return (but may execute on any thread)
      *
      * @param <R>
@@ -840,7 +749,7 @@ public class Tasks<T> {
          *
          * @return
          */
-        public default Tasks<?> getCurrentChain() {
+        default Tasks<?> getCurrentChain() {
             return currentChain.get();
         }
 
@@ -931,6 +840,93 @@ public class Tasks<T> {
         }
 
         void run(Runnable next) throws AbortChainException;
+    }
+
+    /**
+     * Provides foundation of a task with what the previous task type should return
+     * to pass to this and what this task will return.
+     *
+     * @param <R> Return Type
+     * @param <A> Argument Type Expected
+     */
+    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
+    private static class TaskHolder<R, A> {
+        public final Boolean async;
+        private final Tasks<?> chain;
+        private final Task<R, A> task;
+        private boolean executed = false;
+        private boolean aborted = false;
+
+        private TaskHolder(Tasks<?> chain, Boolean async, Task<R, A> task) {
+            this.task = task;
+            this.chain = chain;
+            this.async = async;
+        }
+
+
+        /**
+         * Called internally by Task Chain to facilitate executing the task and then the next task.
+         */
+        private void run() {
+            final Object arg = this.chain.previous;
+            this.chain.previous = null;
+            final R res;
+            try {
+                currentChain.set(this.chain);
+                if (this.task instanceof AsyncExecutingTask) {
+                    ((AsyncExecutingTask<R, A>) this.task).runAsync((A) arg, this::next);
+                } else {
+                    next(this.task.run((A) arg));
+                }
+            } catch (AbortChainException ignored) {
+                this.abort();
+            } catch (Exception e) {
+                if (this.chain.errorHandler != null) {
+                    this.chain.errorHandler.accept(e, this.task);
+                } else {
+                    logError("Tasks Exception on " + this.task.getClass().getName());
+                    logError(ExceptionUtils.getFullStackTrace(e));
+                }
+                this.abort();
+            } finally {
+                currentChain.remove();
+            }
+        }
+
+        /**
+         * Abort the chain, and clear tasks for GC.
+         */
+        private synchronized void abort() {
+            this.aborted = true;
+            this.chain.previous = null;
+            this.chain.chainQueue.clear();
+            this.chain.done();
+        }
+
+        /**
+         * Accepts result of previous task and executes the next
+         */
+        private void next(Object resp) {
+            synchronized (this) {
+                if (this.aborted) {
+                    this.chain.done();
+                    return;
+                }
+                if (this.executed) {
+                    this.chain.done();
+                    throw new RuntimeException("This task has already been executed.");
+                }
+                this.executed = true;
+            }
+
+            this.chain.async = !Bukkit.isPrimaryThread(); // We don't know where the task called this from.
+            this.chain.previous = resp;
+            this.chain.nextTask();
+        }
+    }
+
+    @SuppressWarnings("PublicInnerClass,WeakerAccess")
+    public static class AbortChainException extends Throwable {
     }
 
     private static class SharedTasks<R> extends Tasks<R> {

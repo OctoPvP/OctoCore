@@ -1,14 +1,14 @@
 package net.octopvp.octocore.paper.database.redis.packets.staff;
 
 import com.google.gson.JsonObject;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 @NoArgsConstructor
 public class DiscordAdminChatPacket extends RedisPacket {
     private JsonObject jo;
+
     @Override
     public void onReceive(JsonObject data) throws Exception {
         String name = data.get("name").getAsString();

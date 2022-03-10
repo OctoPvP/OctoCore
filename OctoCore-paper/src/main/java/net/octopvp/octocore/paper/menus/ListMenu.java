@@ -20,14 +20,21 @@ import java.util.List;
 public class ListMenu extends PaginatedMenu {
     private String filter;
     private boolean filtered;
-    public ListMenu(String filter){
+    private int i = 0;
+    private int a = 0;
+
+    public ListMenu(String filter) {
         this.filter = filter;
         filtered = true;
     }
-    public ListMenu(){}
-    public ListMenu(String[] args){
+
+    public ListMenu() {
+    }
+
+    public ListMenu(String[] args) {
         //setShowPageNumbersInTitle(args.length > 0);
     }
+
     @Override
     public String getPagesTitle(Player player) {
         return CC.GREEN + "Online Players";
@@ -66,7 +73,7 @@ public class ListMenu extends PaginatedMenu {
     public List<Button> getToolbarButtons() {
         if (true)
             return null;
-        return Arrays.asList(new Button(){
+        return Arrays.asList(new Button() {
 
             @Override
             public ItemStack getItem(Player player) {
@@ -85,11 +92,10 @@ public class ListMenu extends PaginatedMenu {
         });
     }
 
-    private int i = 0;
-    private int a = 0;
-    public class PlayerButton extends Button{
+    public class PlayerButton extends Button {
         private final Player p;
-        public PlayerButton(Player pl){
+
+        public PlayerButton(Player pl) {
             p = pl;
         }
 
@@ -99,7 +105,7 @@ public class ListMenu extends PaginatedMenu {
 
             ItemBuilder ib = new ItemBuilder(Material.SKULL_ITEM).name(p.getName());
             ib.lore(a + ""); //TODO client
-            ib.lore(Arrays.asList(CC.SEPARATOR,CC.GREEN + "Client: " + CC.GOLD + "Lunar Client",CC.SEPARATOR,"",CC.YELLOW + CC.B + "Click to view info!"));
+            ib.lore(Arrays.asList(CC.SEPARATOR, CC.GREEN + "Client: " + CC.GOLD + "Lunar Client", CC.SEPARATOR, "", CC.YELLOW + CC.B + "Click to view info!"));
 
             return ib.toSkullBuilder().withOwner(p.getName()).buildSkull();
         }
@@ -120,7 +126,8 @@ public class ListMenu extends PaginatedMenu {
 
     public class FilterPlayersButton extends Button {
         private boolean filtered1 = false;
-        public FilterPlayersButton(boolean f){
+
+        public FilterPlayersButton(boolean f) {
             this.filtered1 = f;
         }
 

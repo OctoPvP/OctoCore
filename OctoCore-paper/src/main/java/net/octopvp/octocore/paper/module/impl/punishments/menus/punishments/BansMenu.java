@@ -7,7 +7,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
-import net.octopvp.octocore.paper.utils.DateUtils;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
@@ -39,7 +39,7 @@ public class BansMenu extends PaginatedMenu {
     public List<Button> getEveryMenuSlots(Player player) {
         List<Button> slots = new ArrayList<>();
 
-        slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(),4));
+        slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(), 4));
 
         return slots;
     }

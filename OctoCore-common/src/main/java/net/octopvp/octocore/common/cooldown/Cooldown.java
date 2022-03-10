@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class Cooldown {
-    private static HashMap<String, HashMap<UUID, Long>> cooldown = new HashMap<>();
+    private static final HashMap<String, HashMap<UUID, Long>> cooldown = new HashMap<>();
+
     public static void createCooldown(String k) {
         Logger.debug("Debug: creating cooldown: " + k);
         if (cooldown.containsKey(k.toLowerCase()))
@@ -29,31 +30,33 @@ public class Cooldown {
 
     public static boolean isOnCooldown(String k, UUID p) {
         return (cooldown.containsKey(k.toLowerCase()) && cooldown.get(k.toLowerCase()).containsKey(p) &&
-                System.currentTimeMillis() <= ((Long)((HashMap)cooldown.get(k.toLowerCase())).get(p)).longValue());
+                System.currentTimeMillis() <= ((Long) ((HashMap) cooldown.get(k.toLowerCase())).get(p)).longValue());
     }
 
     public static int getCooldownForPlayerInt(String k, UUID p) {
-        return (int)(((Long)((HashMap)cooldown.get(k.toLowerCase())).get(p)).longValue() -
+        return (int) (((Long) ((HashMap) cooldown.get(k.toLowerCase())).get(p)).longValue() -
                 System.currentTimeMillis()) / 1000;
     }
 
     public static long getCooldownForPlayerLong(String k, UUID p) {
-        return (int)(((Long)((HashMap)cooldown.get(k.toLowerCase())).get(p)).longValue() -
+        return (int) (((Long) ((HashMap) cooldown.get(k.toLowerCase())).get(p)).longValue() -
                 System.currentTimeMillis());
     }
 
     public static void removeCooldown(String k, UUID p) {
         if (!cooldown.containsKey(k.toLowerCase()))
             throw new IllegalArgumentException(k.toLowerCase() + " does not exist");
-        if(cooldown.get(k.toLowerCase()).containsKey(p))
-            ((HashMap)cooldown.get(k.toLowerCase())).remove(p);
+        if (cooldown.get(k.toLowerCase()).containsKey(p))
+            ((HashMap) cooldown.get(k.toLowerCase())).remove(p);
     }
-    public static boolean wasOnCooldown(String k, UUID p){
-        if(!cooldown.containsKey(k.toLowerCase()))
+
+    public static boolean wasOnCooldown(String k, UUID p) {
+        if (!cooldown.containsKey(k.toLowerCase()))
             throw new IllegalArgumentException(k.toLowerCase() + " does not exist");
-        return ((HashMap)cooldown.get(k.toLowerCase())).containsKey(p);
+        return cooldown.get(k.toLowerCase()).containsKey(p);
     }
-    public static boolean cooldownExists(String k){
+
+    public static boolean cooldownExists(String k) {
         return cooldown.containsKey(k);
     }
 }

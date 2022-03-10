@@ -13,7 +13,16 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreBoardManager extends Manager {
-    private static Map<UUID,Scoreboard> scoreboardMap = new ConcurrentHashMap<>();
+    private static final Map<UUID, Scoreboard> scoreboardMap = new ConcurrentHashMap<>();
+
+    public static void handleJoin(Player player) {
+        Scoreboard scoreboard = ScoreboardModule.createScoreboard(player)
+                .setHandler(new DefaultScoreboardHandler());
+        Logger.debug("Setting scoreboard for %1, scoreboard name: %2", player.getName(), scoreboard.getHandler().getClass().getSimpleName());
+        scoreboard.activate();
+        scoreboardMap.put(player.getUniqueId(), scoreboard);
+    }
+
     @Override
     public void init(OctoCore plugin) {
         new ScoreboardModule().onEnable(plugin);
@@ -22,12 +31,5 @@ public class ScoreBoardManager extends Manager {
     @Override
     public void disable() {
         ScoreboardModule.getInstance().onDisable(OctoCore.getInstance());
-    }
-    public static void handleJoin(Player player){
-        Scoreboard scoreboard = ScoreboardModule.createScoreboard(player)
-                .setHandler(new DefaultScoreboardHandler());
-        Logger.debug("Setting scoreboard for %1, scoreboard name: %2",player.getName(),scoreboard.getHandler().getClass().getSimpleName());
-        scoreboard.activate();
-        scoreboardMap.put(player.getUniqueId(),scoreboard);
     }
 }

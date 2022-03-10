@@ -12,16 +12,16 @@ import net.octopvp.octocore.waterfall.OctoCoreWaterfall;
 
 public class PingEvent implements Listener {
     @EventHandler(priority = 64)
-    public void onPing(ProxyPingEvent event){
+    public void onPing(ProxyPingEvent event) {
         ProxyServer.getInstance().getLogger().info("Proxy Ping evt.");
         ServerPing response = event.getResponse();
-        if(OctoCoreWaterfall.getInstance().getConfig().getBoolean("protocol.enabled"))
+        if (OctoCoreWaterfall.getInstance().getConfig().getBoolean("protocol.enabled"))
             response.getVersion().setName(OctoCoreWaterfall.getInstance().getConfig().getString("protocol.version"));
         StringBuilder motd = new StringBuilder();
         int i = 0;
         for (String s1 : OctoCoreWaterfall.getInstance().getConfig().getStringList("motd")) {
             i++;
-            String s = ChatColor.translateAlternateColorCodes('&',StringUtils.centerText(s1));
+            String s = ChatColor.translateAlternateColorCodes('&', StringUtils.centerText(s1));
             if (i == 1)
                 motd.append("    ").append(s); //FIXME fix MOTD centering
             else motd.append("\n" + s);

@@ -7,11 +7,10 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.paper.manager.impl.autoinit.GlobalConfigManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import org.bson.json.JsonWriterSettings;
 import redis.clients.jedis.Jedis;
@@ -34,21 +33,24 @@ public class DatabaseManager extends Manager {
         return DatabaseManager.mongoClient;
     }
 
+    public static Jedis getJedis() {
+        return OctoCore.getInstance().getRedisHandler().getJedis();
+    }
+
     @Override
     public void init(OctoCore plugin) {
         MongoCredential credentials;
         Logger.info("Connecting to mongo");
         String base = "database.mongo.auth.";
-        if(plugin.getConfig().getBoolean(base + "enabled")){
-            credentials = MongoCredential.createCredential(plugin.getConfig().getString(base + "username"),plugin.getConfig().getString(base + "db"),plugin.getConfig().getString(base + "password").toCharArray());
+        if (plugin.getConfig().getBoolean(base + "enabled")) {
+            credentials = MongoCredential.createCredential(plugin.getConfig().getString(base + "username"), plugin.getConfig().getString(base + "db"), plugin.getConfig().getString(base + "password").toCharArray());
             mongoClient = MongoClients.create(
                     MongoClientSettings.builder()
                             .applyToClusterSettings(builder ->
                                     builder.hosts(Arrays.asList(new ServerAddress(plugin.getConfig().getString("database.mongo.host"), plugin.getConfig().getInt("database.mongo.port")))))
                             .credential(credentials)
                             .build());
-        }
-        else {
+        } else {
             mongoClient = MongoClients.create(
                     MongoClientSettings.builder()
                             .applyToClusterSettings(builder ->
@@ -61,12 +63,6 @@ public class DatabaseManager extends Manager {
         PlayerManager.postDBInit();
         PunishModule.postDbInit(mongoDatabase);
     }
-
-    public static Jedis getJedis(){
-        return OctoCore.getInstance().getRedisHandler().getJedis();
-    }
-
-
 
     @Override
     public void disable() {

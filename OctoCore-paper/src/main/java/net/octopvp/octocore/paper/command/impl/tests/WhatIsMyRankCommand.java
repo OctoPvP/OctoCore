@@ -9,7 +9,7 @@ import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 
 public class WhatIsMyRankCommand extends BaseCommand {
-    @Command(name = "whatismyrank",playerOnly = true)
+    @Command(name = "whatismyrank", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         PlayerData data = PlayerManager.getData(sender.getPlayer().getUniqueId());
         sender.sendMessage(CC.AQUA + "Your highest grant/rank is " + data.getHighestRank().getDisplayName());

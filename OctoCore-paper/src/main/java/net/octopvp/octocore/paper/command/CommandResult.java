@@ -3,7 +3,6 @@ package net.octopvp.octocore.paper.command;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.utils.msg.Lang;
-import net.octopvp.octocore.paper.utils.permission.PermissionString;
 
 public enum CommandResult {
     SUCCESS(""),
@@ -16,12 +15,13 @@ public enum CommandResult {
     MOJANG_ERROR(CC.RED + "Could not contact the Mojang API! Please Try Again Later."),
     PLAYER_ONLY(Lang.PLAYER_ONLY.getMsg()),
     NO_PERMS(Lang.NO_PERMISSION.getMsg());
-    private String msg;
-    CommandResult(String s){
+    private final String msg;
+
+    CommandResult(String s) {
         this.msg = s;
     }
 
     public String getMsg(String... str) {
-        return StringUtils.replacePlaceholders(msg,str);
+        return StringUtils.replacePlaceholders(msg, str);
     }
 }

@@ -5,36 +5,10 @@ import org.bukkit.entity.EntityType;
 import java.util.EnumMap;
 import java.util.Map;
 
-public final class EntityUtils
-{
+public final class EntityUtils {
     private static Map<EntityType, String> displayNames;
     private static int currentFakeEntityId;
-    
-    private EntityUtils() {
-    }
-    
-    public static String getName(final EntityType type) {
-        return EntityUtils.displayNames.get(type);
-    }
-    
-    public static EntityType parse(final String input) {
-        for (final Map.Entry<EntityType, String> entry : EntityUtils.displayNames.entrySet()) {
-            if (entry.getValue().replace(" ", "").equalsIgnoreCase(input)) {
-                return entry.getKey();
-            }
-        }
-        for (final EntityType type : EntityType.values()) {
-            if (input.equalsIgnoreCase(type.toString())) {
-                return type;
-            }
-        }
-        return null;
-    }
-    
-    public static int getFakeEntityId() {
-        return EntityUtils.currentFakeEntityId--;
-    }
-    
+
     static {
         EntityUtils.displayNames = new EnumMap<>(EntityType.class);
         EntityUtils.currentFakeEntityId = -1;
@@ -98,5 +72,30 @@ public final class EntityUtils
         EntityUtils.displayNames.put(EntityType.WITHER_SKULL, "Wither Skull");
         EntityUtils.displayNames.put(EntityType.WOLF, "Wolf");
         EntityUtils.displayNames.put(EntityType.ZOMBIE, "Zombie");
+    }
+
+    private EntityUtils() {
+    }
+
+    public static String getName(final EntityType type) {
+        return EntityUtils.displayNames.get(type);
+    }
+
+    public static EntityType parse(final String input) {
+        for (final Map.Entry<EntityType, String> entry : EntityUtils.displayNames.entrySet()) {
+            if (entry.getValue().replace(" ", "").equalsIgnoreCase(input)) {
+                return entry.getKey();
+            }
+        }
+        for (final EntityType type : EntityType.values()) {
+            if (input.equalsIgnoreCase(type.toString())) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    public static int getFakeEntityId() {
+        return EntityUtils.currentFakeEntityId--;
     }
 }

@@ -13,42 +13,43 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class GameModeCommand extends BaseCommand {
-    private static HashMap<String, GameMode> gameModes = new HashMap<>();
+    private static final HashMap<String, GameMode> gameModes = new HashMap<>();
+
     static {
-        gameModes.put("c",GameMode.CREATIVE);
-        gameModes.put("creative",GameMode.CREATIVE);
-        gameModes.put("s",GameMode.SURVIVAL);
-        gameModes.put("survival",GameMode.SURVIVAL);
-        gameModes.put("sp",GameMode.SPECTATOR);
-        gameModes.put("spectator",GameMode.SPECTATOR);
-        gameModes.put("a",GameMode.ADVENTURE);
-        gameModes.put("adventure",GameMode.ADVENTURE);
+        gameModes.put("c", GameMode.CREATIVE);
+        gameModes.put("creative", GameMode.CREATIVE);
+        gameModes.put("s", GameMode.SURVIVAL);
+        gameModes.put("survival", GameMode.SURVIVAL);
+        gameModes.put("sp", GameMode.SPECTATOR);
+        gameModes.put("spectator", GameMode.SPECTATOR);
+        gameModes.put("a", GameMode.ADVENTURE);
+        gameModes.put("adventure", GameMode.ADVENTURE);
         gameModes.put("1", GameMode.CREATIVE);
-        gameModes.put("0",GameMode.SURVIVAL);
-        gameModes.put("2",GameMode.ADVENTURE);
-        gameModes.put("3",GameMode.SPECTATOR);
+        gameModes.put("0", GameMode.SURVIVAL);
+        gameModes.put("2", GameMode.ADVENTURE);
+        gameModes.put("3", GameMode.SPECTATOR);
     }
-    @Command(name = "gamemode",aliases = {"gm"},usage = "<gamemode> [player]")
+
+    @Command(name = "gamemode", aliases = {"gm"}, usage = "<gamemode> [player]")
     public CommandResult execute(Sender sender, String[] args) {
-        if(args.length == 0){
+        if (args.length == 0) {
             return CommandResult.INVALID_ARGS;
         }
-        if (args.length >= 1){
+        if (args.length >= 1) {
             GameMode gameMode = gameModes.get(args[0]);
-            if(gameMode == null){
+            if (gameMode == null) {
                 sender.sendMessage(CC.RED + args[0] + " is not a valid gamemode");
                 return CommandResult.INVALID_ARGS;
             }
-            if(!sender.hasPermission("octocore.command.gamemode." + gameMode.name().toLowerCase()))
+            if (!sender.hasPermission("octocore.command.gamemode." + gameMode.name().toLowerCase()))
                 return CommandResult.NO_PERMS;
-            if(args.length == 2){
+            if (args.length == 2) {
                 Player target;
-                try{
+                try {
                     target = Bukkit.getPlayer(args[1]);
                 } catch (Exception e) {
                     return CommandResult.INVALID_PLAYER;
@@ -64,10 +65,10 @@ public class GameModeCommand extends BaseCommand {
         return CommandResult.SUCCESS;
     }
 
-    @Completer(name = "gamemode",aliases = {"gm"})
+    @Completer(name = "gamemode", aliases = {"gm"})
     public List<String> tabComplete(Sender sender, String[] args) {
-        if(args.length == 0){
-            return Lists.newArrayList("c","s","sp","a","creative","survival","spectator","adventure","0","1","2","3");
-        }else return PlayerManager.getOnlinePlayersString();
+        if (args.length == 0) {
+            return Lists.newArrayList("c", "s", "sp", "a", "creative", "survival", "spectator", "adventure", "0", "1", "2", "3");
+        } else return PlayerManager.getOnlinePlayersString();
     }
 }

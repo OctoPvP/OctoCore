@@ -10,12 +10,14 @@ import org.bson.Document;
 
 @Getter
 public class GlobalConfigManager extends Manager {
-    @Getter private static GlobalConfigManager instance;
+    @Getter
+    private static GlobalConfigManager instance;
 
 
-    @Getter private static MongoCollection<Document> configCollection = null;
+    @Getter
+    private static MongoCollection<Document> configCollection = null;
 
-    public void load(MongoDatabase database){
+    public void load(MongoDatabase database) {
         configCollection = database.getCollection("config");
 
     }

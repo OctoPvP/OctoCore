@@ -7,10 +7,12 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 
 public class SetDescConversation extends StringPrompt {
-    private ReturnableTypeCallback<String> callback;
-    public SetDescConversation(ReturnableTypeCallback<String> callback){
+    private final ReturnableTypeCallback<String> callback;
+
+    public SetDescConversation(ReturnableTypeCallback<String> callback) {
         this.callback = callback;
     }
+
     @Override
     public String getPromptText(ConversationContext conversationContext) {
         return CC.GREEN + "Please enter description";

@@ -15,47 +15,21 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
-public class PingAdapter extends PacketAdapter implements Listener
-{
+public class PingAdapter extends PacketAdapter implements Listener {
     private static final Map<UUID, PingCallback> callbacks;
     private static final Map<UUID, Integer> ping;
     private static final Map<UUID, Integer> lastReply;
-    
+
+    static {
+        callbacks = Maps.newConcurrentMap();
+        ping = Maps.newConcurrentMap();
+        lastReply = Maps.newConcurrentMap();
+    }
+
     public PingAdapter() {
-        super(OctoCore.getInstance(), new PacketType[] { PacketType.Play.Server.KEEP_ALIVE, PacketType.Play.Client.KEEP_ALIVE });
+        super(OctoCore.getInstance(), PacketType.Play.Server.KEEP_ALIVE, PacketType.Play.Client.KEEP_ALIVE);
     }
-    
-    public void onPacketSending(final PacketEvent event) {
-        final int id = (int)event.getPacket().getIntegers().read(0);
-        PingAdapter.callbacks.put(event.getPlayer().getUniqueId(), new PingCallback(id) {
-            @Override
-            public void call() {
-                final int ping = (int)(System.currentTimeMillis() - this.getSendTime());
-                PingAdapter.ping.put(event.getPlayer().getUniqueId(), ping);
-                PingAdapter.lastReply.put(event.getPlayer().getUniqueId(), MinecraftServer.currentTick);
-            }
-        });
-    }
-    
-    public void onPacketReceiving(final PacketEvent event) {
-        final Iterator<Map.Entry<UUID, PingCallback>> iterator = PingAdapter.callbacks.entrySet().iterator();
-        while (iterator.hasNext()) {
-            final Map.Entry<UUID, PingCallback> entry = iterator.next();
-            if (entry.getValue().getId() == (int)event.getPacket().getIntegers().read(0)) {
-                entry.getValue().call();
-                iterator.remove();
-                break;
-            }
-        }
-    }
-    
-    @EventHandler
-    public void onQuit(final PlayerQuitEvent event) {
-        PingAdapter.ping.remove(event.getPlayer().getUniqueId());
-        PingAdapter.lastReply.remove(event.getPlayer().getUniqueId());
-        PingAdapter.callbacks.remove(event.getPlayer().getUniqueId());
-    }
-    
+
     public static int getAveragePing() {
         if (PingAdapter.ping.size() == 0) {
             return 0;
@@ -66,38 +40,62 @@ public class PingAdapter extends PacketAdapter implements Listener
         }
         return x / PingAdapter.ping.size();
     }
-    
+
     public static Map<UUID, Integer> getPing() {
         return PingAdapter.ping;
     }
-    
+
     public static Map<UUID, Integer> getLastReply() {
         return PingAdapter.lastReply;
     }
-    
-    static {
-        callbacks = Maps.newConcurrentMap();
-        ping = Maps.newConcurrentMap();
-        lastReply = Maps.newConcurrentMap();
+
+    public void onPacketSending(final PacketEvent event) {
+        final int id = event.getPacket().getIntegers().read(0);
+        PingAdapter.callbacks.put(event.getPlayer().getUniqueId(), new PingCallback(id) {
+            @Override
+            public void call() {
+                final int ping = (int) (System.currentTimeMillis() - this.getSendTime());
+                PingAdapter.ping.put(event.getPlayer().getUniqueId(), ping);
+                PingAdapter.lastReply.put(event.getPlayer().getUniqueId(), MinecraftServer.currentTick);
+            }
+        });
     }
-    
-    private abstract static class PingCallback
-    {
+
+    public void onPacketReceiving(final PacketEvent event) {
+        final Iterator<Map.Entry<UUID, PingCallback>> iterator = PingAdapter.callbacks.entrySet().iterator();
+        while (iterator.hasNext()) {
+            final Map.Entry<UUID, PingCallback> entry = iterator.next();
+            if (entry.getValue().getId() == event.getPacket().getIntegers().read(0)) {
+                entry.getValue().call();
+                iterator.remove();
+                break;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onQuit(final PlayerQuitEvent event) {
+        PingAdapter.ping.remove(event.getPlayer().getUniqueId());
+        PingAdapter.lastReply.remove(event.getPlayer().getUniqueId());
+        PingAdapter.callbacks.remove(event.getPlayer().getUniqueId());
+    }
+
+    private abstract static class PingCallback {
         private final long sendTime;
         private final int id;
-        
-        public abstract void call();
-        
-        @ConstructorProperties({ "id" })
+
+        @ConstructorProperties({"id"})
         public PingCallback(final int id) {
             this.sendTime = System.currentTimeMillis();
             this.id = id;
         }
-        
+
+        public abstract void call();
+
         public long getSendTime() {
             return this.sendTime;
         }
-        
+
         public int getId() {
             return this.id;
         }

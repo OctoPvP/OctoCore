@@ -8,10 +8,12 @@ import org.bukkit.inventory.ItemStack;
 
 public class PlaceholderButton extends Button {
 
-    public PlaceholderButton(){}
+    public PlaceholderButton() {
+    }
+
     @Override
     public ItemStack getItem(Player player) {
-        return new ItemBuilder(Material.STAINED_GLASS_PANE).durability((short)7).name(CC.GRAY).build();
+        return new ItemBuilder(Material.STAINED_GLASS_PANE).durability((short) 7).name(CC.GRAY).build();
     }
 
     @Override

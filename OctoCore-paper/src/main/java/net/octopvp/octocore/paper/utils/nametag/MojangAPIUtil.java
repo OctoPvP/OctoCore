@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.conversations.StringPrompt;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONArray;
@@ -18,6 +17,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,10 +40,9 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class MojangAPIUtil {
+    private static final JSONParser PARSER = new JSONParser();
     private static URL API_STATUS_URL = null;
     private static URL GET_UUID_URL = null;
-    private static final JSONParser PARSER = new JSONParser();
-
     private static Plugin plugin;
 
     static {
@@ -127,28 +126,6 @@ public class MojangAPIUtil {
     }
 
     /**
-     * The statuses of Mojang's API used by getAPIStatus().
-     */
-    public enum APIStatus {
-        RED,
-        YELLOW,
-        GREEN;
-
-        public static APIStatus fromString(String string) {
-            switch (string) {
-                case "red":
-                    return RED;
-                case "yellow":
-                    return YELLOW;
-                case "green":
-                    return GREEN;
-                default:
-                    throw new IllegalArgumentException("Unknown status: " + string);
-            }
-        }
-    }
-
-    /**
      * Same as #getUUIDAtTimeAsync, but the callback is executed synchronously
      */
     public static void getUUIDAtTimeWithCallBack(String username, long timeStamp, ResultCallBack<UUIDAtTime> callBack) {
@@ -211,46 +188,6 @@ public class MojangAPIUtil {
             });
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static class UUIDAtTime {
-        private String name;
-        private UUID uuid;
-
-        public UUIDAtTime(String name, UUID uuid) {
-            this.name = name;
-            this.uuid = uuid;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public UUID getUUID() {
-            return uuid;
-        }
-
-        @Override
-        public String toString() {
-            return "UUIDAtTime{name=" + name + ",uuid=" + uuid + "}";
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof UUIDAtTime)) {
-                return false;
-            }
-            UUIDAtTime uuidAtTime = (UUIDAtTime) obj;
-            return this.name.equals(uuidAtTime.name) && this.uuid.equals(uuidAtTime.uuid);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(this.name, this.uuid);
         }
     }
 
@@ -442,58 +379,6 @@ public class MojangAPIUtil {
         });
     }
 
-    public static class Profile {
-        private UUID uuid;
-        private String name;
-        private boolean legacy;
-        private boolean unpaid;
-
-        Profile(UUID uuid, String name, boolean legacy, boolean unpaid) {
-            this.uuid = uuid;
-            this.name = name;
-            this.legacy = legacy;
-            this.unpaid = unpaid;
-        }
-
-        public UUID getUUID() {
-            return uuid;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean isLegacy() {
-            return legacy;
-        }
-
-        public boolean isUnpaid() {
-            return unpaid;
-        }
-
-        @Override
-        public String toString() {
-            return "Profile{uuid=" + uuid + ", name=" + name + ", legacy=" + legacy + ", unpaid=" + unpaid + "}";
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof Profile)) {
-                return false;
-            }
-            Profile otherProfile = (Profile) obj;
-            return uuid.equals(otherProfile.uuid) && name.equals(otherProfile.name) && legacy == otherProfile.legacy && unpaid == otherProfile.unpaid;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(uuid, name, legacy, unpaid);
-        }
-    }
-
     /**
      * Same as #getSkinDataWithCallBack but is entirely executed
      * on the current thread. Should be used with caution to avoid
@@ -534,7 +419,7 @@ public class MojangAPIUtil {
                 if (base64 == null) {
                     return new Result<>(null, true, null);
                 }
-                String decodedBase64 = new String(Base64.getDecoder().decode(base64), "UTF-8");
+                String decodedBase64 = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
                 JSONObject base64json = (JSONObject) PARSER.parse(decodedBase64);
                 long timeStamp = (long) base64json.get("timestamp");
                 String profileName = (String) base64json.get("profileName");
@@ -579,7 +464,7 @@ public class MojangAPIUtil {
      * Gets the Skin data for a certain user. If the user cannot
      * be found, the value passed to the callback will be null.
      *
-     * @param uuid the uuid of the user
+     * @param uuid     the uuid of the user
      * @param callBack the callback
      */
     @SuppressWarnings("unchecked")
@@ -617,7 +502,7 @@ public class MojangAPIUtil {
                         callBack.callBack(true, null, null);
                         return;
                     }
-                    String decodedBase64 = new String(Base64.getDecoder().decode(base64), "UTF-8");
+                    String decodedBase64 = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
                     JSONObject base64json = (JSONObject) PARSER.parse(decodedBase64);
                     long timeStamp = (long) base64json.get("timestamp");
                     String profileName = (String) base64json.get("profileName");
@@ -645,92 +530,6 @@ public class MojangAPIUtil {
                 callBack.callBack(false, null, e);
             }
         });
-    }
-
-    public static class SkinData {
-        private UUID uuid;
-        private String name;
-        private String skinURL;
-        private String capeURL;
-        private long timeStamp;
-        private String base64;
-        private String signedBase64;
-
-        public SkinData(UUID uuid, String name, String skinURL, String capeURL, long timeStamp, String base64, String signedBase64) {
-            this.uuid = uuid;
-            this.name = name;
-            this.skinURL = skinURL;
-            this.capeURL = capeURL;
-            this.timeStamp = timeStamp;
-            this.base64 = base64;
-            this.signedBase64 = signedBase64;
-        }
-
-        public UUID getUUID() {
-            return uuid;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean hasSkinURL() {
-            return skinURL != null;
-        }
-
-        public String getSkinURL() {
-            return skinURL;
-        }
-
-        public boolean hasCapeURL() {
-            return capeURL != null;
-        }
-
-        public String getCapeURL() {
-            return capeURL;
-        }
-
-        public long getTimeStamp() {
-            return timeStamp;
-        }
-
-        public String getBase64() {
-            return base64;
-        }
-
-        public boolean hasSignedBase64() {
-            return signedBase64 != null;
-        }
-
-        public String getSignedBase64() {
-            return signedBase64;
-        }
-
-        @Override
-        public String toString() {
-            return "SkinData{uuid=" + uuid + ",name=" + name + ",skinURL=" + skinURL + ",capeURL=" + capeURL + ",timeStamp=" + timeStamp + ",base64=" + base64 + ",signedBase64=" + signedBase64 + "}";
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof SkinData)) {
-                return false;
-            }
-            SkinData skinData = (SkinData) obj;
-            return this.uuid.equals(skinData.uuid) && this.name.equals(skinData.name) &&
-                    (this.skinURL == null ? skinData.skinURL == null : this.skinURL.equals(skinData.skinURL)) &&
-                    (this.capeURL == null ? skinData.capeURL == null : this.capeURL.equals(skinData.skinURL)) && this.timeStamp == skinData.timeStamp &&
-                    this.base64.equals(skinData.base64) && (this.signedBase64 == null ? skinData.signedBase64 == null : this.signedBase64.equals(skinData.signedBase64));
-
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(uuid, name, skinURL, capeURL, timeStamp, base64, signedBase64);
-        }
     }
 
     private static RequestResult makeSyncGetRequest(URL url) {
@@ -863,16 +662,31 @@ public class MojangAPIUtil {
         return UUID.fromString(uuidString);
     }
 
+    /**
+     * The statuses of Mojang's API used by getAPIStatus().
+     */
+    public enum APIStatus {
+        RED,
+        YELLOW,
+        GREEN;
+
+        public static APIStatus fromString(String string) {
+            switch (string) {
+                case "red":
+                    return RED;
+                case "yellow":
+                    return YELLOW;
+                case "green":
+                    return GREEN;
+                default:
+                    throw new IllegalArgumentException("Unknown status: " + string);
+            }
+        }
+    }
+
     @FunctionalInterface
     private interface RequestCallBack {
         void callBack(boolean successful, String response, Exception exception, int responseCode);
-    }
-
-    private static class RequestResult {
-        boolean successful;
-        String response;
-        Exception exception;
-        int responseCode;
     }
 
     /**
@@ -895,10 +709,195 @@ public class MojangAPIUtil {
         void callBack(boolean successful, T result, Exception exception);
     }
 
+    public static class UUIDAtTime {
+        private final String name;
+        private final UUID uuid;
+
+        public UUIDAtTime(String name, UUID uuid) {
+            this.name = name;
+            this.uuid = uuid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public UUID getUUID() {
+            return uuid;
+        }
+
+        @Override
+        public String toString() {
+            return "UUIDAtTime{name=" + name + ",uuid=" + uuid + "}";
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof UUIDAtTime)) {
+                return false;
+            }
+            UUIDAtTime uuidAtTime = (UUIDAtTime) obj;
+            return this.name.equals(uuidAtTime.name) && this.uuid.equals(uuidAtTime.uuid);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(this.name, this.uuid);
+        }
+    }
+
+    public static class Profile {
+        private final UUID uuid;
+        private final String name;
+        private final boolean legacy;
+        private final boolean unpaid;
+
+        Profile(UUID uuid, String name, boolean legacy, boolean unpaid) {
+            this.uuid = uuid;
+            this.name = name;
+            this.legacy = legacy;
+            this.unpaid = unpaid;
+        }
+
+        public UUID getUUID() {
+            return uuid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean isLegacy() {
+            return legacy;
+        }
+
+        public boolean isUnpaid() {
+            return unpaid;
+        }
+
+        @Override
+        public String toString() {
+            return "Profile{uuid=" + uuid + ", name=" + name + ", legacy=" + legacy + ", unpaid=" + unpaid + "}";
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof Profile)) {
+                return false;
+            }
+            Profile otherProfile = (Profile) obj;
+            return uuid.equals(otherProfile.uuid) && name.equals(otherProfile.name) && legacy == otherProfile.legacy && unpaid == otherProfile.unpaid;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(uuid, name, legacy, unpaid);
+        }
+    }
+
+    public static class SkinData {
+        private final UUID uuid;
+        private final String name;
+        private final String skinURL;
+        private final String capeURL;
+        private final long timeStamp;
+        private final String base64;
+        private final String signedBase64;
+
+        public SkinData(UUID uuid, String name, String skinURL, String capeURL, long timeStamp, String base64, String signedBase64) {
+            this.uuid = uuid;
+            this.name = name;
+            this.skinURL = skinURL;
+            this.capeURL = capeURL;
+            this.timeStamp = timeStamp;
+            this.base64 = base64;
+            this.signedBase64 = signedBase64;
+        }
+
+        public UUID getUUID() {
+            return uuid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean hasSkinURL() {
+            return skinURL != null;
+        }
+
+        public String getSkinURL() {
+            return skinURL;
+        }
+
+        public boolean hasCapeURL() {
+            return capeURL != null;
+        }
+
+        public String getCapeURL() {
+            return capeURL;
+        }
+
+        public long getTimeStamp() {
+            return timeStamp;
+        }
+
+        public String getBase64() {
+            return base64;
+        }
+
+        public boolean hasSignedBase64() {
+            return signedBase64 != null;
+        }
+
+        public String getSignedBase64() {
+            return signedBase64;
+        }
+
+        @Override
+        public String toString() {
+            return "SkinData{uuid=" + uuid + ",name=" + name + ",skinURL=" + skinURL + ",capeURL=" + capeURL + ",timeStamp=" + timeStamp + ",base64=" + base64 + ",signedBase64=" + signedBase64 + "}";
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof SkinData)) {
+                return false;
+            }
+            SkinData skinData = (SkinData) obj;
+            return this.uuid.equals(skinData.uuid) && this.name.equals(skinData.name) &&
+                    (this.skinURL == null ? skinData.skinURL == null : this.skinURL.equals(skinData.skinURL)) &&
+                    (this.capeURL == null ? skinData.capeURL == null : this.capeURL.equals(skinData.skinURL)) && this.timeStamp == skinData.timeStamp &&
+                    this.base64.equals(skinData.base64) && (this.signedBase64 == null ? skinData.signedBase64 == null : this.signedBase64.equals(skinData.signedBase64));
+
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(uuid, name, skinURL, capeURL, timeStamp, base64, signedBase64);
+        }
+    }
+
+    private static class RequestResult {
+        boolean successful;
+        String response;
+        Exception exception;
+        int responseCode;
+    }
+
     public static class Result<T> {
-        private T value;
-        private boolean successful;
-        private Exception exception;
+        private final T value;
+        private final boolean successful;
+        private final Exception exception;
 
         public Result(T value, boolean successful, Exception exception) {
             this.value = value;

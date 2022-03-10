@@ -63,7 +63,7 @@ public class PermissionListener implements Listener {
         if (event.getSender() instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) event.getSender();
             OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
-            Logger.debug("Player: %1, Data: %2", player.getName(),data);
+            Logger.debug("Player: %1, Data: %2", player.getName(), data);
             if (data == null)
                 return;
             boolean b = data.hasPermission(event.getPermission());

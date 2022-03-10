@@ -19,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class TagUpdatePacket extends RedisPacket {
     private JsonBuilder builder;
+
     @Override
     public void onReceive(JsonObject data) throws Exception {
         System.out.println("Tag update: " + OctoCore.getGson().toJson(data));

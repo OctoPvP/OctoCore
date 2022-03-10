@@ -11,7 +11,8 @@ public enum ServerType {
     OTHER("Other"),
     LIMBO("Limbo");
     String name;
-    ServerType(String name){
+
+    ServerType(String name) {
         this.name = name;
     }
 

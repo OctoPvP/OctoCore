@@ -12,19 +12,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * {@link HashMap} but with 3 values and 1 key
  * <b>I know it's not the right terminology dont bully me</b>
+ *
  * @param <K> key
  * @param <V> value 1
  * @param <M> value 2
  * @param <A> value 3
  */
-public class HashTriMap<K,V,M,A> implements TriMap {
-    Map<K, Triplet<V,M,A>> base = new ConcurrentHashMap<>();
-    transient Set<Entry<K,V,M,A>> entrySet;
+public class HashTriMap<K, V, M, A> implements TriMap {
+    Map<K, Triplet<V, M, A>> base = new ConcurrentHashMap<>();
+    transient Set<Entry<K, V, M, A>> entrySet;
 
     @Override
     public Set<Entry> entrySet() {
         Set<Entry> set = new HashSet<>();
-        base.forEach((k,pair) -> set.add(new Entry() {
+        base.forEach((k, pair) -> set.add(new Entry() {
             @Override
             public Object getKey() {
                 return k;
@@ -65,7 +66,7 @@ public class HashTriMap<K,V,M,A> implements TriMap {
 
     @Override
     public void putAll(TriMap e) {
-        e.forEach((k,v,m,a)->base.put((K)k,new Triplet<>((V)v,(M)m,(A)a)));
+        e.forEach((k, v, m, a) -> base.put((K) k, new Triplet<>((V) v, (M) m, (A) a)));
     }
 
     @Override
@@ -74,8 +75,8 @@ public class HashTriMap<K,V,M,A> implements TriMap {
     }
 
     @Override
-    public Object put(Object key, Object value1, Object value2,Object value3) {
-        return base.put((K)key,new Triplet<>((V)value1,(M)value2,(A)value3));
+    public Object put(Object key, Object value1, Object value2, Object value3) {
+        return base.put((K) key, new Triplet<>((V) value1, (M) value2, (A) value3));
     }
 
     @Override
@@ -86,7 +87,7 @@ public class HashTriMap<K,V,M,A> implements TriMap {
     @Override
     public boolean containsValue(Object val) {
         AtomicBoolean contains = new AtomicBoolean(false);
-        base.forEach((k,pair)->{
+        base.forEach((k, pair) -> {
             if (pair.getValue1() == val || pair.getValue0() == val)
                 contains.set(true);
         });

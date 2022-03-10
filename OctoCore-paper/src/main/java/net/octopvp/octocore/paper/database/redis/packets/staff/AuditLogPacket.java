@@ -1,11 +1,10 @@
 package net.octopvp.octocore.paper.database.redis.packets.staff;
 
 import com.google.gson.JsonObject;
+import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

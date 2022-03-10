@@ -16,26 +16,20 @@ import java.util.concurrent.locks.ReentrantLock;
 @Deprecated
 public abstract class SongPlayer {
 
+    private final Lock lock = new ReentrantLock();
     protected Song song;
-
     protected boolean playing = false;
     protected short tick = -1;
     protected Map<String, Boolean> playerList = Collections.synchronizedMap(new HashMap<String, Boolean>());
-
     protected boolean autoDestroy = false;
     protected boolean destroyed = false;
-
     protected Thread playerThread;
-
     protected byte volume = 100;
     protected byte fadeStart = volume;
     protected byte fadeTarget = 100;
     protected int fadeDuration = 60;
     protected int fadeDone = 0;
     protected FadeType fadeType = FadeType.FADE_LINEAR;
-
-    private final Lock lock = new ReentrantLock();
-
     protected NoteBlockPlayerMain plugin;
 
     protected SoundCategory soundCategory;

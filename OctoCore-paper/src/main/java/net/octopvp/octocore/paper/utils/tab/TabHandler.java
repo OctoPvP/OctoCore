@@ -7,10 +7,13 @@ import net.octopvp.octocore.paper.utils.tab.tablist.TabList;
 import org.bukkit.entity.Player;
 
 public interface TabHandler {
-    PairMap<Integer,Integer, TabItem> getTabItems(Player p);
+    PairMap<Integer, Integer, TabItem> getTabItems(Player p);
+
     String getHeader(Player player);
+
     String getFooter(Player player);
-    default TabList getTab(Player player){
+
+    default TabList getTab(Player player) {
         return OctoCore.getTab().getTabList(player);
     }
 }

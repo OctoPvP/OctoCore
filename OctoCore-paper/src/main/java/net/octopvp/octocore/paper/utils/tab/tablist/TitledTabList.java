@@ -41,18 +41,8 @@ public class TitledTabList implements TabList {
         resetFooter();
     }
 
-    public void setHeader(String header) {
-        this.header = header;
-        updateHeaderFooter();
-    }
-
     public void resetHeader() {
         setHeader(null);
-    }
-
-    public void setFooter(String footer) {
-        this.footer = footer;
-        updateHeaderFooter();
     }
 
     public void resetFooter() {
@@ -82,7 +72,17 @@ public class TitledTabList implements TabList {
         return this.header;
     }
 
+    public void setHeader(String header) {
+        this.header = header;
+        updateHeaderFooter();
+    }
+
     public String getFooter() {
         return this.footer;
+    }
+
+    public void setFooter(String footer) {
+        this.footer = footer;
+        updateHeaderFooter();
     }
 }

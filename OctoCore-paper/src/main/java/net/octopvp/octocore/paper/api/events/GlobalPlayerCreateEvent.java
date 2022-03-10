@@ -12,15 +12,15 @@ import org.bukkit.event.HandlerList;
 @Getter
 @RequiredArgsConstructor
 public class GlobalPlayerCreateEvent extends Event {
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private final GlobalPlayer globalPlayer;
 
-    @Override
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 }

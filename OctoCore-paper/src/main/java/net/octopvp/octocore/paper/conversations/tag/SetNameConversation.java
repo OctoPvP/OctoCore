@@ -7,10 +7,12 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 
 public class SetNameConversation extends StringPrompt {
-    private ReturnableTypeCallback<String> callback;
-    public SetNameConversation(ReturnableTypeCallback<String> callback){
+    private final ReturnableTypeCallback<String> callback;
+
+    public SetNameConversation(ReturnableTypeCallback<String> callback) {
         this.callback = callback;
     }
+
     @Override
     public String getPromptText(ConversationContext conversationContext) {
         return CC.GREEN + "Please enter the name of the tag in chat. This is " + CC.U + "NOT " + CC.R + CC.GREEN + "the tag seen by players. Just an identifier";

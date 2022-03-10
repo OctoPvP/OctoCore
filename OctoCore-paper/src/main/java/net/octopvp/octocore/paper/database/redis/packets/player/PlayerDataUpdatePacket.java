@@ -1,10 +1,10 @@
 package net.octopvp.octocore.paper.database.redis.packets.player;
 
 import com.google.gson.JsonObject;
-import net.octopvp.octocore.common.redis.RedisPacket;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 @NoArgsConstructor
 public class PlayerDataUpdatePacket extends RedisPacket {
     private JsonObject data;
+
     @Override
     public void onReceive(JsonObject data) throws Exception {
         DataUpdateReason reason = DataUpdateReason.valueOf(data.get("reason").getAsString());

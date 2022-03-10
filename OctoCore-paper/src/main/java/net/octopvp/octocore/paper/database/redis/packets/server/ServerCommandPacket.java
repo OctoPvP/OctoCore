@@ -1,10 +1,10 @@
 package net.octopvp.octocore.paper.database.redis.packets.server;
 
 import com.google.gson.JsonObject;
-import net.octopvp.octocore.common.redis.RedisPacket;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 @NoArgsConstructor
 public class ServerCommandPacket extends RedisPacket {
     private String server, command;
+
     @Override
     public void onReceive(JsonObject data) throws Exception {
         String server = data.get("server").getAsString();

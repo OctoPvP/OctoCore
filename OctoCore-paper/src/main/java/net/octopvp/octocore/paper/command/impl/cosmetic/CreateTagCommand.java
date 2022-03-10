@@ -8,7 +8,7 @@ import net.octopvp.octocore.paper.menus.tag.ManageTagMenu;
 import net.octopvp.octocore.paper.utils.Sender;
 
 public class CreateTagCommand extends BaseCommand {
-    @Command(name = "createtag",permission = Permission.ADMIN,playerOnly = true)
+    @Command(name = "createtag", permission = Permission.ADMIN, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         new ManageTagMenu(sender.getPlayer()).open(sender.getPlayer());
         return CommandResult.SUCCESS;

@@ -8,71 +8,89 @@ import net.octopvp.octocore.paper.objects.permissions.Rank;
 import java.util.UUID;
 
 public class GrantBuilder {
-    private Grant grant;
-    public GrantBuilder(Rank targetRank){
-       grant = new Grant(targetRank);
+    private final Grant grant;
+
+    public GrantBuilder(Rank targetRank) {
+        grant = new Grant(targetRank);
     }
-    public GrantBuilder(String rankName, UUID rank){
-        grant = new Grant(rankName,rank);
+
+    public GrantBuilder(String rankName, UUID rank) {
+        grant = new Grant(rankName, rank);
     }
-    public GrantBuilder(Grant existing){
+
+    public GrantBuilder(Grant existing) {
         grant = existing;
     }
-    public Grant build(){
+
+    public Grant build() {
         return grant;
     }
-    public GrantBuilder setAddedAt(long l){
+
+    public GrantBuilder setAddedAt(long l) {
         grant.setAddedAt(l);
         return this;
     }
-    public GrantBuilder setDuration(long l){
+
+    public GrantBuilder setDuration(long l) {
         grant.setDuration(l);
         return this;
     }
-    public GrantBuilder setRemovedAt(long l){
+
+    public GrantBuilder setRemovedAt(long l) {
         grant.setRemovedAt(l);
         return this;
     }
-    public GrantBuilder setAddedBy(String added){
+
+    public GrantBuilder setAddedBy(String added) {
         grant.setAddedBy(added);
         return this;
     }
-    public GrantBuilder setReason(String reason){
+
+    public GrantBuilder setReason(String reason) {
         grant.setReason(reason);
         return this;
     }
-    public GrantBuilder setRemovedBy(String removedBy){
+
+    public GrantBuilder setRemovedBy(String removedBy) {
         grant.setRemovedBy(removedBy);
         return this;
     }
-    public GrantBuilder setAddedByUUID(UUID addedBy){
+
+    public GrantBuilder setAddedByUUID(UUID addedBy) {
         grant.setAddedByUUID(addedBy);
         return this;
     }
-    public GrantBuilder setRemovedByUUID(UUID removed){
+
+    public GrantBuilder setRemovedByUUID(UUID removed) {
         grant.setRemovedByUUID(removed);
         return this;
     }
-    public GrantBuilder setActive(boolean active){
+
+    public GrantBuilder setActive(boolean active) {
         grant.setActive(active);
         return this;
     }
-    public GrantBuilder setPermanent(boolean perm){
+
+    public GrantBuilder setPermanent(boolean perm) {
         grant.setPermanent(perm);
         return this;
     }
-    public GrantBuilder setPerm(boolean p){
+
+    public GrantBuilder setPerm(boolean p) {
         return setPermanent(p);
     }
-    public GrantBuilder setServer(String server){
+
+    public GrantBuilder setServer(String server) {
         grant.setServer(new ServerContext(server));
         return this;
     }
-    public GrantBuilder setGlobal(){
+
+    public GrantBuilder setGlobal() {
         grant.setServer(new ServerContext("Global"));
         return this;
     }
-    public GrantBuilder setServer(ServerContext context){
+
+    public GrantBuilder setServer(ServerContext context) {
         grant.setServer(context);
         return this;
     }

@@ -30,18 +30,18 @@ public class UnBanCommand extends BaseCommand {
                 return;
             }
 
-            OfflinePlayer target = Bukkit.getOfflinePlayer( PunishModule.getInstance().getProfileManager().correctName(args[0]));
+            OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
 
-            PunishPlayerData targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
 
             if (targetData == null || !target.isOnline()) {
-                 PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData =  PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
+                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
                 targetData.getPunishData().load();
             }
             if (!targetData.getPunishData().isBanned()) {
                 sender.sendMessage(Lang.NOT_BANNED);
-                 PunishModule.getInstance().getProfileManager().unloadData(target);
+                PunishModule.getInstance().getProfileManager().unloadData(target);
                 return;
             }
 
@@ -103,7 +103,7 @@ public class UnBanCommand extends BaseCommand {
                 });
             }
 
-             PunishModule.getInstance().getProfileManager().unloadData(target);
+            PunishModule.getInstance().getProfileManager().unloadData(target);
         });
         return CommandResult.SUCCESS;
     }

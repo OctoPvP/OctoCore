@@ -7,8 +7,10 @@ import java.util.List;
 
 public abstract class SCommand {
     public OctoCore plugin = OctoCore.getInstance();
-    public abstract CommandResult execute(Sender sender,String[] args);
-    public List<String> tabComplete(Sender sender, String[] args){
+
+    public abstract CommandResult execute(Sender sender, String[] args);
+
+    public List<String> tabComplete(Sender sender, String[] args) {
         return null;
     }
 }

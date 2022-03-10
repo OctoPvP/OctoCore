@@ -25,6 +25,7 @@ import java.util.UUID;
 public class PlayerDataPacket extends RedisPacket {
     private static final ArrayList<UUID> alreadyCreating = new ArrayList<>();
     private JsonBuilder jsonBuilder;
+
     @Override
     public void onReceive(JsonObject data) throws Exception {
         if (!data.has("name") || data.get("name").isJsonNull()) {

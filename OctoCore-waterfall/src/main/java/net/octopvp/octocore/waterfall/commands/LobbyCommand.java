@@ -8,12 +8,12 @@ import net.octopvp.octocore.common.util.CC;
 
 public class LobbyCommand extends Command {
     public LobbyCommand() {
-        super("lobby", "octocore.command.lobby", "lobby","hub","l","h","plssendmetolobby");
+        super("lobby", "octocore.command.lobby", "lobby", "hub", "l", "h", "plssendmetolobby");
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if(!(sender instanceof ProxiedPlayer)){
+        if (!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(new TextComponent(CC.RED + "You must be a player to do this!"));
         }
     }

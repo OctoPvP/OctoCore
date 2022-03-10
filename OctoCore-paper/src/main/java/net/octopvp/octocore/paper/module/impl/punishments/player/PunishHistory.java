@@ -6,7 +6,7 @@ import lombok.Setter;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.utils.DateUtils;
+import net.octopvp.octocore.common.util.DateUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 
 import java.util.List;
@@ -29,6 +29,13 @@ public class PunishHistory {
     private boolean last;
     private boolean silent;
 
+    public static List<PunishHistory> getPunishments(PlayerData playerData, PunishmentType punishmentType, boolean activeOnly) {
+        if (activeOnly) {
+            return playerData.getPunishmentsExecuted().stream().filter(punishHistory -> punishHistory.getPunishmentType() == punishmentType).filter(punishHistory -> !punishHistory.hasExpired()).collect(Collectors.toList());
+        }
+        return playerData.getPunishmentsExecuted().stream().filter(punishHistory -> punishHistory.getPunishmentType() == punishmentType).collect(Collectors.toList());
+    }
+
     public String getNiceDuration() {
         if (this.permanent) return "Permanent";
         if (this.duration == -5L) return "";
@@ -50,12 +57,5 @@ public class PunishHistory {
         if (!isLast()) return true;
 
         return System.currentTimeMillis() >= duration;
-    }
-
-    public static List<PunishHistory> getPunishments(PlayerData playerData, PunishmentType punishmentType, boolean activeOnly) {
-        if (activeOnly) {
-            return playerData.getPunishmentsExecuted().stream().filter(punishHistory -> punishHistory.getPunishmentType() == punishmentType).filter(punishHistory -> !punishHistory.hasExpired()).collect(Collectors.toList());
-        }
-        return playerData.getPunishmentsExecuted().stream().filter(punishHistory -> punishHistory.getPunishmentType() == punishmentType).collect(Collectors.toList());
     }
 }

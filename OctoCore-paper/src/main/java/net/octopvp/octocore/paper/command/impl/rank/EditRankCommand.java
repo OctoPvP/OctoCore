@@ -11,14 +11,14 @@ import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.Sender;
 
 public class EditRankCommand extends BaseCommand {
-    @Command(name = "editrank",playerOnly = true,permission = Permission.EDIT_RANK)
+    @Command(name = "editrank", playerOnly = true, permission = Permission.EDIT_RANK)
     public CommandResult execute(Sender sender, String[] args) {
-        if (args.length != 1){
+        if (args.length != 1) {
             sender.sendMessage(CC.RED + "Usage: /editrank <rank>");
             return CommandResult.SUCCESS;
         }
         Rank target = RankManager.getRankByName(args[0]);
-        if (target == null){
+        if (target == null) {
             sender.sendMessage(CC.RED + "Could not find that rank!");
             return CommandResult.SUCCESS;
         }

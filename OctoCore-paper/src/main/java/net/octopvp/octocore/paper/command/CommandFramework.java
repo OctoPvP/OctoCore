@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.command;
 
 import net.octopvp.octocore.common.cooldown.Cooldown;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -29,239 +28,239 @@ import java.util.Map.Entry;
 /**
  * Command Framework - CommandFramework <br>
  * The main command framework class used for controlling the framework.
- * 
+ *
  * @author minnymin3
- * 
  */
 public class CommandFramework implements CommandExecutor {
 
-	private Map<String, Entry<Method, Object>> commandMap = new HashMap<>();
-	private CommandMap map;
-	private Plugin plugin;
+    private final Map<String, Entry<Method, Object>> commandMap = new HashMap<>();
+    private CommandMap map;
+    private final Plugin plugin;
 
-	/**
-	 * Initializes the command framework and sets up the command maps
-	 */
-	public CommandFramework(Plugin plugin) {
-		this.plugin = plugin;
-		if (plugin.getServer().getPluginManager() instanceof SimplePluginManager) {
-			SimplePluginManager manager = (SimplePluginManager) plugin.getServer().getPluginManager();
-			try {
-				Field field = SimplePluginManager.class.getDeclaredField("commandMap");
-				field.setAccessible(true);
-				map = (CommandMap) field.get(manager);
-			} catch (IllegalArgumentException | NoSuchFieldException | IllegalAccessException | SecurityException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    /**
+     * Initializes the command framework and sets up the command maps
+     */
+    public CommandFramework(Plugin plugin) {
+        this.plugin = plugin;
+        if (plugin.getServer().getPluginManager() instanceof SimplePluginManager) {
+            SimplePluginManager manager = (SimplePluginManager) plugin.getServer().getPluginManager();
+            try {
+                Field field = SimplePluginManager.class.getDeclaredField("commandMap");
+                field.setAccessible(true);
+                map = (CommandMap) field.get(manager);
+            } catch (IllegalArgumentException | NoSuchFieldException | IllegalAccessException | SecurityException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	@Override
-	public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
-		return handleCommand(sender, cmd, label, args);
-	}
-	
-	/**
-	 * Handles commands. Used in the onCommand method in your JavaPlugin class
-	 * 
-	 * @param sender The {@link CommandSender} parsed from
-	 *            onCommand
-	 * @param cmd The {@link org.bukkit.command.Command} parsed from onCommand
-	 * @param label The label parsed from onCommand
-	 * @param args The arguments parsed from onCommand
-	 * @return Always returns true for simplicity's sake in onCommand
-	 */
-	public boolean handleCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
-		for (int i = args.length; i >= 0; i--) {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(label.toLowerCase());
-			for (int x = 0; x < i; x++) buffer.append("." + args[x].toLowerCase());
-			String cmdLabel = buffer.toString().replaceFirst(plugin.getDescription().getName().toLowerCase() + ":","").replaceFirst("/" + plugin.getDescription().getName().toLowerCase() + ":","");
-			if (commandMap.containsKey(cmdLabel)) {
-				Method method = commandMap.get(cmdLabel).getKey();
-				Object methodObject = commandMap.get(cmdLabel).getValue();
-				Command command = method.getAnnotation(Command.class);
-				if (command.permission() != net.octopvp.octocore.common.object.Permission.NOTHING)
-					if (!sender.hasPermission(command.permission().getNode())) {
-						sender.sendMessage(Lang.NO_PERMISSION.getMsg());
-						return true;
-					}
-				if (command.playerOnly()) {
-					if(!(sender instanceof Player)){
-						sender.sendMessage(Lang.PLAYER_ONLY.getMsg());
-						return true;
-					}
-				}
-				//if(command.argLength() > args.length){}
-				if(command.cooldown() >= 1){
-					if(sender instanceof Player){
-						Player p = (Player) sender;
-						//They are currently on cooldown
-						if(Cooldown.isOnCooldown(command.name() + "|cmd_cooldown", p.getUniqueId())){
-							p.sendMessage(Lang.COMMAND_COOLDOWN.getMsg(Cooldown.getCooldownForPlayerInt(command.name() + "|cmd_cooldown",p.getUniqueId()) + ""));
-							return true;
-						}
-						//They used to have a cooldown
-						if(Cooldown.wasOnCooldown(command.name() + "|cmd_cooldown", p.getUniqueId())){
-							//remove that cooldown
-							Cooldown.removeCooldown(command.name() + "|cmd_cooldown",p.getUniqueId());
-						}
-						//Create a new cooldown for that
-					}
-				}
-				try {
-					Object resultObj = method.invoke(methodObject, new Sender(sender), args);
-					if (resultObj instanceof CommandResult) {
-						CommandResult result = (CommandResult) resultObj;
-						if (result == CommandResult.SUCCESS)
-							return true;
-						else if (result == CommandResult.INVALID_ARGS) {
-							sender.sendMessage(CC.RED + "Usage: /" + command.name() + " " + command.usage());
-							return true;
-						} else if (result == null) {
-							return true;
-						} else if (result.getMsg() == "" || result.getMsg() == " ") {
-							return true;
-						} else if (result.getMsg() == null) {
-							return true;
-						} else {
-							sender.sendMessage(result.getMsg());
-							return true;
-						}
-					}
-				} catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
-					e.printStackTrace();
-				}
-				return true;
-			}
-		}
-		sender.sendMessage(Lang.UNHANDLED_COMMAND.getMsg());
-		return true;
-	}
-	/**
-	 * Registers all command and completer methods inside of the object. Similar
-	 * to Bukkit's registerEvents method.
-	 * 
-	 * @param obj The object to register the commands of
-	 */
-	public void registerCommands(Object obj) {
-		for (Method m : obj.getClass().getMethods()) {
-			if (m.getAnnotation(Command.class) != null) {
-				Command command = m.getAnnotation(Command.class);
-				if (m.getParameterTypes().length > 2 || m.getParameterTypes()[0] != Sender.class || m.getParameterTypes()[1] != String[].class) {
-					Logger.error("Unable to register command " + m.getName() + ". Unexpected method arguments");
-					continue;
-				}
-				registerCommand(command, command.name(), m, obj);
-				for (String alias : command.aliases()) {
-					registerCommand(command, alias, m, obj);
-				}
-			} else if (m.getAnnotation(Completer.class) != null) {
-				Completer comp = m.getAnnotation(Completer.class);
-				if (m.getParameterTypes().length > 2 || m.getParameterTypes().length == 0
-						|| m.getParameterTypes()[0] != Sender.class || m.getParameterTypes()[1] != String[].class) {
-					Logger.error("Unable to register tab completer " + m.getName() + ". Unexpected method arguments");
-					continue;
-				}
-				if (m.getReturnType() != List.class) {
-					Logger.error("Unable to register tab completer " + m.getName() + ". Unexpected return type");
-					continue;
-				}
-				registerCompleter(comp.name(), m, obj);
-				for (String alias : comp.aliases()) {
-					registerCompleter(alias, m, obj);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Registers all the commands under the plugin's help
-	 */
-	public void registerHelp() {
-		Set<HelpTopic> help = new TreeSet<HelpTopic>(HelpTopicComparator.helpTopicComparatorInstance());
-		for (String s : commandMap.keySet()) {
-			if (!s.contains(".")) {
-				org.bukkit.command.Command cmd = map.getCommand(s);
-				HelpTopic topic = new GenericCommandHelpTopic(cmd);
-				help.add(topic);
-			}
-		}
-		IndexHelpTopic topic = new IndexHelpTopic(plugin.getName(), "All commands for " + plugin.getName(), null, help,
-				"Below is a list of all " + plugin.getName() + " commands:");
-		Bukkit.getServer().getHelpMap().addTopic(topic);
-	}
-
-	public void registerCommand(Command command, String label, Method m, Object obj) {
-		if(command.disable())
-			return;
-		commandMap.put(label.toLowerCase(), new AbstractMap.SimpleEntry<>(m, obj));
-		commandMap.put(this.plugin.getName() + ':' + label.toLowerCase(), new AbstractMap.SimpleEntry<>(m, obj));
-		String cmdLabel = label.split("\\.")[0].toLowerCase();
-		if (map.getCommand(cmdLabel) == null) {
-			org.bukkit.command.Command cmd = new BukkitCommand(cmdLabel, this, plugin);
-			map.register(plugin.getName(), cmd);
-		}
-		if(command.cooldown() >= 1){
-			if(!Cooldown.cooldownExists(command.name() + "|cmd_cooldown")){ //make sure that we're only registering 1 cooldown, use command.name(); and not label because label could be a alias
-				Cooldown.createCooldown(command.name() + "|cmd_cooldown");
-			}
-		}
-		if (!command.description().equalsIgnoreCase("") && cmdLabel.equals(label)) {
-			map.getCommand(cmdLabel).setDescription(command.description());
-		}
-		if (!command.usage().equalsIgnoreCase("") && cmdLabel.equals(label)) {
-			map.getCommand(cmdLabel).setUsage(command.usage());
-		}
-		if(!(command.permission()==null)&&!(command.permission().getNode()=="")&&!(command.permission() == net.octopvp.octocore.common.object.Permission.NOTHING)){
-		    registerPermission(command.permission().getNode(),"Permission of /" + command.name());
-			//if(!Bukkit.getPluginManager().getPermissions().contains())
-			//	Bukkit.getPluginManager().addPermission(perm);
-		}
-	}
-
-	public void registerCompleter(String label, Method m, Object obj) {
-		String cmdLabel = label.split("\\.")[0].toLowerCase();
-		if (map.getCommand(cmdLabel) == null) {
-			org.bukkit.command.Command command = new BukkitCommand(cmdLabel, this, plugin);
-			map.register(plugin.getName(), command);
-		}
-		if (map.getCommand(cmdLabel) instanceof BukkitCommand) {
-			BukkitCommand command = (BukkitCommand) map.getCommand(cmdLabel);
-			if (command.completer == null) {
-				command.completer = new BukkitCompleter();
-			}
-			command.completer.addCompleter(label, m, obj);
-		} else if (map.getCommand(cmdLabel) instanceof PluginCommand) {
-			try {
-				Object command = map.getCommand(cmdLabel);
-				Field field = command.getClass().getDeclaredField("completer");
-				field.setAccessible(true);
-				if (field.get(command) == null) {
-					BukkitCompleter completer = new BukkitCompleter();
-					completer.addCompleter(label, m, obj);
-					field.set(command, completer);
-				} else if (field.get(command) instanceof BukkitCompleter) {
-					BukkitCompleter completer = (BukkitCompleter) field.get(command);
-					completer.addCompleter(label, m, obj);
-				} else {
-					Logger.error("Unable to register tab completer " + m.getName()
-							+ ". A tab completer is already registered for that command!");
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-	private static void registerPermission(String name, String desc){
+    private static void registerPermission(String name, String desc) {
         Permission perm = new Permission(name, desc);
-        if(!Bukkit.getPluginManager().getPermissionsString().contains(name)) {
+        if (!Bukkit.getPluginManager().getPermissionsString().contains(name)) {
             //Logger.info("Registering permission \"" + name + "\" because it isn't registered.");
             Bukkit.getPluginManager().getPermissions().add(perm);
+        } else {
+            if (!(name == "")) return;
+            //Logger.info("Didn't register permission \"" + name + "\" because it already is registered!");
         }
-        else{
-        	if(!(name == "")) return;
-        		//Logger.info("Didn't register permission \"" + name + "\" because it already is registered!");
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
+        return handleCommand(sender, cmd, label, args);
+    }
+
+    /**
+     * Handles commands. Used in the onCommand method in your JavaPlugin class
+     *
+     * @param sender The {@link CommandSender} parsed from
+     *               onCommand
+     * @param cmd    The {@link org.bukkit.command.Command} parsed from onCommand
+     * @param label  The label parsed from onCommand
+     * @param args   The arguments parsed from onCommand
+     * @return Always returns true for simplicity's sake in onCommand
+     */
+    public boolean handleCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
+        for (int i = args.length; i >= 0; i--) {
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(label.toLowerCase());
+            for (int x = 0; x < i; x++) buffer.append("." + args[x].toLowerCase());
+            String cmdLabel = buffer.toString().replaceFirst(plugin.getDescription().getName().toLowerCase() + ":", "").replaceFirst("/" + plugin.getDescription().getName().toLowerCase() + ":", "");
+            if (commandMap.containsKey(cmdLabel)) {
+                Method method = commandMap.get(cmdLabel).getKey();
+                Object methodObject = commandMap.get(cmdLabel).getValue();
+                Command command = method.getAnnotation(Command.class);
+                if (command.permission() != net.octopvp.octocore.common.object.Permission.NOTHING)
+                    if (!sender.hasPermission(command.permission().getNode())) {
+                        sender.sendMessage(Lang.NO_PERMISSION.getMsg());
+                        return true;
+                    }
+                if (command.playerOnly()) {
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(Lang.PLAYER_ONLY.getMsg());
+                        return true;
+                    }
+                }
+                //if(command.argLength() > args.length){}
+                if (command.cooldown() >= 1) {
+                    if (sender instanceof Player) {
+                        Player p = (Player) sender;
+                        //They are currently on cooldown
+                        if (Cooldown.isOnCooldown(command.name() + "|cmd_cooldown", p.getUniqueId())) {
+                            p.sendMessage(Lang.COMMAND_COOLDOWN.getMsg(Cooldown.getCooldownForPlayerInt(command.name() + "|cmd_cooldown", p.getUniqueId()) + ""));
+                            return true;
+                        }
+                        //They used to have a cooldown
+                        if (Cooldown.wasOnCooldown(command.name() + "|cmd_cooldown", p.getUniqueId())) {
+                            //remove that cooldown
+                            Cooldown.removeCooldown(command.name() + "|cmd_cooldown", p.getUniqueId());
+                        }
+                        //Create a new cooldown for that
+                    }
+                }
+                try {
+                    Object resultObj = method.invoke(methodObject, new Sender(sender), args);
+                    if (resultObj instanceof CommandResult) {
+                        CommandResult result = (CommandResult) resultObj;
+                        if (result == CommandResult.SUCCESS)
+                            return true;
+                        else if (result == CommandResult.INVALID_ARGS) {
+                            sender.sendMessage(CC.RED + "Usage: /" + command.name() + " " + command.usage());
+                            return true;
+                        } else if (result == null) {
+                            return true;
+                        } else if (result.getMsg() == "" || result.getMsg() == " ") {
+                            return true;
+                        } else if (result.getMsg() == null) {
+                            return true;
+                        } else {
+                            sender.sendMessage(result.getMsg());
+                            return true;
+                        }
+                    }
+                } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        }
+        sender.sendMessage(Lang.UNHANDLED_COMMAND.getMsg());
+        return true;
+    }
+
+    /**
+     * Registers all command and completer methods inside of the object. Similar
+     * to Bukkit's registerEvents method.
+     *
+     * @param obj The object to register the commands of
+     */
+    public void registerCommands(Object obj) {
+        for (Method m : obj.getClass().getMethods()) {
+            if (m.getAnnotation(Command.class) != null) {
+                Command command = m.getAnnotation(Command.class);
+                if (m.getParameterTypes().length > 2 || m.getParameterTypes()[0] != Sender.class || m.getParameterTypes()[1] != String[].class) {
+                    Logger.error("Unable to register command " + m.getName() + ". Unexpected method arguments");
+                    continue;
+                }
+                registerCommand(command, command.name(), m, obj);
+                for (String alias : command.aliases()) {
+                    registerCommand(command, alias, m, obj);
+                }
+            } else if (m.getAnnotation(Completer.class) != null) {
+                Completer comp = m.getAnnotation(Completer.class);
+                if (m.getParameterTypes().length > 2 || m.getParameterTypes().length == 0
+                        || m.getParameterTypes()[0] != Sender.class || m.getParameterTypes()[1] != String[].class) {
+                    Logger.error("Unable to register tab completer " + m.getName() + ". Unexpected method arguments");
+                    continue;
+                }
+                if (m.getReturnType() != List.class) {
+                    Logger.error("Unable to register tab completer " + m.getName() + ". Unexpected return type");
+                    continue;
+                }
+                registerCompleter(comp.name(), m, obj);
+                for (String alias : comp.aliases()) {
+                    registerCompleter(alias, m, obj);
+                }
+            }
+        }
+    }
+
+    /**
+     * Registers all the commands under the plugin's help
+     */
+    public void registerHelp() {
+        Set<HelpTopic> help = new TreeSet<HelpTopic>(HelpTopicComparator.helpTopicComparatorInstance());
+        for (String s : commandMap.keySet()) {
+            if (!s.contains(".")) {
+                org.bukkit.command.Command cmd = map.getCommand(s);
+                HelpTopic topic = new GenericCommandHelpTopic(cmd);
+                help.add(topic);
+            }
+        }
+        IndexHelpTopic topic = new IndexHelpTopic(plugin.getName(), "All commands for " + plugin.getName(), null, help,
+                "Below is a list of all " + plugin.getName() + " commands:");
+        Bukkit.getServer().getHelpMap().addTopic(topic);
+    }
+
+    public void registerCommand(Command command, String label, Method m, Object obj) {
+        if (command.disable())
+            return;
+        commandMap.put(label.toLowerCase(), new AbstractMap.SimpleEntry<>(m, obj));
+        commandMap.put(this.plugin.getName() + ':' + label.toLowerCase(), new AbstractMap.SimpleEntry<>(m, obj));
+        String cmdLabel = label.split("\\.")[0].toLowerCase();
+        if (map.getCommand(cmdLabel) == null) {
+            org.bukkit.command.Command cmd = new BukkitCommand(cmdLabel, this, plugin);
+            map.register(plugin.getName(), cmd);
+        }
+        if (command.cooldown() >= 1) {
+            if (!Cooldown.cooldownExists(command.name() + "|cmd_cooldown")) { //make sure that we're only registering 1 cooldown, use command.name(); and not label because label could be a alias
+                Cooldown.createCooldown(command.name() + "|cmd_cooldown");
+            }
+        }
+        if (!command.description().equalsIgnoreCase("") && cmdLabel.equals(label)) {
+            map.getCommand(cmdLabel).setDescription(command.description());
+        }
+        if (!command.usage().equalsIgnoreCase("") && cmdLabel.equals(label)) {
+            map.getCommand(cmdLabel).setUsage(command.usage());
+        }
+        if (!(command.permission() == null) && !(command.permission().getNode() == "") && !(command.permission() == net.octopvp.octocore.common.object.Permission.NOTHING)) {
+            registerPermission(command.permission().getNode(), "Permission of /" + command.name());
+            //if(!Bukkit.getPluginManager().getPermissions().contains())
+            //	Bukkit.getPluginManager().addPermission(perm);
+        }
+    }
+
+    public void registerCompleter(String label, Method m, Object obj) {
+        String cmdLabel = label.split("\\.")[0].toLowerCase();
+        if (map.getCommand(cmdLabel) == null) {
+            org.bukkit.command.Command command = new BukkitCommand(cmdLabel, this, plugin);
+            map.register(plugin.getName(), command);
+        }
+        if (map.getCommand(cmdLabel) instanceof BukkitCommand) {
+            BukkitCommand command = (BukkitCommand) map.getCommand(cmdLabel);
+            if (command.completer == null) {
+                command.completer = new BukkitCompleter();
+            }
+            command.completer.addCompleter(label, m, obj);
+        } else if (map.getCommand(cmdLabel) instanceof PluginCommand) {
+            try {
+                Object command = map.getCommand(cmdLabel);
+                Field field = command.getClass().getDeclaredField("completer");
+                field.setAccessible(true);
+                if (field.get(command) == null) {
+                    BukkitCompleter completer = new BukkitCompleter();
+                    completer.addCompleter(label, m, obj);
+                    field.set(command, completer);
+                } else if (field.get(command) instanceof BukkitCompleter) {
+                    BukkitCompleter completer = (BukkitCompleter) field.get(command);
+                    completer.addCompleter(label, m, obj);
+                } else {
+                    Logger.error("Unable to register tab completer " + m.getName()
+                            + ". A tab completer is already registered for that command!");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }

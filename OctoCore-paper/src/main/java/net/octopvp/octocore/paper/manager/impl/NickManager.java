@@ -4,16 +4,26 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class NickManager extends Manager {
-    private static HashMap<PlayerData, String> nicked = new HashMap<>();
+    private static final HashMap<PlayerData, String> nicked = new HashMap<>();
 
     public static HashMap<PlayerData, String> getNicked() {
         return NickManager.nicked;
+    }
+
+    public static void addNick(PlayerData profile, String nick) {
+        if (!nicked.containsKey(profile))
+            nicked.put(profile, nick);
+        else {
+            removeNick(profile);
+            nicked.put(profile, nick);
+        }
+    }
+
+    public static void removeNick(PlayerData name) {
+        nicked.remove(name);
     }
 
     @Override
@@ -24,18 +34,5 @@ public class NickManager extends Manager {
     @Override
     public void disable() {
 
-    }
-
-    public static void addNick(PlayerData profile, String nick){
-        if(!nicked.containsKey(profile))
-            nicked.put(profile, nick);
-        else{
-            removeNick(profile);
-            nicked.put(profile,nick);
-        }
-    }
-    public static void removeNick(PlayerData name){
-        if(nicked.containsKey(name))
-            nicked.remove(name);
     }
 }

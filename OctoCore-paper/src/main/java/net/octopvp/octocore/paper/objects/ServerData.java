@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,13 +13,12 @@ import java.util.UUID;
 public class ServerData {
 
     private final String serverName;
-
+    boolean safelyStopped;
     private long lastTick;
     private boolean whitelisted, maintenance;
     private int maxPlayers;
     private List<GlobalPlayer> onlinePlayers = new ArrayList<>();
     private List<String> names = new ArrayList<>();
     private double[] recentTps = new double[]{20.0, 20.0, 20.0};
-    boolean safelyStopped;
 
 }

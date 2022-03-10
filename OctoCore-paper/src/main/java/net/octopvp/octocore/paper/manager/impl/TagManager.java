@@ -25,18 +25,6 @@ public class TagManager extends Manager {
     private static final List<PlayerTag> tags = new ArrayList<>();
     private static MongoCollection<Document> tagsCollection;
 
-    @Override
-    public void init(OctoCore plugin) {
-        Logger.debug("Loading Tags");
-        tagsCollection = DatabaseManager.getMongoDatabase().getCollection("tags");
-        loadTags();
-    }
-
-    @Override
-    public void disable() {
-
-    }
-
     public static void deleteTag(PlayerTag tag) {
         deleteTag(tag.getId());
     }
@@ -116,6 +104,18 @@ public class TagManager extends Manager {
 
     private static PlayerTag deserializeTag(String json) {
         return OctoCore.getGson().fromJson(json, PlayerTag.class);
+    }
+
+    @Override
+    public void init(OctoCore plugin) {
+        Logger.debug("Loading Tags");
+        tagsCollection = DatabaseManager.getMongoDatabase().getCollection("tags");
+        loadTags();
+    }
+
+    @Override
+    public void disable() {
+
     }
 
 }

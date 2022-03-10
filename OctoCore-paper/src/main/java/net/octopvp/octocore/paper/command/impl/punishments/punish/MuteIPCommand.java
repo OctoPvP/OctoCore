@@ -12,7 +12,7 @@ import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerDat
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.utils.DateUtils;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;

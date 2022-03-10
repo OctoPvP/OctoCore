@@ -16,11 +16,11 @@ public class SetupPrompt extends StringPrompt {
     @Override
     public Prompt acceptInput(ConversationContext conversationContext, String s) {
         Player p = (Player) conversationContext.getForWhom();
-        if(s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("exit") || s.equalsIgnoreCase("abort")){
+        if (s.equalsIgnoreCase("cancel") || s.equalsIgnoreCase("exit") || s.equalsIgnoreCase("abort")) {
             p.sendMessage(Lang.AUTH_SETUP_ABORTED.toString());
             return Prompt.END_OF_CONVERSATION;
         }
-        if(AuthModule.handle2FARequest(p,s))
+        if (AuthModule.handle2FARequest(p, s))
             return Prompt.END_OF_CONVERSATION;
         return this;
     }

@@ -27,6 +27,10 @@ import java.util.concurrent.TimeUnit;
  * @author AlvinB
  */
 public class NameTagChanger {
+    /**
+     * The singleton instance to access all NameTagChanger methods
+     */
+    public static final NameTagChanger INSTANCE = new NameTagChanger();
     // Access to this must be asynchronous!
     private static final LoadingCache<UUID, Skin> SKIN_CACHE = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build(new CacheLoader<UUID, Skin>() {
         @Override
@@ -46,15 +50,9 @@ public class NameTagChanger {
             return Skin.EMPTY_SKIN;
         }
     });
-
-    /**
-     * The singleton instance to access all NameTagChanger methods
-     */
-    public static final NameTagChanger INSTANCE = new NameTagChanger();
-
     boolean sendingPackets;
-    private IPacketHandler packetHandler;
     HashMap<UUID, GameProfileWrapper> gameProfiles = Maps.newHashMap();
+    private IPacketHandler packetHandler;
     /**
      * The plugin to assign packet/event listeners to
      */
@@ -292,7 +290,7 @@ public class NameTagChanger {
                 });
             }
         }
-        for(Player p : Bukkit.getOnlinePlayers()) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
             p.hidePlayer(player);
             p.showPlayer(player);
         }

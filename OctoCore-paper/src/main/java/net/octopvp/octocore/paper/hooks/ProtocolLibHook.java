@@ -1,8 +1,6 @@
 package net.octopvp.octocore.paper.hooks;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketListener;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.hologram.HologramListener;
 import net.octopvp.octocore.paper.protocol.InventoryAdapter;
@@ -10,7 +8,7 @@ import net.octopvp.octocore.paper.protocol.PingAdapter;
 import net.octopvp.octocore.paper.utils.runnable.runnables.LagCheck;
 import org.bukkit.Bukkit;
 
-public class ProtocolLibHook implements Hook{
+public class ProtocolLibHook implements Hook {
 
     @Override
     public void onEnable() {

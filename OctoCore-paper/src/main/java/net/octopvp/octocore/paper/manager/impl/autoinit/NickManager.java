@@ -6,11 +6,13 @@ import net.octopvp.octocore.paper.manager.Manager;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 public class NickManager extends Manager {
+    public static void disguise(Player player) {
+        GameProfile gameProfile = ((CraftPlayer) player).getProfile();
+        CraftPlayer cplayer = (CraftPlayer) player;
+        //gameProfile.getProperties().
+    }
+
     @Override
     public void init(OctoCore plugin) {
 
@@ -19,10 +21,5 @@ public class NickManager extends Manager {
     @Override
     public void disable() {
 
-    }
-    public static void disguise(Player player){
-        GameProfile gameProfile = ((CraftPlayer) player).getProfile();
-        CraftPlayer cplayer = (CraftPlayer) player;
-        //gameProfile.getProperties().
     }
 }

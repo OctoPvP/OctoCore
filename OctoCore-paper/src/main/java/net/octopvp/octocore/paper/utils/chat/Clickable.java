@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 public class Clickable {
 
-    private List<TextComponent> components = new ArrayList<>();
+    private final List<TextComponent> components = new ArrayList<>();
     private String hoverText;
     private String text;
 
@@ -34,8 +34,8 @@ public class Clickable {
         this.hoverText = hoverMsg;
     }
 
-    public Clickable(String msg, String hoverMsg){
-        this (msg, hoverMsg, "");
+    public Clickable(String msg, String hoverMsg) {
+        this(msg, hoverMsg, "");
     }
 
     public TextComponent add(String msg, String hoverMsg, String clickString) {
@@ -63,7 +63,8 @@ public class Clickable {
     public void sendToPlayer(Player player) {
         player.spigot().sendMessage(this.asComponents());
     }
-    public void sendTo(CommandSender sender){
+
+    public void sendTo(CommandSender sender) {
         if (sender instanceof Player)
             sendToPlayer((Player) sender);
         else

@@ -1,8 +1,8 @@
 package net.octopvp.octocore.paper.utils;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.manager.impl.PlaceholderManager;
+import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -16,11 +16,13 @@ import java.text.MessageFormat;
 import java.util.Set;
 import java.util.UUID;
 
-public class Sender implements CommandSender  {
+public class Sender implements CommandSender {
     private CommandSender commandSender;
-    public Sender(CommandSender commandSender){
+
+    public Sender(CommandSender commandSender) {
         this.commandSender = commandSender;
     }
+
     @Override
     public void sendMessage(String s) {
         commandSender.sendMessage(PlaceholderManager.replacePlaceholders(s));
@@ -32,10 +34,12 @@ public class Sender implements CommandSender  {
             commandSender.sendMessage(PlaceholderManager.replacePlaceholders(string));
         }
     }
-    public void sendMessage(TextComponent textComponent){
+
+    public void sendMessage(TextComponent textComponent) {
         getPlayer().sendMessage(textComponent);
     }
-    public void sendMessage(Lang lang){
+
+    public void sendMessage(Lang lang) {
         sendMessage(lang.getMsg());
     }
 
@@ -69,7 +73,7 @@ public class Sender implements CommandSender  {
         return commandSender.hasPermission(s);
     }
 
-    public boolean hasPermission(net.octopvp.octocore.common.object.Permission permission){
+    public boolean hasPermission(net.octopvp.octocore.common.object.Permission permission) {
         return commandSender.hasPermission(permission.getNode());
     }
 
@@ -80,7 +84,7 @@ public class Sender implements CommandSender  {
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin, String s, boolean b) {
-        return commandSender.addAttachment(plugin,s,b);
+        return commandSender.addAttachment(plugin, s, b);
     }
 
     @Override
@@ -90,12 +94,12 @@ public class Sender implements CommandSender  {
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin, String s, boolean b, int i) {
-        return commandSender.addAttachment(plugin,s,b,i);
+        return commandSender.addAttachment(plugin, s, b, i);
     }
 
     @Override
     public PermissionAttachment addAttachment(Plugin plugin, int i) {
-        return commandSender.addAttachment(plugin,i);
+        return commandSender.addAttachment(plugin, i);
     }
 
     @Override
@@ -122,17 +126,20 @@ public class Sender implements CommandSender  {
     public void setOp(boolean b) {
         commandSender.setOp(b);
     }
-    public Player getPlayer(){
-        try{
+
+    public Player getPlayer() {
+        try {
             return Bukkit.getPlayer(getName());
         } catch (Exception e) {
             return null;
         }
     }
-    public boolean isPlayer(){
+
+    public boolean isPlayer() {
         return commandSender instanceof Player;
     }
-    public String getDisplayName(){
+
+    public String getDisplayName() {
         return getPlayer() == null ? "CONSOLE" : getPlayer().getDisplayName();
     }
 
@@ -140,14 +147,15 @@ public class Sender implements CommandSender  {
         return this.commandSender;
     }
 
-    public UUID getUUID(){
-        return getPlayer() == null ? new UUID(0,0) : getPlayer().getUniqueId();
-    }
-    public UUID getUniqueId(){
-        return getUUID();
-    }
-
     public void setCommandSender(CommandSender commandSender) {
         this.commandSender = commandSender;
+    }
+
+    public UUID getUUID() {
+        return getPlayer() == null ? new UUID(0, 0) : getPlayer().getUniqueId();
+    }
+
+    public UUID getUniqueId() {
+        return getUUID();
     }
 }

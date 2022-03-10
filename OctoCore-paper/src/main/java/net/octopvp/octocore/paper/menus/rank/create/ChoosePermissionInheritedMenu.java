@@ -21,9 +21,9 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class ChoosePermissionInheritedMenu extends Menu {
-    private RankBuilder rankBuilder;
     private final Consumer<RankBuilder> callback;
     private final Menu instance = this;
+    private RankBuilder rankBuilder;
 
     public ChoosePermissionInheritedMenu(RankBuilder rankBuilder, Consumer<RankBuilder> callback) {
         this.rankBuilder = rankBuilder;
@@ -33,6 +33,26 @@ public class ChoosePermissionInheritedMenu extends Menu {
     @Override
     public List<Button> getButtons(Player player) {
         return Lists.newArrayList(new PlaceHolderButton(), new PermissionsButton(), new InheritedButton(), new DoneButton());
+    }
+
+    @Override
+    public Button getBackButton(Player player) {
+        return new BackButton() {
+            @Override
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+                callback.accept(rankBuilder);
+            }
+
+            @Override
+            public int getSlot() {
+                return 22;
+            }
+        };
+    }
+
+    @Override
+    public String getName(Player player) {
+        return CC.GREEN + "Choose an action.";
     }
 
     private class PermissionsButton extends Button {
@@ -79,21 +99,6 @@ public class ChoosePermissionInheritedMenu extends Menu {
         }
     }
 
-    @Override
-    public Button getBackButton(Player player) {
-        return new BackButton() {
-            @Override
-            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-                callback.accept(rankBuilder);
-            }
-
-            @Override
-            public int getSlot() {
-                return 22;
-            }
-        };
-    }
-
     private class DoneButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
@@ -111,11 +116,6 @@ public class ChoosePermissionInheritedMenu extends Menu {
             SoundUtil.playPing(player);
             callback.accept(rankBuilder);
         }
-    }
-
-    @Override
-    public String getName(Player player) {
-        return CC.GREEN + "Choose an action.";
     }
 
     public class PlaceHolderButton extends PlaceholderButton {

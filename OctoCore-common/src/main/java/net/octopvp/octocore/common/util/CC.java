@@ -49,8 +49,7 @@ public final class CC {
             ARROW_LEFT = "\u00AB",
             X = "\u2718",
             CHECK = "\u2714",
-            SELECTOR_ARROW = "\u25b8"
-                    ;
+            SELECTOR_ARROW = "\u25b8";
 
     public static String
             MAIN = AQUA,

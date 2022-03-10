@@ -9,7 +9,7 @@ import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.utils.Sender;
 
 public class ReloadRanksCommand extends BaseCommand {
-    @Command(name = "reloadranks",permission = Permission.ADMIN)
+    @Command(name = "reloadranks", permission = Permission.ADMIN)
     public CommandResult execute(Sender sender, String[] args) {
         RankManager.reloadRanks();
         sender.sendMessage(CC.GREEN + "Done!");

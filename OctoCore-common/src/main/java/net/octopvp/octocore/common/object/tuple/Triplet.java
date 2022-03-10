@@ -2,15 +2,17 @@ package net.octopvp.octocore.common.object.tuple;
 
 /**
  * three types
+ *
  * @param <A>
  * @param <B>
  * @param <C>
  */
-public class Triplet<A,B,C> {
-    private A value0;
-    private B value1;
-    private C value2;
-    public Triplet(final A v0,final B v1,final C v2){
+public class Triplet<A, B, C> {
+    private final A value0;
+    private final B value1;
+    private final C value2;
+
+    public Triplet(final A v0, final B v1, final C v2) {
         this.value0 = v0;
         this.value1 = v1;
         this.value2 = v2;
@@ -18,6 +20,7 @@ public class Triplet<A,B,C> {
 
     /**
      * gets the first value
+     *
      * @return
      */
     public A getValue0() {
@@ -26,6 +29,7 @@ public class Triplet<A,B,C> {
 
     /**
      * gets the second value
+     *
      * @return
      */
     public B getValue1() {
@@ -34,6 +38,7 @@ public class Triplet<A,B,C> {
 
     /**
      * gets the third value
+     *
      * @return
      */
     public C getValue2() {

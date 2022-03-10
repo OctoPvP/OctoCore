@@ -8,7 +8,7 @@ import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.GrantProcedure;
 import net.octopvp.octocore.paper.objects.GrantProcedureState;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.utils.DateUtils;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
@@ -33,7 +33,7 @@ public class DurationMenu extends Menu {
 
     @Override
     public List<Button> getButtons(Player player) {
-        return Lists.newArrayList(new PermanentButton(),new CustomDurationButton(),new PlaceholderButton());
+        return Lists.newArrayList(new PermanentButton(), new CustomDurationButton(), new PlaceholderButton());
     }
 
     @Override
@@ -42,8 +42,7 @@ public class DurationMenu extends Menu {
     }
 
 
-
-    private class PermanentButton extends Button{
+    private class PermanentButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.BEDROCK).name(CC.AQUA + "Permanent").lore(CC.GREEN + "This will make the duration " + CC.UNDERLINE + "Permanent").build();
@@ -68,7 +67,8 @@ public class DurationMenu extends Menu {
             new GrantReasonMenu(data).open(player);
         }
     }
-    private class CustomDurationButton extends Button{
+
+    private class CustomDurationButton extends Button {
 
         @Override
         public ItemStack getItem(Player player) {
@@ -85,7 +85,7 @@ public class DurationMenu extends Menu {
             callback(data, player);
         }
 
-        private void callback(PlayerData playerData, Player player){
+        private void callback(PlayerData playerData, Player player) {
             player.closeInventory();
             SoundUtil.playPing(player);
             OctoCore.getConversationFactory().withFirstPrompt(new StringPrompt() {
@@ -110,10 +110,10 @@ public class DurationMenu extends Menu {
                     }
                     long duration;
                     try {
-                        duration = System.currentTimeMillis() - DateUtils.parseDateDiff(s,false);
+                        duration = System.currentTimeMillis() - DateUtils.parseDateDiff(s, false);
                     } catch (Exception e) {
                         player.sendMessage(Lang.GRANT_INVALID_TIME.getMsg());
-                        callback(playerData,player); //FIXME might not work
+                        callback(playerData, player); //FIXME might not work
                         return Prompt.END_OF_CONVERSATION;
                     }
                     playerData.getGrantProcedure().setPermanent(false);
@@ -126,15 +126,16 @@ public class DurationMenu extends Menu {
             }).withLocalEcho(false).buildConversation(player).begin();
         }
     }
-    private class PlaceholderButton extends net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton{
+
+    private class PlaceholderButton extends net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton {
         @Override
         public int[] getSlots() {
             List<Integer> a = new ArrayList<>();
-            IntStream.range(0,27).forEach((i)->{
+            IntStream.range(0, 27).forEach((i) -> {
                 if (!(i == 11 || i == 15))
                     a.add(i);
             });
-            return a.stream().mapToInt(i ->i).toArray();
+            return a.stream().mapToInt(i -> i).toArray();
         }
     }
 }

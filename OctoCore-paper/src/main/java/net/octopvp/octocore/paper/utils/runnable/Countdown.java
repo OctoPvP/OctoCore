@@ -7,22 +7,24 @@ import org.bukkit.scheduler.BukkitTask;
 
 public abstract class Countdown {
 
+    protected final Plugin plugin = OctoCore.getInstance();
+    protected BukkitTask task;
     private int time;
 
-    protected BukkitTask task;
-    protected final Plugin plugin = OctoCore.getInstance();
     public Countdown(int time) {
         this.time = time;
         start();
     }
+
     public abstract void count(int current);
+
     public final void start() {
         task = new BukkitRunnable() {
 
             @Override
             public void run() {
                 time--;
-                if (time <= -1){
+                if (time <= -1) {
                     cancel();
                     return;
                 }

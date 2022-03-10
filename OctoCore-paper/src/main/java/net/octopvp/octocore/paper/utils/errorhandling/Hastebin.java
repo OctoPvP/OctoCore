@@ -1,6 +1,5 @@
 package net.octopvp.octocore.paper.utils.errorhandling;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -13,16 +12,15 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class Hastebin {
-    private static Map<String, CompletableFuture<String>> queue = new HashMap<>();
-    static{
-        Tasks.runAsync(()->{
-            while (queue.keySet().iterator().hasNext()){
+    private static final Map<String, CompletableFuture<String>> queue = new HashMap<>();
+
+    static {
+        Tasks.runAsync(() -> {
+            while (queue.keySet().iterator().hasNext()) {
                 String s = queue.keySet().iterator().next();
                 CompletableFuture<String> completableFuture = queue.get(s);
                 byte[] postData = s.getBytes(StandardCharsets.UTF_8);
@@ -74,9 +72,10 @@ public class Hastebin {
             }
         });
     }
+
     public CompletableFuture<String> post(String text, boolean... r) {
         CompletableFuture<String> completableFuture = new CompletableFuture<>();
-        queue.put(text,completableFuture);
+        queue.put(text, completableFuture);
         return completableFuture;
     }
 }

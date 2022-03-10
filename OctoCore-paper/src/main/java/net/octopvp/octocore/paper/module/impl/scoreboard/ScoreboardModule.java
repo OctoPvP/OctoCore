@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 public final class ScoreboardModule implements Module {
     @Getter
     private static ScoreboardModule instance;
+
     public static Scoreboard createScoreboard(Player holder) {
         return new SimpleScoreboard(holder);
     }

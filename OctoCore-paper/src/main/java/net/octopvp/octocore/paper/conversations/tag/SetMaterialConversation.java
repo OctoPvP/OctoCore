@@ -7,10 +7,12 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 
 public class SetMaterialConversation extends StringPrompt {
-    private ReturnableTypeCallback<String> callback;
-    public SetMaterialConversation(ReturnableTypeCallback<String> callback){
+    private final ReturnableTypeCallback<String> callback;
+
+    public SetMaterialConversation(ReturnableTypeCallback<String> callback) {
         this.callback = callback;
     }
+
     @Override
     public String getPromptText(ConversationContext conversationContext) {
         return CC.GREEN + "Please enter the material you would like the tag to show up as in /tags (Use minecraft namespaced id)";

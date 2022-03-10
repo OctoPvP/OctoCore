@@ -22,15 +22,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NoteBlockAPI implements Module {
 
-    private static NoteBlockAPI nbsAPI;
     private static final OctoCore plugin = OctoCore.getInstance();
-
+    private static NoteBlockAPI nbsAPI;
     private final Map<UUID, ArrayList<net.octopvp.octocore.paper.module.impl.noteblockapi.songplayer.SongPlayer>> playingSongs = new ConcurrentHashMap<UUID, ArrayList<net.octopvp.octocore.paper.module.impl.noteblockapi.songplayer.SongPlayer>>();
     private final Map<UUID, Byte> playerVolume = new ConcurrentHashMap<UUID, Byte>();
-
-    private boolean disabling = false;
-
     private final HashMap<Plugin, Boolean> dependentPlugins = new HashMap<>();
+    private boolean disabling = false;
 
     /**
      * Returns true if a Player is currently receiving a song
@@ -138,6 +135,10 @@ public class NoteBlockAPI implements Module {
         nbsAPI.playingSongs.put(player, songs);
     }
 
+    public static NoteBlockAPI getAPI() {
+        return nbsAPI;
+    }
+
     @Override
     public void onEnable(OctoCore plugin) {
         nbsAPI = this;
@@ -185,10 +186,6 @@ public class NoteBlockAPI implements Module {
 
     public boolean isDisabling() {
         return disabling;
-    }
-
-    public static NoteBlockAPI getAPI() {
-        return nbsAPI;
     }
 
 }

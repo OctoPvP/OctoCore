@@ -18,7 +18,7 @@ public class ServerOnlinePacket extends RedisPacket {
 
     @Override
     public JsonBuilder getData() {
-        return new JsonBuilder().addProperty("server",server);
+        return new JsonBuilder().addProperty("server", server);
     }
 
     @Override

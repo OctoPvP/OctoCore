@@ -7,16 +7,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
-public class SetupListeners implements Setup{
-    private static final Listener[] listeners = new Listener[]{new PunishmentListener(),new JoinLeaveListener(),new ChatListener(),new DeathListener(),new CommandProcessEvent(),new MenuListener()};
+public class SetupListeners implements Setup {
+    private static final Listener[] listeners = new Listener[]{new PunishmentListener(), new JoinLeaveListener(), new ChatListener(), new DeathListener(), new CommandProcessEvent(), new MenuListener()};
+
     @Override
-    public void setup(OctoCore plugin){
+    public void setup(OctoCore plugin) {
         PluginManager plm = Bukkit.getPluginManager();
         for (Listener listener : listeners)
-            plm.registerEvents(listener,plugin);
+            plm.registerEvents(listener, plugin);
         JoinLeaveListener.init();
     }
 
     @Override
-    public void disable(OctoCore plugin) { }
+    public void disable(OctoCore plugin) {
+    }
 }

@@ -9,8 +9,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-public class SetupCommands implements Setup{
+public class SetupCommands implements Setup {
     public static ArrayList<Object> commands = new ArrayList<>();
+
     public void setup(OctoCore plugin) {
         CommandFramework cmd = OctoCore.getCommandFramework();
 
@@ -31,8 +32,8 @@ public class SetupCommands implements Setup{
         setupExecutor(plugin);
          */
 
-        ReflectionUtils.getClassesInPackage(OctoCore.getInstance(),"net.octopvp.octocore.paper.command.impl").forEach(clazz ->{
-            if(BaseCommand.class.isAssignableFrom(clazz) && clazz.getSuperclass() == BaseCommand.class){
+        ReflectionUtils.getClassesInPackage(OctoCore.getInstance(), "net.octopvp.octocore.paper.command.impl").forEach(clazz -> {
+            if (BaseCommand.class.isAssignableFrom(clazz) && clazz.getSuperclass() == BaseCommand.class) {
                 try {
                     Constructor constructor = clazz.getDeclaredConstructor();
                     constructor.newInstance();

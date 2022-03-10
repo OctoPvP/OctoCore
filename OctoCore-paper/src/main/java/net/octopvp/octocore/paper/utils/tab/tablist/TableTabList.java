@@ -14,7 +14,7 @@ import java.util.logging.Level;
  * An implementation of SimpleTabList that behaves like an HTML/CSS table.
  * It has columns and rows where (0,0) is the top left and (columns - 1, rows - 1)
  * is the top right.
- *
+ * <p>
  * It supports some fancy operations like filling a portion of the table
  * in any direction.
  */
@@ -28,6 +28,19 @@ public class TableTabList extends SimpleTabList {
         this.columns = columns;
         this.rows = getMinRows(columns);
         this.box = new TableBox(new TableCell(0, 0), new TableCell(this.columns - 1, this.rows - 1));
+    }
+
+    private static int getMinRows(int columns) {
+        if (columns == 1)
+            return 1;
+        else if (columns == 2)
+            return 11;
+        else if (columns == 3)
+            return 14;
+        else if (columns == 4)
+            return 20;
+        else
+            throw new RuntimeException("invalid column count " + columns);
     }
 
     @Override
@@ -65,6 +78,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Checks if the table has an item that is not a BlankTabItem at the given cell.
+     *
      * @param cell
      * @return True if the item is not a BlankTabItem.
      */
@@ -75,6 +89,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Checks if the table has an item that is not a BlankTabItem at the given column and row.
+     *
      * @param column
      * @param row
      * @return True if the item is not a BlankTabItem.
@@ -85,6 +100,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Gets the item at the given cell.
+     *
      * @param cell
      * @return The item or null if it is empty (BlankTabItem).
      */
@@ -95,6 +111,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Gets the box of the entire tab list.
+     *
      * @return
      */
     public TableBox getBox() {
@@ -103,6 +120,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Set a single item at the given cell.
+     *
      * @param cell
      * @param item
      * @return The previous item
@@ -113,6 +131,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Set a single item at the given column and row.
+     *
      * @param column
      * @param row
      * @param item
@@ -124,15 +143,16 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Set a bunch of items.
+     *
      * @param items
      */
-    public void setTable(Map<TableCell,TabItem> items) {
-        for (Entry<TableCell,TabItem> entry : items.entrySet())
+    public void setTable(Map<TableCell, TabItem> items) {
+        for (Entry<TableCell, TabItem> entry : items.entrySet())
             validateCell(entry.getKey());
 
         // new items
-        Map<Integer,TabItem> indexItems = new HashMap<>(items.size());
-        for (Entry<TableCell,TabItem> entry : items.entrySet())
+        Map<Integer, TabItem> indexItems = new HashMap<>(items.size());
+        for (Entry<TableCell, TabItem> entry : items.entrySet())
             indexItems.put(getIndex(entry.getKey()), entry.getValue());
 
         super.set(indexItems);
@@ -140,6 +160,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Remove an item by column/row.
+     *
      * @param column
      * @param row
      */
@@ -149,6 +170,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Remove an item by table cell.
+     *
      * @param cell
      */
     public void remove(TableCell cell) {
@@ -157,6 +179,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Fill a box from the top left horizontally.
+     *
      * @param box
      * @param items
      * @return
@@ -167,6 +190,7 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Fill a box from a specific corner horizontally.
+     *
      * @param box
      * @param items
      * @return
@@ -177,10 +201,11 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Fills a box with a list of tab items.
+     *
      * @param box
-     * @param items The items to fill the box with.
+     * @param items       The items to fill the box with.
      * @param startCorner Where to begin filling the box.
-     * @param direction The direction to fill the box.
+     * @param direction   The direction to fill the box.
      * @return
      */
     public boolean fill(TableBox box, List<TabItem> items, TableCorner startCorner, FillDirection direction) {
@@ -189,13 +214,14 @@ public class TableTabList extends SimpleTabList {
 
     /**
      * Fills a box with a list of tab items.
-     * @param col1 x1 Must be less than or equal to x2
-     * @param row1 y1 Must be less than or equal to y2
-     * @param col2 x2
-     * @param row2 y2
-     * @param items The items to fill the box with.
+     *
+     * @param col1        x1 Must be less than or equal to x2
+     * @param row1        y1 Must be less than or equal to y2
+     * @param col2        x2
+     * @param row2        y2
+     * @param items       The items to fill the box with.
      * @param startCorner Where to begin filling the box.
-     * @param direction The direction to fill the box.
+     * @param direction   The direction to fill the box.
      * @return True if all the items fit, false if otherwise.
      */
     public boolean fill(int col1, int row1, int col2, int row2, List<TabItem> items, TableCorner startCorner, FillDirection direction) {
@@ -205,7 +231,7 @@ public class TableTabList extends SimpleTabList {
         Preconditions.checkNotNull(startCorner, "startCorner can't be null");
         Preconditions.checkNotNull(direction, "direction can't be null");
 
-        Map<Integer,TabItem> map = new HashMap<>();
+        Map<Integer, TabItem> map = new HashMap<>();
         Iterator<TabItem> iterator = items.iterator();
 
         boolean reverseCol = false;
@@ -226,8 +252,7 @@ public class TableTabList extends SimpleTabList {
                         map.put(getIndex(fixedCol, fixedRow), iterator.next());
                 }
             }
-        }
-        else if (direction == FillDirection.VERTICAL) {
+        } else if (direction == FillDirection.VERTICAL) {
             for (int col = col1; col <= col2; col++) {
                 for (int row = row1; row <= row2; row++) {
                     int fixedRow = reverseRow ? row2 - (row - row1) : row;
@@ -245,7 +270,7 @@ public class TableTabList extends SimpleTabList {
     }
 
     private void reset() {
-        Map<Integer,TabItem> newItems = new HashMap<>();
+        Map<Integer, TabItem> newItems = new HashMap<>();
         for (int row = 0; row < this.columns; row++) {
             for (int column = 0; column < this.rows; column++) {
                 TabItem item = new BlankTabItem();
@@ -272,19 +297,6 @@ public class TableTabList extends SimpleTabList {
         Preconditions.checkArgument(column >= 0 && column < this.columns, "column not in allowed range");
     }
 
-    private static int getMinRows(int columns) {
-        if (columns == 1)
-            return 1;
-        else if (columns == 2)
-            return 11;
-        else if (columns == 3)
-            return 14;
-        else if (columns == 4)
-            return 20;
-        else
-            throw new RuntimeException("invalid column count " + columns);
-    }
-
     public String toString() {
         return "TableTabList(columns=" + this.columns + ", rows=" + this.rows + ", box=" + this.getBox() + ")";
     }
@@ -295,6 +307,24 @@ public class TableTabList extends SimpleTabList {
 
     public int getRows() {
         return this.rows;
+    }
+
+    /**
+     * Represents a corner of the table.
+     */
+    public enum TableCorner {
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_RIGHT,
+        BOTTOM_LEFT
+    }
+
+    /**
+     * Represents a direction in which to fill an area.
+     */
+    public enum FillDirection {
+        HORIZONTAL,
+        VERTICAL,
     }
 
     /**
@@ -328,12 +358,12 @@ public class TableTabList extends SimpleTabList {
             return this.column;
         }
 
-        public int getRow() {
-            return this.row;
-        }
-
         public void setColumn(int column) {
             this.column = column;
+        }
+
+        public int getRow() {
+            return this.row;
         }
 
         public void setRow(int row) {
@@ -344,10 +374,9 @@ public class TableTabList extends SimpleTabList {
             if (o == this) return true;
             if (!(o instanceof TableCell)) return false;
             final TableCell other = (TableCell) o;
-            if (!other.canEqual((Object) this)) return false;
+            if (!other.canEqual(this)) return false;
             if (this.getColumn() != other.getColumn()) return false;
-            if (this.getRow() != other.getRow()) return false;
-            return true;
+            return this.getRow() == other.getRow();
         }
 
         protected boolean canEqual(final Object other) {
@@ -384,6 +413,7 @@ public class TableTabList extends SimpleTabList {
 
         /**
          * Get a corner of this box.
+         *
          * @param corner
          * @return
          */
@@ -393,6 +423,7 @@ public class TableTabList extends SimpleTabList {
 
         /**
          * Top left.
+         *
          * @return
          */
         public TableCell getTopLeft() {
@@ -401,6 +432,7 @@ public class TableTabList extends SimpleTabList {
 
         /**
          * Top right.
+         *
          * @return
          */
         public TableCell getTopRight() {
@@ -409,6 +441,7 @@ public class TableTabList extends SimpleTabList {
 
         /**
          * Bottom right.
+         *
          * @return
          */
         public TableCell getBottomRight() {
@@ -417,6 +450,7 @@ public class TableTabList extends SimpleTabList {
 
         /**
          * Bottom left.
+         *
          * @return
          */
         public TableCell getBottomLeft() {
@@ -425,6 +459,7 @@ public class TableTabList extends SimpleTabList {
 
         /**
          * Get the width of this box.
+         *
          * @return
          */
         public int getWidth() {
@@ -433,6 +468,7 @@ public class TableTabList extends SimpleTabList {
 
         /**
          * Get the height of this box.
+         *
          * @return
          */
         public int getHeight() {
@@ -441,6 +477,7 @@ public class TableTabList extends SimpleTabList {
 
         /**
          * Get the size of this box.
+         *
          * @return
          */
         public int getSize() {
@@ -455,11 +492,10 @@ public class TableTabList extends SimpleTabList {
             if (o == this) return true;
             if (!(o instanceof TableBox)) return false;
             final TableBox other = (TableBox) o;
-            if (!other.canEqual((Object) this)) return false;
+            if (!other.canEqual(this)) return false;
             final Object this$cells = this.cells;
             final Object other$cells = other.cells;
-            if (this$cells == null ? other$cells != null : !this$cells.equals(other$cells)) return false;
-            return true;
+            return this$cells == null ? other$cells == null : this$cells.equals(other$cells);
         }
 
         protected boolean canEqual(final Object other) {
@@ -481,23 +517,5 @@ public class TableTabList extends SimpleTabList {
         public List<TableCell> getCells() {
             return this.cells;
         }
-    }
-
-    /**
-     * Represents a corner of the table.
-     */
-    public enum TableCorner {
-        TOP_LEFT,
-        TOP_RIGHT,
-        BOTTOM_RIGHT,
-        BOTTOM_LEFT
-    }
-
-    /**
-     * Represents a direction in which to fill an area.
-     */
-    public enum FillDirection {
-        HORIZONTAL,
-        VERTICAL,
     }
 }

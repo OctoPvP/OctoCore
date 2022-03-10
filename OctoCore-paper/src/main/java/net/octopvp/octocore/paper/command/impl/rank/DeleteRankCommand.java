@@ -12,9 +12,9 @@ import net.octopvp.octocore.paper.utils.Sender;
 import org.bukkit.entity.Player;
 
 public class DeleteRankCommand extends BaseCommand {
-    @Command(name = "deleterank",aliases = {"delrank"},permission = Permission.DELETE_RANK)
+    @Command(name = "deleterank", aliases = {"delrank"}, permission = Permission.DELETE_RANK)
     public CommandResult execute(Sender sender, String[] args) {
-        if (args.length != 1){
+        if (args.length != 1) {
             sender.sendMessage(CC.RED + "Usage: /deleterank <rank name>");
             return CommandResult.SUCCESS;
         }
@@ -23,9 +23,9 @@ public class DeleteRankCommand extends BaseCommand {
             sender.sendMessage(CC.RED + "Could not find that rank!");
             return CommandResult.SUCCESS;
         }
-        if (sender.getCommandSender() instanceof Player){
+        if (sender.getCommandSender() instanceof Player) {
             new ConfirmDeleteMenu(targetRank).open(sender);
-        }else{
+        } else {
             RankManager.delete(targetRank);
         }
         return CommandResult.SUCCESS;

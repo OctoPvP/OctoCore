@@ -10,30 +10,35 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class Broadcast {
+    private static final HashMap<UUID, Broadcast> broadcastIds = new HashMap<>();
     private String message;
     private UUID player;
-    private static HashMap<UUID,Broadcast> broadcastIds = new HashMap<>();
-    private UUID broadcastId = UUID.randomUUID();
-    private Map<String,Integer> responses = new ConcurrentHashMap<>();
-    public Broadcast(String s,UUID player){
+    private final UUID broadcastId = UUID.randomUUID();
+    private final Map<String, Integer> responses = new ConcurrentHashMap<>();
+
+    public Broadcast(String s, UUID player) {
         this.player = player;
         this.message = s;
-        broadcastIds.put(broadcastId,this);
+        broadcastIds.put(broadcastId, this);
     }
+
+    public static Broadcast getBroadcast(UUID id) {
+        return broadcastIds.get(id);
+    }
+
     //builders are cool :D
-    public Broadcast send(){
+    public Broadcast send() {
         new GlobalBroadcastPacket(message).send();
         return this;
     }
-    public Broadcast setMessage(String message){
+
+    public Broadcast setMessage(String message) {
         this.message = message;
         return this;
     }
-    public Broadcast setPlayer(UUID player){
+
+    public Broadcast setPlayer(UUID player) {
         this.player = player;
         return this;
-    }
-    public static Broadcast getBroadcast(UUID id){
-        return broadcastIds.get(id);
     }
 }

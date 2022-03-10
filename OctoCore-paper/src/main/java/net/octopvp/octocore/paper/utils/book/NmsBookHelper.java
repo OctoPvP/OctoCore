@@ -190,7 +190,7 @@ public final class NmsBookHelper {
      * @return a Chat-Component equivalent of the parameter
      */
     public static BaseComponent[] jsonToComponents(String json) {
-        return new BaseComponent[] { new TextComponent(json) };
+        return new BaseComponent[]{new TextComponent(json)};
     }
 
     /**
@@ -212,23 +212,6 @@ public final class NmsBookHelper {
             return json.toString();
         } catch (Exception e) {
             throw new UnsupportedVersionException(e);
-        }
-    }
-
-    /**
-     * An error thrown when this NMS-helper class doesn't support the running MC
-     * version
-     */
-    public static class UnsupportedVersionException extends RuntimeException {
-        /**
-         * The current running version
-         */
-        @Getter
-        private final String version = NmsBookHelper.version;
-
-        public UnsupportedVersionException(Exception e) {
-            super("Error while executing reflections, submit to developers the following log (version: "
-                    + NmsBookHelper.version + ")", e);
         }
     }
 
@@ -280,6 +263,23 @@ public final class NmsBookHelper {
             return Class.forName("org.bukkit.craftbukkit." + version + "." + path);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Cannot find CraftBukkit class at path: " + path, e);
+        }
+    }
+
+    /**
+     * An error thrown when this NMS-helper class doesn't support the running MC
+     * version
+     */
+    public static class UnsupportedVersionException extends RuntimeException {
+        /**
+         * The current running version
+         */
+        @Getter
+        private final String version = NmsBookHelper.version;
+
+        public UnsupportedVersionException(Exception e) {
+            super("Error while executing reflections, submit to developers the following log (version: "
+                    + NmsBookHelper.version + ")", e);
         }
     }
 }

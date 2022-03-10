@@ -31,8 +31,9 @@ import java.util.stream.IntStream;
 
 public class EditRankMenu extends Menu {
     private final String name;
-    private RankBuilder builder;
     private final boolean edit;
+    private final Menu instance = this;
+    private RankBuilder builder;
 
     public EditRankMenu(String name) {
         this.name = name;
@@ -40,12 +41,12 @@ public class EditRankMenu extends Menu {
         edit = false;
     }
 
+
     public EditRankMenu(Rank rank) {
         name = rank.getName();
         builder = new RankBuilder(rank);
         edit = true;
     }
-
 
     @Override
     public void onOpen(Player player) {
@@ -265,8 +266,6 @@ public class EditRankMenu extends Menu {
             update(player);
         }
     }
-
-    private final Menu instance = this;
 
     private class ServerButton extends Button {
         @Override

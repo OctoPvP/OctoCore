@@ -5,7 +5,6 @@ import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,15 +15,16 @@ public class MenuManager {
     private static Map<UUID, Menu> openedMenus = new ConcurrentHashMap<>();
     @Getter
     private static Map<UUID, Menu> lastOpenedMenus = new ConcurrentHashMap<>();
+
     static {
-        Tasks.runTimer(()-> Bukkit.getOnlinePlayers().forEach(player ->{
+        Tasks.runTimer(() -> Bukkit.getOnlinePlayers().forEach(player -> {
             Menu menu = getOpenedMenus().get(player.getUniqueId());
             if (menu != null) {
                 if (menu.isAutoUpdate() && !menu.isUpdateAsynchronously())
                     menu.update(player);
             }
         }), 0L, 20L);
-        Tasks.runAsyncTimer(()-> Bukkit.getOnlinePlayers().forEach(player ->{
+        Tasks.runAsyncTimer(() -> Bukkit.getOnlinePlayers().forEach(player -> {
             Menu menu = getOpenedMenus().get(player.getUniqueId());
             if (menu != null && menu.isAutoUpdate()) {
                 if (menu.isUpdateAsynchronously())

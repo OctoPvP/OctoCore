@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
-public class DataUpdateRunnable implements Runnable{
+public class DataUpdateRunnable implements Runnable {
     @Override
     public void run() {
 
@@ -28,7 +28,8 @@ public class DataUpdateRunnable implements Runnable{
                     data.updateBannedAlts();
                 }
             } while (playerDataIterator.hasNext());
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
 
         JsonBuilder jsonChain = new JsonBuilder().addProperty("maxPlayers", Bukkit.getMaxPlayers()).addProperty("whitelisted", Bukkit.hasWhitelist());
         jsonChain.addProperty("name", OctoCore.getServerName()).addProperty("tps1", Bukkit.getServer().spigot().getTPS()[0]).addProperty("tps2", Bukkit.getServer().spigot().getTPS()[1]);

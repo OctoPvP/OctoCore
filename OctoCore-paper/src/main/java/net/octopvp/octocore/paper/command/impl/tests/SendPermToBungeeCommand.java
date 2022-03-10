@@ -5,7 +5,6 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.utils.Sender;
 
 import java.io.ByteArrayOutputStream;
@@ -13,16 +12,17 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class SendPermToBungeeCommand extends BaseCommand {
-    @Command(name = "sendpermtobungee",playerOnly = true)
+    @Command(name = "sendpermtobungee", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        if (args.length == 1){
+        if (args.length == 1) {
 
             sender.sendMessage("&aSent permission to BungeeCord!");
             return CommandResult.SUCCESS;
         }
         return CommandResult.INVALID_ARGS;
     }
-    @Command(name = "testpluginmsg",playerOnly = true)
+
+    @Command(name = "testpluginmsg", playerOnly = true)
     public CommandResult execute0(Sender sender, String[] args) {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
@@ -31,7 +31,7 @@ public class SendPermToBungeeCommand extends BaseCommand {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sender.getPlayer().sendPluginMessage(OctoCore.getInstance(),(args.length == 1 ? PluginMsgChannels.BUNGEE : "test"),b.toByteArray());
+        sender.getPlayer().sendPluginMessage(OctoCore.getInstance(), (args.length == 1 ? PluginMsgChannels.BUNGEE : "test"), b.toByteArray());
         sender.sendMessage("&aSent plugin message to BungeeCord!");
         return CommandResult.SUCCESS;
     }

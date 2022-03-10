@@ -17,28 +17,28 @@ import java.util.List;
 
 @Disable
 public class NickCommand extends BaseCommand {
-    @Command(name = "nick", description = "nick",usage = "[name]",permission = Permission.COMMAND_NICK)
+    @Command(name = "nick", description = "nick", usage = "[name]", permission = Permission.COMMAND_NICK)
     public CommandResult execute(Sender sender, String[] args) {
-        if(args.length == 1){
+        if (args.length == 1) {
             NameTagChanger.INSTANCE.changePlayerName(sender.getPlayer(), args[0]);
             sender.getPlayer().setDisplayName(args[0]);
             sender.getPlayer().setPlayerListName(args[0]);
             NickManager.addNick(PlayerManager.getProfile(sender.getPlayer().getUniqueId()), args[0]);
-            sender.sendMessage(Lang.NICK_SUCCESS.getMsg().replaceFirst("%nick%",args[0]));
+            sender.sendMessage(Lang.NICK_SUCCESS.getMsg().replaceFirst("%nick%", args[0]));
             return CommandResult.SUCCESS;
-        }else if(args.length == 2){
+        } else if (args.length == 2) {
             Player target = null;
             try {
                 target = Bukkit.getPlayer(args[1]);
             } catch (Exception e) {
                 return CommandResult.PLAYER_NOT_FOUND;
             }
-            NameTagChanger.INSTANCE.changePlayerName(target,args[0]);
+            NameTagChanger.INSTANCE.changePlayerName(target, args[0]);
             target.setDisplayName(args[0]);
             target.setPlayerListName(args[0]);
             NickManager.addNick(PlayerManager.getProfile(target.getUniqueId()), args[0]);
             target.sendMessage(Lang.NICK_SUCCESS.getMsg(args[0]));
-            sender.sendMessage(Lang.NICK_OTHER_SUCCESS.getMsg(target.getName(),args[0]));
+            sender.sendMessage(Lang.NICK_OTHER_SUCCESS.getMsg(target.getName(), args[0]));
             return CommandResult.SUCCESS;
         }
         return CommandResult.INVALID_ARGS;

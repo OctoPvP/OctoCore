@@ -16,9 +16,8 @@ import java.util.Map;
 import java.util.logging.Level;
 
 public class Tab implements Listener {
-    private static Map<Plugin, Tab> instances = new HashMap<>();
     static Level logLevel = Level.WARNING;
-
+    private static final Map<Plugin, Tab> instances = new HashMap<>();
     private final Plugin plugin;
     @Getter
     private final Map<Player, TabList> tabLists;
@@ -37,6 +36,7 @@ public class Tab implements Listener {
 
     /**
      * Gets an instance of Tabbed from a plugin.
+     *
      * @param plugin
      * @return
      */
@@ -59,6 +59,7 @@ public class Tab implements Listener {
 
     /**
      * Get the current tab list of the player.
+     *
      * @param player
      * @return The tab list, or null if it wasn't present.
      */
@@ -68,6 +69,7 @@ public class Tab implements Listener {
 
     /**
      * Disables the tab list of a player.
+     *
      * @param player
      * @return The tab list removed (or null if it wasn't present).
      */
@@ -81,6 +83,7 @@ public class Tab implements Listener {
 
     /**
      * Disables a tab list.
+     *
      * @param tabList
      * @return The tab list removed.
      */
@@ -90,6 +93,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new TitledTabList with the given parameters.
+     *
      * @param player
      * @return
      */
@@ -99,6 +103,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new DefaultTabList.
+     *
      * @param player
      * @return
      */
@@ -108,6 +113,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new CustomTabList with the given parameters.
+     *
      * @param player
      * @return
      */
@@ -117,6 +123,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new CustomTabList with the given parameters.
+     *
      * @param player
      * @param maxItems
      * @return
@@ -127,6 +134,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new CustomTabList with the given parameters.
+     *
      * @param player
      * @param maxItems
      * @param minColumnWidth
@@ -138,6 +146,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new CustomTabList with the given parameters.
+     *
      * @param player
      * @param maxItems
      * @param minColumnWidth
@@ -150,6 +159,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new TableTabList with the given parameters.
+     *
      * @param player
      * @return
      */
@@ -159,6 +169,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new TableTabList with the given parameters.
+     *
      * @param player
      * @param columns
      * @return
@@ -169,6 +180,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new TableTabList with the given parameters.
+     *
      * @param player
      * @param columns
      * @param minColumnWidth
@@ -180,6 +192,7 @@ public class Tab implements Listener {
 
     /**
      * Creates a new TableTabList with the given parameters.
+     *
      * @param player
      * @param columns
      * @param minColumnWidth

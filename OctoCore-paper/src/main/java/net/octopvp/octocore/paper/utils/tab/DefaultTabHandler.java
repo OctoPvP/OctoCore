@@ -8,13 +8,14 @@ import net.octopvp.octocore.paper.utils.tab.item.TabItem;
 import net.octopvp.octocore.paper.utils.tab.item.TextTabItem;
 import org.bukkit.entity.Player;
 
-public class DefaultTabHandler implements TabHandler{
+public class DefaultTabHandler implements TabHandler {
     boolean a = false;
+
     @Override
     public PairMap<Integer, Integer, TabItem> getTabItems(Player p) {
         a = !a;
-        PairMap<Integer,Integer,TabItem> map = new HashPairMap<>();
-        map.put(0,0,new TextTabItem(a ? CC.AQUA + ":D" : CC.GREEN + ":D",-1));
+        PairMap<Integer, Integer, TabItem> map = new HashPairMap<>();
+        map.put(0, 0, new TextTabItem(a ? CC.AQUA + ":D" : CC.GREEN + ":D", -1));
         return map;
     }
 

@@ -9,15 +9,17 @@ import org.bukkit.event.Cancellable;
 
 @RequiredArgsConstructor
 public class RedisPacketRecieveEvent extends SimpleEvent implements Cancellable {
-    private boolean cancelled;
     @Getter
     private final RedisPacket packet;
     @Getter
     private final JsonObject data;
+    private boolean cancelled;
+
     @Override
     public boolean isCancelled() {
         return cancelled;
     }
+
     @Override
     public void setCancelled(boolean b) {
         cancelled = b;

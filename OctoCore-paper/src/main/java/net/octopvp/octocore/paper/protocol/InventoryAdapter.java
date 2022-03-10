@@ -17,11 +17,19 @@ import java.util.UUID;
 
 public class InventoryAdapter extends PacketAdapter {
     private static Set<UUID> currentlyOpen;
-    
-    public InventoryAdapter() {
-        super(OctoCore.getInstance(), new PacketType[] { PacketType.Play.Client.CLIENT_COMMAND, PacketType.Play.Client.CLOSE_WINDOW });
+
+    static {
+        InventoryAdapter.currentlyOpen = new HashSet<UUID>();
     }
-    
+
+    public InventoryAdapter() {
+        super(OctoCore.getInstance(), PacketType.Play.Client.CLIENT_COMMAND, PacketType.Play.Client.CLOSE_WINDOW);
+    }
+
+    public static Set<UUID> getCurrentlyOpen() {
+        return InventoryAdapter.currentlyOpen;
+    }
+
     public void onPacketReceiving(final PacketEvent event) {
         final Player player = event.getPlayer();
         final PacketContainer packet = event.getPacket();
@@ -30,20 +38,11 @@ public class InventoryAdapter extends PacketAdapter {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(OctoCore.getInstance(), () -> Bukkit.getPluginManager().callEvent(new PlayerOpenInventoryEvent(player)));
             }
             InventoryAdapter.currentlyOpen.add(player.getUniqueId());
-        }
-        else if (packet.getType() == PacketType.Play.Client.CLOSE_WINDOW) {
+        } else if (packet.getType() == PacketType.Play.Client.CLOSE_WINDOW) {
             if (InventoryAdapter.currentlyOpen.contains(player.getUniqueId())) {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(OctoCore.getInstance(), () -> Bukkit.getPluginManager().callEvent(new PlayerCloseInventoryEvent(player)));
             }
             InventoryAdapter.currentlyOpen.remove(player.getUniqueId());
         }
-    }
-    
-    public static Set<UUID> getCurrentlyOpen() {
-        return InventoryAdapter.currentlyOpen;
-    }
-    
-    static {
-        InventoryAdapter.currentlyOpen = new HashSet<UUID>();
     }
 }

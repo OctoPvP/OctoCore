@@ -31,9 +31,17 @@ public enum Sound {
     NOTE_BIT("BLOCK_NOTE_BLOCK_BIT"),
     NOTE_BANJO("BLOCK_NOTE_BLOCK_BANJO");
 
+    private static final Map<String, org.bukkit.Sound> cachedSoundMap = new HashMap<>();
+
+    static {
+        // Cache sound access.
+        for (Sound sound : values())
+            for (String soundName : sound.versionDependentNames)
+                cachedSoundMap.put(soundName.toUpperCase(), sound.getSound());
+    }
+
     private final String[] versionDependentNames;
     private org.bukkit.Sound cached = null;
-    private static final Map<String, org.bukkit.Sound> cachedSoundMap = new HashMap<>();
 
     Sound(String... versionDependentNames) {
         this.versionDependentNames = versionDependentNames;
@@ -77,12 +85,5 @@ public enum Sound {
             return getSound();
         }
         throw new IllegalArgumentException("Found no valid sound name for " + this.name());
-    }
-
-    static {
-        // Cache sound access.
-        for (Sound sound : values())
-            for (String soundName : sound.versionDependentNames)
-                cachedSoundMap.put(soundName.toUpperCase(), sound.getSound());
     }
 }

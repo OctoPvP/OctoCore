@@ -13,6 +13,16 @@ import java.util.UUID;
 
 public class GameProfileWrapper {
 
+    private final UUID uuid;
+    private final String name;
+    private final Multimap<String, PropertyWrapper> properties = LinkedHashMultimap.create();
+    public GameProfileWrapper(UUID uuid, String name) {
+        Validate.notNull(uuid, "uuid cannot be null");
+        Validate.notNull(name, "name cannot be null");
+        this.uuid = uuid;
+        this.name = name;
+    }
+
     // Implement reflection when we need to.
     public static GameProfileWrapper fromHandle(Object object) {
         Validate.isTrue(object instanceof GameProfile, "object is not a GameProfile");
@@ -24,17 +34,6 @@ public class GameProfileWrapper {
             }
         }
         return wrapper;
-    }
-
-    private final UUID uuid;
-    private final String name;
-    private final Multimap<String, PropertyWrapper> properties = LinkedHashMultimap.create();
-
-    public GameProfileWrapper(UUID uuid, String name) {
-        Validate.notNull(uuid, "uuid cannot be null");
-        Validate.notNull(name, "name cannot be null");
-        this.uuid = uuid;
-        this.name = name;
     }
 
     public UUID getUUID() {
@@ -84,22 +83,21 @@ public class GameProfileWrapper {
 
     public static class PropertyWrapper {
 
+        private final String name;
+        private final String value;
+        private final String signature;
+        public PropertyWrapper(String name, String value, String signature) {
+            this.name = name;
+            this.value = value;
+            this.signature = signature;
+        }
+
         // Implement reflection when we need to
         @SuppressWarnings("ConstantConditions")
         public static PropertyWrapper fromHandle(Object object) {
             Validate.isTrue(object instanceof Property, "object " + object + " is not a Property");
             Property property = (Property) object;
             return new PropertyWrapper(property.getName(), property.getValue(), property.getSignature());
-        }
-
-        private final String name;
-        private final String value;
-        private final String signature;
-
-        public PropertyWrapper(String name, String value, String signature) {
-            this.name = name;
-            this.value = value;
-            this.signature = signature;
         }
 
         public String getName() {
@@ -135,9 +133,7 @@ public class GameProfileWrapper {
             if (property.name.equals(this.name) && property.value.equals(this.value)) {
                 if (property.hasSignature() && this.hasSignature()) {
                     return property.signature.equals(this.signature);
-                } else if (!property.hasSignature() && !this.hasSignature()) {
-                    return true;
-                }
+                } else return !property.hasSignature() && !this.hasSignature();
             }
             return false;
         }

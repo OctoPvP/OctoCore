@@ -11,11 +11,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class KaboomCommand extends BaseCommand {
-    @Command(name = "kaboom",permission = Permission.KABOOM)
+    @Command(name = "kaboom", permission = Permission.KABOOM)
     public CommandResult execute(Sender sender, String[] args) {
-        if (args.length == 1){
+        if (args.length == 1) {
             Player player;
-            try{
+            try {
                 player = Bukkit.getPlayer(args[0]);
             } catch (Exception e) {
                 return CommandResult.PLAYER_NOT_FOUND;

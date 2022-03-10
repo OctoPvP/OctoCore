@@ -15,7 +15,7 @@ public class ReflectionUtils {
         Set<Class<?>> classes = new HashSet<>();
         for (URL url : ClasspathHelper.forClassLoader(ClasspathHelper.contextClassLoader(),
                 ClasspathHelper.staticClassLoader(), plugin
-                .getClass().getClassLoader())) {
+                        .getClass().getClassLoader())) {
             Vfs.Dir dir = Vfs.fromURL(url);
             try {
                 for (Vfs.File file : dir.getFiles()) {
@@ -29,6 +29,6 @@ public class ReflectionUtils {
                 dir.close();
             }
         }
-        return (Collection<Class<?>>) ImmutableSet.copyOf(classes);
+        return ImmutableSet.copyOf(classes);
     }
 }

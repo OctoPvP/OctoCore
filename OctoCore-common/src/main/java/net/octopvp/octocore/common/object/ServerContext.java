@@ -8,22 +8,28 @@ import net.octopvp.octocore.common.OctoCoreCommon;
 @Setter
 public class ServerContext {
     private String server;
-    public ServerContext(String s){
+
+    public ServerContext(String s) {
         this.server = s;
     }
-    public boolean isThisServer(){
-        return server.equalsIgnoreCase(OctoCoreCommon.getServerName()) || server.equalsIgnoreCase("global");
-    }
-    public boolean isBungee(){
-        return server.equalsIgnoreCase("bungee") || isGlobal();
-    }
-    public boolean isGlobal(){
-        return server.equalsIgnoreCase("global");
-    }
-    public static ServerContext global(){
+
+    public static ServerContext global() {
         return new ServerContext("Global");
     }
-    public boolean isServer(String in){
+
+    public boolean isThisServer() {
+        return server.equalsIgnoreCase(OctoCoreCommon.getServerName()) || server.equalsIgnoreCase("global");
+    }
+
+    public boolean isBungee() {
+        return server.equalsIgnoreCase("bungee") || isGlobal();
+    }
+
+    public boolean isGlobal() {
+        return server.equalsIgnoreCase("global");
+    }
+
+    public boolean isServer(String in) {
         if (in.equalsIgnoreCase("global"))
             return true;
         String[] servers = in.split("\\|");

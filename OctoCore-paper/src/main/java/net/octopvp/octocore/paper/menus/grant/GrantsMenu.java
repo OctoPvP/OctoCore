@@ -8,7 +8,7 @@ import net.octopvp.octocore.paper.database.redis.packets.other.GrantsUpdatePacke
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
-import net.octopvp.octocore.paper.utils.DateUtils;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
@@ -27,14 +27,14 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GrantsMenu extends PaginatedMenu {
+    private static int i = 0;
     private final PlayerData targetData;
+    private final Comparator<Grant> GRANT_COMPARATOR = Comparator.comparingLong(Grant::getAddedAt).reversed();
+    private boolean all = true;
 
     public GrantsMenu(PlayerData data) {
         this.targetData = data;
     }
-
-    private boolean all = true;
-    private final Comparator<Grant> GRANT_COMPARATOR = Comparator.comparingLong(Grant::getAddedAt).reversed();
 
     @Override
     public String getPagesTitle(Player player) {
@@ -116,8 +116,6 @@ public class GrantsMenu extends PaginatedMenu {
             SoundUtil.playPing(player);
         }
     }
-
-    private static int i = 0;
 
     @RequiredArgsConstructor
     private class GrantEntryButton extends Button {

@@ -15,12 +15,12 @@ import org.bukkit.entity.Player;
 
 public class StaffHistoryCommand extends BaseCommand {
 
-    @Command(name = "staffhistory",aliases = {"staffhist","staffh"},usage = "<player>",playerOnly = true, permission = Permission.PUNISHMENT_STAFF_HISTORY)
-    public CommandResult execute(Sender sender,String[] args) {
+    @Command(name = "staffhistory", aliases = {"staffhist", "staffh"}, usage = "<player>", playerOnly = true, permission = Permission.PUNISHMENT_STAFF_HISTORY)
+    public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 0) {
             return CommandResult.INVALID_ARGS;
         }
-        Tasks.runAsync(() ->{
+        Tasks.runAsync(() -> {
             Player player = sender.getPlayer();
             //OfflinePlayer target = Bukkit.getOfflinePlayer(PlayerManager.getFixedName(args[0]));
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
@@ -37,7 +37,7 @@ public class StaffHistoryCommand extends BaseCommand {
                 new StaffHistoryMenu(targetData).open(player);
             }
         });
-        PlayerManager.getOfflineData(args[0]).thenAcceptAsync((data)->{
+        PlayerManager.getOfflineData(args[0]).thenAcceptAsync((data) -> {
 
         });
         return CommandResult.SUCCESS;

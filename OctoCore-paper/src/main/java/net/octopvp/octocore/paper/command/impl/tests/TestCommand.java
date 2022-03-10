@@ -28,10 +28,11 @@ import java.util.List;
 
 public class TestCommand extends BaseCommand {
     private static final String perm = PermissionUtil.fromEnum(Permission.COMMAND_NICK);
-    @Command(name = "test", description = "test", aliases = {"test1","test2"},playerOnly = true)
+
+    @Command(name = "test", description = "test", aliases = {"test1", "test2"}, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         PlayerData data = PlayerManager.getData(sender.getPlayer().getUniqueId());
-        if (data == null){
+        if (data == null) {
             sender.sendMessage(ChatColor.RED + "Data is null!");
             return CommandResult.SUCCESS;
         }
@@ -40,12 +41,14 @@ public class TestCommand extends BaseCommand {
         sender.sendMessage(ChatColor.GREEN + "Done");
         return CommandResult.SUCCESS;
     }
+
     @Command(name = "testmenu")
     public CommandResult exec(Sender sender, String[] args) {
         Player player = sender.getPlayer();
         new TestMenu().open(sender);
         return CommandResult.SUCCESS;
     }
+
     @RequiredArgsConstructor
     private class TestMenu extends PaginatedMenu {
         @Override
@@ -74,6 +77,7 @@ public class TestCommand extends BaseCommand {
         public String getPagesTitle(Player player) {
             return "test";
         }
+
         @Override
         public List<Button> getPaginatedButtons(Player player) {
             List<Button> buttons = new ArrayList<>();
