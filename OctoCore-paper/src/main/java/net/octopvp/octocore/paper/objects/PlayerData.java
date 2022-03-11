@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.objects;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -13,6 +14,7 @@ import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
@@ -25,10 +27,9 @@ import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishHistory;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
-import net.octopvp.octocore.paper.objects.enums.RankType;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
-import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.paper.utils.GsonType;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -46,7 +47,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 public class PlayerData {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
     private static transient Plugin plugin = OctoCore.getInstance();
     //TODO set defaults for this so theres no errors when using/loading old data from older updates (idk if this makes sense lol)
     private UUID uuid;
@@ -57,38 +58,29 @@ public class PlayerData {
     private String customColor;
     private transient boolean fullyJoined = false;
     private transient int lastDataSave = 0;
-    private long coins = 0, lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis();
-    private String nick,
-            lastKnownName = "<unknown>",
-            nickPrefix,
-            nickColor,
-            name = lastKnownName,
-            lowerName = name.toLowerCase(),
-            server, authSecret, lastSeenServer = "Unknown", rankName = "default",
-            lastSeen;
+    private int coins;
+    private long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis();
+    private String nick, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName, lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default", lastSeen;
     private String lastAuthedIp = "", lastSeenIp = "";
     private transient String lastMessage; //only applies to this server for spam prot (maybe :))
     private List<String> metaDataList = new ArrayList<>();
     private Map<String, String> metaData = new ConcurrentHashMap<>();
-    private RankType rankType = RankType.DEFAULT; //player's rank type, defaults to PLAYER (not meant for permission managment)
     private WorldTime worldTime = WorldTime.DAY;
-    private PlayerTag tag = null, nickTag = null;
+    private UUID tagID = null, nickTagID = null;
     private int /*playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/
             playTime = 0;
     private HashSet<UUID> allowedTagsID = new HashSet<>();
     private transient Set<PlayerTag> allowedTags;
     private UUID nickUUID;
-    private ChatColor nameColor = ChatColor.GREEN, chatColor = ChatColor.GREEN;
+    private ChatColor nameColor = ChatColor.GREEN;
     private boolean nameColorBold = false, nameColorItalic = false;
 
     private boolean staffChatAlerts = true, adminChatAlerts = true, reportAlerts = true;
     private boolean staffChat = false, adminChat = false, build = false;
 
-    private Set<Grant> grants = new HashSet<>();
+    private ArrayList<Grant> grants = new ArrayList<>();
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
-    private Set<Node> nodes = new HashSet<>();
-    private SaveState saveState = SaveState.SAVED;
-    private String s = "default";
+    private List<Node> nodes = new ArrayList<>();
     private transient List<PunishHistory> punishmentsExecuted = new ArrayList<>();
 
     private transient List<LoadNote> loadNotes = new ArrayList<>();
@@ -103,27 +95,164 @@ public class PlayerData {
         this.lowerName = name.toLowerCase();
         this._id = uuid.toString();
         Player player = Bukkit.getPlayer(uuid);
-        if (player != null)
-            this.lastSeenIp = player.getAddress().getHostName();
-        onLoad();
+        if (player != null) this.lastSeenIp = player.getAddress().getHostName();
     }
 
-    public void onLoad(Document... documents) {
-        this.grants.removeIf(Objects::isNull);
-        this.lastLoaded = System.currentTimeMillis();
-        this.name = requestName();
-
-        if (cachedPermissions == null)
-            cachedPermissions = new ConcurrentHashMap<>();
-        if (loadNotes == null)
-            loadNotes = new ArrayList<>();
-        Document document = (documents.length == 1 ? documents[0] : PlayerManager.getProfileDocument(uuid));
+    public void load() {
+        load(null);
     }
 
-    public void onSave(Player player) {
-        if (player != null) {
-            this.lastSeen = DATE_FORMAT.format(new Date());
+    public void load(Document document) {
+        if (document == null) {
+            document = PlayerManager.getProfileDocument(uuid);
         }
+        if (document == null) {
+            return;
+        }
+        Gson gson = OctoCore.getGson();
+        this.name = requestName();
+        this.lowerName = name.toLowerCase();
+        this.lastLoaded = System.currentTimeMillis();
+        this.grants = gson.fromJson(document.getString("grants"), GsonType.GRANT);
+        this.grants.removeIf(Objects::isNull);
+        this.dataVersion = document.getDouble("dataVersion");
+        this.frozen = document.getBoolean("frozen");
+        this.nicked = document.getBoolean("nicked");
+        this.authEnabled = document.getBoolean("authEnabled");
+        this.vanished = document.getBoolean("vanished");
+        this.joinVanished = document.getBoolean("joinVanished");
+        this.customColorEnabled = document.getBoolean("customColorEnabled");
+        this.customColor = document.getString("customColor");
+        this.coins = getInt(document, "coins");
+        this.lastLoaded = getLong(document, "lastLoaded");
+        this.lastLogin = getLong(document, "lastLogin");
+        this.xp = getLong(document, "xp");
+        this.firstJoin = getLong(document, "firstJoin");
+        this.lastSave = getLong(document, "lastSave");
+        this.nick = document.getString("nick");
+        this.lastKnownName = document.getString("lastKnownName");
+        this.nickPrefix = document.getString("nickPrefix");
+        this.nickColor = document.getString("nickColor");
+        this.server = document.getString("server");
+        this.authSecret = document.getString("authSecret");
+        this.lastSeenServer = document.getString("lastSeenServer");
+        this.rankName = document.getString("rankName");
+        this.lastSeen = document.getString("lastSeen");
+        this.lastAuthedIp = document.getString("lastAuthedIp");
+        this.lastSeenIp = document.getString("lastSeenIp");
+        this.metaDataList = gson.fromJson(document.getString("metaDataList"), GsonType.STRING_LIST);
+        this.metaDataList.removeIf(Objects::isNull);
+        this.metaData = gson.fromJson(document.getString("metaData"), GsonType.STRING_STRING_MAP);
+        this.worldTime = WorldTime.valueOf(document.getString("worldTime"));
+        if (document.containsKey("nickTagID")) this.nickTagID = UUID.fromString(document.getString("nickTagID"));
+        if (document.containsKey("nickUUID")) this.nickUUID = UUID.fromString(document.getString("nickUUID"));
+        this.playTime = getInt(document, "playTime");
+        this.allowedTagsID = gson.fromJson(document.getString("allowedTagsID"), GsonType.UUID_SET);
+        if (document.containsKey("nameColor")) this.nameColor = ChatColor.of(document.getString("nameColor"));
+        this.nameColorBold = document.getBoolean("nameColorBold");
+        this.nameColorItalic = document.getBoolean("nameColorItalic");
+        this.staffChatAlerts = document.getBoolean("staffChatAlerts");
+        this.adminChatAlerts = document.getBoolean("adminChatAlerts");
+        this.reportAlerts = document.getBoolean("reportAlerts");
+        this.staffChat = document.getBoolean("staffChat");
+        this.adminChat = document.getBoolean("adminChat");
+        this.build = document.getBoolean("build");
+        this.nodes = gson.fromJson(document.getString("nodes"), GsonType.NODE_LIST);
+        this.nodes.removeIf(Objects::isNull);
+
+        if (cachedPermissions == null) cachedPermissions = new ConcurrentHashMap<>();
+        if (loadNotes == null) loadNotes = new ArrayList<>();
+
+    }
+
+    private long getLong(Document doc, String key, long... def) {
+        Number number = getNumber(doc, key);
+        if (number == null)
+            return def.length > 0 ? def[0] : -1L;
+        return number.longValue();
+    }
+
+    private int getInt(Document doc, String key, int... def) {
+        Number number = getNumber(doc, key);
+        if (number == null) return def.length > 0 ? def[0] : -1;
+        return number.intValue();
+    }
+
+    private double getDouble(Document doc, String key, double... def) {
+        Number n = getNumber(doc, key).doubleValue();
+        if (n == null)
+            return def.length > 0 ? def[0] : -1;
+        return n.doubleValue();
+    }
+
+    private Number getNumber(Document doc, String key) {
+        Object obj = doc.get(key);
+        if (obj != null && obj instanceof Number) return (Number) obj;
+        else return null;
+    }
+
+    public void save() {
+        this.save(false);
+    }
+
+    public Document save(boolean getDoc) {
+        this.lastDataSave = 0;
+
+        Document document = new Document();
+        document.put("uuid", uuid.toString());
+        document.put("name", name);
+        document.put("lowerName", lowerName);
+        document.put("grants", OctoCore.getGson().toJson(grants));
+        document.put("dataVersion", dataVersion);
+        document.put("frozen", frozen);
+        document.put("nicked", nicked);
+        document.put("authEnabled", authEnabled);
+        document.put("vanished", vanished);
+        document.put("joinVanished", joinVanished);
+        document.put("customColorEnabled", customColorEnabled);
+        document.put("customColor", customColor);
+        document.put("coins", coins);
+        document.put("lastLoaded", lastLoaded);
+        document.put("lastLogin", lastLogin);
+        document.put("xp", xp);
+        document.put("firstJoin", firstJoin);
+        document.put("lastSave", lastSave);
+        document.put("nick", nick);
+        document.put("lastKnownName", lastKnownName);
+        document.put("nickPrefix", nickPrefix);
+        document.put("nickColor", nickColor);
+        document.put("server", server);
+        document.put("authSecret", authSecret);
+        document.put("lastSeenServer", lastSeenServer);
+        document.put("rankName", rankName);
+        document.put("lastSeen", lastSeen);
+        document.put("lastAuthedIp", lastAuthedIp);
+        document.put("lastSeenIp", lastSeenIp);
+        document.put("metaDataList", OctoCore.getGson().toJson(metaDataList));
+        document.put("metaData", OctoCore.getGson().toJson(metaData));
+        document.put("worldTime", worldTime.name());
+        if (nickTagID != null) document.put("nickTagID", nickTagID.toString());
+        if (nickUUID != null) document.put("nickUUID", nickUUID.toString());
+        document.put("playTime", playTime);
+        document.put("allowedTagsID", OctoCore.getGson().toJson(allowedTagsID));
+        if (nameColor != null) document.put("nameColor", nameColor.name().toUpperCase());
+        document.put("nameColorBold", nameColorBold);
+        document.put("nameColorItalic", nameColorItalic);
+        document.put("staffChatAlerts", staffChatAlerts);
+        document.put("adminChatAlerts", adminChatAlerts);
+        document.put("reportAlerts", reportAlerts);
+        document.put("staffChat", staffChat);
+        document.put("adminChat", adminChat);
+        document.put("build", build);
+        document.put("nodes", OctoCore.getGson().toJson(nodes));
+        document.entrySet().removeIf(e -> e.getValue() == null);
+        if (getDoc) return document;
+        if (PlayerManager.doesDocumentExistByUUID(uuid))
+            PlayerManager.getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document);
+        else
+            PlayerManager.getPdataCollection().insertOne(document);
+        new CachedData(this.uuid).update(document);
+        return document;
     }
 
     public void onJoin(Player player) {
@@ -149,16 +278,12 @@ public class PlayerData {
         return getNode(perm) != null;
     }
 
-    public void save() {
-        PlayerManager.saveProfile(this);
-    }
-
     public String getFormattedName(boolean nicked, Player player, boolean... showtag) {
         String prefix = getHighestRank().getPrefix();
         boolean shouldShowTag = showtag.length == 0 || showtag[0];
         if (nicked)
-            return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (tag != null && shouldShowTag ? " " + getTagString() : "");
-        return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).equals("") ? player.getName() : " " + player.getName())) + (tag != null && shouldShowTag ? " " + getTagString() : "");
+            return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
+        return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).equals("") ? player.getName() : " " + player.getName())) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
         /*
         if (nicked)
             return CC.translate((this.isNicked() ? nickPrefix : getHighestRank().getPrefix()) + (this.isNicked() ? nickColor : getCurrentColor()) + " " + (this.isNicked() ? nick : lastKnownName)) + (tag != null ? " " + getTagString() : "");
@@ -180,10 +305,7 @@ public class PlayerData {
     }
 
     public String getActualMainColor() {
-        return (customColor != null &&
-                isCustomColorEnabled() ?
-                customColor :
-                getHighestRank().getColor().toString());
+        return (customColor != null && isCustomColorEnabled() ? customColor : getHighestRank().getColor().toString());
     }
 
     public String getPrefixColorOrNull() {
@@ -191,11 +313,8 @@ public class PlayerData {
     }
 
     public boolean isOnline(String name) { // FIXME inverted this because its returning false even if they are online
-        if (Bukkit.getPlayer(uuid) != null)
-            return true;
-        return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData ->
-                serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
-                        .contains(name.toLowerCase())).findFirst().orElse(null) != null;
+        if (Bukkit.getPlayer(uuid) != null) return true;
+        return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData -> serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList()).contains(name.toLowerCase())).findFirst().orElse(null) != null;
     }
 
     public boolean isOnlineThisServer() {
@@ -207,8 +326,7 @@ public class PlayerData {
     }
 
     public String getTagString() {
-        if (tag == null)
-            return "";
+        if (getTag() == null) return "";
         if (isNicked()) {
             return CC.D_GRAY + CC.ARROW_LEFT + getNickTag().getTag() + CC.D_GRAY + CC.ARROW_RIGHT;
         }
@@ -271,8 +389,7 @@ public class PlayerData {
     }
 
     public Rank getHighestRank() {
-        return this.getActiveGrants().stream().map(Grant::getRank)
-                .max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getDefaultRank());
+        return this.getActiveGrants().stream().map(Grant::getRank).max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getDefaultRank());
     }
 
     public Set<Node> getFinalNodes() {
@@ -294,13 +411,11 @@ public class PlayerData {
         if (cachedResult != null) {
             if (cachedResult.getTimestamp() + 600000 < System.currentTimeMillis()) { //10 minutes ttl
                 cachedPermissions.remove(perm);
-            } else
-                return cachedResult.allowed();
+            } else return cachedResult.allowed();
         }
         PermissionResult result = PermissionCalculator.hasPermissionResult(perm, getFinalNodes());
         cachedPermissions.put(perm, result);
-        if (result.getReason() == PermissionReason.NOT_SET)
-            return getHighestRank().hasPermission(perm);
+        if (result.getReason() == PermissionReason.NOT_SET) return getHighestRank().hasPermission(perm);
         else return result.allowed();
     }
 
@@ -314,8 +429,7 @@ public class PlayerData {
 
     public void applyGrant(Grant grant) {
         grants.add(grant);
-        if (Bukkit.getPlayer(uuid) != null)
-            loadPerms(Bukkit.getPlayer(uuid));
+        if (Bukkit.getPlayer(uuid) != null) loadPerms(Bukkit.getPlayer(uuid));
         save();
     }
 
@@ -388,8 +502,7 @@ public class PlayerData {
             permissions.putAll(defaultRank.getAllEffectivePermissions());
             defaultRank.getInheritedRanks().forEach(i -> {
                 Rank inherited = RankManager.getRankById(i);
-                if (inherited != null)
-                    permissions.putAll(inherited.getAllEffectivePermissions());
+                if (inherited != null) permissions.putAll(inherited.getAllEffectivePermissions());
             });
         }
         permissions.putAll(this.getAllSetEffectivePermissions());
@@ -397,10 +510,8 @@ public class PlayerData {
     }
 
     public String getDisplayName() {
-        if (nicked)
-            return CC.translate(getCurrentColor() + getNickColor() + CC.R);
-        else
-            return CC.translate(getCurrentColor() + getName() + CC.R);
+        if (nicked) return CC.translate(getCurrentColor() + getNickColor() + CC.R);
+        else return CC.translate(getCurrentColor() + getName() + CC.R);
     }
 
     public Map<String, ServerContext> getAllNegatedPermissions() {
@@ -435,8 +546,7 @@ public class PlayerData {
     public Map<String, ServerContext> getAllSetEffectivePermissions() {
         Map<String, ServerContext> a = new HashMap<>();
         nodes.forEach(node -> {
-            if (hasPermission(node.getPermission()))
-                a.put(node.getPermission(), node.getServer());
+            if (hasPermission(node.getPermission())) a.put(node.getPermission(), node.getServer());
         });
         return a;
     }
@@ -444,8 +554,7 @@ public class PlayerData {
     public Map<String, ServerContext> getAllSetNegatedPermissions() {
         Map<String, ServerContext> a = new HashMap<>();
         nodes.forEach(node -> {
-            if (node.isNegated())
-                a.put(node.getPermission(), node.getServer());
+            if (node.isNegated()) a.put(node.getPermission(), node.getServer());
         });
         return a;
     }
@@ -462,11 +571,7 @@ public class PlayerData {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Bukkit.getPlayer(uuid).sendPluginMessage(
-                    OctoCore.getInstance(),
-                    PluginMsgChannels.PLUGIN_MSG,
-                    b.toByteArray()
-            );
+            Bukkit.getPlayer(uuid).sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.PLUGIN_MSG, b.toByteArray());
         }
     }
 
@@ -557,6 +662,19 @@ public class PlayerData {
     public void removeTag(UUID tagID) {
         allowedTagsID.remove(tagID);
         allowedTags = null; // Reset cache
+    }
+
+    public PlayerTag getTag() {
+        return TagManager.getTag(tagID);
+    }
+
+    public PlayerTag getNickTag() {
+        return TagManager.getTag(nickTagID);
+    }
+
+    public void setTag(PlayerTag tag) {
+        this.tagID = tag.getId();
+        this.allowedTags = null;
     }
 
     @Override

@@ -12,9 +12,11 @@ import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
+import net.octopvp.octocore.paper.objects.CachedData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -179,7 +181,18 @@ public class JoinLeaveListener implements Listener {
         if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) {
             if (kicked)
                 return;
-            PlayerManager.loadPData(event.getUniqueId(), event.getName(), true);
+            //PlayerManager.loadPData(event.getUniqueId(), event.getName(), true);
+            PlayerData playerData = PlayerManager.createPlayerData(uuid, name);
+
+            CachedData cache = new CachedData(uuid);
+            Document data0 = cache.getData();
+
+            if (data0 != null) {
+                playerData.load(data0);
+            } else {
+                playerData.load();
+            }
+
             if (PlayerManager.getData(event.getUniqueId()) == null)
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
         }

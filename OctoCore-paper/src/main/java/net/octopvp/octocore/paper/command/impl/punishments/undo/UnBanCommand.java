@@ -21,7 +21,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class UnBanCommand extends BaseCommand {
-
     @Command(name = "unban", permission = Permission.PUNISHMENT_UNBAN)
     public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {
@@ -60,6 +59,11 @@ public class UnBanCommand extends BaseCommand {
                 reason = reason.replace("-silent", "");
             } else if (reason.contains("-s")) {
                 reason = reason.replace("-s", "");
+            }
+            if (reason.isEmpty()) {
+                sender.sendMessage("&cUsage: /unban <player> <reason> [-s]");
+                PunishModule.getInstance().getProfileManager().unloadData(target);
+                return;
             }
 
             Punishment punishment = targetData.getPunishData().getActiveBan();
