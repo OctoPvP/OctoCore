@@ -154,7 +154,7 @@ public class Punishment {
             Player player = (Player) sender;
             jsonChain.addProperty("sender", player.getDisplayName());
 
-            PlayerData playerData = PlayerManager.getData(player.getUniqueId());
+            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
             jsonChain.addProperty("coloredName", playerData.getHighestRank().getColor() + playerData.getName());
         } else {
             jsonChain.addProperty("sender", sender.getName());

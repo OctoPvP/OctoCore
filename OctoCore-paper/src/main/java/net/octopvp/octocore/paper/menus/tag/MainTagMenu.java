@@ -91,7 +91,7 @@ public class MainTagMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            PlayerData data = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData data = PlayerManager.getInstance().getData(player.getUniqueId());
             List<PlayerTag> tags = new ArrayList<>();
             data.getAllowedTags().forEach(tag -> {
                 if (tag != null)

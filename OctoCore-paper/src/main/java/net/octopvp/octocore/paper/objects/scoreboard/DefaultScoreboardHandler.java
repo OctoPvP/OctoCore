@@ -27,7 +27,7 @@ public class DefaultScoreboardHandler implements ScoreboardHandler {
             i = 0;
             a = !a;
         }
-        PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+        PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
         if (playerData == null)
             return new EntryBuilder().blank().build();
         String name = playerData.getCurrentColor() + CC.strip(player.getDisplayName());

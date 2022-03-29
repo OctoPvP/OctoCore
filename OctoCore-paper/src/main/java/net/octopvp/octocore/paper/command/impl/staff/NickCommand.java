@@ -23,7 +23,7 @@ public class NickCommand extends BaseCommand {
             NameTagChanger.INSTANCE.changePlayerName(sender.getPlayer(), args[0]);
             sender.getPlayer().setDisplayName(args[0]);
             sender.getPlayer().setPlayerListName(args[0]);
-            NickManager.addNick(PlayerManager.getProfile(sender.getPlayer().getUniqueId()), args[0]);
+            NickManager.addNick(PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId()), args[0]);
             sender.sendMessage(Lang.NICK_SUCCESS.getMsg().replaceFirst("%nick%", args[0]));
             return CommandResult.SUCCESS;
         } else if (args.length == 2) {
@@ -36,7 +36,7 @@ public class NickCommand extends BaseCommand {
             NameTagChanger.INSTANCE.changePlayerName(target, args[0]);
             target.setDisplayName(args[0]);
             target.setPlayerListName(args[0]);
-            NickManager.addNick(PlayerManager.getProfile(target.getUniqueId()), args[0]);
+            NickManager.addNick(PlayerManager.getInstance().getData(target.getUniqueId()), args[0]);
             target.sendMessage(Lang.NICK_SUCCESS.getMsg(args[0]));
             sender.sendMessage(Lang.NICK_OTHER_SUCCESS.getMsg(target.getName(), args[0]));
             return CommandResult.SUCCESS;

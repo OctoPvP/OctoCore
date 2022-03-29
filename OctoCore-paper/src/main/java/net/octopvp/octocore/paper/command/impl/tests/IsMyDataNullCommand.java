@@ -9,7 +9,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 public class IsMyDataNullCommand extends BaseCommand {
     @Command(name = "ismydatanull", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        boolean exists = PlayerManager.getData(sender.getPlayer()) == null;
+        boolean exists = PlayerManager.getInstance().getData(sender.getPlayer()) == null;
         sender.sendMessage(exists + "");
         return CommandResult.SUCCESS;
     }

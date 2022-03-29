@@ -18,18 +18,16 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class StaffRollBackCommand extends BaseCommand {
-
-
     @Command(name = "staffrollback", permission = Permission.PUNISHMENT_STAFFROLLBACK)
     public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {
             if (args.length < 2) {
                 sender.sendMessage(CC.translate("&cUsage: /staffrollback <staff> <time> <Bans/Mutes/Blacklists/Warns>"));
-                sender.sendMessage(CC.translate("&cFor the type you can use 'Bans, Mutes, Blacklists or Warns'"));
+                sender.sendMessage(CC.translate("&cFor the type you can use 'Warns, Mutes, Bans or Blacklists'"));
                 return;
             }
-            OfflinePlayer target = Bukkit.getOfflinePlayer(PlayerManager.getFixedName(args[0]));
-            if (!PlayerManager.doesDocumentExistByUUID(target.getUniqueId()) && !args[0].equalsIgnoreCase("console")) {
+            OfflinePlayer target = Bukkit.getOfflinePlayer(PlayerManager.getInstance().getFixedName(args[0]));
+            if (!PlayerManager.getInstance().doesDocumentExistByUUID(target.getUniqueId()) && !args[0].equalsIgnoreCase("console")) {
                 sender.sendMessage(Lang.COULD_NOT_FIND_DATA);
                 return;
             }

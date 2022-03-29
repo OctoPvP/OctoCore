@@ -54,7 +54,7 @@ public class DurationMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
             if (playerData == null) {
                 player.closeInventory();
                 return;

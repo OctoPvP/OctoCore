@@ -58,7 +58,7 @@ public class GrantConfirmationMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            PlayerData senderData = PlayerManager.getData(player);
+            PlayerData senderData = PlayerManager.getInstance().getData(player);
             GrantProcedure grantProcedure = senderData.getGrantProcedure();
             Rank targetRank = RankManager.getRankByName(grantProcedure.getRankName());
             if (targetRank == null) {
@@ -120,7 +120,7 @@ public class GrantConfirmationMenu extends Menu {
                                 true
                         ).send();
                     } else {
-                        PlayerData data = PlayerManager.getProfile(targetData.get().getUuid());
+                        PlayerData data = PlayerManager.getInstance().getData(targetData.get().getUuid());
                         if (data == null)
                             data = PlayerManager.loadProfileFromDB(targetData.get().getUuid(), false);
                         //data.getGrants().add(grant);
@@ -154,7 +154,7 @@ public class GrantConfirmationMenu extends Menu {
 
         @Override
         public ItemStack getItem(Player player) {
-            GrantProcedure procedure = PlayerManager.getProfile(player.getUniqueId()).getGrantProcedure();
+            GrantProcedure procedure = PlayerManager.getInstance().getData(player.getUniqueId()).getGrantProcedure();
             return new ItemBuilder(Material.BEACON).name(CC.AQUA + "Are you sure?").lore(CC.SEPARATOR, CC.AQUA + "Player: " + CC.YELLOW + procedure.getTargetData().getName(), CC.AQUA + "Rank: " + CC.YELLOW + procedure.getRankName(), CC.AQUA + "Current Rank: " + CC.YELLOW + procedure.getTargetData().getHighestRank().getName(), CC.AQUA + "Duration: " + CC.YELLOW + procedure.getNiceDuration(), CC.AQUA + "Server: " + CC.YELLOW + procedure.getServer(), CC.SEPARATOR).build();
         }
 

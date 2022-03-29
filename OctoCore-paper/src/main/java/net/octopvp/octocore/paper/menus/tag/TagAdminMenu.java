@@ -3,11 +3,14 @@ package net.octopvp.octocore.paper.menus.tag;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.conversations.QuestionConversation;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -88,13 +91,15 @@ public class TagAdminMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
             new QuestionConversation(CC.GREEN + "Please enter the username of the player.", (answer) -> {
-                PlayerManager.getOfflineData(answer).thenAcceptAsync(data -> {
-                    if (data == null) {
-                        player.sendMessage(CC.RED + "That player does not exist!");
-                        return;
-                    }
-                    new ManagePlayerTagsMenu(data).open(player);
-                });
+                OfflinePlayer op = Bukkit.getOfflinePlayer(answer);
+                PlayerData data = PlayerManager.getInstance().getOfflineData(op.getUniqueId());
+                if (data == null) {
+                    player.sendMessage(CC.RED + "That player does not exist!");
+                    return Prompt.END_OF_CONVERSATION;
+                }
+                data.load();
+
+                new ManagePlayerTagsMenu(data).open(player);
                 return Prompt.END_OF_CONVERSATION;
             }).start(player);
         }

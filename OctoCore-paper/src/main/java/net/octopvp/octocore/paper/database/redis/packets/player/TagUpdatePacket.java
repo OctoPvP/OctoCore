@@ -28,7 +28,7 @@ public class TagUpdatePacket extends RedisPacket {
         UUID tagId = UUID.fromString(data.get("tagId").getAsString());
         if (player == null || tagId == null) return;
         PlayerTag tag = TagManager.getTag(tagId);
-        PlayerData playerData = PlayerManager.getData(player);
+        PlayerData playerData = PlayerManager.getInstance().getData(player);
         switch (type) {
             case "GIVE_TAG": {
                 playerData.addTag(tag);

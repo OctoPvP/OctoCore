@@ -104,7 +104,7 @@ public class PlayerData {
 
     public void load(Document document) {
         if (document == null) {
-            document = PlayerManager.getProfileDocument(uuid);
+            document = PlayerManager.getInstance().getProfileDocument(uuid);
         }
         if (document == null) {
             return;
@@ -247,10 +247,10 @@ public class PlayerData {
         document.put("nodes", OctoCore.getGson().toJson(nodes));
         document.entrySet().removeIf(e -> e.getValue() == null);
         if (getDoc) return document;
-        if (PlayerManager.doesDocumentExistByUUID(uuid))
-            PlayerManager.getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document);
+        if (PlayerManager.getInstance().doesDocumentExistByUUID(uuid))
+            PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document);
         else
-            PlayerManager.getPdataCollection().insertOne(document);
+            PlayerManager.getInstance().getPdataCollection().insertOne(document);
         new CachedData(this.uuid).update(document);
         return document;
     }

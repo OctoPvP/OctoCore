@@ -102,7 +102,7 @@ public class BanCommand extends BaseCommand {
             if (sender.getCommandSender() instanceof Player) {
                 Logger.debug("Sender is player!");
                 Player player = sender.getPlayer();
-                PlayerData playerData = PlayerManager.getData(player.getUniqueId());
+                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
 
                 if (playerData == null) {
                     Logger.debug("Sender Data is null!");

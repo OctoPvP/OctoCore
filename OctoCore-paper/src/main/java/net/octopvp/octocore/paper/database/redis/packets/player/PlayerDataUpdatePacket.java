@@ -24,7 +24,7 @@ public class PlayerDataUpdatePacket extends RedisPacket {
                 String target = data.get("target").getAsString();
                 String toAdd = data.get("add").getAsString();
                 if (Bukkit.getPlayer(target) != null) {
-                    PlayerData pdata = PlayerManager.getProfile(Bukkit.getPlayer(target).getUniqueId());
+                    PlayerData pdata = PlayerManager.getInstance().getData(Bukkit.getPlayer(target).getUniqueId());
                     pdata.addTag(TagManager.getTagByName(toAdd)); //maybe get by id
                 }
                 break;
@@ -32,7 +32,7 @@ public class PlayerDataUpdatePacket extends RedisPacket {
                 String targetWho = data.get("target").getAsString();
                 String toRemove = data.get("remove").getAsString();
                 if (Bukkit.getPlayer(targetWho) != null) {
-                    PlayerData playerData = PlayerManager.getProfile(Bukkit.getPlayer(targetWho).getUniqueId());
+                    PlayerData playerData = PlayerManager.getInstance().getData(Bukkit.getPlayer(targetWho).getUniqueId());
                     playerData.removeTag(TagManager.getTagByName(toRemove).getId());
                 }
                 break;

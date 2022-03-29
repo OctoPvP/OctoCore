@@ -48,7 +48,7 @@ public class TabManager extends Manager {
     }
 
     public static void update() {
-        PlayerManager.getPlayerProfiles().forEach((uuid, profile) -> {
+        PlayerManager.getInstance().getPlayerProfiles().forEach((uuid, profile) -> {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null)
                 return;
@@ -61,7 +61,7 @@ public class TabManager extends Manager {
 
     public static void onJoin(Player p) {
         if (OctoCore.getInstance().getConfig().getBoolean("default-tab")) {
-            if (PlayerManager.getPlayerProfiles().containsKey(p.getUniqueId())) {
+            if (PlayerManager.getInstance().getPlayerProfiles().containsKey(p.getUniqueId())) {
                 sendTab(p, getTabHandler(p));
             }
         }

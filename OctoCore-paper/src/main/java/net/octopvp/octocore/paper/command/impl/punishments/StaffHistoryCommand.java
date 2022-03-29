@@ -25,10 +25,10 @@ public class StaffHistoryCommand extends BaseCommand {
             //OfflinePlayer target = Bukkit.getOfflinePlayer(PlayerManager.getFixedName(args[0]));
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
             if (target.isOnline()) {
-                PlayerData targetData = PlayerManager.getData(target.getUniqueId());
+                PlayerData targetData = PlayerManager.getInstance().getData(target.getUniqueId());
                 new StaffHistoryMenu(targetData).open(player);
             } else {
-                PlayerData targetData = PlayerManager.getData(target.getUniqueId());
+                PlayerData targetData = PlayerManager.getInstance().getData(target.getUniqueId());
 
                 if (targetData == null) {
                     return;
@@ -36,9 +36,6 @@ public class StaffHistoryCommand extends BaseCommand {
                 targetData.loadPunishmentsPerformed();
                 new StaffHistoryMenu(targetData).open(player);
             }
-        });
-        PlayerManager.getOfflineData(args[0]).thenAcceptAsync((data) -> {
-
         });
         return CommandResult.SUCCESS;
     }

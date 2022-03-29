@@ -13,7 +13,7 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 public class AdminChat extends BaseCommand {
     @Command(name = "adminchat", aliases = {"ac"}, permission = Permission.ADMINCHAT, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        PlayerData playerData = PlayerManager.getProfile(sender.getPlayer().getUniqueId());
+        PlayerData playerData = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
         if (args.length == 0) {
             playerData.setStaffChat(!playerData.isStaffChat());
             sender.sendMessage((playerData.isStaffChat() ? Lang.ADMIN_CHAT_ENABLED : Lang.ADMIN_CHAT_DISABLED));

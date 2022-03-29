@@ -16,7 +16,7 @@ public class DumpPlayerDataCommand extends BaseCommand {
         if (args.length != 1)
             return CommandResult.INVALID_ARGS;
         sender.sendMessage(CC.GRAY + "Dumping data, please wait...");
-        String data = new GsonBuilder().setPrettyPrinting().create().toJson(PlayerManager.getProfileJsonOnlineorOffline(args[0]));
+        String data = new GsonBuilder().setPrettyPrinting().create().toJson(PlayerManager.getInstance().getDataJsonOnlineorOffline(args[0]));
         new Hastebin().post(data).thenAcceptAsync((s) -> sender.sendMessage(CC.AQUA + "Pdata dump for: " + args[0] + "\n" + s));
         return CommandResult.SUCCESS;
     }

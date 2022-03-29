@@ -61,11 +61,11 @@ public class AddGrantMenu extends PaginatedMenu {
 
     @Override
     public void onClose(Player player) {
-        PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+        PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
         if (playerData.getGrantProcedure() != null && playerData.getGrantProcedure().getGrantProcedureState() == GrantProcedureState.START) {
             playerData.setGrantProcedure(null);
         }
-        PlayerManager.deleteData(data.getUuid());
+        PlayerManager.getInstance().getPlayerProfiles().remove(data.getUuid());
     }
 
     @Override
@@ -110,7 +110,7 @@ public class AddGrantMenu extends PaginatedMenu {
                 player.sendMessage(Lang.GRANT_ALREADY_HAS_RANK.getMsg(playerData.getName(), rankData.getName()));
                 return;
             }
-            PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
             if (!RankManager.canGrant(playerData, rankData) && !player.hasPermission(Permission.GRANT_ALL.toString())) {
                 player.sendMessage(Lang.GRANT_CANNOT_GRANT_HIGHER_RANK.getMsg());
                 return;

@@ -193,7 +193,7 @@ public class JoinLeaveListener implements Listener {
                 playerData.load();
             }
 
-            if (PlayerManager.getData(event.getUniqueId()) == null)
+            if (PlayerManager.getInstance().getData(event.getUniqueId()) == null)
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
         }
     }
@@ -212,7 +212,7 @@ public class JoinLeaveListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogin(PlayerLoginEvent event) {
-        PlayerData data = PlayerManager.getData(event.getPlayer());
+        PlayerData data = PlayerManager.getInstance().getData(event.getPlayer());
         if (data == null)
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
     }

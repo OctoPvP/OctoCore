@@ -73,7 +73,7 @@ public class UnBlacklistCommand extends BaseCommand {
                 Player player = sender.getPlayer();
                 jsonChain.addProperty("senderDisplay", player.getDisplayName());
 
-                PlayerData playerData = PlayerManager.getData(player.getUniqueId());
+                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                 jsonChain.addProperty("coloredName", playerData.getHighestRank().getColor() + playerData.getName());
             } else {
                 jsonChain.addProperty("senderDisplay", sender.getName());
@@ -85,7 +85,7 @@ public class UnBlacklistCommand extends BaseCommand {
 
             Player addedBy = Bukkit.getPlayer(punishment.getAddedByName());
             if (addedBy != null) {
-                PlayerData addedByData = PlayerManager.getData(addedBy.getUniqueId());
+                PlayerData addedByData = PlayerManager.getInstance().getData(addedBy.getUniqueId());
                 addedByData.getPunishmentsExecuted().forEach(punishHistory -> {
                     if (punishHistory.getPunishmentType() == PunishmentType.BLACKLIST) {
                         if (punishHistory.getTarget().equals(target.getName())) {

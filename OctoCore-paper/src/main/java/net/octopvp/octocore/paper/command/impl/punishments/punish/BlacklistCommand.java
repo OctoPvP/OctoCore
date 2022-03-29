@@ -77,7 +77,7 @@ public class BlacklistCommand extends BaseCommand {
 
             if (sender.isPlayer()) {
                 Player player = sender.getPlayer();
-                PlayerData playerData = PlayerManager.getData(player.getUniqueId());
+                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                 if (playerData == null) {
                     return;
                 }

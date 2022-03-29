@@ -15,7 +15,7 @@
 
 
         tab.set(1,0, new TextTabItem(title_color + "You (" + p.getDisplayName() + ")", -1,skin));
-        tab.set(1,2, new TextTabItem(value_color + "Rank: " + PlayerManager.getProfile(p.getUniqueId()).getPrefix(), -1,skin));
+        tab.set(1,2, new TextTabItem(value_color + "Rank: " + PlayerManager.getInstance().getData(p.getUniqueId()).getPrefix(), -1,skin));
         tab.set(1,4, new TextTabItem(value_color + "Coins: " + profile.getCoins(), -1,skin));
         tab.set(1,6, new TextTabItem(value_color + "XP: " + profile.getXp(), -1,skin));
         tab.set(1,8, new TextTabItem(value_color + "Last Login: 1/1/2021", -1,skin));

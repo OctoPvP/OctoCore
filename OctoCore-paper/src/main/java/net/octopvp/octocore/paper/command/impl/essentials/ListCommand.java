@@ -27,7 +27,7 @@ public class ListCommand extends BaseCommand {
             if (args.length > 1) {
                 sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getPlayerProfiles().size()));
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+                    PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                     String msg;
                     if (playerData == null)
                         msg = CC.GRAY + player.getName();
@@ -42,7 +42,7 @@ public class ListCommand extends BaseCommand {
             //console
             sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getPlayerProfiles().size()));
             for (Player player : Bukkit.getOnlinePlayers()) {
-                PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                 String msg;
                 if (playerData == null)
                     msg = CC.GRAY + player.getName();

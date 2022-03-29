@@ -15,7 +15,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void messageListener(AsyncPlayerChatEvent e) {
-        PlayerData playerData = PlayerManager.getProfile(e.getPlayer().getUniqueId());
+        PlayerData playerData = PlayerManager.getInstance().getData(e.getPlayer().getUniqueId());
 
         if (playerData.isStaffChat()) {
             if (playerData.isAdminChat()) {

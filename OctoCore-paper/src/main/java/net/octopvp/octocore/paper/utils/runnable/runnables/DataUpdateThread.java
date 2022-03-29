@@ -57,7 +57,7 @@ public class DataUpdateThread extends Thread {
         jsonChain.addProperty("tps3", Bukkit.getServer().spigot().getTPS()[2]).addProperty("lastTick", System.currentTimeMillis()).addProperty("players", StringUtils.getStringFromList(Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList())));
 
         new ServerUpdatePacket(jsonChain).send();
-        for (PlayerData playerData : PlayerManager.getPlayerProfiles().values()) {
+        for (PlayerData playerData : PlayerManager.getInstance().getPlayerProfiles().values()) {
             if (playerData == null) continue;
             playerData.setLastDataSave(playerData.getLastDataSave() + 1);
             if (playerData.getLastDataSave() >= 120) //save every 2 mins

@@ -74,7 +74,7 @@ public class UnMuteCommand extends BaseCommand {
                 Player player = sender.getPlayer();
                 jsonChain.addProperty("senderDisplay", player.getDisplayName());
 
-                PlayerData playerData = PlayerManager.getPlayerData(player.getUniqueId());
+                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                 jsonChain.addProperty("coloredName", playerData.getHighestRank().getColor() + playerData.getName());
             } else {
                 jsonChain.addProperty("senderDisplay", sender.getName());
@@ -86,7 +86,7 @@ public class UnMuteCommand extends BaseCommand {
 
             Player addedBy = Bukkit.getPlayer(punishment.getAddedByName());
             if (addedBy != null) {
-                PlayerData addedByData = PlayerManager.getPlayerData(addedBy.getUniqueId());
+                PlayerData addedByData = PlayerManager.getInstance().getData(addedBy.getUniqueId());
                 addedByData.getPunishmentsExecuted().forEach(punishHistory -> {
                     if (punishHistory.getPunishmentType() == PunishmentType.MUTE) {
                         if (punishHistory.getTarget().equals(target.getName())) {

@@ -58,7 +58,7 @@ public class TagManager extends Manager {
         PlayerTag tag = getTagByName(tagName);
         if (tag == null)
             return;
-        PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
+        PlayerData pdata = PlayerManager.getInstance().getData(player.getUniqueId());
         pdata.addTag(tag);
         pdata.setTag(tag);
     }

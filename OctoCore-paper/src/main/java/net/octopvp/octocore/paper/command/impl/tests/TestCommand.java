@@ -31,7 +31,7 @@ public class TestCommand extends BaseCommand {
 
     @Command(name = "test", description = "test", aliases = {"test1", "test2"}, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        PlayerData data = PlayerManager.getData(sender.getPlayer().getUniqueId());
+        PlayerData data = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
         if (data == null) {
             sender.sendMessage(ChatColor.RED + "Data is null!");
             return CommandResult.SUCCESS;

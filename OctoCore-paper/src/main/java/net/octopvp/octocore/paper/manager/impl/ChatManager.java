@@ -21,7 +21,7 @@ public class ChatManager extends Manager {
     }
 
     public static String formatChat(Player player, String message, boolean translateColor) {
-        PlayerData profile = PlayerManager.getProfile(player);
+        PlayerData profile = PlayerManager.getInstance().getData(player);
         if (profile == null)
             return null;
         String name = profile.getFormattedName(true, player);
