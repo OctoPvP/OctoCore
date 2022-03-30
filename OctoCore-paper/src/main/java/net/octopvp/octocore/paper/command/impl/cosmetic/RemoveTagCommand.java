@@ -44,14 +44,14 @@ public class RemoveTagCommand extends BaseCommand {
         } else {
             //player is offline
             sender.sendMessage(CC.GREEN + "Attempting to load " + target + "'s playerdata");
-            PlayerData data = PlayerManager.getInstance().getDataFromDB(target);
+            PlayerData data = PlayerManager.getInstance().getOfflineData(target);
             if (data == null)
                 return CommandResult.PLAYER_NOT_FOUND;
             sender.sendMessage(CC.GREEN + "Found " + target + "'s data!");
             PlayerTag tag1 = TagManager.getTagByName(tag);
             if (data.hasTag(tag1))
                 data.removeTag(tag1.getId());
-            PlayerManager.saveProfile(data);
+            data.save();
             sender.sendMessage(CC.GREEN + "Added tag " + tag1.getName() + " to " + target);
             return CommandResult.SUCCESS;
         }

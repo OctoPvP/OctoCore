@@ -19,7 +19,7 @@ public class GlobalPlayer {
     private UUID uuid;
 
     private String name, server, firstJoined, lastServer;
-    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts;
+    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving;
     private long lastSeen, lastActivity = -1L;
     private List<PlayerTag> allTags = new ArrayList<>();
     private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();

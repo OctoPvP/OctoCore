@@ -13,9 +13,7 @@ public class SetupListeners implements Setup {
     @Override
     public void setup(OctoCore plugin) {
         PluginManager plm = Bukkit.getPluginManager();
-        for (Listener listener : listeners)
-            plm.registerEvents(listener, plugin);
-        JoinLeaveListener.init();
+        for (Listener listener : listeners) plm.registerEvents(listener, plugin);
     }
 
     @Override

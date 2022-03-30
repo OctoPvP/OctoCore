@@ -7,65 +7,69 @@ import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.ServerData;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Setter
 public class ServerManager extends Manager {
-    private Set<ServerData> connectedServers = ConcurrentHashMap.newKeySet();
+    @Getter
+    private static ServerManager instance;
+    private Map<String, ServerData> serverData = new ConcurrentHashMap<>();
+    private Map<String, GlobalPlayer> globalPlayers = new ConcurrentHashMap<>();
+
+    public Map<String, GlobalPlayer> getRealGlobalPlayers() {
+        return this.globalPlayers;
+    }
+
+    public Map<String, GlobalPlayer> getGlobalPlayers() {
+        return new HashMap<>(this.globalPlayers);
+    }
+
+    public Map<String, ServerData> getServerData() {
+        return new HashMap<>(this.serverData);
+    }
+
+    public Set<ServerData> getConnectedServers() {
+        return new HashSet<>(this.serverData.values());
+    }
+
+    public void removeInActivePlayers() {
+        this.globalPlayers.entrySet().removeIf(next -> System.currentTimeMillis() - next.getValue().getLastActivity() >= 6000L);
+    }
+
+    public void removeInActiveServers() {
+        this.serverData.entrySet().removeIf(next -> System.currentTimeMillis() - next.getValue().getLastTick() >= 15000L);
+    }
 
     public ServerData createServerData(String name) {
-        if (getServerData(name) != null) return null;
-        this.connectedServers.add(new ServerData(name));
-        return getServerData(name);
+        if (this.getServerData(name) != null) return this.getServerData(name);
+        this.serverData.put(name.toLowerCase(), new ServerData(name));
+        return this.getServerData(name);
     }
 
     public ServerData getServerData(String name) {
-        return this.connectedServers.stream().filter(serverData -> serverData.getServerName().equalsIgnoreCase(name)).findFirst().orElse(null);
-    }
-
-    public List<GlobalPlayer> getGlobalPlayers() {
-        List<GlobalPlayer> players = new ArrayList<>();
-        this.connectedServers.forEach(serverData -> players.addAll(serverData.getOnlinePlayers()));
-        return players;
+        return this.getServerData().get(name.toLowerCase());
     }
 
     public int getGlobalMaxPlayers() {
-        int i = 0;
-        for (ServerData serverData : this.connectedServers) {
-            i += serverData.getMaxPlayers();
-        }
-        return i;
+        return new HashMap<>(this.serverData).values().stream().mapToInt(ServerData::getMaxPlayers).sum();
     }
 
     public GlobalPlayer getGlobalPlayer(String name) {
-        GlobalPlayer globalPlayerReturn = null;
-        for (ServerData server : this.connectedServers) {
-            for (GlobalPlayer globalPlayer : server.getOnlinePlayers()) {
-                if (globalPlayer.getName().equalsIgnoreCase(name)) {
-                    globalPlayerReturn = globalPlayer;
-                }
-            }
-        }
-        return globalPlayerReturn;
+        return this.getGlobalPlayers().get(name.toLowerCase());
     }
 
-    public boolean isPlayerOnline(String name) {
-        boolean r = false;
-        for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
-            if (globalPlayer.getName().equalsIgnoreCase(name)) {
-                r = true;
-            }
-        }
-        return r;
+    public GlobalPlayer getRealGlobalPlayer(String name) {
+        return this.getRealGlobalPlayers().get(name.toLowerCase());
     }
 
     @Override
     public void init(OctoCore plugin) {
-
+        instance = this;
     }
 
     @Override

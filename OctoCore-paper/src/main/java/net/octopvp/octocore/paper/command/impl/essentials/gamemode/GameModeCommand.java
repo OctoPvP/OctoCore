@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -69,6 +70,7 @@ public class GameModeCommand extends BaseCommand {
     public List<String> tabComplete(Sender sender, String[] args) {
         if (args.length == 0) {
             return Lists.newArrayList("c", "s", "sp", "a", "creative", "survival", "spectator", "adventure", "0", "1", "2", "3");
-        } else return PlayerManager.getOnlinePlayersString();
+        } else return new ArrayList<>();
+        //return PlayerManager.getOnlinePlayersString();
     }
 }

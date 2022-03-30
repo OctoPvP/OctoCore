@@ -34,6 +34,7 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -54,13 +55,13 @@ public class PlayerData {
     private double dataVersion = 0.0;
     @SerializedName("_id")
     private String _id; //for mongodb _id field (quick and dirty way)
-    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false;
+    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false, savingOnQuit = false;
     private String customColor;
     private transient boolean fullyJoined = false;
     private transient int lastDataSave = 0;
     private int coins;
-    private long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis();
-    private String nick, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName, lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default", lastSeen;
+    private long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
+    private String nick, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName, lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default";
     private String lastAuthedIp = "", lastSeenIp = "";
     private transient String lastMessage; //only applies to this server for spam prot (maybe :))
     private List<String> metaDataList = new ArrayList<>();
@@ -102,7 +103,7 @@ public class PlayerData {
         load(null);
     }
 
-    public void load(Document document) {
+    public void load(@Nullable Document document) {
         if (document == null) {
             document = PlayerManager.getInstance().getProfileDocument(uuid);
         }
@@ -137,7 +138,7 @@ public class PlayerData {
         this.authSecret = document.getString("authSecret");
         this.lastSeenServer = document.getString("lastSeenServer");
         this.rankName = document.getString("rankName");
-        this.lastSeen = document.getString("lastSeen");
+        this.lastSeen = getLong(document, "lastSeen");
         this.lastAuthedIp = document.getString("lastAuthedIp");
         this.lastSeenIp = document.getString("lastSeenIp");
         this.metaDataList = gson.fromJson(document.getString("metaDataList"), GsonType.STRING_LIST);
@@ -256,7 +257,8 @@ public class PlayerData {
     }
 
     public void onJoin(Player player) {
-        this.lastSeen = DATE_FORMAT.format(new Date());
+        //this.lastSeen = DATE_FORMAT.format(new Date());
+        this.lastSeen = System.currentTimeMillis();
         name = player.getName();
         lowerName = name.toLowerCase();
         lastKnownName = name;

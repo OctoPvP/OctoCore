@@ -17,6 +17,7 @@ import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
+import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
@@ -81,11 +82,7 @@ public class GrantConfirmationMenu extends Menu {
                 AtomicReference<PlayerData> targetData = new AtomicReference<>(grantProcedure.getTargetData());
                 Logger.debug("Applying Grant To: " + targetData.get());
                 if (targetData.get() == null) {
-                    try {
-                        targetData.set(PlayerManager.getOfflineData(grantProcedure.getPlayerName()).get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
+                    targetData.set(PlayerManager.getInstance().getOfflineData(grantProcedure.getPlayerName()));
                 }
                 if (targetData.get() == null) {
                     player.sendMessage(Lang.GRANT_DATA_COULD_NOT_BE_LOADED.getMsg(senderData.getGrantProcedure().getPlayerName()));
@@ -120,12 +117,15 @@ public class GrantConfirmationMenu extends Menu {
                                 true
                         ).send();
                     } else {
+                        PlayerManager.getInstance().modifyData(targetData.get().getUuid(), data -> {
+                            data.applyGrant(grant);
+                        });
+                        /*
                         PlayerData data = PlayerManager.getInstance().getData(targetData.get().getUuid());
-                        if (data == null)
-                            data = PlayerManager.loadProfileFromDB(targetData.get().getUuid(), false);
                         //data.getGrants().add(grant);
                         data.applyGrant(grant);
                         data.save();
+                         */
                     }
                 }
             });

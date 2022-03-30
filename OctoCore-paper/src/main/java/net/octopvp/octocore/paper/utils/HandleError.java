@@ -12,7 +12,7 @@ public class HandleError {
         data.addException(e);
         data.addData("Player", p.getName());
         try {
-            data.addData("PdataJSON", PlayerManager.serializeProfileToJson(PlayerManager.getInstance().getData(p.getUniqueId())));
+            //data.addData("PdataJSON", PlayerManager.serializeProfileToJson(PlayerManager.getInstance().getData(p.getUniqueId())));
         } catch (Exception exception) {
             exception.printStackTrace();
             data.addDescription("Error adding pdata json. Exception has also been added.");

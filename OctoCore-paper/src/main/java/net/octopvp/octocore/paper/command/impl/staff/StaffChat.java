@@ -5,6 +5,7 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.database.redis.packets.staff.StaffChatPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
@@ -28,7 +29,7 @@ public class StaffChat extends BaseCommand {
                     sb.append(args[i]);
                 else sb.append(" ").append(args[i]);
             }
-            PlayerManager.sendStaffChat(sender.getPlayer(), sb.toString(), OctoCore.getServerName());
+            new StaffChatPacket(sender.getPlayer().getName(), OctoCore.getServerName(), sb.toString(), sender.getPlayer().getUniqueId()).send();
         }
         return CommandResult.SUCCESS;
     }
