@@ -7,10 +7,7 @@ import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.ServerData;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
@@ -63,9 +60,22 @@ public class ServerManager extends Manager {
         return this.getGlobalPlayers().get(name.toLowerCase());
     }
 
+    public GlobalPlayer getGlobalPlayer(UUID uuid) {
+        return this.getGlobalPlayers().values().stream().filter(p -> p.getUniqueId().equals(uuid)).findFirst().orElse(null);
+    }
+
     public GlobalPlayer getRealGlobalPlayer(String name) {
         return this.getRealGlobalPlayers().get(name.toLowerCase());
     }
+
+    public boolean isPlayerOnline(String name) {
+        return this.getGlobalPlayer(name) != null;
+    }
+
+    public boolean isPlayerOnline(UUID uuid) {
+        return this.getGlobalPlayer(uuid) != null;
+    }
+
 
     @Override
     public void init(OctoCore plugin) {

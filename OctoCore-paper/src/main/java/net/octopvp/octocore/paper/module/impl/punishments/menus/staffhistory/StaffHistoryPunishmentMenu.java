@@ -3,7 +3,6 @@ package net.octopvp.octocore.paper.module.impl.punishments.menus.staffhistory;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishHistory;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.common.util.DateUtils;

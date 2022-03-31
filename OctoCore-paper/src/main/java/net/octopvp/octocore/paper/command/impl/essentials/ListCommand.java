@@ -25,7 +25,7 @@ public class ListCommand extends BaseCommand {
         if (sender.getCommandSender() instanceof Player) {
             //do the gui thing
             if (args.length > 1) {
-                sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getPlayerProfiles().size()));
+                sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getInstance().getPlayerProfiles().size()));
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                     String msg;
@@ -40,7 +40,7 @@ public class ListCommand extends BaseCommand {
             }
         } else {
             //console
-            sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getPlayerProfiles().size()));
+            sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getInstance().getPlayerProfiles().size()));
             for (Player player : Bukkit.getOnlinePlayers()) {
                 PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                 String msg;

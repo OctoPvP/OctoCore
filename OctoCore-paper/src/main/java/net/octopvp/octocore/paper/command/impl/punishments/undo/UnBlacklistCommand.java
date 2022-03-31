@@ -5,18 +5,16 @@ import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.database.redis.packets.player.ExecuteUnblacklistPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
+import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class UnBlacklistCommand extends BaseCommand {
@@ -27,18 +25,11 @@ public class UnBlacklistCommand extends BaseCommand {
             return CommandResult.INVALID_ARGS;
         }
         Tasks.runAsync(() -> {
-            OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
+            OfflinePunishData data = new OfflinePunishData(args[0]);
+            data.load();
 
-            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
-
-            if (targetData == null || !target.isOnline()) {
-                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
-                targetData.getPunishData().load();
-            }
-            if (!targetData.getPunishData().isBlacklisted()) {
-                sender.sendMessage(Lang.BLACKLIST_NOT_BLACKLISTED.getMsg(target.getName()));
-                PunishModule.getInstance().getProfileManager().unloadData(target);
+            if (!data.isBlacklisted()) {
+                sender.sendMessage(Lang.BLACKLIST_NOT_BLACKLISTED.getMsg(data.getName()));
                 return;
             }
 
@@ -56,7 +47,7 @@ public class UnBlacklistCommand extends BaseCommand {
                 reason = reason.replace("-silent", "").replace("-s", "").trim();
             }
 
-            Punishment punishment = targetData.getPunishData().getActiveBlacklist();
+            Punishment punishment = data.getActiveBlacklist();
             punishment.setActive(false);
             punishment.setLast(false);
             punishment.setRemovedBy(sender.getName());
@@ -66,7 +57,7 @@ public class UnBlacklistCommand extends BaseCommand {
 
             JsonBuilder jsonChain = new JsonBuilder();
             jsonChain.addProperty("sender", sender.getName());
-            jsonChain.addProperty("target", targetData.getPlayerName());
+            jsonChain.addProperty("target", data.getName());
             jsonChain.addProperty("silent", punishment.isRemovedSilent());
             jsonChain.addProperty("reason", reason);
             if (sender.isPlayer()) {

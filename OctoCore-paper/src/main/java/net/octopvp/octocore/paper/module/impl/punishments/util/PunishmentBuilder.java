@@ -1,7 +1,6 @@
 package net.octopvp.octocore.paper.module.impl.punishments.util;
 
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -18,7 +17,7 @@ public class PunishmentBuilder {
         if (target == null) {
             throw new IllegalArgumentException("Target cannot be null!");
         }
-        PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+        PlayerData targetData = PlayerManager.getInstance().getOfflineData(target.getUniqueId());
         if (targetData == null || !target.isOnline()) {
             PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
             targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());

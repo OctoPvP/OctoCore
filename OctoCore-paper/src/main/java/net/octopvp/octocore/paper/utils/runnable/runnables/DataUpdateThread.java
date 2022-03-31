@@ -8,7 +8,6 @@ import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataPacket
 import net.octopvp.octocore.paper.database.redis.packets.server.ServerUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.objects.CachedData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.GsonSerializer;

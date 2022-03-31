@@ -67,8 +67,11 @@ public class JoinLeaveListener implements Listener {
 
             playerData.load(data0);
 
-            if (PlayerManager.getInstance().getData(event.getUniqueId()) == null)
+
+            if (PlayerManager.getInstance().getData(event.getUniqueId()) == null) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
+                return;
+            }
         }
     }
 

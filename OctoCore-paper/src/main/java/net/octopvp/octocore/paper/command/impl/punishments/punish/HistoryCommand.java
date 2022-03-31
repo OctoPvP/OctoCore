@@ -5,9 +5,11 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.menus.HistoryMenu;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
+import net.octopvp.octocore.paper.objects.OfflinePunishData;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
@@ -23,25 +25,10 @@ public class HistoryCommand extends BaseCommand {
                 sender.sendMessage(CC.translate("&cUsage: /history <player>"));
                 return;
             }
-            OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
+            OfflinePunishData data = new OfflinePunishData(args[0]);
+            data.load();
 
-            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
-
-            if (targetData == null || !target.isOnline()) {
-                sender.sendMessage(CC.translate("&aPlease wait..."));
-                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
-
-                if (!targetData.hasPlayedBefore()) {
-                    sender.sendMessage(Lang.HAVENT_PLAYED_BEFORE.toString());
-                    PunishModule.getInstance().getProfileManager().unloadData(target.getUniqueId());
-                    return;
-                }
-
-                targetData.getPunishData().load();
-                targetData.load();
-            }
-            new HistoryMenu(targetData.getPunishData()).open(sender);
+            new HistoryMenu(data).open(sender);
         });
         return CommandResult.SUCCESS;
     }

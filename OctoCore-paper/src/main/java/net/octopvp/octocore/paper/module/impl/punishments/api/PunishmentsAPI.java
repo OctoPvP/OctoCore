@@ -3,7 +3,6 @@ package net.octopvp.octocore.paper.module.impl.punishments.api;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;

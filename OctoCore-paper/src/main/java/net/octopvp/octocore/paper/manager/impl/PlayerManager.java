@@ -133,6 +133,15 @@ public class PlayerManager extends Manager {
         return getData(uuid);
     }
 
+    public String getAddress(UUID uuid) {
+        Document document = pdataCollection.find(Filters.eq("uuid", uuid.toString())).first();
+
+        if (document == null) {
+            return "";
+        }
+        return document.getString("address");
+    }
+
 
     public void leave(Player player) {
         PlayerData data = getData(player);
@@ -164,7 +173,7 @@ public class PlayerManager extends Manager {
     }
 
     public void join(Player player) {
-
+        getData(player.getUniqueId()).onJoin(player);
     }
 
 }

@@ -2,13 +2,14 @@ package net.octopvp.octocore.paper.objects;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.PluginMsgChannels;
+import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.PermUpdateType;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerContext;
@@ -20,12 +21,16 @@ import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.player.AltUpdatePacket;
 import net.octopvp.octocore.paper.database.redis.packets.staff.StaffConnectPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
+import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishHistory;
+import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
+import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
+import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
@@ -33,7 +38,6 @@ import net.octopvp.octocore.paper.utils.GsonType;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
@@ -43,50 +47,45 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Getter
 @Setter
-public class PlayerData {
+public class PlayerData implements IPlayerData, IPunishData {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-    private static transient Plugin plugin = OctoCore.getInstance();
     //TODO set defaults for this so theres no errors when using/loading old data from older updates (idk if this makes sense lol)
     private UUID uuid;
     private double dataVersion = 0.0;
-    @SerializedName("_id")
-    private String _id; //for mongodb _id field (quick and dirty way)
-    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false, savingOnQuit = false;
-    private String customColor;
-    private transient boolean fullyJoined = false;
-    private transient int lastDataSave = 0;
-    private int coins;
+
     private long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
-    private String nick, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName, lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default";
-    private String lastAuthedIp = "", lastSeenIp = "";
-    private transient String lastMessage; //only applies to this server for spam prot (maybe :))
+    private String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName, lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default", lastAuthedIp = "", lastSeenIp = "", address;
     private List<String> metaDataList = new ArrayList<>();
     private Map<String, String> metaData = new ConcurrentHashMap<>();
     private WorldTime worldTime = WorldTime.DAY;
-    private UUID tagID = null, nickTagID = null;
+    private UUID tagID = null, nickTagID = null, nickUUID;
     private int /*playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/
-            playTime = 0;
+            playTime = 0, coins;
     private HashSet<UUID> allowedTagsID = new HashSet<>();
-    private transient Set<PlayerTag> allowedTags;
-    private UUID nickUUID;
     private ChatColor nameColor = ChatColor.GREEN;
-    private boolean nameColorBold = false, nameColorItalic = false;
-
-    private boolean staffChatAlerts = true, adminChatAlerts = true, reportAlerts = true;
-    private boolean staffChat = false, adminChat = false, build = false;
+    private boolean nameColorBold = false, nameColorItalic = false, staffChatAlerts = true, adminChatAlerts = true, reportAlerts = true, staffChat = false, adminChat = false, build = false;
+    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false, savingOnQuit = false;
 
     private ArrayList<Grant> grants = new ArrayList<>();
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
     private List<Node> nodes = new ArrayList<>();
-    private transient List<PunishHistory> punishmentsExecuted = new ArrayList<>();
 
+    private transient boolean fullyJoined = false;
+    private transient int lastDataSave = 0;
+    private transient String lastMessage; //only applies to this server for spam prot (maybe :))
+    private transient Set<PlayerTag> allowedTags;
+    private transient List<Punishment> punishmentsExecuted = new ArrayList<>();
     private transient List<LoadNote> loadNotes = new ArrayList<>();
     private transient GrantProcedure grantProcedure = null;
     private transient Map<String, PermissionResult> cachedPermissions = new ConcurrentHashMap<>();
+
+    private PunishData punishData = new PunishData(this);
+    private Collection<Alt> alts = new ArrayList<>();
+    private List<String> addresses = new ArrayList<>();
+
 
     public PlayerData(UUID uuid, String name) {
         this.uuid = uuid;
@@ -94,7 +93,6 @@ public class PlayerData {
         this.lastKnownName = name;
         this.name = lastKnownName;
         this.lowerName = name.toLowerCase();
-        this._id = uuid.toString();
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) this.lastSeenIp = player.getAddress().getHostName();
     }
@@ -160,6 +158,7 @@ public class PlayerData {
         this.build = document.getBoolean("build");
         this.nodes = gson.fromJson(document.getString("nodes"), GsonType.NODE_LIST);
         this.nodes.removeIf(Objects::isNull);
+        this.address = document.getString("address");
 
         if (cachedPermissions == null) cachedPermissions = new ConcurrentHashMap<>();
         if (loadNotes == null) loadNotes = new ArrayList<>();
@@ -246,6 +245,9 @@ public class PlayerData {
         document.put("adminChat", adminChat);
         document.put("build", build);
         document.put("nodes", OctoCore.getGson().toJson(nodes));
+        document.put("address", address);
+        document.put("addresses", StringUtils.getStringFromList(this.addresses));
+
         document.entrySet().removeIf(e -> e.getValue() == null);
         if (getDoc) return document;
         if (PlayerManager.getInstance().doesDocumentExistByUUID(uuid))
@@ -262,9 +264,71 @@ public class PlayerData {
         name = player.getName();
         lowerName = name.toLowerCase();
         lastKnownName = name;
+        this.address = player.getAddress().getAddress().getHostAddress();
 
         if (hasPermission(Permission.SEND_JOIN_MESSAGE.getNode()))
             new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName()).send();
+    }
+
+    public void loadAlts(UUID uuid) {
+        Document document = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("uuid", uuid)).first();
+        if (document == null) {
+            return;
+        }
+        this.loadAlts(document.getString("address"));
+    }
+
+    public Alt getAlt(UUID uuid) {
+        return this.getAltsSafely().stream().filter(alt -> alt.getUniqueId() == uuid).findFirst().orElse(null);
+    }
+
+    public List<Alt> getAltsSafely() {
+        List<Alt> alts = new ArrayList<>();
+        Iterator<Alt> iterator = this.alts.iterator();
+
+        if (iterator.hasNext()) {
+            do {
+                alts.add(iterator.next());
+            } while (iterator.hasNext());
+        }
+
+        return alts;
+    }
+
+    public void loadAlts(String address) {
+        this.alts.clear();
+
+        try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("address", address)).iterator()) {
+            while (cursor.hasNext()) {
+                Document document = cursor.next();
+
+                PlayerData playerData = new PlayerData(UUID.fromString(document.getString("uuid")), document.getString("name"));
+
+                playerData.getPunishData().forceLoadActiveBansAndBlacklists();
+
+                if (!playerData.getUuid().toString().equals(this.uuid.toString()) && this.getAlt(playerData.getUuid()) == null) {
+                    this.alts.add(new Alt(playerData.getUuid(), playerData.getName(), playerData.getPunishData()).updateDisplayName());
+                }
+            }
+        }
+
+        ServerManager.getInstance().getGlobalPlayers().values().forEach(globalPlayer -> {
+            if (!globalPlayer.getUniqueId().toString().equals(this.uuid.toString()) && globalPlayer.getAddress().equalsIgnoreCase(address) && this.getAlt(globalPlayer.getUniqueId()) == null) {
+                new AltUpdatePacket(this.uuid, this.name, globalPlayer.getUniqueId(), globalPlayer.getName());
+            }
+        });
+
+        this.alts.removeIf(alt -> alt.getName().equalsIgnoreCase(this.name));
+
+        List<Alt> alts = new ArrayList<>();
+        this.alts.forEach(alt -> { //remove duplicates
+            if (alts.stream().filter(current -> current.getName().equalsIgnoreCase(alt.getName())).findFirst().orElse(null) == null) {
+                alts.add(alt);
+            }
+        });
+
+        this.alts.clear();
+        this.alts.addAll(alts);
     }
 
 
@@ -589,44 +653,25 @@ public class PlayerData {
         return DateUtils.formatDateDiff(from, to) + " ago";
     }
 
-    public List<PunishHistory> getPunishmentsExecuted() {
+    public List<Punishment> getPunishmentsExecuted() {
         if (punishmentsExecuted == null) punishmentsExecuted = new ArrayList<>();
         return punishmentsExecuted;
     }
 
     public void loadPunishmentsPerformed() {
         this.punishmentsExecuted.clear();
-        Stream.of(PunishmentType.values()).forEach(punishmentType -> {
-            List<Document> punishments = this.getCollection(punishmentType).find(Filters.eq("addedBy", this.uuid.toString())).into(new ArrayList<>());
 
-            punishments.forEach(document -> {
-                PunishHistory punishHistory = new PunishHistory(this.name, punishmentType);
-                punishHistory.setAddedAt(document.getLong("addedAt"));
-                punishHistory.setDuration(document.getLong("durationTime"));
-                punishHistory.setPermanent(document.getBoolean("permanent"));
-                punishHistory.setExecutor(document.getString("addedBy"));
-                punishHistory.setTarget(document.getString("name"));
-                punishHistory.setReason(document.getString("reason"));
-                punishHistory.setActive(document.getBoolean("active"));
-                punishHistory.setLast(document.getBoolean("last"));
-                punishHistory.setSilent(document.getBoolean("silent"));
-                punishHistory.setEnteredDuration(document.getString("enteredDuration"));
-                punishmentsExecuted.add(punishHistory);
-            });
-        });
+        try (MongoCursor<Document> cursor = PunishModule.getPunishments().find(Filters.eq("addedBy", name)).iterator()) {
+            while (cursor.hasNext()) {
+                Document document = cursor.next();
+                punishmentsExecuted.add(new Punishment(document));
+            }
+        }
     }
 
+
     private MongoCollection<Document> getCollection(PunishmentType punishmentType) {
-        if (punishmentType == PunishmentType.BAN) {
-            return PunishModule.getBans();
-        } else if (punishmentType == PunishmentType.MUTE) {
-            return PunishModule.getMutes();
-        } else if (punishmentType == PunishmentType.KICK) {
-            return PunishModule.getKicks();
-        } else if (punishmentType == PunishmentType.BLACKLIST) {
-            return PunishModule.getBlacklists();
-        }
-        return PunishModule.getWarns();
+        return PunishModule.getPunishments();
     }
 
     public Set<PlayerTag> getAllowedTags() {
@@ -682,6 +727,41 @@ public class PlayerData {
     @Override
     public String toString() {
         return OctoCore.getGson().toJson(this);
+    }
+
+    @Override
+    public Collection<Punishment> getPunishments() {
+        return punishData.getPunishments();
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return this.uuid;
+    }
+
+    @Override
+    public boolean isBanned() {
+        return punishData.isBanned();
+    }
+
+    @Override
+    public boolean isIPBanned() {
+        return punishData.isIPBanned();
+    }
+
+    @Override
+    public boolean isMuted() {
+        return punishData.isMuted();
+    }
+
+    @Override
+    public boolean isBlacklisted() {
+        return punishData.isBlacklisted();
+    }
+
+    @Override
+    public boolean isWarned() {
+        return punishData.isWarned();
     }
 
     public enum SaveState {

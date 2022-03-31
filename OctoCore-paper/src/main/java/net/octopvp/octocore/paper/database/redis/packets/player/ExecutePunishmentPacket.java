@@ -9,14 +9,17 @@ import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
-import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.chat.Clickable;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -25,8 +28,8 @@ import java.util.stream.Collectors;
 public class ExecutePunishmentPacket extends RedisPacket {
     private JsonBuilder data;
 
-    public static void altKick(String alts, String name, String type, boolean permanent, String niceDuration, String reason, String sender, String expire) {
-        StringUtils.getListFromString(alts).forEach(alt -> {
+    public static void altKick(List<Alt> alts, String name, String type, boolean permanent, String niceDuration, String reason, String sender, String expire) {
+        alts.forEach(alt -> {
             new ExecuteAltKickPacket(new JsonBuilder()
                     .addProperty("alt", name)
                     .addProperty("type", type)
@@ -35,7 +38,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                     .addProperty("expire", expire)
                     .addProperty("reason", reason)
                     .addProperty("sender", sender)
-                    .addProperty("name", alt)).send();
+                    .addProperty("name", alt.getName())).send();
         });
     }
 
@@ -53,11 +56,14 @@ public class ExecutePunishmentPacket extends RedisPacket {
             boolean permanent = data.get("permanent").getAsBoolean();
             boolean IPRelative = data.get("IPRelative").getAsBoolean();
             boolean temp = !permanent;
-            String alts = data.get("alts").getAsString();
+            PlayerData playerData = PlayerManager.getInstance().getData(uuid);
 
+            if (playerData == null) {
+                playerData = new PlayerData(uuid, name);
+                playerData.loadAlts(uuid);
+            }
             PunishmentType type = PunishmentType.valueOf(data.get("type").getAsString());
-            int warns = data.get("warns").getAsInt();
-            Logger.debug("Type: %1\nPermanent: %2\nSilent: %3\nIPRelative: %4\nWarns: %5", type, permanent, silent, IPRelative, warns);
+            Logger.debug("Type: %1\nPermanent: %2\nSilent: %3\nIPRelative: %4", type, permanent, silent, IPRelative);
             if (type == PunishmentType.BAN) {
                 Tasks.run(() -> {
                     Player player = Bukkit.getPlayer(uuid);
@@ -75,22 +81,8 @@ public class ExecutePunishmentPacket extends RedisPacket {
                     }
                 });
                 if (IPRelative) {
-                /*
-                StringUtils.getListFromString(alts).forEach(alt -> {
-                    OctoCore.getInstance().getRedisData().write(JedisAction.EXECUTE_ALT_KICK,
-                            new JsonChain()
-                                    .addProperty("alt", name)
-                                    .addProperty("type", "BAN")
-                                    .addProperty("permanent", permanent)
-                                    .addProperty("duration", niceDuration)
-                                    .addProperty("reason", reason)
-                                    .addProperty("sender", sender)
-                                    .addProperty("name", alt).get());
-                });
-                 */
-                    altKick(alts, name, "BAN", permanent, niceDuration, reason, sender, niceExpire);
+                    altKick(playerData.getAltsSafely(), name, "BAN", permanent, niceDuration, reason, sender, niceExpire);
                 }
-                PunishModule.getInstance().getProfileManager().unloadData(uuid);
             }
             if (type == PunishmentType.BLACKLIST) {
                 Tasks.run(() -> {
@@ -120,21 +112,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                         */
                     }
                 });
-            /*
-            StringUtils.getListFromString(alts).forEach(alt -> {
-                OctoCore.getInstance().getRedisData().write(JedisAction.EXECUTE_ALT_KICK,
-                        new JsonChain()
-                                .addProperty("alt", name)
-                                .addProperty("type", "BLACKLIST")
-                                .addProperty("permanent", permanent)
-                                .addProperty("duration", niceDuration)
-                                .addProperty("reason", reason)
-                                .addProperty("sender", sender)
-                                .addProperty("name", alt).get());
-            });
-             */
-                altKick(alts, name, "BLACKLIST", permanent, niceDuration, reason, sender, niceExpire);
-                PunishModule.getInstance().getProfileManager().unloadData(uuid);
+                altKick(playerData.getAltsSafely(), name, "BLACKLIST", permanent, niceDuration, reason, sender, niceExpire);
             }
             if (type == PunishmentType.KICK) {
                 Tasks.run(() -> {
@@ -153,7 +131,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                             (!permanent ? Lang.TEMP_MUTE_ENTRY_MESSAGE.getMsg(niceExpire) : ""));
                     player.sendMessage(CC.translate(message));
                 }
-                StringUtils.getListFromString(alts).forEach(alt -> {
+                playerData.getAltsSafely().forEach(alt -> {
                     Player p = Bukkit.getPlayer(uuid);
                     if (p != null) {
                         String message = Lang.MUTE_MESSAGE.getMsg(

@@ -1,168 +1,113 @@
 package net.octopvp.octocore.paper.module.impl.punishments.player;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
-import net.octopvp.octocore.paper.OctoCore;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
+import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
+import net.octopvp.octocore.paper.objects.IPunishData;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import org.bson.Document;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
-public class PunishData {
-    private final PunishPlayerData playerData;
-    private final OctoCore plugin = OctoCore.getInstance();
-    private final Set<Punishment> punishments = new HashSet<>();
+@Setter
+@RequiredArgsConstructor
+public class PunishData implements IPunishData {
+    private final PlayerData playerData;
 
-    public PunishData(PunishPlayerData data) {
-        this.playerData = data;
-    }
+    private Collection<Punishment> punishments = new HashSet<>();
 
-    public PunishData(PunishPlayerData data, JsonArray punishments) {
-        this.playerData = data;
-        this.punishments.clear();
-        for (JsonElement entry : punishments) {
-            Punishment punishment = OctoCore.getGson().fromJson(entry, Punishment.class);
-            this.punishments.add(punishment);
-        }
-    }
-
+    @Override
     public boolean isBanned() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.BAN).findFirst().orElse(null) != null;
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
     }
 
+    @Override
     public boolean isIPBanned() {
-        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.BAN).findFirst().orElse(null) != null;
+        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
     }
 
-    public boolean isIPMuted() {
-        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.MUTE).findFirst().orElse(null) != null;
-    }
-
+    @Override
     public boolean isBlacklisted() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.BLACKLIST).findFirst().orElse(null) != null;
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).findFirst().orElse(null) != null;
     }
 
-    public boolean isMuted() {
-        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.MUTE).findFirst().orElse(null) != null;
-    }
-
+    @Override
     public boolean isWarned() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.WARN).findFirst().orElse(null) != null;
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.WARN).findFirst().orElse(null) != null;
+    }
+
+    @Override
+    public boolean isMuted() {
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE).findFirst().orElse(null) != null;
     }
 
 
     public Punishment getActiveBan() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.BAN).findFirst().orElse(null);
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null);
     }
 
     public Punishment getActiveMute() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.MUTE).findFirst().orElse(null);
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE).findFirst().orElse(null);
     }
 
     public Punishment getActiveBlacklist() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.BLACKLIST).findFirst().orElse(null);
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).findFirst().orElse(null);
     }
 
     public List<Punishment> getPunishments(PunishmentType type) {
-        return this.punishments.stream().filter(punishment -> punishment.getPunishmentType() == type).collect(Collectors.toList());
+        return this.punishments.stream().filter(punishment -> punishment.getType() == type).collect(Collectors.toList());
     }
 
     public void load() {
-        playerData.setLoading(true);
         this.punishments.clear();
 
-        List<Document> bans = PunishModule.getBans().find().filter(Filters.eq("uuid", this.playerData.getUniqueId().toString())).into(new ArrayList<>());
-        bans.forEach(saved -> {
-            Punishment punishment = new Punishment(this.playerData, PunishmentType.BAN);
-            punishment.load(saved);
-
-            this.punishments.add(punishment);
-        });
-
-        List<Document> mutes = PunishModule.getMutes().find().filter(Filters.eq("uuid", this.playerData.getUniqueId().toString())).into(new ArrayList<>());
-        mutes.forEach(saved -> {
-            Punishment punishment = new Punishment(this.playerData, PunishmentType.MUTE);
-            punishment.load(saved);
-
-            this.punishments.add(punishment);
-        });
-
-        List<Document> warns = PunishModule.getWarns().find().filter(Filters.eq("uuid", this.playerData.getUniqueId().toString())).into(new ArrayList<>());
-        warns.forEach(saved -> {
-            Punishment punishment = new Punishment(this.playerData, PunishmentType.WARN);
-            punishment.load(saved);
-
-            this.punishments.add(punishment);
-        });
-
-        List<Document> blacklists = PunishModule.getBlacklists().find().filter(Filters.eq("uuid", this.playerData.getUniqueId().toString())).into(new ArrayList<>());
-        blacklists.forEach(saved -> {
-            Punishment punishment = new Punishment(this.playerData, PunishmentType.BLACKLIST);
-            punishment.load(saved);
-
-            this.punishments.add(punishment);
-        });
-
-        List<Document> kicks = PunishModule.getKicks().find().filter(Filters.eq("uuid", this.playerData.getUniqueId().toString())).into(new ArrayList<>());
-        kicks.forEach(saved -> {
-            Punishment punishment = new Punishment(this.playerData, PunishmentType.KICK);
-            punishment.load(saved);
-
-            this.punishments.add(punishment);
-        });
-        playerData.setLoading(false);
-    }
-
-    public void forceLoadBans(UUID uuid) {
-        this.punishments.removeIf(punishment -> punishment.getPunishmentType() == PunishmentType.BAN);
-
-        List<Document> bans = PunishModule.getBans().find().filter(Filters.eq("uuid", uuid.toString())).into(new ArrayList<>());
-        bans.forEach(saved -> {
-            Punishment punishment = new Punishment(null, PunishmentType.BAN);
-            punishment.load(saved);
+        List<Document> punishments = PunishModule.getPunishments().find().filter(
+                Filters.eq("uuid", this.playerData.getUuid().toString())).into(new ArrayList<>());
+        punishments.forEach(document -> {
+            Punishment punishment = new Punishment(document);
 
             this.punishments.add(punishment);
         });
     }
 
-    public void save() {
-        this.punishments.forEach(Punishment::save);
-    }
+    public void forceLoadActiveBansAndBlacklists() {
+        this.punishments.removeIf(punishment -> punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST);
 
-    public void forceLoadBlacklists(UUID uuid) {
-        this.punishments.removeIf(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST);
+        List<Document> punishments = PunishModule.getPunishments().find(Filters.and(
+                Filters.eq("uuid", this.playerData.getUuid().toString()),
+                Filters.eq("active", true))).into(new ArrayList<>());
 
-        List<Document> blacklists = PunishModule.getBlacklists().find().filter(Filters.eq("uuid", uuid.toString())).into(new ArrayList<>());
-        blacklists.forEach(saved -> {
-            Punishment punishment = new Punishment(this.playerData, PunishmentType.BLACKLIST);
-            punishment.load(saved);
-
-            this.punishments.add(punishment);
-        });
-    }
-
-    public void forceLoadMutes(UUID uuid) {
-        this.punishments.removeIf(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE);
-
-        List<Document> mutes = PunishModule.getMutes().find().filter(Filters.eq("uuid", uuid.toString())).into(new ArrayList<>());
-        mutes.forEach(saved -> {
-            Punishment punishment = new Punishment(this.playerData, PunishmentType.MUTE);
-            punishment.load(saved);
+        punishments.forEach(document -> {
+            Punishment punishment = new Punishment(document);
 
             this.punishments.add(punishment);
         });
     }
 
     @Override
-    public String toString() {
-        return "PunishData{" +
-                "punishments=" + punishments +
-                '}';
+    public Collection<Alt> getAlts() {
+        return playerData.getAltsSafely();
+    }
+
+    @Override
+    public String getName() {
+        return playerData.getName();
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return playerData.getUuid();
+    }
+
+    @Override
+    public String getAddress() {
+        return playerData.getAddress();
     }
 }

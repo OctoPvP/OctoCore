@@ -7,8 +7,6 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishHistory;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -33,7 +31,7 @@ public class KickCommand extends BaseCommand {
                 return;
             }
 
-            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
+            PlayerData targetData = PlayerManager.getInstance().getOfflineData(target.getUniqueId());
 
             if (targetData == null || !target.isOnline()) {
                 PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());

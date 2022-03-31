@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.module.impl.punishments.menus.alts;
 
 import lombok.AllArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;

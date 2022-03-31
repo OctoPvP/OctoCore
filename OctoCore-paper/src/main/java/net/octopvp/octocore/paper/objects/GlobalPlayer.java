@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class GlobalPlayer {
     private UUID uuid;
 
-    private String name, server, firstJoined, lastServer;
+    private String name, server, firstJoined, lastServer, address;
     private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving;
     private long lastSeen, lastActivity = -1L;
     private List<PlayerTag> allTags = new ArrayList<>();

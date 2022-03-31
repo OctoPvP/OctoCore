@@ -1,24 +1,17 @@
 package net.octopvp.octocore.paper.command.impl.punishments.punish;
 
 import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishHistory;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
-import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 public class BanCommand extends BaseCommand {
 
@@ -28,18 +21,13 @@ public class BanCommand extends BaseCommand {
             return CommandResult.INVALID_ARGS;
         }
         Tasks.runAsync(() -> {
-            OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
-            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
-            if (targetData == null || !target.isOnline()) {
-                Logger.debug("Target Data is null");
-                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
-                targetData.getPunishData().load();
-            }
-            if (targetData.getPunishData().isBanned()) {
+
+            OfflinePunishData data = new OfflinePunishData(args[0]);
+            data.load();
+
+            if (data.isBanned()) {
                 Logger.debug("Target is already banned");
-                sender.sendMessage(Lang.ALREADY_BANNED.getMsg(targetData.getPlayerName()));
-                PunishModule.getInstance().getProfileManager().unloadData(target);
+                sender.sendMessage(Lang.ALREADY_BANNED.getMsg(data.getName()));
                 return;
             }
 
@@ -78,7 +66,7 @@ public class BanCommand extends BaseCommand {
             }
             Logger.debug("Silent: %1", silent);
 
-            Punishment punishment = new Punishment(targetData, PunishmentType.BAN);
+            Punishment punishment = new Punishment(data, PunishmentType.BAN);
             punishment.setSilent(silent);
             if (duration != -5L) {
                 punishment.setPermanent(false);
@@ -93,37 +81,9 @@ public class BanCommand extends BaseCommand {
             punishment.setAddedAt(System.currentTimeMillis());
             punishment.setReason(reason);
 
-            targetData.getPunishData().getPunishments().add(punishment);
-
             punishment.execute(sender);
             Logger.debug("Saving punishment: %1", punishment);
             punishment.save();
-
-            if (sender.getCommandSender() instanceof Player) {
-                Logger.debug("Sender is player!");
-                Player player = sender.getPlayer();
-                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-
-                if (playerData == null) {
-                    Logger.debug("Sender Data is null!");
-                    return;
-                }
-                PunishHistory punishHistory = new PunishHistory(sender.getName(), PunishmentType.BAN);
-                punishHistory.setAddedAt(punishment.getAddedAt());
-                punishHistory.setDuration(punishment.getDurationTime());
-                punishHistory.setPermanent(punishment.isPermanent());
-                punishHistory.setExecutor(sender.getName());
-                punishHistory.setTarget(targetData.getPlayerName());
-                punishHistory.setReason(punishment.getReason());
-                punishHistory.setActive(punishment.isActive());
-                punishHistory.setLast(punishment.isLast());
-                punishHistory.setSilent(punishment.isSilent());
-                punishHistory.setEnteredDuration(punishment.getEnteredDuration());
-
-                playerData.getPunishmentsExecuted().add(punishHistory);
-            }
-
-            PunishModule.getInstance().getProfileManager().unloadData(target);
         });
         return CommandResult.SUCCESS;
     }
