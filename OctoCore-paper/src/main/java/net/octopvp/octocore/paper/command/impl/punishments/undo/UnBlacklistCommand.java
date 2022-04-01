@@ -1,10 +1,10 @@
 package net.octopvp.octocore.paper.command.impl.punishments.undo;
 
 import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.database.redis.packets.player.UndoPunishmentPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
@@ -38,7 +38,7 @@ public class UnBlacklistCommand extends BaseCommand {
             for (int i = 1; i < args.length; ++i) {
                 reasonBuilder.append(args[i]).append(" ");
             }
-            if (reasonBuilder.length() == 0) reasonBuilder.append("Un-Blacklisted");
+            if (reasonBuilder.length() == 0) reasonBuilder.append("unblacklisted");
 
             String reason = reasonBuilder.toString().trim();
             boolean silent = reason.contains("-silent") || reason.contains("-s");
@@ -55,40 +55,16 @@ public class UnBlacklistCommand extends BaseCommand {
             punishment.setRemovedSilent(silent);
             punishment.setWhenRemoved(System.currentTimeMillis());
 
-            JsonBuilder jsonChain = new JsonBuilder();
-            jsonChain.addProperty("sender", sender.getName());
-            jsonChain.addProperty("target", data.getName());
-            jsonChain.addProperty("silent", punishment.isRemovedSilent());
-            jsonChain.addProperty("reason", reason);
+            String coloredSenderName;
             if (sender.isPlayer()) {
-                Player player = sender.getPlayer();
-                jsonChain.addProperty("senderDisplay", player.getDisplayName());
-
-                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-                jsonChain.addProperty("coloredName", playerData.getHighestRank().getColor() + playerData.getName());
+                coloredSenderName = PlayerManager.getInstance().getFormattedName(sender.getPlayer().getName());
             } else {
-                jsonChain.addProperty("senderDisplay", sender.getName());
+                coloredSenderName = "&4&lConsole";
             }
 
-            new ExecuteUnblacklistPacket(jsonChain).send();
+            new UndoPunishmentPacket(PunishmentType.BLACKLIST, sender.getDisplayName(), coloredSenderName, sender.getName(), data.getName(), reason.trim(), silent).send();
 
             punishment.save(true);
-
-            Player addedBy = Bukkit.getPlayer(punishment.getAddedByName());
-            if (addedBy != null) {
-                PlayerData addedByData = PlayerManager.getInstance().getData(addedBy.getUniqueId());
-                addedByData.getPunishmentsExecuted().forEach(punishHistory -> {
-                    if (punishHistory.getPunishmentType() == PunishmentType.BLACKLIST) {
-                        if (punishHistory.getTarget().equals(target.getName())) {
-                            if (punishHistory.getAddedAt() == punishment.getAddedAt()) {
-                                punishHistory.setActive(false);
-                            }
-                        }
-                    }
-                });
-            }
-
-            PunishModule.getInstance().getProfileManager().unloadData(target);
         });
         return CommandResult.SUCCESS;
     }

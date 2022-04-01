@@ -61,7 +61,7 @@ public class EditRankMenu extends Menu {
                 SoundUtil.playError(player);
                 player.closeInventory();
             }
-            if (RankManager.getRankByName(name) != null) {
+            if (RankManager.getInstance().getRankByName(name) != null) {
                 player.sendMessage(CC.RED + "That rank already exists!");
                 SoundUtil.playError(player);
                 player.closeInventory();
@@ -130,7 +130,7 @@ public class EditRankMenu extends Menu {
                     prompt(player);
                     return Prompt.END_OF_CONVERSATION;
                 }
-                if (RankManager.getRankByName(s) != null) {
+                if (RankManager.getInstance().getRankByName(s) != null) {
                     player.sendMessage(CC.RED + "That rank already exists!");
                     SoundUtil.playError(player);
                     prompt(player);
@@ -235,6 +235,7 @@ public class EditRankMenu extends Menu {
         public ItemStack getItem(Player player) {
             return new ItemBuilder(Material.PAPER).name(CC.AQUA + "Rank Type").lore(CC.SEPARATOR,
                     (builder.getRank().getRankType() == RankType.DEFAULT ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Default",
+                    (builder.getRank().getRankType() == RankType.HIDDEN ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Hidden",
                     (builder.getRank().getRankType() == RankType.DONATOR ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Donator",
                     (builder.getRank().getRankType() == RankType.STAFF ? CC.GRAY + CC.SELECTOR_ARROW : "") + CC.D_AQUA + "Staff",
                     "", CC.SEPARATOR, CC.YELLOW + "Left-Click to cycle forward!", CC.YELLOW + "Right-Click to cycle backwards!").build();
@@ -251,6 +252,8 @@ public class EditRankMenu extends Menu {
             if (clickType == ClickType.LEFT) {
                 if (builder.getRank().getRankType() == RankType.DEFAULT) // Default -> Donator -> Staff
                     builder.getRank().setRankType(RankType.DONATOR);
+                else if (builder.getRank().getRankType() == RankType.HIDDEN)
+                    builder.getRank().setRankType(RankType.DEFAULT);
                 else if (builder.getRank().getRankType() == RankType.DONATOR)
                     builder.setRankType(RankType.STAFF);
                 else if (builder.getRank().getRankType() == RankType.STAFF)
@@ -258,8 +261,10 @@ public class EditRankMenu extends Menu {
             } else if (clickType == ClickType.RIGHT) {
                 if (builder.getRank().getRankType() == RankType.DEFAULT)
                     builder.setRankType(RankType.STAFF);
-                else if (builder.getRank().getRankType() == RankType.DONATOR)
+                if (builder.getRank().getRankType() == RankType.HIDDEN)
                     builder.setRankType(RankType.DEFAULT);
+                else if (builder.getRank().getRankType() == RankType.DONATOR)
+                    builder.setRankType(RankType.HIDDEN);
                 else if (builder.getRank().getRankType() == RankType.STAFF)
                     builder.getRank().setRankType(RankType.DONATOR);
             }
@@ -324,7 +329,7 @@ public class EditRankMenu extends Menu {
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             if (!edit)
-                RankManager.createNewRank(builder);
+                RankManager.getInstance().createNewRank(builder);
             else builder.build().save();
             player.closeInventory();
             player.sendMessage(CC.GREEN + "Success!");

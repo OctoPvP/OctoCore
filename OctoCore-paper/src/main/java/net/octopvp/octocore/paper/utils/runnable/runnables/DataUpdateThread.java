@@ -40,16 +40,6 @@ public class DataUpdateThread extends Thread {
 
     public void update() {
         if (!plugin.isEnabled()) return;
-        Iterator<PunishPlayerData> playerDataIterator = PunishModule.getInstance().getProfileManager().getPlayerData().values().iterator();
-        try {
-            do {
-                PunishPlayerData data = playerDataIterator.next();
-                if (!data.isLoading()) {
-                    data.updateBannedAlts();
-                }
-            } while (playerDataIterator.hasNext());
-        } catch (Exception ignored) {
-        }
 
         JsonBuilder jsonChain = new JsonBuilder().addProperty("maxPlayers", Bukkit.getMaxPlayers()).addProperty("whitelisted", Bukkit.hasWhitelist());
         jsonChain.addProperty("name", OctoCore.getServerName()).addProperty("tps1", Bukkit.getServer().spigot().getTPS()[0]).addProperty("tps2", Bukkit.getServer().spigot().getTPS()[1]);

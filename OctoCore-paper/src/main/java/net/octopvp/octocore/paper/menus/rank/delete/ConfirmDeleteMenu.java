@@ -77,7 +77,7 @@ public class ConfirmDeleteMenu extends Menu {
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             super.onClick(player, slot, clickType, event);
-            RankManager.delete(toDelete);
+            RankManager.getInstance().delete(toDelete);
             player.closeInventory();
         }
     }

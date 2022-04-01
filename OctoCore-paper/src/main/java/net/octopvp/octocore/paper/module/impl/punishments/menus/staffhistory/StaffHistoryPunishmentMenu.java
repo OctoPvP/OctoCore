@@ -3,6 +3,7 @@ package net.octopvp.octocore.paper.module.impl.punishments.menus.staffhistory;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.common.util.DateUtils;
@@ -40,10 +41,10 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu {
         List<Button> slots = new ArrayList<>();
 
         AtomicInteger order = new AtomicInteger(1);
-        PunishHistory.getPunishments(playerData, this.punishmentType, this.activeOnly)
-                .stream().sorted(Comparator.comparingLong(PunishHistory::getAddedAt).reversed()).forEach(punishHistory -> {
-                    slots.add(new PunishButton(punishHistory, order.getAndIncrement()));
-                });
+        playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == this.punishmentType).sorted(Comparator.comparingLong(Punishment::getAddedAt).reversed()).forEach(punishment -> {
+            slots.add(new PunishButton(punishment, order.getAndIncrement()));
+        });
+
 
         return slots;
     }
@@ -82,26 +83,26 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu {
 
     @AllArgsConstructor
     private class PunishButton extends Button {
-        private PunishHistory punishHistory;
+        private Punishment punishment;
         private int order;
 
         @Override
         public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(punishHistory.hasExpired() ? Material.BOOK : Material.ENCHANTED_BOOK);
-            item.setName(CC.MAIN + "#" + order + " &7(" + CC.SECONDARY + DateUtils.getDate(punishHistory.getAddedAt()) + "&7)");
+            ItemBuilder item = new ItemBuilder(punishment.hasExpired() ? Material.BOOK : Material.ENCHANTED_BOOK);
+            item.setName(CC.MAIN + "#" + order + " &7(" + CC.SECONDARY + DateUtils.getDate(punishment.getAddedAt()) + "&7)");
             item.addLoreLine(CC.SEPARATOR);
-            item.addLoreLine(CC.MAIN + "Target&7: " + CC.SECONDARY + punishHistory.getTarget());
-            if (punishHistory.getPunishmentType() != PunishmentType.KICK) {
-                item.addLoreLine(CC.MAIN + "Duration&7: " + CC.SECONDARY + punishHistory.getNiceDuration());
-                item.addLoreLine(CC.MAIN + "Expire&7: " + CC.SECONDARY + punishHistory.getNiceExpire());
+            item.addLoreLine(CC.MAIN + "Target&7: " + CC.SECONDARY + punishment.getName());
+            if (punishment.getPunishmentType() != PunishmentType.KICK) {
+                item.addLoreLine(CC.MAIN + "Duration&7: " + CC.SECONDARY + punishment.getNiceDuration());
+                item.addLoreLine(CC.MAIN + "Expire&7: " + CC.SECONDARY + punishment.getNiceExpire());
             }
-            item.addLoreLine(CC.MAIN + "Reason&7: " + CC.SECONDARY + punishHistory.getReason());
+            item.addLoreLine(CC.MAIN + "Reason&7: " + CC.SECONDARY + punishment.getReason());
             item.addLoreLine(CC.SEPARATOR);
-            item.addLoreLine(CC.MAIN + "Permanent&7: " + (punishHistory.isPermanent() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.MAIN + "Active&7: " + (!punishHistory.hasExpired() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.MAIN + "Silent&7: " + (punishHistory.isSilent() ? "&aYes" : "&cNo"));
+            item.addLoreLine(CC.MAIN + "Permanent&7: " + (punishment.isPermanent() ? "&aYes" : "&cNo"));
+            item.addLoreLine(CC.MAIN + "Active&7: " + (!punishment.hasExpired() ? "&aYes" : "&cNo"));
+            item.addLoreLine(CC.MAIN + "Silent&7: " + (punishment.isSilent() ? "&aYes" : "&cNo"));
             item.addLoreLine(CC.SEPARATOR);
-            item.addLoreLine(CC.SECONDARY + "Click to check " + CC.MAIN + punishHistory.getTarget() + "'s " + CC.SECONDARY + "punishments");
+            item.addLoreLine(CC.SECONDARY + "Click to check " + CC.MAIN + punishment.getName() + "'s " + CC.SECONDARY + "punishments");
             item.addLoreLine(CC.SEPARATOR);
             return item.toItemStack();
         }
@@ -114,7 +115,7 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu {
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
-            Tasks.run(() -> player.performCommand("check " + punishHistory.getTarget()));
+            Tasks.run(() -> player.performCommand("check " + punishment.getName()));
         }
     }
 

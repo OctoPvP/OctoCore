@@ -6,22 +6,26 @@ import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import net.octopvp.octocore.common.object.ObjectConsumer;
 import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.paper.database.redis.packets.staff.StaffLeavePacket;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.PlayerData;
+import net.octopvp.octocore.paper.objects.enums.RankType;
+import net.octopvp.octocore.paper.objects.permissions.Grant;
+import net.octopvp.octocore.paper.objects.permissions.Rank;
+import net.octopvp.octocore.paper.utils.GsonType;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class PlayerManager extends Manager {
     @Getter
@@ -140,6 +144,22 @@ public class PlayerManager extends Manager {
             return "";
         }
         return document.getString("address");
+    }
+
+    public String getFormattedName(String playerName) {
+        Document document = pdataCollection.find(Filters.eq("lowerCaseName", playerName.toLowerCase())).first();
+        if (document == null) {
+            return CC.translate("&a" + playerName);
+        }
+
+        Rank defaultRank = RankManager.getInstance().getDefaultRank();
+
+        List<Grant> grants = OctoCore.getGson().fromJson(document.getString("grants"), GsonType.GRANT);
+        grants.removeIf(Objects::isNull);
+        List<Grant> activeGrants = new ArrayList<>(grants).stream().filter(grant -> !grant.hasExpired() && RankManager.getInstance().getRankByName(grant.getRankName()) != null).collect(Collectors.toList());
+        Rank rank = activeGrants.stream().filter(grant -> grant.getRank() != null && grant.getRank().getRankType() != RankType.HIDDEN).map(Grant::getRank)
+                .max(Comparator.comparingInt(Rank::getWeight)).orElse(defaultRank);
+        return rank.getDisplayColor() + playerName;
     }
 
 

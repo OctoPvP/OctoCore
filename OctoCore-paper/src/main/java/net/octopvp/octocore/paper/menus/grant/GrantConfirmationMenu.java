@@ -61,7 +61,7 @@ public class GrantConfirmationMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             PlayerData senderData = PlayerManager.getInstance().getData(player);
             GrantProcedure grantProcedure = senderData.getGrantProcedure();
-            Rank targetRank = RankManager.getRankByName(grantProcedure.getRankName());
+            Rank targetRank = RankManager.getInstance().getRankByName(grantProcedure.getRankName());
             if (targetRank == null) {
                 player.closeInventory();
                 player.sendMessage(Lang.GRANT_RANK_NOT_FOUND.getMsg(grantProcedure.getRankName()));

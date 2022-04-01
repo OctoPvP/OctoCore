@@ -438,7 +438,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     public List<Grant> getActiveGrants() {
-        return this.grants.stream().filter(grant -> !grant.hasExpired() && RankManager.getRankById(grant.getRankId()) != null).collect(Collectors.toList());
+        return this.grants.stream().filter(grant -> !grant.hasExpired() && RankManager.getInstance().getRankById(grant.getRankId()) != null).collect(Collectors.toList());
     }
 
     public boolean hasRank(Rank rankData) {
@@ -455,7 +455,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     public Rank getHighestRank() {
-        return this.getActiveGrants().stream().map(Grant::getRank).max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getDefaultRank());
+        return this.getActiveGrants().stream().map(Grant::getRank).max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getInstance().getDefaultRank());
     }
 
     public Set<Node> getFinalNodes() {
@@ -510,18 +510,18 @@ public class PlayerData implements IPlayerData, IPunishData {
                 bungeePermissions.addAll(rankData.getEffectiveBungeePermissions());
                 ArrayList<UUID> inheritances = Lists.newArrayList(rankData.getInheritedRanks());
                 inheritances.forEach(inheritance -> {
-                    Rank rankInheritance = RankManager.getRankById(inheritance);
+                    Rank rankInheritance = RankManager.getInstance().getRankById(inheritance);
                     bungeePermissions.addAll(rankInheritance.getEffectiveBungeePermissions());
                 });
             }
         }
 
-        Rank defaultRank = RankManager.getDefaultRank();
+        Rank defaultRank = RankManager.getInstance().getDefaultRank();
         if (defaultRank != null) {
             bungeePermissions.addAll(defaultRank.getEffectiveBungeePermissions());
             Set<UUID> inheritances = defaultRank.getInheritedRanks();
             inheritances.forEach(inheritance -> {
-                Rank rankInheritance = RankManager.getRankById(inheritance);
+                Rank rankInheritance = RankManager.getInstance().getRankById(inheritance);
                 if (rankInheritance != null) {
                     bungeePermissions.addAll(rankInheritance.getEffectiveBungeePermissions());
                 }
@@ -535,9 +535,9 @@ public class PlayerData implements IPlayerData, IPunishData {
          */
         if (!player.getDisplayName().equals(this.getDisplayName())) //TODO handle nicks
             player.setDisplayName(this.getDisplayName());
-        //bungeePermissions.forEach((permission,bool) -> RankManager.sendPermissionToBungee(player, player.getName(), permission, bool,
+        //bungeePermissions.forEach((permission,bool) -> RankManager.getInstance().sendPermissionToBungee(player, player.getName(), permission, bool,
         //        "global")); //TODO use nodes
-        bungeePermissions.forEach(node -> RankManager.sendPermissionToBungee(player, player.getName(), node));
+        bungeePermissions.forEach(node -> RankManager.getInstance().sendPermissionToBungee(player, player.getName(), node));
     }
 
     public String getPrefix() {
@@ -555,7 +555,7 @@ public class PlayerData implements IPlayerData, IPunishData {
 
                 List<UUID> inheritances = new ArrayList<>(rankData.getInheritedRanks());
                 inheritances.forEach(inheritance -> {
-                    Rank rankInheritance = RankManager.getRankById(inheritance);
+                    Rank rankInheritance = RankManager.getInstance().getRankById(inheritance);
 
                     if (rankInheritance != null) {
                         permissions.putAll(rankInheritance.getAllEffectivePermissions());
@@ -563,11 +563,11 @@ public class PlayerData implements IPlayerData, IPunishData {
                 });
             }
         }
-        Rank defaultRank = RankManager.getDefaultRank();
+        Rank defaultRank = RankManager.getInstance().getDefaultRank();
         if (defaultRank != null) {
             permissions.putAll(defaultRank.getAllEffectivePermissions());
             defaultRank.getInheritedRanks().forEach(i -> {
-                Rank inherited = RankManager.getRankById(i);
+                Rank inherited = RankManager.getInstance().getRankById(i);
                 if (inherited != null) permissions.putAll(inherited.getAllEffectivePermissions());
             });
         }
@@ -592,16 +592,16 @@ public class PlayerData implements IPlayerData, IPunishData {
                 permissions.putAll(rankData.getNegatedPermissions());
                 List<UUID> inheritances = new ArrayList<>(rankData.getInheritedRanks());
                 inheritances.forEach(inheritance -> {
-                    Rank rankInheritance = RankManager.getRankById(inheritance);
+                    Rank rankInheritance = RankManager.getInstance().getRankById(inheritance);
                     if (rankInheritance != null) permissions.putAll(rankInheritance.getNegatedPermissions());
                 });
             }
         }
-        Rank defaultRank = RankManager.getDefaultRank();
+        Rank defaultRank = RankManager.getInstance().getDefaultRank();
         if (defaultRank != null) {
             permissions.putAll(defaultRank.getNegatedPermissions());
             defaultRank.getInheritedRanks().forEach(i -> {
-                Rank inherited = RankManager.getRankById(i);
+                Rank inherited = RankManager.getInstance().getRankById(i);
                 if (inherited != null) permissions.putAll(inherited.getNegatedPermissions());
             });
         }

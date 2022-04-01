@@ -34,7 +34,7 @@ public class Grant {
     public boolean hasExpired() {
         if (server.isThisServer()) {
             if (!this.isActive()) return true;
-            if (RankManager.getRankById(rankId) == null) {
+            if (RankManager.getInstance().getRankById(rankId) == null) {
                 setActive(false);
                 Logger.debug("cant find rank by rankid: " + rankId); //FIXME - remove on expire
                 return true;
@@ -50,7 +50,7 @@ public class Grant {
 
     public boolean isActiveSomewhere() {
         if (!this.isActive()) return false;
-        if (RankManager.getRankById(rankId) == null) return false;
+        if (RankManager.getInstance().getRankById(rankId) == null) return false;
 
         if (!this.server.isGlobal()) {
             ServerData serverData = OctoCore.getServerManager().getServerData(this.server.getServer());
@@ -84,7 +84,7 @@ public class Grant {
     }
 
     public Rank getRank() {
-        return RankManager.getRankById(rankId);
+        return RankManager.getInstance().getRankById(rankId);
     }
 
     @Override

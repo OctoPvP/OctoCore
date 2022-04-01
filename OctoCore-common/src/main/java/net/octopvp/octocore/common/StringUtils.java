@@ -364,6 +364,7 @@ public class StringUtils {
         return month + "";
     }
 
+
     public static String capatalizeFirst(String in) {
         return in.substring(0, 1).toUpperCase() + in.substring(1).toLowerCase();
     }

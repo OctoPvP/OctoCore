@@ -18,7 +18,7 @@ public class DeleteRankCommand extends BaseCommand {
             sender.sendMessage(CC.RED + "Usage: /deleterank <rank name>");
             return CommandResult.SUCCESS;
         }
-        Rank targetRank = RankManager.getRankByName(args[0]);
+        Rank targetRank = RankManager.getInstance().getInstance().getRankByName(args[0]);
         if (targetRank == null) {
             sender.sendMessage(CC.RED + "Could not find that rank!");
             return CommandResult.SUCCESS;
@@ -26,7 +26,7 @@ public class DeleteRankCommand extends BaseCommand {
         if (sender.getCommandSender() instanceof Player) {
             new ConfirmDeleteMenu(targetRank).open(sender);
         } else {
-            RankManager.delete(targetRank);
+            RankManager.getInstance().getInstance().delete(targetRank);
         }
         return CommandResult.SUCCESS;
     }

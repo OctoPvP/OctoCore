@@ -17,7 +17,7 @@ public class EditRankCommand extends BaseCommand {
             sender.sendMessage(CC.RED + "Usage: /editrank <rank>");
             return CommandResult.SUCCESS;
         }
-        Rank target = RankManager.getRankByName(args[0]);
+        Rank target = RankManager.getInstance().getInstance().getRankByName(args[0]);
         if (target == null) {
             sender.sendMessage(CC.RED + "Could not find that rank!");
             return CommandResult.SUCCESS;

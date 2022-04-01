@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum RankType {
-    DEFAULT, DONATOR, STAFF;
+    DEFAULT, HIDDEN, DONATOR, STAFF;
 
     public static String toMessage() {
         return StringUtils.getStringFromList(Stream.of(RankType.values()).map(RankType::toString)

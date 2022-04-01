@@ -3,6 +3,7 @@ package net.octopvp.octocore.paper.module.impl.punishments.menus.alts;
 import lombok.AllArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
@@ -18,11 +19,11 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class AltsMenu extends PaginatedMenu {
-    private PunishPlayerData playerData;
+    private PlayerData playerData;
 
     @Override
     public String getPagesTitle(Player player) {
-        return CC.translate("&7" + playerData.getPlayerName() + "'s alts");
+        return CC.translate("&7" + playerData.getName() + "'s alts");
     }
 
     @Override
@@ -34,7 +35,7 @@ public class AltsMenu extends PaginatedMenu {
             @Override
             public ItemStack getItem(Player player) {
                 ItemBuilder item = new ItemBuilder(Material.PAPER);
-                item.setName(CC.MAIN + playerData.getPlayerName() + "'s possible alts");
+                item.setName(CC.MAIN + playerData.getName() + "'s possible alts");
                 item.addLoreLine("");
                 item.addLoreLine(CC.VALUE + "Alts amount&7: " + CC.SECONDARY + playerData.getAlts().size());
                 item.addLoreLine(CC.VALUE + "Banned alts&7: " + CC.SECONDARY + playerData.getAlts().stream().filter(Alt::isBanned).collect(Collectors.toList()).size());
