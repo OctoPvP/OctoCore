@@ -10,12 +10,12 @@ import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
+import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class UnBanCommand extends BaseCommand {
@@ -27,18 +27,11 @@ public class UnBanCommand extends BaseCommand {
                 return;
             }
 
-            OfflinePlayer target = Bukkit.getOfflinePlayer(PunishModule.getInstance().getProfileManager().correctName(args[0]));
+            OfflinePunishData data = new OfflinePunishData(args[0]);
+            data.load();
 
-            PlayerData targetData = PlayerManager.getInstance().getOfflineData(target.getUniqueId());
-
-            if (targetData == null || !target.isOnline()) {
-                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
-                targetData.getPunishData().load();
-            }
-            if (!targetData.getPunishData().isBanned()) {
+            if (!data.isBanned()) {
                 sender.sendMessage(Lang.NOT_BANNED);
-                PunishModule.getInstance().getProfileManager().unloadData(target);
                 return;
             }
 
@@ -60,11 +53,10 @@ public class UnBanCommand extends BaseCommand {
             }
             if (reason.isEmpty()) {
                 sender.sendMessage("&cUsage: /unban <player> <reason> [-s]");
-                PunishModule.getInstance().getProfileManager().unloadData(target);
                 return;
             }
 
-            Punishment punishment = targetData.getPunishData().getActiveBan();
+            Punishment punishment = data.getPunishData().getActiveBan();
             punishment.setActive(false);
             punishment.setLast(false);
             punishment.setRemovedBy(sender.getName());
@@ -83,7 +75,7 @@ public class UnBanCommand extends BaseCommand {
                 jsonBuilder.addProperty("senderDisplay", sender.getName());
             }
             jsonBuilder.addProperty("sender", sender.getName());
-            jsonBuilder.addProperty("target", targetData.getPlayerName());
+            jsonBuilder.addProperty("target", data.getName());
             jsonBuilder.addProperty("silent", punishment.isRemovedSilent());
             jsonBuilder.addProperty("reason", reason);
 
