@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.menus.rank.create;
+package net.octopvp.octocore.paper.menus.rank;
 
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,8 @@ import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.Skulls;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
+import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
+import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Material;
@@ -27,6 +29,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class ChooseServerScopeMenu extends PaginatedMenu {
     private final Consumer<ServerContext> callback;
+    private final Menu previousMenu;
     private int i = 0;
 
     @Override
@@ -45,6 +48,19 @@ public class ChooseServerScopeMenu extends PaginatedMenu {
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
         return Lists.newArrayList(new GlobalButton(), new CustomButton());
+    }
+
+    @Override
+    public Button getBackButton(Player player) {
+        if (previousMenu == null) {
+            return null;
+        }
+        return new BackButton() {
+            @Override
+            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+                previousMenu.open(player);
+            }
+        };
     }
 
     @RequiredArgsConstructor

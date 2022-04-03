@@ -80,6 +80,7 @@ public class BanCommand extends BaseCommand {
             punishment.setAddedByName(sender.getName());
             punishment.setAddedAt(System.currentTimeMillis());
             punishment.setReason(reason);
+            punishment.setTargetAddress(data.getAddress());
 
             punishment.execute(sender);
             Logger.debug("Saving punishment: %1", punishment);

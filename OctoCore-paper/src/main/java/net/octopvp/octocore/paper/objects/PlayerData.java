@@ -32,6 +32,7 @@ import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
+import net.octopvp.octocore.paper.objects.enums.RankType;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.GsonType;
@@ -67,7 +68,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     private HashSet<UUID> allowedTagsID = new HashSet<>();
     private ChatColor nameColor = ChatColor.GREEN;
     private boolean nameColorBold = false, nameColorItalic = false, staffChatAlerts = true, adminChatAlerts = true, reportAlerts = true, staffChat = false, adminChat = false, build = false;
-    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false, savingOnQuit = false;
+    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false;
 
     private ArrayList<Grant> grants = new ArrayList<>();
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
@@ -163,6 +164,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         if (cachedPermissions == null) cachedPermissions = new ConcurrentHashMap<>();
         if (loadNotes == null) loadNotes = new ArrayList<>();
 
+        loaded = true;
     }
 
     private long getLong(Document doc, String key, long... def) {
@@ -271,7 +273,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     public void loadAlts(UUID uuid) {
-        Document document = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("uuid", uuid)).first();
+        Document document = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("uuid", uuid.toString())).first();
         if (document == null) {
             return;
         }
@@ -455,7 +457,20 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     public Rank getHighestRank() {
-        return this.getActiveGrants().stream().map(Grant::getRank).max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getInstance().getDefaultRank());
+        Grant grant = getHighestGrant();
+        if (grant == null) {
+            return RankManager.getInstance().getDefaultRank();
+        }
+        Rank r = grant.getRank();
+        if (r == null) {
+            return RankManager.getInstance().getDefaultRank();
+        }
+        return r;
+        //return this.getActiveGrants().stream().map(Grant::getRank).max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getInstance().getDefaultRank());
+    }
+
+    public Grant getHighestGrant() {
+        return this.getActiveGrants().stream().filter(grant -> grant.getRank() != null && grant.getRank().getRankType() != RankType.HIDDEN).max(Comparator.comparingInt(grant -> grant.getRank().getWeight())).orElse(null);
     }
 
     public Set<Node> getFinalNodes() {
@@ -661,7 +676,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     public void loadPunishmentsPerformed() {
         this.punishmentsExecuted.clear();
 
-        try (MongoCursor<Document> cursor = PunishModule.getPunishments().find(Filters.eq("addedBy", name)).iterator()) {
+        try (MongoCursor<Document> cursor = PunishModule.getPunishments().find(Filters.eq("addedBy", uuid.toString())).iterator()) {
             while (cursor.hasNext()) {
                 Document document = cursor.next();
                 punishmentsExecuted.add(new Punishment(document));
@@ -752,6 +767,11 @@ public class PlayerData implements IPlayerData, IPunishData {
     @Override
     public boolean isMuted() {
         return punishData.isMuted();
+    }
+
+    @Override
+    public boolean isIPMuted() {
+        return punishData.isIPMuted();
     }
 
     @Override

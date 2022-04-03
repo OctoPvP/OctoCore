@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.database.redis.packets.player.AltUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.ServerManager;
@@ -50,7 +51,7 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
                     activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", Bukkit.getOfflinePlayer(this.name).getUniqueId().toString()))).into(new ArrayList<>());
 
             for (Document document : punishments) {
-                System.out.println(document.getString("name"));
+                Logger.debug(document.getString("name"));
             }
 
             if (punishments.size() > 0) {
@@ -124,24 +125,34 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
         return this;
     }
 
+    @Override
     public boolean isBanned() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
     }
 
+    @Override
     public boolean isIPBanned() {
         return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
     }
 
+    @Override
     public boolean isBlacklisted() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).findFirst().orElse(null) != null;
     }
 
+    @Override
     public boolean isWarned() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.WARN).findFirst().orElse(null) != null;
     }
 
+    @Override
     public boolean isMuted() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE).findFirst().orElse(null) != null;
+    }
+
+    @Override
+    public boolean isIPMuted() {
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE && punishment.isIPRelative()).findFirst().orElse(null) != null;
     }
 
     public Punishment getActiveBan() {

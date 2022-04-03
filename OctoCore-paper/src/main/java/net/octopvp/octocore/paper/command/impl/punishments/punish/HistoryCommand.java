@@ -6,15 +6,11 @@ import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.menus.HistoryMenu;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
-import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import org.bson.Document;
 
 public class HistoryCommand extends BaseCommand {
 
@@ -25,9 +21,9 @@ public class HistoryCommand extends BaseCommand {
                 sender.sendMessage(CC.translate("&cUsage: /history <player>"));
                 return;
             }
-            OfflinePunishData data = new OfflinePunishData(args[0]);
-            data.load();
 
+            Document document = PlayerManager.getInstance().getDocument(args[0]);
+            OfflinePunishData data = new OfflinePunishData(args[0]).load(false).loadAlts(document);
             new HistoryMenu(data).open(sender);
         });
         return CommandResult.SUCCESS;

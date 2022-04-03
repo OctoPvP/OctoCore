@@ -47,11 +47,11 @@ public final class OctoCore extends JavaPlugin {
     private static Location spawn;
 
     @Getter
-    private static Settings settings = new Settings();
+    private static final Settings settings = new Settings();
     @Getter
     private static String serverName;
     @Getter
-    private static boolean master;
+    private static boolean master, loading;
     @Getter
     @Setter
     private static ServerManager serverManager;
@@ -60,7 +60,7 @@ public final class OctoCore extends JavaPlugin {
     private static ServerType serverType;
     private static final SetupModules setupModules = new SetupModules();
     @Getter
-    private static Gson gson = new GsonBuilder().setPrettyPrinting()
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting()
             .serializeNulls()
             .enableComplexMapKeySerialization().create();    // https://stackoverflow.com/a/44800004/11588583
     private static Tab tab;
@@ -77,6 +77,8 @@ public final class OctoCore extends JavaPlugin {
     private RedisHandler redisHandler;
     //they init from up to down
     @Getter
+    private PlayerManager playerManager;
+    @Getter
     private DatabaseManager databaseManager;
     @Getter
     private AuthManager authManager;
@@ -87,8 +89,6 @@ public final class OctoCore extends JavaPlugin {
     //Setup End
     @Getter
     private RankManager rankManager;
-    @Getter
-    private PlayerManager playerManager;
     @Getter
     private SettingsManager settingsManager;
     @Getter
@@ -165,6 +165,7 @@ public final class OctoCore extends JavaPlugin {
         if (instance != null)
             throw new IllegalStateException("OctoCore is already initialized");
         instance = this;
+        loading = true;
         Tasks.init(this);
         if (getConfig().getBoolean("sentry.enable", false))
             SentryManager.init(getConfig().getString("sentry.sentry-dsn", ""));
@@ -237,6 +238,7 @@ public final class OctoCore extends JavaPlugin {
         new SetupOther().setup(this);
         Logger.info("Done!");
         dataUpdateThread.start();
+        loading = false;
         Logger.info("OctoCore took " + (System.currentTimeMillis() - start) + "ms to load.");
     }
 

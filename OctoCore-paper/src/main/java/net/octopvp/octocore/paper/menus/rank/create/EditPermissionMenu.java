@@ -7,6 +7,7 @@ import net.octopvp.octocore.common.util.permissions.NodeBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.conversations.QuestionConversation;
 import net.octopvp.octocore.paper.manager.impl.FilterManager;
+import net.octopvp.octocore.paper.menus.rank.ChooseServerScopeMenu;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
@@ -30,6 +31,8 @@ public class EditPermissionMenu extends Menu {
     private final boolean create;
     private final Consumer<NodeBuilder> callback;
     private final Menu previous;
+
+    private final Menu instance = this;
 
     @SneakyThrows
     public EditPermissionMenu(NodeBuilder nodeBuilder, boolean create, Menu previous, Consumer<NodeBuilder> callback) {
@@ -170,7 +173,7 @@ public class EditPermissionMenu extends Menu {
             new ChooseServerScopeMenu((context) -> {
                 nodeBuilder.setScope(context);
                 open(player);
-            }).open(player);
+            }, instance).open(player);
         }
     }
 

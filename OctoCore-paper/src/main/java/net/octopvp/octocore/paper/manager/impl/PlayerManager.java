@@ -37,7 +37,7 @@ public class PlayerManager extends Manager {
     @Getter
     private final Map<UUID, PlayerData> playerProfiles = new ConcurrentHashMap<>();
     @Getter
-    private Map<UUID, Integer> quitting = new HashMap<>();
+    private final Map<UUID, Integer> quitting = new HashMap<>();
 
 
     public PlayerData getData(UUID uuid) {
@@ -192,8 +192,16 @@ public class PlayerManager extends Manager {
 
     }
 
+    public Document getDocument(String name) {
+        return pdataCollection.find(Filters.eq("lowerCaseName", name.toLowerCase())).first();
+    }
+
+
     public void join(Player player) {
-        getData(player.getUniqueId()).onJoin(player);
+        PlayerData data = getData(player.getUniqueId());
+        data.onJoin(player);
+        data.loadPunishmentsPerformed();
+        data.setFullJoined(true);
     }
 
 }

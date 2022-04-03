@@ -78,7 +78,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>C:\Users\evanl\OctoPvP\Network\lobby\plugins</outputDirectory>
+                    <outputDirectory>D:\Development\OctoPvP\Network\lobby\plugins</outputDirectory>
                     <archive>
                         <index>true</index>
                         <manifestEntries>

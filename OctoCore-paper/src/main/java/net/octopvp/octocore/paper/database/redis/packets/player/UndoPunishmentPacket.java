@@ -3,11 +3,9 @@ package net.octopvp.octocore.paper.database.redis.packets.player;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
@@ -30,16 +28,27 @@ public class UndoPunishmentPacket extends RedisPacket {
     @Override
     public void onReceive(JsonObject data) {
         this.type = PunishmentType.valueOf(data.get("type").getAsString());
-        String t = type.name().toLowerCase() + "ed";
+        String t;
+        if (this.type == PunishmentType.BAN) {
+            t = "banned";
+        } else if (this.type == PunishmentType.MUTE) {
+            t = "muted";
+        } else if (this.type == PunishmentType.BLACKLIST) {
+            t = "blacklisted";
+        } else {
+            t = "punished";
+        }
 
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(data.get("target").getAsString());
 
         String userName = PlayerManager.getInstance().getFormattedName(offlinePlayer.getName());
+        String coloredName = data.get("coloredName").getAsString();
+        String reason0 = data.get("reason").getAsString();
         Clickable clickable = new Clickable((silent ? Lang.PUNISHMENT_SILENT.toString() : "") + Lang.PUNISHMENT_UNDO.getMsg(
                 userName,
                 t,
                 coloredName,
-                reason
+                reason0
         )/*,Lang.PUNISHMENT_UNMUTE_HOVER.getMsg(reason)*/);
         Bukkit.getConsoleSender().sendMessage(CC.translate(clickable.getText()));
 

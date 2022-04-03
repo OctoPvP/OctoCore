@@ -32,10 +32,10 @@ public class RankManager extends Manager {
     private static RankManager instance;
 
     @Getter
-    private static MongoCollection<Document> ranksCollection = DatabaseManager.getMongoDatabase().getCollection("ranks");
+    private static final MongoCollection<Document> ranksCollection = DatabaseManager.getMongoDatabase().getCollection("ranks");
 
     @Getter
-    private static Set<Rank> ranks = new HashSet<>();
+    private static final Set<Rank> ranks = new HashSet<>();
 
     public void loadRanks() {
         Logger.info("Loading ranks...");
@@ -64,18 +64,15 @@ public class RankManager extends Manager {
     }
 
     public Rank getDefaultRank() {
-        Rank rank = ranks.stream().filter(Rank::isDefaultRank).findFirst().orElse(null);
-        if (rank == null) {
-            return createDefaultRank();
-        }
-        return rank;
+        return ranks.stream().filter(Rank::isDefaultRank).findFirst().orElse(null);
     }
 
     public void save(Rank rank) {
         if (ranksCollection.find(Filters.eq("rankId", rank.getRankId().toString())).first() != null)
             ranksCollection.replaceOne(Filters.eq("rankId", rank.getRankId().toString()), Document.parse(OctoCore.getGson().toJson(rank)), new ReplaceOptions().upsert(true));
         else ranksCollection.insertOne(Document.parse(OctoCore.getGson().toJson(rank)));
-        broadcastReload();
+        if (!OctoCore.isLoading())
+            broadcastReload();
     }
 
     public void sendPermissionToBungee(Player player, String name, Node node) {
@@ -134,8 +131,14 @@ public class RankManager extends Manager {
     }
 
     public Rank createDefaultRank() {
+        return createDefaultRank(true);
+    }
+
+    public Rank createDefaultRank(boolean createIfNotExist) {
         Rank defaultRank = getDefaultRank();
         if (defaultRank == null) {
+            if (!createIfNotExist)
+                return null;
             RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(1).setRankType(RankType.DEFAULT);
             Rank r = rank.build();
             ranks.add(r);

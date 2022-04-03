@@ -23,6 +23,8 @@ public interface IPunishData {
 
     boolean isMuted();
 
+    boolean isIPMuted();
+
     boolean isBlacklisted();
 
     boolean isWarned();

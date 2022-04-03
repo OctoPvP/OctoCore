@@ -55,7 +55,7 @@ public class StaffHistoryMenu extends Menu {
 
     @Override
     public String getName(Player player) {
-        return "Punishments";
+        return "Punishments preformed by " + playerData.getName();
     }
 
     @AllArgsConstructor
@@ -63,8 +63,8 @@ public class StaffHistoryMenu extends Menu {
 
         @Override
         public ItemStack getItem(Player player) {
-            int active = PunishHistory.getPunishments(playerData, PunishmentType.BAN, true).size();
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.BAN, false).size();
+            int active = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).count();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.BAN).count();
 
             ItemBuilder item = new ItemBuilder(Material.WOOL);
             item.durability(WoolUtils.convertChatColorToWoolData(ChatColor.RED));
@@ -84,7 +84,7 @@ public class StaffHistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.BAN, false).size();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.BAN).count();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.BAN).open(player);
         }
@@ -94,8 +94,8 @@ public class StaffHistoryMenu extends Menu {
     private class BlacklistsButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            int active = PunishHistory.getPunishments(playerData, PunishmentType.BLACKLIST, true).size();
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.BLACKLIST, false).size();
+            int active = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).count();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.BLACKLIST).count();
 
             ItemBuilder item = new ItemBuilder(Material.WOOL);
             item.setDurability(WoolUtils.convertChatColorToWoolData(ChatColor.RED));
@@ -115,7 +115,7 @@ public class StaffHistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.BLACKLIST, false).size();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.BLACKLIST).count();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.BLACKLIST).open(player);
         }
@@ -125,8 +125,8 @@ public class StaffHistoryMenu extends Menu {
     private class MutesButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            int active = PunishHistory.getPunishments(playerData, PunishmentType.MUTE, true).size();
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.MUTE, false).size();
+            int active = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE).count();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.MUTE).count();
 
             ItemBuilder item = new ItemBuilder(Material.WOOL);
             item.setDurability(WoolUtils.convertChatColorToWoolData(ChatColor.GOLD));
@@ -146,7 +146,7 @@ public class StaffHistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.MUTE, false).size();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.MUTE).count();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.MUTE).open(player);
         }
@@ -156,8 +156,8 @@ public class StaffHistoryMenu extends Menu {
     private class KicksButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            int active = PunishHistory.getPunishments(playerData, PunishmentType.KICK, true).size();
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.KICK, false).size();
+            int active = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.KICK).count();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.KICK).count();
 
             ItemBuilder item = new ItemBuilder(Material.WOOL);
             item.setDurability(9);
@@ -177,7 +177,7 @@ public class StaffHistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.KICK, false).size();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.KICK).count();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.KICK).open(player);
         }
@@ -187,8 +187,8 @@ public class StaffHistoryMenu extends Menu {
     private class WarnsButton extends Button {
         @Override
         public ItemStack getItem(Player player) {
-            int active = PunishHistory.getPunishments(playerData, PunishmentType.WARN, true).size();
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.WARN, false).size();
+            int active = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.WARN).count();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.WARN).count();
 
             ItemBuilder item = new ItemBuilder(Material.WOOL);
             item.setDurability(WoolUtils.convertChatColorToWoolData(ChatColor.YELLOW));
@@ -208,7 +208,7 @@ public class StaffHistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            int all = PunishHistory.getPunishments(playerData, PunishmentType.WARN, false).size();
+            int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.WARN).count();
             if (all == 0) return;
             new StaffHistoryPunishmentMenu(playerData, PunishmentType.WARN).open(player);
         }

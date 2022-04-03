@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -22,7 +23,7 @@ public class TagUpdatePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) throws Exception {
-        System.out.println("Tag update: " + OctoCore.getGson().toJson(data));
+        Logger.debug("Tag update: " + OctoCore.getGson().toJson(data));
         String type = data.get("type").getAsString();
         Player player = Bukkit.getPlayer(UUID.fromString(data.get("uuid").getAsString()));
         UUID tagId = UUID.fromString(data.get("tagId").getAsString());

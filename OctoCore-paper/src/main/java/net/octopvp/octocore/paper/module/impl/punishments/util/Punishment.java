@@ -6,7 +6,6 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
@@ -15,7 +14,6 @@ import net.octopvp.octocore.paper.database.redis.packets.player.ExecutePunishmen
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.objects.IPlayerData;
-import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bson.Document;
@@ -23,13 +21,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 @Getter
 @Setter
 public class Punishment {
-    private final OctoCore plugin = OctoCore.getInstance();
+    private transient final OctoCore plugin = OctoCore.getInstance();
     private PunishmentType punishmentType;
 
     private boolean active = true, permanent = true, silent = false, removedSilent = false, last = false, IPRelative = false;
@@ -182,7 +179,8 @@ public class Punishment {
                 .addProperty("addedBy", addedByName)
                 .addProperty("server", OctoCore.getServerName())
                 .addProperty("type", this.punishmentType.name())
-                .addProperty("IPRelative", this.IPRelative);
+                .addProperty("IPRelative", this.IPRelative)
+                .addProperty("punishment", OctoCore.getGson().toJson(this));
 
         new ExecutePunishmentPacket(jsonChain).send();
     }

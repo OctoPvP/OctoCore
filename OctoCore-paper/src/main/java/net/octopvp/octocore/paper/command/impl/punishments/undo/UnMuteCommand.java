@@ -1,28 +1,21 @@
 package net.octopvp.octocore.paper.command.impl.punishments.undo;
 
 import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.UndoPunishmentPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
-import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 public class UnMuteCommand extends BaseCommand {
 
-    @Command(name = "unmute", permission = Permission.PUNISHMENT_UNMUTE)
+    @Command(name = "unmute", usage = "<player> <reason>", permission = Permission.PUNISHMENT_UNMUTE)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length < 2) {
             return CommandResult.INVALID_ARGS;

@@ -6,7 +6,9 @@ import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.manager.impl.ScoreBoardManager;
 import net.octopvp.octocore.paper.manager.impl.TabManager;
+import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.objects.CachedData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
@@ -62,6 +64,14 @@ public class JoinLeaveListener implements Listener {
 
             PlayerData playerData = PlayerManager.getInstance().createProfile(uuid, name);
 
+            playerData.getPunishData().forceLoadActiveBansAndBlacklists();
+            playerData.loadAlts(event.getAddress().getHostAddress());
+
+            if (PunishModule.checkPunishments(event, playerData, name, uuid)) {
+                PlayerManager.getInstance().getPlayerProfiles().remove(uuid);
+                return;
+            }
+
             CachedData cache = new CachedData(uuid);
             Document data0 = cache.getData();
 
@@ -100,6 +110,8 @@ public class JoinLeaveListener implements Listener {
             return;
         }
         PlayerManager.getInstance().join(event.getPlayer());
+
+        ScoreBoardManager.handleJoin(event.getPlayer());
     }
 
     @EventHandler

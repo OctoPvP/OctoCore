@@ -1,15 +1,12 @@
 package net.octopvp.octocore.paper.module.impl.punishments.util;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
 import net.octopvp.octocore.paper.objects.IPunishData;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -78,6 +75,11 @@ public class Alt implements IPunishData {
     @Override
     public boolean isMuted() {
         return punishData != null && punishData.isMuted();
+    }
+
+    @Override
+    public boolean isIPMuted() {
+        return punishData != null && punishData.isIPMuted();
     }
 
     @Override

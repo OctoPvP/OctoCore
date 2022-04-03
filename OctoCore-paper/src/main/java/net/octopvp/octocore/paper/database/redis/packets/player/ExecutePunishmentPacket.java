@@ -3,16 +3,18 @@ package net.octopvp.octocore.paper.database.redis.packets.player;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
+import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
+import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.PlayerData;
+import net.octopvp.octocore.paper.utils.GsonType;
 import net.octopvp.octocore.paper.utils.chat.Clickable;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
@@ -45,6 +47,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
     @Override
     public void onReceive(JsonObject data) throws Exception {
         try {
+            Punishment punishment = OctoCore.getGson().fromJson(data.get("punishment").getAsString(), GsonType.PUNISHMENT);
             UUID uuid = UUID.fromString(data.get("uuid").getAsString());
             String name = data.get("name").getAsString();
             String sender = data.get("sender").getAsString();
@@ -150,62 +153,18 @@ public class ExecutePunishmentPacket extends RedisPacket {
                     player.sendMessage(CC.translate(message));
                 }
             }
-        /*
-        if (type == PunishmentType.BAN) {
-            Tasks.run(()->{
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) {
-                    player.kickBungee(
-                            new DisconnectReason(
-                                    Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                            (temp ? Lang.TEMP : Lang.PERM),
-                                            "BANNED",
-                                            "Banned",
-                                            addedByName,
-                                            reason,
-                                            (temp ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
-                                                    niceExpire,niceDuration) : Lang.PERM_ENTRY),
-                                            true)).toString()
-                    );
+
+            if (type == PunishmentType.MUTE || type == PunishmentType.WARN) {
+                if (OctoCore.getServerName().equalsIgnoreCase(server)) {
+                    PlayerData pdata = PlayerManager.getInstance().getData(uuid);
+                    if (pdata == null) {
+                        pdata = new PlayerData(uuid, name);
+                        pdata.getPunishData().load();
+                    }
+                    punishment.setTargetAddress(PlayerManager.getInstance().getAddress(uuid));
                 }
-            });
-            if (IPRelative){
-                /*
-                StringUtils.getListFromString(alts).forEach(alt -> {
-                    OctoCore.getInstance().getRedisData().write(JedisAction.EXECUTE_ALT_KICK,
-                            new JsonChain()
-                                    .addProperty("alt", name)
-                                    .addProperty("type", "BAN")
-                                    .addProperty("permanent", permanent)
-                                    .addProperty("duration", niceDuration)
-                                    .addProperty("reason", reason)
-                                    .addProperty("sender", sender)
-                                    .addProperty("name", alt).get());
-                });
-                altKick(alts,name,"BAN",permanent,niceDuration,reason,sender);
             }
-        }
-        if (type == PunishmentType.BLACKLIST){
-            Tasks.run(()->{
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) {
-                    player.kickBungee(
-                            new DisconnectReason(
-                                    Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                            (temp ? Lang.TEMP : Lang.PERM),
-                                            "BLACKLISTED",
-                                            "Blacklisted",
-                                            addedByName,
-                                            reason,
-                                            (temp ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
-                                                    niceExpire,niceDuration) : Lang.PERM_ENTRY),
-                                            true)).toString()
-                    );
-                }
-            });
-            altKick(alts,name,"BLACKLIST",permanent,niceDuration,reason,sender);
-        }
-                         */
+
             String typeStr;
             switch (type) {
                 case BAN:

@@ -36,7 +36,7 @@ public class TestCommand extends BaseCommand {
             sender.sendMessage(ChatColor.RED + "Data is null!");
             return CommandResult.SUCCESS;
         }
-        Grant grant = new GrantBuilder(RankManager.getInstance().getInstance().getRankByName("Owner")).setActive(true).setPerm(true).setReason("lmao").setServer(ServerContext.global()).build();
+        Grant grant = new GrantBuilder(RankManager.getInstance().getRankByName("Owner")).setActive(true).setPerm(true).setReason("lmao").setServer(ServerContext.global()).build();
         data.applyGrant(grant);
         sender.sendMessage(ChatColor.GREEN + "Done");
         return CommandResult.SUCCESS;
