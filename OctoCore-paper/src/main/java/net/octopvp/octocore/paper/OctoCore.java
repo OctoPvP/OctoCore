@@ -86,7 +86,6 @@ public final class OctoCore extends JavaPlugin {
     private FilterManager filterManager;
     @Getter
     private NickManager nickManager;
-    //Setup End
     @Getter
     private RankManager rankManager;
     @Getter
@@ -107,6 +106,7 @@ public final class OctoCore extends JavaPlugin {
     private ScoreBoardManager scoreBoardManager;
     @Getter
     private TagManager tagManager;
+    //Setup End
 
     public static Chat getChat() {
         return OctoCore.chat;

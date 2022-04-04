@@ -112,9 +112,6 @@ public class Debugger {
     }
 
     public void listGlobal() {
-        ServerManager.getInstance().getGlobalPlayers().forEach((k, v) -> {
-            print(k + ": " + v);
-        });
+        ServerManager.getInstance().getGlobalPlayers().forEach((k, v) -> print(k + ": " + v));
     }
-
 }
