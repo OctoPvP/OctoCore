@@ -5,14 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.redis.RedisPacket;
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
 import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.objects.ServerData;
-
-import java.util.Iterator;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,19 +27,8 @@ public class ServerUpdatePacket extends RedisPacket {
             serverData.setMaxPlayers(data.get("maxPlayers").getAsInt());
             serverData.setRecentTps(new double[]{data.get("tps1").getAsDouble(), data.get("tps2").getAsDouble(), data.get("tps3").getAsDouble()});
             serverData.setNames(StringUtils.getListFromString(data.get("players").getAsString()));
-            Iterator iterator = OctoCore.getServerManager().getConnectedServers().iterator();
-            while (iterator.hasNext()) {
-                ServerData connectedServer = (ServerData) iterator.next();
-                boolean time = System.currentTimeMillis() - connectedServer.getLastTick() >= 15000L, removed = false;
-                if (time || connectedServer.isSafelyStopped()) {
-                    iterator.remove();
-                    removed = true;
-                }
-                if (removed && !connectedServer.isSafelyStopped()) {
-                    new AdminAlertPacket().onReceive(new JsonBuilder().add("message", CC.RED + connectedServer.getServerName() + " may have crashed (has not responded for 15 seconds)").get());
-                }
-            }
             try {
+                ServerManager.getInstance().removeInActiveServers();
                 ServerManager.getInstance().removeInActivePlayers();
             } catch (Exception ignored) {
             }

@@ -2,7 +2,10 @@ package net.octopvp.octocore.paper.manager.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.ServerData;
@@ -39,7 +42,19 @@ public class ServerManager extends Manager {
     }
 
     public void removeInActiveServers() {
-        this.serverData.entrySet().removeIf(next -> System.currentTimeMillis() - next.getValue().getLastTick() >= 15000L);
+        this.serverData.entrySet().removeIf(next -> {
+            if (System.currentTimeMillis() - next.getValue().getLastTick() >= 15000L) {
+                if (!next.getValue().isSafelyStopped()) {
+                    try {
+                        new AdminAlertPacket().onReceive(new JsonBuilder().add("message", CC.RED + next.getValue().getServerName() + " may have crashed (has not responded for 15 seconds)").get());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return true;
+            }
+            return false;
+        });
     }
 
     public ServerData createServerData(String name) {
