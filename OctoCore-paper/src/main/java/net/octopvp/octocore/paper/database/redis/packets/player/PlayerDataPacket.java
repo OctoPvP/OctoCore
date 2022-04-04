@@ -8,6 +8,7 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.api.events.GlobalPlayerCreateEvent;
+import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.PlayerTag;
@@ -52,6 +53,7 @@ public class PlayerDataPacket extends RedisPacket {
                 gPlayer.setName(data.get("name").getAsString());
 
                 serverData.getOnlinePlayers().add(gPlayer);
+                ServerManager.getInstance().getRealGlobalPlayers().put(gPlayer.getName().toLowerCase(), globalPlayer);
 
                 created = true;
                 globalPlayer = OctoCore.getServerManager().getGlobalPlayer(data.get("name").getAsString());

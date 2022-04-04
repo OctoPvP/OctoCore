@@ -8,9 +8,8 @@ import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
 import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
-import net.octopvp.octocore.paper.objects.GlobalPlayer;
+import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.objects.ServerData;
 
 import java.util.Iterator;
@@ -41,23 +40,12 @@ public class ServerUpdatePacket extends RedisPacket {
                     removed = true;
                 }
                 if (removed && !connectedServer.isSafelyStopped()) {
-                    if (OctoCore.isMaster()) { //make sure these kind of broadcasts only happen on master
-                        new AdminAlertPacket(CC.RED + connectedServer.getServerName() + " may have crashed (has not responded for 15 seconds)").send();
-                    }
+                    new AdminAlertPacket().onReceive(new JsonBuilder().add("message", CC.RED + connectedServer.getServerName() + " may have crashed (has not responded for 15 seconds)").get());
                 }
             }
-
-            //Iterator<GlobalPlayer> globalPlayers = serverData.getOnlinePlayers().iterator();
-            for (Iterator<GlobalPlayer> globalPlayerIterator = serverData.getOnlinePlayers().iterator(); globalPlayerIterator.hasNext(); ) { //fix ConcurrentModificationException -> https://stackoverflow.com/a/25131800
-                GlobalPlayer globalPlayer = globalPlayerIterator.next();
-
-                if (System.currentTimeMillis() - globalPlayer.getLastActivity() >= 5000L) {
-                    GlobalPlayerDestroyEvent event = new GlobalPlayerDestroyEvent(globalPlayer);
-                    OctoCore.getInstance().getServer().getPluginManager().callEvent(event);
-                    if (!event.isCancelled()) {
-                        globalPlayerIterator.remove();
-                    }
-                }
+            try {
+                ServerManager.getInstance().removeInActivePlayers();
+            } catch (Exception ignored) {
             }
         } catch (Exception ignored) {
         }

@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -91,10 +90,6 @@ public class JoinLeaveListener implements Listener {
         TabManager.onLeave(e.getPlayer());
         MainRedisHandler.getSaving().remove(e.getPlayer().getUniqueId());
         unfreezePlayer(e.getPlayer());
-    }
-
-    @EventHandler
-    public void onGlobalPDestroyEvent(GlobalPlayerDestroyEvent e) {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
