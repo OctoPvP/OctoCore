@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper.utils.debug;
 
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.listeners.JoinLeaveListener;
+import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,6 +53,8 @@ public class Debugger {
             Statement statement = new Statement(this, name, args);
             print("Running the expression \"" + ChatColor.AQUA + cmd + ChatColor.RESET + "\"...");
             statement.execute();
+            print("Done running the expression \"" + ChatColor.AQUA + cmd + ChatColor.RESET + "\"!");
+
         } catch (Exception e) {
             print("Error: the expression \"" + ChatColor.AQUA + cmd + ChatColor.RESET + "\" failed to execute.");
             print(e.toString());
@@ -106,6 +109,12 @@ public class Debugger {
     public void createTestRank() {
         RankBuilder rankBuilder = new RankBuilder("test");
         rankBuilder.build().save();
+    }
+
+    public void listGlobal() {
+        ServerManager.getInstance().getGlobalPlayers().forEach((k, v) -> {
+            print(k + ": " + v);
+        });
     }
 
 }
