@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.utils;
 
 import com.google.gson.reflect.TypeToken;
+import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
@@ -25,5 +26,8 @@ public class GsonType {
     public static final Type UUID_SET = new TypeToken<HashSet<UUID>>() {
     }.getType();
     public static final Type STRING_STRING_MAP = new TypeToken<Map<String, String>>() {
+    }.getType();
+    public static final Type STRING_SERVER_CONTEXT_MAP = new TypeToken<Map<String, ServerContext>>() {
+
     }.getType();
 }

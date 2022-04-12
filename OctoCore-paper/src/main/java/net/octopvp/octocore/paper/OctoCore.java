@@ -54,9 +54,6 @@ public final class OctoCore extends JavaPlugin {
     private static boolean master, loading;
     @Getter
     @Setter
-    private static ServerManager serverManager;
-    @Getter
-    @Setter
     private static ServerType serverType;
     private static final SetupModules setupModules = new SetupModules();
     @Getter
@@ -80,6 +77,8 @@ public final class OctoCore extends JavaPlugin {
     private PlayerManager playerManager;
     @Getter
     private DatabaseManager databaseManager;
+    @Getter
+    private ServerManager serverManager;
     @Getter
     private AuthManager authManager;
     @Getter

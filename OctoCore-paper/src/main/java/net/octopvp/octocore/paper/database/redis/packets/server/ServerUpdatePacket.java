@@ -18,9 +18,9 @@ public class ServerUpdatePacket extends RedisPacket {
     @Override
     public void onReceive(JsonObject data) {
         try {
-            ServerData serverData = OctoCore.getServerManager().getServerData(data.get("name").getAsString());
+            ServerData serverData = OctoCore.getInstance().getServerManager().getServerData(data.get("name").getAsString());
             if (serverData == null) {
-                serverData = OctoCore.getServerManager().createServerData(data.get("name").getAsString());
+                serverData = OctoCore.getInstance().getServerManager().createServerData(data.get("name").getAsString());
             }
             serverData.setWhitelisted(data.get("whitelisted").getAsBoolean());
             serverData.setLastTick(data.get("lastTick").getAsLong());

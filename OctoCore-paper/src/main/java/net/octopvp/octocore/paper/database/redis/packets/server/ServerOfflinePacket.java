@@ -19,7 +19,7 @@ public class ServerOfflinePacket extends RedisPacket {
     @Override
     public void onReceive(JsonObject data) throws Exception {
         String server = data.get("server").getAsString();
-        OctoCore.getServerManager().getServerData(server).setSafelyStopped(true); //so master dosen't send the crash alert
+        OctoCore.getInstance().getServerManager().getServerData(server).setSafelyStopped(true); //so master dosen't send the crash alert
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission(Permission.RECEIVE_SERVER_OFFLINE_MESSAGE.getNode())) {
                 onlinePlayer.sendMessage(Lang.ADMIN_ALERTS.getMsg(Lang.SERVER_OFFLINE_FORMAT.getMsg(server)));

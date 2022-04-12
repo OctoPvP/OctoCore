@@ -26,7 +26,7 @@ public class RemoveTagCommand extends BaseCommand {
         }
         String target = args[0];
         String tag = args[1];
-        if (OctoCore.getServerManager().isPlayerOnline(target)) {
+        if (OctoCore.getInstance().getServerManager().isPlayerOnline(target)) {
             if (Bukkit.getPlayer(target) != null) {
                 //on this server
                 PlayerData profile = PlayerManager.getInstance().getData(Bukkit.getPlayer(target).getUniqueId());

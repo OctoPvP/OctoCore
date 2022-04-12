@@ -22,6 +22,7 @@ public class ServerManager extends Manager {
     private Map<String, GlobalPlayer> globalPlayers = new ConcurrentHashMap<>();
 
     public Map<String, GlobalPlayer> getRealGlobalPlayers() {
+        if (globalPlayers == null) return new ConcurrentHashMap<>();
         return this.globalPlayers;
     }
 

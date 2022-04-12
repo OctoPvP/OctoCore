@@ -382,7 +382,7 @@ public class PlayerData implements IPlayerData, IPunishData {
 
     public boolean isOnline(String name) { // FIXME inverted this because its returning false even if they are online
         if (Bukkit.getPlayer(uuid) != null) return true;
-        return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData -> serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList()).contains(name.toLowerCase())).findFirst().orElse(null) != null;
+        return OctoCore.getInstance().getServerManager().getConnectedServers().stream().filter(serverData -> serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList()).contains(name.toLowerCase())).findFirst().orElse(null) != null;
     }
 
     public boolean isOnlineThisServer() {

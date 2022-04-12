@@ -17,7 +17,6 @@ import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
-import net.octopvp.octocore.paper.utils.menu.buttons.PlaceholderButton;
 import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
@@ -30,7 +29,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
@@ -89,7 +87,7 @@ public class GrantConfirmationMenu extends Menu {
                     return;
                 }
 
-                GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(targetData.get().getName());
+                GlobalPlayer globalPlayer = OctoCore.getInstance().getServerManager().getGlobalPlayer(targetData.get().getName());
                 if (grant.isPermanent()) {
                     player.sendMessage(Lang.GRANT_PERM_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getEnteredReason()));
                     if (globalPlayer != null)

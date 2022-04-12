@@ -56,7 +56,7 @@ public class Grant {
         if (RankManager.getInstance().getRankById(rankId) == null) return false;
 
         if (!this.server.isGlobal()) {
-            ServerData serverData = OctoCore.getServerManager().getServerData(this.server.getServer());
+            ServerData serverData = OctoCore.getInstance().getServerManager().getServerData(this.server.getServer());
             if (serverData != null && !serverData.getServerName().equalsIgnoreCase(OctoCore.getServerName())) {
                 if (isPermanent()) return true;
 

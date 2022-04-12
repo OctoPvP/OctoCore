@@ -37,7 +37,7 @@ public class GrantServerMenu extends PaginatedMenu {
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
         buttons.add(new GlobalButton());
-        OctoCore.getServerManager().getConnectedServers().forEach(server -> buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
+        OctoCore.getInstance().getServerManager().getConnectedServers().forEach(server -> buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
         return buttons;
     }
 
