@@ -3,6 +3,7 @@ package net.octopvp.octocore.paper.utils.debug;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.listeners.JoinLeaveListener;
 import net.octopvp.octocore.paper.manager.impl.ServerManager;
+import net.octopvp.octocore.paper.objects.OctoPermissible;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -113,5 +114,13 @@ public class Debugger {
 
     public void listGlobal() {
         ServerManager.getInstance().getGlobalPlayers().forEach((k, v) -> print(k + ": " + v));
+    }
+
+    public void isPermissibleInjected() {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            boolean b = player.getPermissibleBase() instanceof OctoPermissible;
+            print(b);
+        }
     }
 }

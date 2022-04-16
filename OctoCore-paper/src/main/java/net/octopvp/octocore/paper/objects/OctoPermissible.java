@@ -33,6 +33,11 @@ public class OctoPermissible extends PermissibleBase {
         return data.hasPermission(inName);
     }
 
+    @Override
+    public boolean isOp() {
+        return super.isOp();
+    }
+
     public PermissibleBase getOldPermissibleBase() {
         return oldPermissibleBase;
     }

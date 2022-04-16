@@ -4,6 +4,7 @@ import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
+import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.ScoreBoardManager;
 import net.octopvp.octocore.paper.manager.impl.TabManager;
@@ -40,6 +41,7 @@ public class JoinLeaveListener implements Listener {
             player.removePotionEffect(PotionEffectType.SPEED);
         });
     }
+
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
@@ -95,6 +97,7 @@ public class JoinLeaveListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogin(PlayerLoginEvent event) {
         PlayerData data = PlayerManager.getInstance().getData(event.getPlayer());
+        PermissionManager.injectPermissible(event.getPlayer(), data);
         if (data == null)
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
     }

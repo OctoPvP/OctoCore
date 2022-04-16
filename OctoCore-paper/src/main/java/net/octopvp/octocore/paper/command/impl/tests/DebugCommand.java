@@ -14,7 +14,7 @@ public class DebugCommand extends BaseCommand {
     @Command(name = "debugexp", permission = Permission.ADMIN)
     public CommandResult execute(Sender sender, String[] args) {
         String expression = StringUtils.arraytoString(args);
-        new Debugger(sender).execute(expression);
+        new Debugger(sender.getCommandSender()).execute(expression);
         return CommandResult.SUCCESS;
     }
 

@@ -28,7 +28,7 @@ public class Rank implements Cloneable {
     private static final Comparator<Rank> inheritanceComparatorSmallToLarge = Comparator.comparingInt(Rank::getWeight);
     private String name;
     private UUID rankId = UUID.randomUUID();
-    private int weight = 0;
+    private int weight = 1;
     private boolean defaultRank = false;
     private RankType rankType = RankType.DEFAULT;
     //private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
@@ -41,7 +41,7 @@ public class Rank implements Cloneable {
     private ServerContext scope = ServerContext.global();
 
     public void save() {
-        RankManager.getInstance().getInstance().save(this);
+        RankManager.getInstance().save(this);
     }
 
     @Override
