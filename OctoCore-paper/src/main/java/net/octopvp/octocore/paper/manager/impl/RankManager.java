@@ -139,7 +139,7 @@ public class RankManager extends Manager {
         if (defaultRank == null) {
             if (!createIfNotExist)
                 return null;
-            RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(1).setRankType(RankType.DEFAULT);
+            RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(0).setRankType(RankType.DEFAULT);
             Rank r = rank.build();
             ranks.add(r);
             r.save();

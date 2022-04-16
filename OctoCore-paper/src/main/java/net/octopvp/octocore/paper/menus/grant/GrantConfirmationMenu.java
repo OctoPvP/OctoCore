@@ -78,7 +78,7 @@ public class GrantConfirmationMenu extends Menu {
             if (grantEvent.isCancelled()) return;
             Tasks.runAsync(() -> {
                 AtomicReference<PlayerData> targetData = new AtomicReference<>(grantProcedure.getTargetData());
-                Logger.debug("Applying Grant To: " + targetData.get());
+                Logger.debug("Applying Grant To: " + targetData.get().getName());
                 if (targetData.get() == null) {
                     targetData.set(PlayerManager.getInstance().getOfflineData(grantProcedure.getPlayerName()));
                 }

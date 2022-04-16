@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class TagAdminMenu extends Menu {
-    private final Menu instance = this;
 
     @Override
     public List<Button> getButtons(Player player) {
@@ -53,7 +52,7 @@ public class TagAdminMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            new ManageTagsMenu(instance).open(player);
+            new ManageTagsMenu(TagAdminMenu.this).open(player);
         }
     }
 

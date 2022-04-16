@@ -15,7 +15,7 @@ public class SetNameConversation extends StringPrompt {
 
     @Override
     public String getPromptText(ConversationContext conversationContext) {
-        return CC.GREEN + "Please enter the name of the tag in chat. This is " + CC.U + "NOT " + CC.R + CC.GREEN + "the tag seen by players. Just an identifier";
+        return CC.GREEN + "Please enter the name of the tag in chat. This is " + CC.U + "NOT" + CC.R + CC.GREEN + " the tag seen by players. Just an identifier";
     }
 
     @Override
