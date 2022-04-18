@@ -18,16 +18,16 @@ import java.util.List;
 public class ListCommand extends BaseCommand {
     @Command(name = "list", aliases = {"players"}, description = "List all online players (gui)", permission = Permission.LIST_PLAYERS)
     public CommandResult execute(Sender sender, String[] args) {
-        if (true) {
+        if (false) {
             new ListMenu(args).open(sender.getPlayer());
             return CommandResult.SUCCESS;
         }
         if (sender.getCommandSender() instanceof Player) {
             //do the gui thing
             if (args.length > 1) {
-                sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getPlayerProfiles().size()));
+                sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getInstance().getPlayerProfiles().size()));
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+                    PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                     String msg;
                     if (playerData == null)
                         msg = CC.GRAY + player.getName();
@@ -40,9 +40,9 @@ public class ListCommand extends BaseCommand {
             }
         } else {
             //console
-            sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getPlayerProfiles().size()));
+            sender.sendMessage(Lang.LIST_MESSAGE_HEADER.getMsg(PlayerManager.getInstance().getPlayerProfiles().size()));
             for (Player player : Bukkit.getOnlinePlayers()) {
-                PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                 String msg;
                 if (playerData == null)
                     msg = CC.GRAY + player.getName();

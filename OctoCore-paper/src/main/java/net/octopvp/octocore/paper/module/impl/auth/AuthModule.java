@@ -53,7 +53,7 @@ public class AuthModule implements Module {
     }
 
     public static boolean isAuthed(Player player) {
-        PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
+        PlayerData pdata = PlayerManager.getInstance().getData(player.getUniqueId());
         if (pdata == null)
             return true;
         if (pdata.getLastAuthedIp() == null)
@@ -64,12 +64,12 @@ public class AuthModule implements Module {
     }
 
     public static boolean has2faEnabled(UUID uuid) {
-        return PlayerManager.getProfile(uuid).isAuthEnabled();
+        return PlayerManager.getInstance().getData(uuid).isAuthEnabled();
     }
 
     public static void force2fa(Player player) {
         if (isServerAuthEnabled()) {
-            PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
             playerData.setLastAuthedIp(player.getAddress().getHostString());
             player.sendMessage(Lang.AUTH_SUCCESS.getMsg());
         }
@@ -79,7 +79,7 @@ public class AuthModule implements Module {
         if (settingUpAuth.containsKey(player.getUniqueId())) {
             if (verify(settingUpAuth.get(player.getUniqueId()), code)) {
                 player.sendMessage(Lang.AUTH_SETUP_SUCCESS.getMsg());
-                PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
                 playerData.setAuthEnabled(true);
                 playerData.setAuthSecret(settingUpAuth.get(player.getUniqueId()));
                 playerData.setLastAuthedIp(player.getAddress().getHostString());
@@ -91,7 +91,7 @@ public class AuthModule implements Module {
             return false;
         }
         if (has2faEnabled(player.getUniqueId()) && !isAuthed(player)) {
-            PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData pdata = PlayerManager.getInstance().getData(player.getUniqueId());
             if (verify(pdata.getAuthSecret(), code)) {
                 pdata.setLastAuthedIp(player.getAddress().getHostString());
                 player.sendMessage(Lang.AUTH_SUCCESS.getMsg());
@@ -120,7 +120,7 @@ public class AuthModule implements Module {
 
     public static void handleJoin(Player player) {
         Tasks.runLater(() -> {
-            PlayerData pdata = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData pdata = PlayerManager.getInstance().getData(player.getUniqueId());
             if (pdata == null)
                 return;
             if (!pdata.isAuthEnabled())

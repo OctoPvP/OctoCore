@@ -23,7 +23,7 @@ public class UnNickCommand extends BaseCommand {
                 return CommandResult.OTHER;
             }
             sender.getPlayer().setDisplayName(sender.getName());
-            NickManager.removeNick(PlayerManager.getProfile(sender.getPlayer().getUniqueId()));
+            NickManager.removeNick(PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId()));
             NameTagChanger.INSTANCE.resetPlayerName(sender.getPlayer());
         } else if (args.length == 1) {
             Player target = null;
@@ -38,7 +38,7 @@ public class UnNickCommand extends BaseCommand {
             } else {
                 target.setDisplayName(target.getName());
                 NameTagChanger.INSTANCE.resetPlayerName(target);
-                NickManager.removeNick(PlayerManager.getProfile(target.getUniqueId()));
+                NickManager.removeNick(PlayerManager.getInstance().getData(target.getUniqueId()));
                 target.sendMessage(Lang.NICK_RESET.getMsg());
                 sender.sendMessage(Lang.UNNICK_SUCCESS.getMsg(target.getName()));
                 return CommandResult.SUCCESS;

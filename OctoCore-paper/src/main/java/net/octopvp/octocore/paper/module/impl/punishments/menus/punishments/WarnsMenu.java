@@ -8,6 +8,7 @@ import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.paper.objects.IPunishData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.MenuManager;
@@ -32,18 +33,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Getter
 public class WarnsMenu extends PaginatedMenu {
-    private final PunishData punishData;
+    private final IPunishData punishData;
 
     @Override
     public String getPagesTitle(Player player) {
-        return CC.translate("&7" + punishData.getPlayerData().getPlayerName() + "'s warns");
+        return CC.translate("&7" + punishData.getName() + "'s warns");
     }
 
     @Override
     public List<Button> getEveryMenuSlots(Player player) {
         List<Button> slots = new ArrayList<>();
 
-        slots.add(new PlayerInfoButton(punishData.getPlayerData().getUniqueId(), 4));
+        slots.add(new PlayerInfoButton(punishData.getUniqueId(), 4));
 
 
         return slots;

@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,53 +42,53 @@ public class Tasks<T> {
         plugin = plugin1;
     }
 
-    public static void run(Runnable callable) {
+    public static BukkitTask run(Runnable callable) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         }
-        Bukkit.getScheduler().runTask(plugin, callable);
+        return Bukkit.getScheduler().runTask(plugin, callable);
     }
 
-    public static void runSync(Runnable callable) {
+    public static BukkitTask runSync(Runnable callable) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         }
-        run(callable);
+        return run(callable);
     }
 
-    public static void runAsync(Runnable callable) {
+    public static BukkitTask runAsync(Runnable callable) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         }
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, callable);
+        return Bukkit.getScheduler().runTaskAsynchronously(plugin, callable);
     }
 
-    public static void runLater(Runnable callable, long delay) {
+    public static BukkitTask runLater(Runnable callable, long delay) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         }
-        Bukkit.getScheduler().runTaskLater(plugin, callable, delay);
+        return Bukkit.getScheduler().runTaskLater(plugin, callable, delay);
     }
 
-    public static void runAsyncLater(Runnable callable, long delay) {
+    public static BukkitTask runAsyncLater(Runnable callable, long delay) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         }
-        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, callable, delay);
+        return Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, callable, delay);
     }
 
-    public static void runTimer(Runnable callable, long delay, long interval) {
+    public static BukkitTask runTimer(Runnable callable, long delay, long interval) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         }
-        Bukkit.getScheduler().runTaskTimer(plugin, callable, delay, interval);
+        return Bukkit.getScheduler().runTaskTimer(plugin, callable, delay, interval);
     }
 
-    public static void runAsyncTimer(Runnable callable, long delay, long interval) {
+    public static BukkitTask runAsyncTimer(Runnable callable, long delay, long interval) {
         if (plugin == null) {
             throw new IllegalStateException("Tasks has not been initialized! Please use Tasks.init!");
         }
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, callable, delay, interval);
+        return Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, callable, delay, interval);
     }
 
     /**

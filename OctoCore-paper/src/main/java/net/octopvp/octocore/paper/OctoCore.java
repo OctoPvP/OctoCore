@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
@@ -26,6 +27,7 @@ import net.octopvp.octocore.paper.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorHandling;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
+import net.octopvp.octocore.paper.utils.runnable.runnables.DataUpdateThread;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -45,42 +47,46 @@ public final class OctoCore extends JavaPlugin {
     private static Location spawn;
 
     @Getter
-    private static Settings settings = new Settings();
+    private static final Settings settings = new Settings();
     @Getter
     private static String serverName;
     @Getter
-    private static boolean master;
-    @Getter
-    @Setter
-    private static ServerManager serverManager;
+    private static boolean master, loading;
     @Getter
     @Setter
     private static ServerType serverType;
     private static final SetupModules setupModules = new SetupModules();
     @Getter
-    private static Gson gson = new Gson();    // https://stackoverflow.com/a/44800004/11588583
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting()
+            .serializeNulls()
+            .enableComplexMapKeySerialization().create();    // https://stackoverflow.com/a/44800004/11588583
     private static Tab tab;
     //Setup Start
     @Getter
     SetupManager setupManager = new SetupManager();
     private final ConversationFactory conversationFactory = new ConversationFactory(this);
+
+    @Getter
+    private DataUpdateThread dataUpdateThread;
+
     @Getter
     @Setter
     private RedisHandler redisHandler;
     //they init from up to down
     @Getter
+    private PlayerManager playerManager;
+    @Getter
     private DatabaseManager databaseManager;
+    @Getter
+    private ServerManager serverManager;
     @Getter
     private AuthManager authManager;
     @Getter
     private FilterManager filterManager;
     @Getter
     private NickManager nickManager;
-    //Setup End
     @Getter
     private RankManager rankManager;
-    @Getter
-    private PlayerManager playerManager;
     @Getter
     private SettingsManager settingsManager;
     @Getter
@@ -99,6 +105,7 @@ public final class OctoCore extends JavaPlugin {
     private ScoreBoardManager scoreBoardManager;
     @Getter
     private TagManager tagManager;
+    //Setup End
 
     public static Chat getChat() {
         return OctoCore.chat;
@@ -157,6 +164,7 @@ public final class OctoCore extends JavaPlugin {
         if (instance != null)
             throw new IllegalStateException("OctoCore is already initialized");
         instance = this;
+        loading = true;
         Tasks.init(this);
         if (getConfig().getBoolean("sentry.enable", false))
             SentryManager.init(getConfig().getString("sentry.sentry-dsn", ""));
@@ -208,10 +216,9 @@ public final class OctoCore extends JavaPlugin {
         if (!getDataFolder().exists())
             getDataFolder().mkdirs();
         new SetupConfig().setup(this);
-        //Logger.info("Starting ConnectionPoolManager");
-        //initdb();
-        //if(connection == null)
-        //    Logger.error("Could not connect to database!");
+
+        this.dataUpdateThread = new DataUpdateThread(this);
+
         Logger.info("Setting up internal files");
         Logger.info("Setting up listeners");
         new SetupListeners().setup(this);
@@ -229,6 +236,8 @@ public final class OctoCore extends JavaPlugin {
         setupModules.setup(this);
         new SetupOther().setup(this);
         Logger.info("Done!");
+        dataUpdateThread.start();
+        loading = false;
         Logger.info("OctoCore took " + (System.currentTimeMillis() - start) + "ms to load.");
     }
 
@@ -237,18 +246,11 @@ public final class OctoCore extends JavaPlugin {
         String dcReason = new DisconnectReason("This server is restarting!").toString();
         Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(dcReason));
         Bukkit.getScheduler().cancelTasks(this);
-        setupManager.disable(getInstance());
+        setupManager.disable(this);
         if (NameTagChanger.INSTANCE.isEnabled())
             NameTagChanger.INSTANCE.disable();
         setupModules.disable(this);
-        /*
-        try {
-            connection.close();
-            connectionPoolManager.closePool();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-         */
+
     }
 
     public void setupVault() {

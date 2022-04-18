@@ -1,13 +1,15 @@
 package net.octopvp.octocore.paper.command.impl.punishments;
 
+import com.mongodb.client.model.Filters;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
@@ -18,18 +20,16 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class StaffRollBackCommand extends BaseCommand {
-
-
     @Command(name = "staffrollback", permission = Permission.PUNISHMENT_STAFFROLLBACK)
     public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {
             if (args.length < 2) {
                 sender.sendMessage(CC.translate("&cUsage: /staffrollback <staff> <time> <Bans/Mutes/Blacklists/Warns>"));
-                sender.sendMessage(CC.translate("&cFor the type you can use 'Bans, Mutes, Blacklists or Warns'"));
+                sender.sendMessage(CC.translate("&cFor the type you can use 'Warns, Mutes, Bans or Blacklists'"));
                 return;
             }
-            OfflinePlayer target = Bukkit.getOfflinePlayer(PlayerManager.getFixedName(args[0]));
-            if (!PlayerManager.doesDocumentExistByUUID(target.getUniqueId()) && !args[0].equalsIgnoreCase("console")) {
+            OfflinePlayer target = Bukkit.getOfflinePlayer(PlayerManager.getInstance().getFixedName(args[0]));
+            if (!PlayerManager.getInstance().doesDocumentExistByUUID(target.getUniqueId()) && !args[0].equalsIgnoreCase("console")) {
                 sender.sendMessage(Lang.COULD_NOT_FIND_DATA);
                 return;
             }
@@ -45,13 +45,13 @@ public class StaffRollBackCommand extends BaseCommand {
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg("bans"));
                 AtomicInteger expired = new AtomicInteger(0);
                 AtomicInteger active = new AtomicInteger(0);
-                PunishModule.getBans().find().into(new ArrayList<>()).forEach(document -> {
-                    if (document.containsKey("addedBy") && document.getString("addedBy").equalsIgnoreCase(args[0])) {
+                PunishModule.getPunishments().find(Filters.eq("type", PunishmentType.BAN.toString())).into(new ArrayList<>()).forEach(document -> {
+                    if (document.containsKey("addedByName") && document.getString("addedByName").equalsIgnoreCase(args[0])) {
                         if (document.containsKey("addedAt")) {
                             long addedAt = document.getLong("addedAt");
 
                             if (check <= addedAt) {
-                                PunishModule.getBans().deleteOne(document);
+                                PunishModule.getPunishments().deleteOne(document);
                                 if (document.containsKey("active") && document.getBoolean("active")) {
                                     active.getAndIncrement();
                                 } else {
@@ -78,13 +78,13 @@ public class StaffRollBackCommand extends BaseCommand {
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg("mutes"));
                 AtomicInteger expired = new AtomicInteger(0);
                 AtomicInteger active = new AtomicInteger(0);
-                PunishModule.getMutes().find().into(new ArrayList<>()).forEach(document -> {
-                    if (document.containsKey("addedBy") && document.getString("addedBy").equalsIgnoreCase(args[0])) {
+                PunishModule.getPunishments().find(Filters.eq("type", PunishmentType.MUTE.toString())).into(new ArrayList<>()).forEach(document -> {
+                    if (document.containsKey("addedByName") && document.getString("addedByName").equalsIgnoreCase(args[0])) {
                         if (document.containsKey("addedAt")) {
                             long addedAt = document.getLong("addedAt");
 
                             if (check <= addedAt) {
-                                PunishModule.getBans().deleteOne(document);
+                                PunishModule.getPunishments().deleteOne(document);
                                 if (document.containsKey("active") && document.getBoolean("active")) {
                                     active.getAndIncrement();
                                 } else {
@@ -111,13 +111,13 @@ public class StaffRollBackCommand extends BaseCommand {
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg("blacklists"));
                 AtomicInteger expired = new AtomicInteger(0);
                 AtomicInteger active = new AtomicInteger(0);
-                PunishModule.getBlacklists().find().into(new ArrayList<>()).forEach(document -> {
-                    if (document.containsKey("addedBy") && document.getString("addedBy").equalsIgnoreCase(args[0])) {
+                PunishModule.getPunishments().find(Filters.eq("type", PunishmentType.BLACKLIST.toString())).into(new ArrayList<>()).forEach(document -> {
+                    if (document.containsKey("addedByName") && document.getString("addedByName").equalsIgnoreCase(args[0])) {
                         if (document.containsKey("addedAt")) {
                             long addedAt = document.getLong("addedAt");
 
                             if (check <= addedAt) {
-                                PunishModule.getBans().deleteOne(document);
+                                PunishModule.getPunishments().deleteOne(document);
                                 if (document.containsKey("active") && document.getBoolean("active")) {
                                     active.getAndIncrement();
                                 } else {
@@ -144,13 +144,13 @@ public class StaffRollBackCommand extends BaseCommand {
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg("warns"));
                 AtomicInteger expired = new AtomicInteger(0);
                 AtomicInteger active = new AtomicInteger(0);
-                PunishModule.getWarns().find().into(new ArrayList<>()).forEach(document -> {
-                    if (document.containsKey("addedBy") && document.getString("addedBy").equalsIgnoreCase(args[0])) {
+                PunishModule.getPunishments().find(Filters.eq("type", PunishmentType.WARN.toString())).into(new ArrayList<>()).forEach(document -> {
+                    if (document.containsKey("addedByName") && document.getString("addedByName").equalsIgnoreCase(args[0])) {
                         if (document.containsKey("addedAt")) {
                             long addedAt = document.getLong("addedAt");
 
                             if (check <= addedAt) {
-                                PunishModule.getBans().deleteOne(document);
+                                PunishModule.getPunishments().deleteOne(document);
                                 if (document.containsKey("active") && document.getBoolean("active")) {
                                     active.getAndIncrement();
                                 } else {

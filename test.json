@@ -1,0 +1,59 @@
+{
+  "_id": {
+    "$oid": "622a548cdc29164f28e8ddda"
+  },
+  "uuid": "a47a8a18-fc71-37d5-a023-474274097145",
+  "name": "Badbird5907",
+  "lowerName": "badbird5907",
+  "grants": "[{\"rankName\":\"Owner\",\"rankId\":\"aa474698-4755-48d5-b8d9-93bc25866836\",\"addedAt\":0,\"duration\":0,\"removedAt\":0,\"reason\":\"lmao\",\"active\":true,\"permanent\":true,\"server\":{\"server\":\"Global\"}}]",
+  "dataVersion": 0,
+  "frozen": false,
+  "nicked": false,
+  "authEnabled": false,
+  "vanished": false,
+  "joinVanished": false,
+  "customColorEnabled": false,
+  "customColor": null,
+  "coins": 0,
+  "lastLoaded": {
+    "$numberLong": "1647025028710"
+  },
+  "lastLogin": {
+    "$numberLong": "0"
+  },
+  "xp": {
+    "$numberLong": "0"
+  },
+  "firstJoin": {
+    "$numberLong": "1647025028692"
+  },
+  "lastSave": {
+    "$numberLong": "1647025028692"
+  },
+  "nick": null,
+  "lastKnownName": "Badbird5907",
+  "nickPrefix": null,
+  "nickColor": null,
+  "server": null,
+  "authSecret": null,
+  "lastSeenServer": "lobby",
+  "rankName": "default",
+  "lastSeen": "11/03/2022 01:57:08",
+  "lastAuthedIp": "",
+  "lastSeenIp": "127.0.0.1",
+  "metaDataList": "[]",
+  "metaData": "{}",
+  "worldTime": "DAY",
+  "playTime": 5,
+  "allowedTagsID": "[]",
+  "nameColor": "GREEN",
+  "nameColorBold": false,
+  "nameColorItalic": false,
+  "staffChatAlerts": true,
+  "adminChatAlerts": true,
+  "reportAlerts": true,
+  "staffChat": false,
+  "adminChat": false,
+  "build": false,
+  "nodes": "[]"
+}

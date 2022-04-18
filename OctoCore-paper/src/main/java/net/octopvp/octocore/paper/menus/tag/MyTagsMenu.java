@@ -36,7 +36,7 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
 
     @Override
     public List<Button> getPaginatedButtons(Player player) {
-        PlayerData data = PlayerManager.getProfile(player.getUniqueId());
+        PlayerData data = PlayerManager.getInstance().getData(player.getUniqueId());
         List<Button> buttons = new ArrayList<>();
         for (PlayerTag tag : currentTags) {
             if (tag == null)
@@ -69,7 +69,7 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
 
         public TagButton(PlayerTag tag, Player player) {
             this.tag = tag;
-            PlayerData data = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData data = PlayerManager.getInstance().getData(player.getUniqueId());
             if (data.getTag() != null)
                 a = data.getTag().getId().toString().equalsIgnoreCase(tag.getId().toString()); //this is the tag theyre using rn
         }
@@ -97,10 +97,10 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
             if (a) {
                 a = false;
                 player.sendMessage(CC.GREEN + "Unequipped your tag!");
-                PlayerManager.getProfile(player.getUniqueId()).setTag(null);
+                PlayerManager.getInstance().getData(player.getUniqueId()).setTag(null);
             } else {
                 player.sendMessage(CC.GREEN + "Equipped your tag!");
-                PlayerManager.getProfile(player.getUniqueId()).setTag(tag);
+                PlayerManager.getInstance().getData(player.getUniqueId()).setTag(tag);
             }
             update(player);
         }

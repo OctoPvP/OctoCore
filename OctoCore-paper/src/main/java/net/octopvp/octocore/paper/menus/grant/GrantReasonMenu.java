@@ -63,7 +63,7 @@ public class GrantReasonMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            PlayerData sendData = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData sendData = PlayerManager.getInstance().getData(player.getUniqueId());
             if (sendData == null || !playerData.isOnlineThisServer()) {
                 player.closeInventory();
                 return;

@@ -1,20 +1,18 @@
 package net.octopvp.octocore.paper.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.api.events.GlobalPlayerDestroyEvent;
-import net.octopvp.octocore.paper.database.redis.packets.staff.PunishedJoinPacket;
+import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
+import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.manager.impl.ScoreBoardManager;
 import net.octopvp.octocore.paper.manager.impl.TabManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
+import net.octopvp.octocore.paper.objects.CachedData;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +23,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class JoinLeaveListener implements Listener {
 
@@ -45,8 +42,6 @@ public class JoinLeaveListener implements Listener {
         });
     }
 
-    public static void init() {
-    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
@@ -54,152 +49,55 @@ public class JoinLeaveListener implements Listener {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("The server hasn't started yet!").toString());
             return;
         }
-        UUID uuid = event.getUniqueId();
-        String name = event.getName();
-        boolean kicked = false;
-        if (PunishModule.getInstance()
-                .getProfileManager()
-                .getPlayerDataFromUUID(uuid)
-                == null)
-            PunishModule.getInstance().getProfileManager().createPlayerData(uuid, name);
-        PunishPlayerData data = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(uuid);
-        data.setLoading(true);
-        String addr = event.getAddress().getHostAddress();
-        data.setAddress(addr);
-        data.checkForAddressChanges(addr);
-        data.checkForPotentialAlts();
-        if (OctoCore.getInstance().getConfig().getBoolean("punish.alts.allow-alts", true)) {
-            int max = OctoCore.getInstance().getConfig().getInt("punish.alts.max", 5);
-            if (max != -1) {
-                if (data.getPotentialAlts().size() > max) {
-                    event.disallow(
-                            AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
-                            new DisconnectReason(
-                                    Lang.TOO_MANY_ALTS_KICK_MESSAGE.getMsg(
-                                            max,
-                                            data.getPotentialAlts().size()
-                                    )
-                            ).toString()
-                    );
-                    event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
-                    return;
-                }
-            }
-        }
-        data.load();
-        data.getPunishData().load();
-
-        data.getPunishData().getPunishments().forEach(punishment -> {
-            if (punishment.hasExpired() && punishment.isLast()) {
-                punishment.setLast(false);
-                punishment.save(true);
-            }
-        });
-        AtomicReference<Punishment> blacklist = new AtomicReference<>();
-        data.getAlts().forEach(alt -> {
-            PunishPlayerData altData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(alt.getUniqueId());
-            if (altData != null && altData.getPunishData().isBlacklisted() && Bukkit.getPlayer(alt.getName()) != null) {
-                blacklist.set(altData.getPunishData().getActiveBlacklist());
-            } else {
-                PunishData punishData = new PunishData(null);
-                punishData.forceLoadBlacklists(alt.getUniqueId());
-
-                if (punishData.isBlacklisted()) {
-                    blacklist.set(punishData.getActiveBlacklist());
-                }
-            }
-        });
-        if (blacklist.get() != null) {
-            Punishment activeBlacklist = blacklist.get();
-            PunishmentListener.disallowBlacklist(event, activeBlacklist);
-            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
-            return;
-        }
-        if (data.getPunishData().isBlacklisted()) {
-            Punishment activeBlacklist = data.getPunishData().getActiveBlacklist();
-            PunishmentListener.disallowBlacklist(event, activeBlacklist);
-            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
-            return;
-        }
-        if (data.getPunishData().isBanned()) {
-            Punishment activeBan = data.getPunishData().getActiveBan();
-            boolean temp = activeBan.isTemporary();
-            event.disallow(
-                    AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
-                    new DisconnectReason(
-                            Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                    (temp ? Lang.TEMP : Lang.PERM),
-                                    "BANNED",
-                                    "Banned",
-                                    activeBan.getAddedByName(),
-                                    activeBan.getReason(),
-                                    (temp ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
-                                            activeBan.getNiceExpire(), activeBan.getNiceDuration()) : Lang.PERM_ENTRY),
-                                    true)).toString()
-            );
-            new PunishedJoinPacket(
-                    new JsonBuilder().addProperty("name", name).addProperty("type", "banned").addProperty("more", true).addProperty("expires", activeBan.getNiceExpire()).addProperty("addedBy", activeBan.getAddedByName())
-            ).send();
-            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
-            return;
-        }
-        AtomicReference<Punishment> ipban = new AtomicReference<>();
-        data.getAlts().forEach(alt -> {
-            PunishPlayerData altData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(alt.getUniqueId());
-            if (altData != null && altData.getPunishData().isIPBanned() && Bukkit.getPlayer(alt.getName()) != null) {
-                ipban.set(altData.getPunishData().getActiveBan());
-            } else {
-                PunishData punishData = new PunishData(null);
-                punishData.forceLoadBans(alt.getUniqueId());
-
-                if (punishData.isIPBanned()) {
-                    ipban.set(punishData.getActiveBan());
-                }
-            }
-        });
-        if (ipban.get() != null) {
-            Punishment activeBan = ipban.get();
-            boolean temp = activeBan.isTemporary();
-            event.disallow(
-                    AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
-                    new DisconnectReason(
-                            Lang.PUNISH_KICK_MESSAGE.getMsg(
-                                    (temp ? Lang.TEMP : Lang.PERM),
-                                    "BANNED",
-                                    "Banned",
-                                    activeBan.getAddedByName(),
-                                    activeBan.getReason(),
-                                    (temp ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
-                                            activeBan.getNiceExpire(), activeBan.getNiceDuration()) : Lang.PERM_ENTRY),
-                                    true)).toString()
-            );
-            new PunishedJoinPacket(new JsonBuilder().addProperty("name", name).addProperty("type", "IP-Banned").addProperty("more", true).addProperty("expires", activeBan.getNiceExpire()).addProperty("addedBy", activeBan.getAddedByName())).send();
-            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
-        }
+        boolean kicked = event.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED;
         if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) {
-            if (kicked)
+            if (kicked) return;
+            String name = event.getName();
+            UUID uuid = event.getUniqueId();
+            //PlayerManager.loadPData(event.getUniqueId(), event.getName(), true);
+
+            new GlobalPlayerStatusUpdatePacket(name, false).send();
+
+            if (PlayerManager.getInstance().getQuitting().containsKey(uuid)) {
+                Bukkit.getServer().getScheduler().cancelTask(PlayerManager.getInstance().getQuitting().get(uuid));
+                PlayerManager.getInstance().getQuitting().remove(uuid);
+            }
+
+            PlayerData playerData = PlayerManager.getInstance().createProfile(uuid, name);
+
+            playerData.getPunishData().forceLoadActiveBansAndBlacklists();
+            playerData.loadAlts(event.getAddress().getHostAddress());
+
+            if (PunishModule.checkPunishments(event, playerData, name, uuid)) {
+                PlayerManager.getInstance().getPlayerProfiles().remove(uuid);
                 return;
-            PlayerManager.loadPData(event.getUniqueId(), event.getName(), true);
-            if (PlayerManager.getData(event.getUniqueId()) == null)
+            }
+
+            CachedData cache = new CachedData(uuid);
+            Document data0 = cache.getData();
+
+            playerData.load(data0);
+
+
+            if (PlayerManager.getInstance().getData(event.getUniqueId()) == null) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
+                return;
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent e) {
-        PlayerManager.processLeave(e.getPlayer());
+        PlayerManager.getInstance().leave(e.getPlayer());
         TabManager.onLeave(e.getPlayer());
         MainRedisHandler.getSaving().remove(e.getPlayer().getUniqueId());
         unfreezePlayer(e.getPlayer());
     }
 
-    @EventHandler
-    public void onGlobalPDestroyEvent(GlobalPlayerDestroyEvent e) {
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogin(PlayerLoginEvent event) {
-        PlayerData data = PlayerManager.getData(event.getPlayer());
+        PlayerData data = PlayerManager.getInstance().getData(event.getPlayer());
+        PermissionManager.injectPermissible(event.getPlayer(), data);
         if (data == null)
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
     }
@@ -209,7 +107,9 @@ public class JoinLeaveListener implements Listener {
         if (event.getPlayer() == null || !event.getPlayer().isOnline()) {
             return;
         }
-        PlayerManager.processJoin(event.getPlayer(), event.getPlayer().getUniqueId(), event.getPlayer().getAddress().getHostString());
+        PlayerManager.getInstance().join(event.getPlayer());
+
+        ScoreBoardManager.handleJoin(event.getPlayer());
     }
 
     @EventHandler

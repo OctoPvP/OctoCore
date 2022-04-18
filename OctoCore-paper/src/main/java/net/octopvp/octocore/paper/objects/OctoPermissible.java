@@ -24,13 +24,18 @@ public class OctoPermissible extends PermissibleBase {
             Logger.error("Perm check: UUID is null!");
             return false;
         }
-        PlayerData data = PlayerManager.getData(this.uuid);
+        PlayerData data = PlayerManager.getInstance().getData(this.uuid);
         if (data == null) {
             Logger.error("PlayerData is null!");
             Thread.dumpStack();
             return false;
         }
         return data.hasPermission(inName);
+    }
+
+    @Override
+    public boolean isOp() {
+        return super.isOp();
     }
 
     public PermissibleBase getOldPermissibleBase() {
@@ -48,7 +53,7 @@ public class OctoPermissible extends PermissibleBase {
             Logger.error("UUID is null!");
             return;
         }
-        PlayerData data = PlayerManager.getData(this.uuid);
+        PlayerData data = PlayerManager.getInstance().getData(this.uuid);
         if (data == null) {
             Logger.error("PlayerData is null!");
             Thread.dumpStack();

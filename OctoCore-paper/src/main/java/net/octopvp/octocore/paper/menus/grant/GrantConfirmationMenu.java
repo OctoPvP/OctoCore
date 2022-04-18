@@ -29,7 +29,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
@@ -58,9 +57,9 @@ public class GrantConfirmationMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            PlayerData senderData = PlayerManager.getData(player);
+            PlayerData senderData = PlayerManager.getInstance().getData(player);
             GrantProcedure grantProcedure = senderData.getGrantProcedure();
-            Rank targetRank = RankManager.getRankByName(grantProcedure.getRankName());
+            Rank targetRank = RankManager.getInstance().getRankByName(grantProcedure.getRankName());
             if (targetRank == null) {
                 player.closeInventory();
                 player.sendMessage(Lang.GRANT_RANK_NOT_FOUND.getMsg(grantProcedure.getRankName()));
@@ -79,20 +78,16 @@ public class GrantConfirmationMenu extends Menu {
             if (grantEvent.isCancelled()) return;
             Tasks.runAsync(() -> {
                 AtomicReference<PlayerData> targetData = new AtomicReference<>(grantProcedure.getTargetData());
-                Logger.debug("Applying Grant To: " + targetData.get());
+                Logger.debug("Applying Grant To: " + targetData.get().getName());
                 if (targetData.get() == null) {
-                    try {
-                        targetData.set(PlayerManager.getOfflineData(grantProcedure.getPlayerName()).get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
+                    targetData.set(PlayerManager.getInstance().getOfflineData(grantProcedure.getPlayerName()));
                 }
                 if (targetData.get() == null) {
                     player.sendMessage(Lang.GRANT_DATA_COULD_NOT_BE_LOADED.getMsg(senderData.getGrantProcedure().getPlayerName()));
                     return;
                 }
 
-                GlobalPlayer globalPlayer = OctoCore.getServerManager().getGlobalPlayer(targetData.get().getName());
+                GlobalPlayer globalPlayer = OctoCore.getInstance().getServerManager().getGlobalPlayer(targetData.get().getName());
                 if (grant.isPermanent()) {
                     player.sendMessage(Lang.GRANT_PERM_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getEnteredReason()));
                     if (globalPlayer != null)
@@ -120,12 +115,15 @@ public class GrantConfirmationMenu extends Menu {
                                 true
                         ).send();
                     } else {
-                        PlayerData data = PlayerManager.getProfile(targetData.get().getUuid());
-                        if (data == null)
-                            data = PlayerManager.loadProfileFromDB(targetData.get().getUuid(), false);
+                        PlayerManager.getInstance().modifyData(targetData.get().getUuid(), data -> {
+                            data.applyGrant(grant);
+                        });
+                        /*
+                        PlayerData data = PlayerManager.getInstance().getData(targetData.get().getUuid());
                         //data.getGrants().add(grant);
                         data.applyGrant(grant);
                         data.save();
+                         */
                     }
                 }
             });
@@ -154,7 +152,7 @@ public class GrantConfirmationMenu extends Menu {
 
         @Override
         public ItemStack getItem(Player player) {
-            GrantProcedure procedure = PlayerManager.getProfile(player.getUniqueId()).getGrantProcedure();
+            GrantProcedure procedure = PlayerManager.getInstance().getData(player.getUniqueId()).getGrantProcedure();
             return new ItemBuilder(Material.BEACON).name(CC.AQUA + "Are you sure?").lore(CC.SEPARATOR, CC.AQUA + "Player: " + CC.YELLOW + procedure.getTargetData().getName(), CC.AQUA + "Rank: " + CC.YELLOW + procedure.getRankName(), CC.AQUA + "Current Rank: " + CC.YELLOW + procedure.getTargetData().getHighestRank().getName(), CC.AQUA + "Duration: " + CC.YELLOW + procedure.getNiceDuration(), CC.AQUA + "Server: " + CC.YELLOW + procedure.getServer(), CC.SEPARATOR).build();
         }
 

@@ -22,7 +22,7 @@ public class PermissionProvider extends Permission {
 
     @Override
     public boolean playerHas(String world, String player, String permission) { //TODO maybe add world support for ServerContext
-        PlayerData data = PlayerManager.getPlayerData(player);
+        PlayerData data = PlayerManager.getInstance().getData(player);
         if (data == null) return false;
 
         return data.hasPermission(permission);

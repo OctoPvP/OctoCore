@@ -28,7 +28,7 @@ public class Rank implements Cloneable {
     private static final Comparator<Rank> inheritanceComparatorSmallToLarge = Comparator.comparingInt(Rank::getWeight);
     private String name;
     private UUID rankId = UUID.randomUUID();
-    private int weight = 0;
+    private int weight = 1;
     private boolean defaultRank = false;
     private RankType rankType = RankType.DEFAULT;
     //private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
@@ -41,7 +41,7 @@ public class Rank implements Cloneable {
     private ServerContext scope = ServerContext.global();
 
     public void save() {
-        RankManager.save(this);
+        RankManager.getInstance().save(this);
     }
 
     @Override
@@ -52,9 +52,9 @@ public class Rank implements Cloneable {
     public String[] getInheritedRanksName() {
         List<String> a = new ArrayList<>();
         inheritedRanks.forEach(inh -> {
-            if (RankManager.getRankById(inh) == null)
+            if (RankManager.getInstance().getRankById(inh) == null)
                 return;
-            a.add(RankManager.getRankById(inh).getName());
+            a.add(RankManager.getInstance().getRankById(inh).getName());
         });
         return a.toArray(new String[0]);
     }
@@ -100,7 +100,7 @@ public class Rank implements Cloneable {
     public Set<Rank> getInheritedRanksConverted() {
         Set<Rank> ranks = new HashSet<>();
         for (UUID inheritedRank : inheritedRanks) {
-            Rank rank = RankManager.getRankById(inheritedRank);
+            Rank rank = RankManager.getInstance().getRankById(inheritedRank);
             if (rank == null) continue;
             ranks.add(rank);
         }

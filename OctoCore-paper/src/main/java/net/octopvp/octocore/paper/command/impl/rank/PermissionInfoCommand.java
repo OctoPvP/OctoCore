@@ -33,7 +33,7 @@ public class PermissionInfoCommand extends BaseCommand {
             target = sender.getName();
         }
         Player targetPlayer = Bukkit.getPlayer(target);
-        PlayerData data = PlayerManager.getData(targetPlayer);
+        PlayerData data = PlayerManager.getInstance().getData(targetPlayer);
         PermissionResult result = data.getPermissionResult(permission);
         sender.sendMessage(CC.SEPARATOR);
         sender.sendMessage(CC.PRIMARY + "Permission Info For: " + CC.SECONDARY + target);

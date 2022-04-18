@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.ServerData;
-import net.octopvp.octocore.common.util.DateUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +27,9 @@ public class Grant {
     private ServerContext server = new ServerContext("Global");
 
     public Grant(Rank rank) {
+        if (rank == null) {
+            throw new IllegalArgumentException("Rank cannot be null");
+        }
         this.rankName = rank.getName();
         this.rankId = rank.getRankId();
     }
@@ -34,7 +37,7 @@ public class Grant {
     public boolean hasExpired() {
         if (server.isThisServer()) {
             if (!this.isActive()) return true;
-            if (RankManager.getRankById(rankId) == null) {
+            if (RankManager.getInstance().getRankById(rankId) == null) {
                 setActive(false);
                 Logger.debug("cant find rank by rankid: " + rankId); //FIXME - remove on expire
                 return true;
@@ -50,10 +53,10 @@ public class Grant {
 
     public boolean isActiveSomewhere() {
         if (!this.isActive()) return false;
-        if (RankManager.getRankById(rankId) == null) return false;
+        if (RankManager.getInstance().getRankById(rankId) == null) return false;
 
         if (!this.server.isGlobal()) {
-            ServerData serverData = OctoCore.getServerManager().getServerData(this.server.getServer());
+            ServerData serverData = OctoCore.getInstance().getServerManager().getServerData(this.server.getServer());
             if (serverData != null && !serverData.getServerName().equalsIgnoreCase(OctoCore.getServerName())) {
                 if (isPermanent()) return true;
 
@@ -84,7 +87,7 @@ public class Grant {
     }
 
     public Rank getRank() {
-        return RankManager.getRankById(rankId);
+        return RankManager.getInstance().getRankById(rankId);
     }
 
     @Override

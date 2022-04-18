@@ -60,7 +60,10 @@ public class DatabaseManager extends Manager {
         mongoDatabase = mongoClient.getDatabase("OctoCore");
         Logger.info(mongoDatabase == null ? "Could not connect to mongo!" : "Connected to mongo!");
         //redisManager = new RedisManager();
-        PlayerManager.postDBInit();
+        if (mongoDatabase == null) {
+            return;
+        }
+        PlayerManager.getInstance().postDBInit(mongoDatabase);
         PunishModule.postDbInit(mongoDatabase);
     }
 

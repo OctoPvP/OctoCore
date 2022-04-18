@@ -16,7 +16,7 @@ public class CreateRankCommand extends BaseCommand {
             sender.sendMessage(CC.RED + "Usage: /createrank <name>\nNote: You may not use spaces or unicode.");
             return CommandResult.SUCCESS;
         } else {
-            if (RankManager.getRankByName(args[0]) != null) {
+            if (RankManager.getInstance().getInstance().getRankByName(args[0]) != null) {
                 sender.sendMessage(CC.RED + "That rank already exists!");
                 return CommandResult.SUCCESS;
             }

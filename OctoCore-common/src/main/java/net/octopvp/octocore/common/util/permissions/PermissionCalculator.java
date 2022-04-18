@@ -1,11 +1,10 @@
 package net.octopvp.octocore.common.util.permissions;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class PermissionCalculator {
+public class PermissionCalculator { //TODO Add weight calculation
+
     public static final String ROOT_WILDCARD = "*", SUB_WILDCARD = ".*";
 
     public static PermissionResult hasPermissionResult(String perm, Collection<Node> permissions) {
@@ -17,7 +16,14 @@ public class PermissionCalculator {
         boolean allPerms = false;
         boolean allPermsNegated = false;
         Map<String, Boolean> wildcardPermissions = new HashMap<>();
-        for (Node permission : permissions) {
+
+        List<Node> permissions1 = new ArrayList<>(permissions);
+        //sort and add permissions into the list by weight
+        permissions1.sort(Comparator.comparingInt(Node::getWeight));
+        //reverse list
+        Collections.reverse(permissions1);
+
+        for (Node permission : permissions1) {
             if (server == "$$this server$$") {
                 if (!permission.getScope().isThisServer())
                     continue;

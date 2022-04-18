@@ -27,6 +27,6 @@ public class GrantProcedure {
     }
 
     public PlayerData getTargetData() {
-        return PlayerManager.getData(uuid);
+        return PlayerManager.getInstance().getData(uuid);
     }
 }

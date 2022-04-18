@@ -24,7 +24,7 @@ public class PermissionManager extends Manager {
             data.loadPerms(player);
         } else {
             Logger.error("Could not inject permissible!");
-            PlayerManager.captureSentryEvent("Could not inject permissible!", player);
+            //PlayerManager.captureSentryEvent("Could not inject permissible!", player);
         }
     }
 

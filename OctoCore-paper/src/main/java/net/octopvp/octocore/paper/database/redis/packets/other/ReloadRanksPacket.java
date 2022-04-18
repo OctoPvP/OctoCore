@@ -10,7 +10,7 @@ import net.octopvp.octocore.paper.manager.impl.RankManager;
 public class ReloadRanksPacket extends RedisPacket {
     @Override
     public void onReceive(JsonObject data) throws Exception {
-        RankManager.reloadRanks();
+        RankManager.getInstance().reloadRanks();
     }
 
     @Override

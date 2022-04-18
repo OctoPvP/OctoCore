@@ -7,6 +7,7 @@ import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -43,8 +44,8 @@ public class ListMenu extends PaginatedMenu {
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttonList = new ArrayList<>();
-        for (int j = 0; j < 100; j++) {
-            buttonList.add(new PlayerButton(player));
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            buttonList.add(new PlayerButton(p));
         }
         return buttonList;
     }

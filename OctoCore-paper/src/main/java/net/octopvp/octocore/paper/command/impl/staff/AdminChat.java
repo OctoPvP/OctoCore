@@ -5,6 +5,7 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.database.redis.packets.staff.AdminChatPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
@@ -13,7 +14,7 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 public class AdminChat extends BaseCommand {
     @Command(name = "adminchat", aliases = {"ac"}, permission = Permission.ADMINCHAT, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        PlayerData playerData = PlayerManager.getProfile(sender.getPlayer().getUniqueId());
+        PlayerData playerData = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
         if (args.length == 0) {
             playerData.setStaffChat(!playerData.isStaffChat());
             sender.sendMessage((playerData.isStaffChat() ? Lang.ADMIN_CHAT_ENABLED : Lang.ADMIN_CHAT_DISABLED));
@@ -28,7 +29,7 @@ public class AdminChat extends BaseCommand {
                     sb.append(args[i]);
                 else sb.append(" ").append(args[i]);
             }
-            PlayerManager.sendAdminChat(sender.getPlayer(), sb.toString(), OctoCore.getServerName());
+            new AdminChatPacket(sender.getPlayer().getName(), OctoCore.getServerName(), sb.toString(), sender.getPlayer().getUniqueId());
         }
         return CommandResult.SUCCESS;
     }

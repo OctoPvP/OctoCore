@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class PlayerInfoButton extends Button {
@@ -25,18 +26,12 @@ public class PlayerInfoButton extends Button {
 
     public PlayerInfoButton(UUID uuid, int slot) {
         this.slot = slot;
-        playerData = null;
-        PlayerManager.getOfflineData(uuid).thenAcceptAsync((data) -> {
-            this.playerData = data;
-        });
+        playerData = PlayerManager.getInstance().getOfflineData(uuid);
     }
 
     public PlayerInfoButton(String name, int slot) {
         this.slot = slot;
-        playerData = null;
-        PlayerManager.getOfflineData(name).thenAcceptAsync((data) -> {
-            this.playerData = data;
-        });
+        playerData = PlayerManager.getInstance().getOfflineData(name);
     }
 
     @Override
@@ -59,8 +54,8 @@ public class PlayerInfoButton extends Button {
         if (onlinePlayer != null) {
             item.addLoreLine(CC.AQUA + "Last seen&7: &aNow");
         } else {
-            if (playerData.getLastSeen() != null) {
-                item.addLoreLine(CC.AQUA + "Last seen&7: &b" + playerData.getLastSeen());
+            if (playerData.getLastSeen() > 0) {
+                item.addLoreLine(CC.AQUA + "Last seen&7: &b" + new Date(playerData.getLastSeen()));
             } else {
                 item.addLoreLine(CC.AQUA + "Last seen&7: &cNever played before!");
             }

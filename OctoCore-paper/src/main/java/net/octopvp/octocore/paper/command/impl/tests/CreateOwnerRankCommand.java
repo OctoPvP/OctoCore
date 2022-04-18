@@ -19,7 +19,7 @@ public class CreateOwnerRankCommand extends BaseCommand {
                 .setWeight(100)
                 .setRankType(RankType.STAFF);
         builder.build().save();
-        RankManager.reloadRanks();
+        RankManager.getInstance().reloadRanks();
         return CommandResult.SUCCESS;
     }
 }

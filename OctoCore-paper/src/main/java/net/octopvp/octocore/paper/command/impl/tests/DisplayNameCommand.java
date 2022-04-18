@@ -11,7 +11,7 @@ public class DisplayNameCommand extends BaseCommand {
     @Command(name = "whatsmydisplayname", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         sender.sendMessage(sender.getPlayer().getDisplayName());
-        PlayerData data = PlayerManager.getData(sender.getPlayer());
+        PlayerData data = PlayerManager.getInstance().getData(sender.getPlayer());
         sender.sendMessage(data.getCurrentColor() + sender.getPlayer().getDisplayName());
         return CommandResult.SUCCESS;
     }

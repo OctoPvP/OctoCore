@@ -23,13 +23,13 @@ public class SaveRequestMiscPacket extends RedisPacket {
 
             UUID uuid = UUID.fromString(id);
             if (Bukkit.getPlayer(uuid) != null) {
-                PlayerManager.getData(uuid).save();
+                PlayerManager.getInstance().getData(uuid).save();
             }
         } else {
             String name = data.get("name").getAsString();
             Player player = Bukkit.getPlayer(name);
             if (player != null) {
-                PlayerManager.getData(player).save();
+                PlayerManager.getInstance().getData(player).save();
             }
         }
     }

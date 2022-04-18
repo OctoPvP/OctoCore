@@ -2,6 +2,8 @@ package net.octopvp.octocore.paper.utils.debug;
 
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.listeners.JoinLeaveListener;
+import net.octopvp.octocore.paper.manager.impl.ServerManager;
+import net.octopvp.octocore.paper.objects.OctoPermissible;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,6 +54,8 @@ public class Debugger {
             Statement statement = new Statement(this, name, args);
             print("Running the expression \"" + ChatColor.AQUA + cmd + ChatColor.RESET + "\"...");
             statement.execute();
+            print("Done running the expression \"" + ChatColor.AQUA + cmd + ChatColor.RESET + "\"!");
+
         } catch (Exception e) {
             print("Error: the expression \"" + ChatColor.AQUA + cmd + ChatColor.RESET + "\" failed to execute.");
             print(e.toString());
@@ -108,4 +112,15 @@ public class Debugger {
         rankBuilder.build().save();
     }
 
+    public void listGlobal() {
+        ServerManager.getInstance().getGlobalPlayers().forEach((k, v) -> print(k + ": " + v));
+    }
+
+    public void isPermissibleInjected() {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            boolean b = player.getPermissibleBase() instanceof OctoPermissible;
+            print(b);
+        }
+    }
 }

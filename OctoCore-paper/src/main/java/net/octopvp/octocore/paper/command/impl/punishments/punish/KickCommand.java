@@ -7,17 +7,26 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishHistory;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
+import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.Random;
+
 public class KickCommand extends BaseCommand {
+
+    private static final String[] errorMessages = {
+            "java.net.ConnectException: Connection timed out: no further information:",
+            "java.net.SocketTimeoutException: Read timed out",
+            "Internal Exception: java.io.IOException: An existing connection was forcibly closed by the remote host",
+            "Internal Exception: java.net.SocketException: Connection reset"
+    };
 
     @Command(name = "kick", permission = Permission.PUNISHMENT_KICK, aliases = {"kickplayer"})
     public CommandResult execute(Sender sender, String[] args) {
@@ -26,26 +35,34 @@ public class KickCommand extends BaseCommand {
                 sender.sendMessage(CC.translate("&cUsage: /kick <player> <reason> [-s]"));
                 return;
             }
-            Player target = Bukkit.getPlayer(args[0]);
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+            OfflinePunishData data = new OfflinePunishData(args[0]);
+            data.load();
 
-            if (target == null) {
-                sender.sendMessage(CC.translate("&cThat player is currently offline!"));
-                return;
-            }
-
-            PunishPlayerData targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
-
-            if (targetData == null || !target.isOnline()) {
-                PunishModule.getInstance().getProfileManager().createPlayerData(target.getUniqueId(), target.getName());
-                targetData = PunishModule.getInstance().getProfileManager().getPlayerDataFromUUID(target.getUniqueId());
-                targetData.getPunishData().load();
-            }
             StringBuilder reasonBuilder = new StringBuilder();
 
             for (int i = 1; i < args.length; ++i) {
-                reasonBuilder.append(args[i]).append(" ");
+                String arg = args[i];
+                if (arg.startsWith("<error")) { // <error> will send a random error message and <error:index> will send a specific error message from array
+                    if (arg.equalsIgnoreCase("<error>"))
+                        reasonBuilder.append(errorMessages[new Random().nextInt(errorMessages.length)]).append(" ");
+                    else {
+                        String errorIndex = arg.replace("<error:", "").replace(">", "");
+                        try {
+                            int index = Integer.parseInt(errorIndex);
+                            if (index < 0 || index >= errorMessages.length)
+                                throw new NumberFormatException("fuck you");
+                            reasonBuilder.append(errorMessages[index]).append(" ");
+                        } catch (NumberFormatException e) {
+                            sender.sendMessage(CC.translate("&cInvalid index! Possible values: "));
+                            for (int i1 = 0; i1 < errorMessages.length; i1++) {
+                                sender.sendMessage(CC.translate("&c" + i1 + " - " + errorMessages[i1]));
+                            }
+                        }
+                    }
+                } else
+                    reasonBuilder.append(arg).append(" ");
             }
-            if (reasonBuilder.length() == 0) reasonBuilder.append("Kicked");
 
             String reason = reasonBuilder.toString().trim();
             boolean silent = reason.contains("-silent") || reason.contains("-s");
@@ -56,7 +73,7 @@ public class KickCommand extends BaseCommand {
                 reason = reason.replace("-s", "");
             }
 
-            Punishment punishment = new Punishment(targetData, PunishmentType.KICK);
+            Punishment punishment = new Punishment(data, PunishmentType.KICK);
             punishment.setSilent(silent);
             punishment.setPermanent(false);
             punishment.setIPRelative(false);
@@ -66,31 +83,8 @@ public class KickCommand extends BaseCommand {
             punishment.setAddedAt(System.currentTimeMillis());
             punishment.setReason(reason);
 
-            targetData.getPunishData().getPunishments().add(punishment);
-
             punishment.execute(sender);
             punishment.save();
-
-            if (sender.isPlayer()) {
-                Player player = sender.getPlayer();
-                PlayerData playerData = PlayerManager.getData(player.getUniqueId());
-                if (playerData == null) {
-                    return;
-                }
-                PunishHistory punishHistory = new PunishHistory(sender.getName(), PunishmentType.KICK);
-                punishHistory.setAddedAt(punishment.getAddedAt());
-                punishHistory.setDuration(punishment.getDurationTime());
-                punishHistory.setPermanent(punishment.isPermanent());
-                punishHistory.setExecutor(sender.getName());
-                punishHistory.setTarget(targetData.getPlayerName());
-                punishHistory.setReason(punishment.getReason());
-                punishHistory.setActive(punishment.isActive());
-                punishHistory.setLast(punishment.isLast());
-                punishHistory.setSilent(punishment.isSilent());
-                punishHistory.setEnteredDuration(punishment.getEnteredDuration());
-
-                playerData.getPunishmentsExecuted().add(punishHistory);
-            }
         });
         return CommandResult.SUCCESS;
     }

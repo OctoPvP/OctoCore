@@ -5,51 +5,65 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.octopvp.octocore.common.StringUtils;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.ExecutePunishmentPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
+import net.octopvp.octocore.paper.objects.IPlayerData;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.common.util.DateUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bson.Document;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
-@RequiredArgsConstructor
 @Getter
 @Setter
 public class Punishment {
-    private final OctoCore plugin = OctoCore.getInstance();
-    private final PunishPlayerData playerData;
-    private final PunishmentType punishmentType;
+    private transient final OctoCore plugin = OctoCore.getInstance();
+    private PunishmentType punishmentType;
 
     private boolean active = true, permanent = true, silent = false, removedSilent = false, last = false, IPRelative = false;
     private long addedAt = -5L, durationTime = -5L, whenRemoved;
-    private String reason = "", removedBy = "", enteredDuration = "", removedFor = "", addedByName = "", name = "";
-    private UUID addedBy;
+    private String reason = "", removedBy = "", enteredDuration = "", removedFor = "", addedByName = "", name = "", targetAddress;
+    private UUID addedBy, id, targetId;
+
+    public Punishment(Document document) {
+        this.load(document);
+        this.id = UUID.fromString(document.getString("id"));
+        this.targetId = UUID.fromString(document.getString("uuid"));
+        this.name = document.getString("name");
+    }
+
+    public Punishment(IPlayerData data, PunishmentType type) {
+        this.punishmentType = type;
+        this.id = UUID.randomUUID();
+        this.name = data.getName();
+        this.targetId = data.getUuid();
+    }
+
+    public Punishment(PunishmentType type, String name, UUID uuid) {
+        this.punishmentType = type;
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.targetId = uuid;
+    }
 
     public boolean isTemporary() {
         return !this.permanent;
     }
 
     public void save(boolean replace) {
-        Logger.debug("b");
         try {
             Document document = new Document();
-            document.put("uuid", playerData.getUniqueId().toString());
-            document.put("name", playerData.getPlayerName());
+            document.put("uuid", targetId.toString());
+            document.put("name", name);
             document.put("active", this.active);
             document.put("permanent", this.permanent);
             document.put("durationTime", this.durationTime);
@@ -64,15 +78,16 @@ public class Punishment {
             document.put("whenRemoved", this.whenRemoved);
             document.put("last", this.last);
             document.put("IPRelative", this.IPRelative);
-            document.put("IPAddress", this.playerData.getAddress());
+            document.put("IPAddress", targetAddress);
             document.put("addedByName", this.addedByName);
-            Logger.debug("c");
+            document.put("id", this.id.toString());
+            document.put("type", this.punishmentType.name());
             if (replace) {
                 this.getCollection().replaceOne(
                         Filters.and(
                                 Filters.eq(
                                         "uuid",
-                                        this.playerData.getUniqueId().toString()),
+                                        this.targetId.toString()),
                                 Filters.eq(
                                         "last",
                                         true)),
@@ -110,6 +125,7 @@ public class Punishment {
         this.name = document.getString("name");
         this.addedByName = document.getString("addedByName");
         this.addedBy = UUID.fromString(document.getString("addedBy"));
+        this.punishmentType = PunishmentType.valueOf(document.getString("type"));
     }
 
     public String getNiceDuration() {
@@ -136,16 +152,7 @@ public class Punishment {
     }
 
     private MongoCollection<Document> getCollection() {
-        if (this.punishmentType == PunishmentType.BAN) {
-            return PunishModule.getBans();
-        } else if (this.punishmentType == PunishmentType.MUTE) {
-            return PunishModule.getMutes();
-        } else if (this.punishmentType == PunishmentType.KICK) {
-            return PunishModule.getKicks();
-        } else if (this.punishmentType == PunishmentType.BLACKLIST) {
-            return PunishModule.getBlacklists();
-        }
-        return PunishModule.getWarns();
+        return PunishModule.getPunishments();
     }
 
     public void execute(CommandSender sender) {
@@ -154,28 +161,26 @@ public class Punishment {
             Player player = (Player) sender;
             jsonChain.addProperty("sender", player.getDisplayName());
 
-            PlayerData playerData = PlayerManager.getData(player.getUniqueId());
+            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
             jsonChain.addProperty("coloredName", playerData.getHighestRank().getColor() + playerData.getName());
         } else {
             jsonChain.addProperty("sender", sender.getName());
         }
-        jsonChain.addProperty("senderName", sender.getName());
-        jsonChain.addProperty("name", this.getPlayerData().getPlayerName());
-        jsonChain.addProperty("reason", this.getReason());
-        jsonChain.addProperty("duration", this.getDurationTime());
-        jsonChain.addProperty("niceDuration", this.getNiceDuration());
-        jsonChain.addProperty("niceExpire", this.getNiceExpire());
-        jsonChain.addProperty("permanent", this.isPermanent());
-        jsonChain.addProperty("uuid", this.getPlayerData().getUniqueId().toString());
-        jsonChain.addProperty("silent", this.isSilent());
-        jsonChain.addProperty("addedByName", this.addedByName);
-        jsonChain.addProperty("addedBy", addedByName);
-        jsonChain.addProperty("server", OctoCore.getServerName());
-        jsonChain.addProperty("type", this.punishmentType.name());
-        jsonChain.addProperty("IPRelative", this.IPRelative);
-        List<Punishment> warns = playerData.getPunishData().getPunishments().stream().filter(punishment -> !punishment.hasExpired() && punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
-        jsonChain.addProperty("warns", warns.size());
-        jsonChain.addProperty("alts", StringUtils.getStringFromList(this.playerData.getAlts().stream().map(Alt::getName).collect(Collectors.toList())));
+        jsonChain.addProperty("senderName", sender.getName())
+                .addProperty("name", name)
+                .addProperty("reason", this.getReason())
+                .addProperty("duration", this.getDurationTime())
+                .addProperty("niceDuration", this.getNiceDuration())
+                .addProperty("niceExpire", this.getNiceExpire())
+                .addProperty("permanent", this.isPermanent())
+                .addProperty("uuid", targetId.toString())
+                .addProperty("silent", this.isSilent())
+                .addProperty("addedByName", this.addedByName)
+                .addProperty("addedBy", addedByName)
+                .addProperty("server", OctoCore.getServerName())
+                .addProperty("type", this.punishmentType.name())
+                .addProperty("IPRelative", this.IPRelative)
+                .addProperty("punishment", OctoCore.getGson().toJson(this));
 
         new ExecutePunishmentPacket(jsonChain).send();
     }
@@ -200,7 +205,14 @@ public class Punishment {
                 ", removedFor='" + removedFor + '\'' +
                 ", addedByName='" + addedByName + '\'' +
                 ", name='" + name + '\'' +
+                ", targetAddress='" + targetAddress + '\'' +
                 ", addedBy=" + addedBy +
+                ", id=" + id +
+                ", targetId=" + targetId +
                 '}';
+    }
+
+    public PunishmentType getType() {
+        return punishmentType;
     }
 }

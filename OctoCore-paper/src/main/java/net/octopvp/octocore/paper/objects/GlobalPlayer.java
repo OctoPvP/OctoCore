@@ -1,10 +1,12 @@
 package net.octopvp.octocore.paper.objects;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.PlayerMessagePacket;
+import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +17,24 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class GlobalPlayer {
-    private UUID uuid;
+@RequiredArgsConstructor
 
-    private String name, server, firstJoined, lastServer;
-    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts;
+public class GlobalPlayer {
+    private final UUID uuid;
+    private final String name;
+
+    private String server, firstJoined, lastServer, address, rankName;
+    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving;
     private long lastSeen, lastActivity = -1L;
     private List<PlayerTag> allTags = new ArrayList<>();
     private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
     private Map<String, ServerContext> negatedPermissions = new ConcurrentHashMap<>();
+    private List<Alt> alts = new ArrayList<>();
+    private List<String> addresses = new ArrayList<>();
+    private int rankWeight;
 
     public boolean isOnline() {
-        return OctoCore.getServerManager().getConnectedServers().stream().filter(serverData ->
+        return OctoCore.getInstance().getServerManager().getConnectedServers().stream().filter(serverData ->
                 serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
                         .contains(name.toLowerCase())).findFirst().orElse(null) != null;
     }
@@ -37,10 +45,6 @@ public class GlobalPlayer {
 
     public UUID getUniqueId() {
         return uuid;
-    }
-
-    public void setUniqueId(UUID u) {
-        uuid = u;
     }
 
     public boolean hasPermission(String permission) {

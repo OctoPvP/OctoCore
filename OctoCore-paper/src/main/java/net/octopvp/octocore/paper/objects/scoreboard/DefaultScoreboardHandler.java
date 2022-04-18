@@ -27,7 +27,7 @@ public class DefaultScoreboardHandler implements ScoreboardHandler {
             i = 0;
             a = !a;
         }
-        PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+        PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
         if (playerData == null)
             return new EntryBuilder().blank().build();
         String name = playerData.getCurrentColor() + CC.strip(player.getDisplayName());
@@ -39,7 +39,7 @@ public class DefaultScoreboardHandler implements ScoreboardHandler {
                 .blank()
                 .next(CC.AQUA + "Your Name&7: " + CC.GREEN + name) //Note - this somehow sets the player's nametag -> .next(CC.AQUA + "Your Name: " + CC.GREEN + player.getName())
                 .next(CC.AQUA + "Rank&7: " + playerData.getCurrentPrefix())
-                .next(CC.AQUA + "Online&7: " + CC.GREEN + OctoCore.getServerManager().getGlobalPlayers().size())
+                .next(CC.AQUA + "Online&7: " + CC.GREEN + OctoCore.getInstance().getServerManager().getGlobalPlayers().size())
                 .blank()
                 .next(CC.SCOREBOARD_SEPARATOR)
                 .next(CC.SCOREBOARD_IP_SEPARATOR + (a ? CC.AQUA : CC.GREEN) + " " + OctoCore.getInstance().getConfig().getString("server-ip") + " " + CC.SCOREBOARD_IP_SEPARATOR)

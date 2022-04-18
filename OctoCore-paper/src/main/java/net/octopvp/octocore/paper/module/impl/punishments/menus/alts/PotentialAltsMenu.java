@@ -2,8 +2,8 @@ package net.octopvp.octocore.paper.module.impl.punishments.menus.alts;
 
 import lombok.AllArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishPlayerData;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
+import net.octopvp.octocore.paper.objects.IPunishData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class PotentialAltsMenu extends PaginatedMenu {
-    private PunishPlayerData playerData;
+    private IPunishData playerData;
 
     @Override
     public String getPagesTitle(Player player) {
-        return CC.translate("&7" + playerData.getPlayerName() + "'s alts");
+        return CC.translate("&7" + playerData.getName() + "'s alts");
     }
 
     @Override
@@ -37,7 +37,7 @@ public class PotentialAltsMenu extends PaginatedMenu {
                 ItemBuilder item = new ItemBuilder(Material.PAPER);
                 item.setName(CC.MAIN + "About");
                 item.addLoreLine(" ");
-                item.addLoreLine("&7This menu is showing all &f" + playerData.getPlayerName() + "'s &7alts");
+                item.addLoreLine("&7This menu is showing all &f" + playerData.getName() + "'s &7alts");
                 item.addLoreLine("&7that are recorded on ip addresses");
                 item.addLoreLine("&7that user were joining from.");
                 item.addLoreLine(" ");
@@ -70,7 +70,7 @@ public class PotentialAltsMenu extends PaginatedMenu {
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> slots = new ArrayList<>();
 
-        playerData.getPotentialAlts().forEach(alt -> slots.add(new AltButton(alt)));
+        playerData.getAlts().forEach(alt -> slots.add(new AltButton(alt)));
 
         return slots;
     }

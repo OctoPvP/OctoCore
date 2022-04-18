@@ -25,7 +25,7 @@ public class GrantsUpdatePacket extends RedisPacket {
         boolean add = data.get("add").getAsBoolean();
         Player player = Bukkit.getPlayer(name);
         if (player != null) {
-            PlayerData playerData = PlayerManager.getData(player.getUniqueId());
+            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
             Grant grant = OctoCore.getGson().fromJson(tochange, Grant.class);
             if (add)
                 playerData.getGrants().add(grant);

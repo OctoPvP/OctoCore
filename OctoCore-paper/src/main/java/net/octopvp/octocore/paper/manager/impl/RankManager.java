@@ -28,14 +28,16 @@ import java.util.Set;
 import java.util.UUID;
 
 public class RankManager extends Manager {
+    @Getter
+    private static RankManager instance;
 
     @Getter
-    private static MongoCollection<Document> ranksCollection = DatabaseManager.getMongoDatabase().getCollection("ranks");
+    private static final MongoCollection<Document> ranksCollection = DatabaseManager.getMongoDatabase().getCollection("ranks");
 
     @Getter
-    private static Set<Rank> ranks = new HashSet<>();
+    private static final Set<Rank> ranks = new HashSet<>();
 
-    public static void loadRanks() {
+    public void loadRanks() {
         Logger.info("Loading ranks...");
         for (Document document : ranksCollection.find()) {
             Rank rank = OctoCore.getGson().fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()), Rank.class);
@@ -48,31 +50,32 @@ public class RankManager extends Manager {
         Logger.info("Loaded (%1) ranks.", ranks.size());
     }
 
-    public static void reloadRanks() {
+    public void reloadRanks() {
         ranks.clear();
         loadRanks();
     }
 
-    public static Rank getRankById(UUID uuid) {
+    public Rank getRankById(UUID uuid) {
         return ranks.stream().filter(rank -> rank.getRankId().toString().equalsIgnoreCase(uuid.toString())).findFirst().orElse(null);
     }
 
-    public static Rank getRankByName(String name) {
+    public Rank getRankByName(String name) {
         return ranks.stream().filter(rank -> rank.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
-    public static Rank getDefaultRank() {
+    public Rank getDefaultRank() {
         return ranks.stream().filter(Rank::isDefaultRank).findFirst().orElse(null);
     }
 
-    public static void save(Rank rank) {
+    public void save(Rank rank) {
         if (ranksCollection.find(Filters.eq("rankId", rank.getRankId().toString())).first() != null)
             ranksCollection.replaceOne(Filters.eq("rankId", rank.getRankId().toString()), Document.parse(OctoCore.getGson().toJson(rank)), new ReplaceOptions().upsert(true));
         else ranksCollection.insertOne(Document.parse(OctoCore.getGson().toJson(rank)));
-        broadcastReload();
+        if (!OctoCore.isLoading())
+            broadcastReload();
     }
 
-    public static void sendPermissionToBungee(Player player, String name, Node node) {
+    public void sendPermissionToBungee(Player player, String name, Node node) {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
         try {
@@ -89,31 +92,32 @@ public class RankManager extends Manager {
         player.sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.PLUGIN_MSG, b.toByteArray());
     }
 
-    public static boolean canGrant(PlayerData granter, Rank rankData) {
+    public boolean canGrant(PlayerData granter, Rank rankData) {
         Rank granterRank = granter.getHighestRank();
         return granterRank.getWeight() > rankData.getWeight();
     }
 
-    public static void createNewRank(RankBuilder builder) {
+    public void createNewRank(RankBuilder builder) {
         createNewRank(builder.build());
     }
 
-    public static void createNewRank(Rank rank) {
+    public void createNewRank(Rank rank) {
         ranks.add(rank);
         rank.save();
     }
 
-    public static void broadcastReload() {
+    public void broadcastReload() {
         new ReloadRanksPacket().send();
     }
 
-    public static void delete(Rank rank) {
+    public void delete(Rank rank) {
         ranksCollection.findOneAndDelete(Filters.eq("rankId", rank.getRankId().toString()));
         broadcastReload();
     }
 
     @Override
     public void init(OctoCore plugin) {
+        instance = this;
         loadRanks();
         if (OctoCore.isMaster()) {
             if (getDefaultRank() == null)
@@ -126,14 +130,21 @@ public class RankManager extends Manager {
 
     }
 
-    public void createDefaultRank() {
+    public Rank createDefaultRank() {
+        return createDefaultRank(true);
+    }
+
+    public Rank createDefaultRank(boolean createIfNotExist) {
         Rank defaultRank = getDefaultRank();
         if (defaultRank == null) {
-            RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(1).setRankType(RankType.DEFAULT);
+            if (!createIfNotExist)
+                return null;
+            RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(0).setRankType(RankType.DEFAULT);
             Rank r = rank.build();
             ranks.add(r);
             r.save();
         }
+        return defaultRank;
     }
 
 }

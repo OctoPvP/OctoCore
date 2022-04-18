@@ -37,7 +37,7 @@ public class GrantServerMenu extends PaginatedMenu {
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
         buttons.add(new GlobalButton());
-        OctoCore.getServerManager().getConnectedServers().forEach(server -> buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
+        OctoCore.getInstance().getServerManager().getConnectedServers().forEach(server -> buttons.add(new ServerButton(server))); //TODO make this work on offline servers.
         return buttons;
     }
 
@@ -67,7 +67,7 @@ public class GrantServerMenu extends PaginatedMenu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            PlayerData data = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData data = PlayerManager.getInstance().getData(player.getUniqueId());
             if (data == null) {
                 player.closeInventory();
                 return;
@@ -99,7 +99,7 @@ public class GrantServerMenu extends PaginatedMenu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            PlayerData playerData = PlayerManager.getProfile(player.getUniqueId());
+            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
             if (playerData == null) {
                 player.closeInventory();
                 return;

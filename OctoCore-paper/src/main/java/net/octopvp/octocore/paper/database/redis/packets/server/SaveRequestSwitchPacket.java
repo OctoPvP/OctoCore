@@ -33,7 +33,6 @@ public class SaveRequestSwitchPacket extends RedisPacket {
                     player.sendMessage(CC.RED + "Could not send you to that server!");
                 }
             }, 100);
-            PlayerManager.processLeave(player);
         }
     }
 

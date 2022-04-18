@@ -2,6 +2,8 @@ package net.octopvp.octocore.paper.listeners;
 
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.paper.database.redis.packets.staff.AdminChatPacket;
+import net.octopvp.octocore.paper.database.redis.packets.staff.StaffChatPacket;
 import net.octopvp.octocore.paper.manager.impl.ChatManager;
 import net.octopvp.octocore.paper.manager.impl.FilterManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -15,7 +17,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void messageListener(AsyncPlayerChatEvent e) {
-        PlayerData playerData = PlayerManager.getProfile(e.getPlayer().getUniqueId());
+        PlayerData playerData = PlayerManager.getInstance().getData(e.getPlayer().getUniqueId());
 
         if (playerData.isStaffChat()) {
             if (playerData.isAdminChat()) {
@@ -23,7 +25,7 @@ public class ChatListener implements Listener {
                 e.getPlayer().sendMessage(Lang.ADMIN_CHAT_DISABLED.toString());
             }
             if (e.getPlayer().hasPermission(Permission.STAFFCHAT.getNode())) {
-                PlayerManager.sendStaffChat(e.getPlayer(), e.getMessage(), OctoCore.getServerName());
+                new StaffChatPacket(e.getPlayer().getName(), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId());
                 e.setCancelled(true);
                 return;
             } else {
@@ -37,7 +39,7 @@ public class ChatListener implements Listener {
                 e.getPlayer().sendMessage(Lang.STAFF_CHAT_DISABLED.toString());
             }
             if (e.getPlayer().hasPermission(Permission.ADMINCHAT.getNode())) {
-                PlayerManager.sendAdminChat(e.getPlayer(), e.getMessage(), OctoCore.getServerName());
+                new AdminChatPacket(e.getPlayer().getName(), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId());
                 e.setCancelled(true);
                 return;
             } else {
