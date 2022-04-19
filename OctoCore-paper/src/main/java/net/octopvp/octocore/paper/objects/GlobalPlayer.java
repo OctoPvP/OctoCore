@@ -24,7 +24,7 @@ public class GlobalPlayer {
     private final String name;
 
     private String server, firstJoined, lastServer, address, rankName;
-    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving;
+    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving, op;
     private long lastSeen, lastActivity = -1L;
     private List<PlayerTag> allTags = new ArrayList<>();
     private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
@@ -48,12 +48,16 @@ public class GlobalPlayer {
     }
 
     public boolean hasPermission(String permission) {
+        if (isOp()) return true;
         if (permissionNegated(permission))
             return false;
         return hasSetPermission(permission);
     }
 
     public boolean hasPermission(String permission, String server) {
+        if (server.equalsIgnoreCase(OctoCore.getServerName()) || server.equalsIgnoreCase("$$this server$$"))
+            if (isOp())
+                return true;
         if (negatedPermissions.containsKey(permission))
             return negatedPermissions.get(permission).getServer().equalsIgnoreCase(server) || negatedPermissions.get(permission).isGlobal();
         if (permissions.containsKey(permission)) {

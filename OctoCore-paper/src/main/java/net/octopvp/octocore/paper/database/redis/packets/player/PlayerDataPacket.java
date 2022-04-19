@@ -51,6 +51,8 @@ public class PlayerDataPacket extends RedisPacket {
         player.setLastSeen(data.get("lastSeen").getAsLong());
         player.setLastActivity(data.get("lastActivity").getAsLong());
 
+        player.setOp(data.get("op").getAsBoolean());
+
         Set<UUID> tagsUUID = GsonSerializer.deserializeUUIDSet(data.get("allTags").getAsString());
         List<PlayerTag> tags = new ArrayList<>();
         for (UUID uuid1 : tagsUUID) {

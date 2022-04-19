@@ -74,7 +74,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
     private List<Node> nodes = new ArrayList<>();
 
-    private transient boolean fullyJoined = false;
+    private transient boolean fullyJoined = false, op = false;
     private transient int lastDataSave = 0;
     private transient String lastMessage; //only applies to this server for spam prot (maybe :))
     private transient Set<PlayerTag> allowedTags;
@@ -488,6 +488,8 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     public boolean hasPermission(String perm) { //haha this is a laggy mess
+        if (op)
+            return true;
         PermissionResult cachedResult = cachedPermissions.get(perm);
         if (cachedResult != null) {
             if (cachedResult.getTimestamp() + 600000 < System.currentTimeMillis()) { //10 minutes ttl

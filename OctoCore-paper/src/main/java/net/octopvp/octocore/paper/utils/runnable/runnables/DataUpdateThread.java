@@ -52,6 +52,9 @@ public class DataUpdateThread extends Thread {
                 playerData.save();
             playerData.setPlayTime(playerData.getPlayTime() + 1); //increment playtime by 1 second
             Player player = Bukkit.getPlayer(playerData.getUuid());
+            if (player != null) {
+                playerData.setOp(player.isOp());
+            }
             String name = playerData.getName();
             if (name == null && playerData.isOnline()) name = player.getName();
             /*
@@ -91,11 +94,13 @@ public class DataUpdateThread extends Thread {
                     .add("negated-permissions", OctoCore.getGson().toJson(playerData.getAllNegatedPermissions()))
                     .add("alts", OctoCore.getGson().toJson(playerData.getAltsSafely(), GsonType.ALT))
                     .add("addresses", StringUtils.getStringFromList(playerData.getAddresses()))
-                    .add("rankWeight", playerData.getHighestRank().getWeight());
+                    .add("rankWeight", playerData.getHighestRank().getWeight())
+                    .add("op", player.isOp());
 
 
             new PlayerDataPacket(pdata).send();
-            new CachedData(player.getUniqueId()).update(playerData.save(true));
+            if (player != null)
+                new CachedData(player.getUniqueId()).update(playerData.save(true));
         }
     }
 
