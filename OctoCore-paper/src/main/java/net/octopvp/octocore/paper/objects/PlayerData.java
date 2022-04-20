@@ -115,7 +115,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         this.lastLoaded = System.currentTimeMillis();
         this.grants = gson.fromJson(document.getString("grants"), GsonType.GRANT);
         this.grants.removeIf(Objects::isNull);
-        this.dataVersion = document.getDouble("dataVersion");
+        this.dataVersion = getDouble(document, "dataVersion");
         this.frozen = document.getBoolean("frozen");
         this.nicked = document.getBoolean("nicked");
         this.authEnabled = document.getBoolean("authEnabled");
