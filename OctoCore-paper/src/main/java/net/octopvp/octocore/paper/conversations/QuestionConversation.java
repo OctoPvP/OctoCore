@@ -28,6 +28,7 @@ public class QuestionConversation extends StringPrompt {
     }
 
     public void start(Player p) {
+        p.closeInventory();
         OctoCore.getConversationFactory().withFirstPrompt(this).withLocalEcho(false).buildConversation(p).begin();
     }
 }

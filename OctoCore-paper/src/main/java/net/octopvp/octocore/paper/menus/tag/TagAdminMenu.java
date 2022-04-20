@@ -90,16 +90,22 @@ public class TagAdminMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             player.closeInventory();
             new QuestionConversation(CC.GREEN + "Please enter the username of the player.", (answer) -> {
-                OfflinePlayer op = Bukkit.getOfflinePlayer(answer);
-                PlayerData data = PlayerManager.getInstance().getOfflineData(op.getUniqueId());
-                if (data == null) {
-                    player.sendMessage(CC.RED + "That player does not exist!");
+                try {
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(answer);
+                    PlayerData data = PlayerManager.getInstance().getOfflineData(op.getUniqueId());
+                    if (data == null) {
+                        player.sendMessage(CC.RED + "That player does not exist!");
+                        return Prompt.END_OF_CONVERSATION;
+                    }
+                    data.load();
+
+                    new ManagePlayerTagsMenu(data).open(player);
+                    return Prompt.END_OF_CONVERSATION;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    player.sendMessage(CC.RED + "An error occurred!");
                     return Prompt.END_OF_CONVERSATION;
                 }
-                data.load();
-
-                new ManagePlayerTagsMenu(data).open(player);
-                return Prompt.END_OF_CONVERSATION;
             }).start(player);
         }
     }

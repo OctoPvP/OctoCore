@@ -39,7 +39,7 @@ public class ManageTagsMenu extends PaginatedMenu {
 
     @Override
     public Button getBackButton(Player player) {
-        return new BackButton.DefaultBackButton(prev);
+        return new BackButton.SuppliedBackButton(new TagAdminMenu());
     }
 
     @RequiredArgsConstructor

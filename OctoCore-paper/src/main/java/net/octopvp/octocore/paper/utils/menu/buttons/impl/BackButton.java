@@ -40,4 +40,16 @@ public abstract class BackButton extends Button {
             menu.previous.open(player);
         }
     }
+
+    @RequiredArgsConstructor
+    public static class SuppliedBackButton extends BackButton {
+        private final Menu menu;
+
+        @Override
+        public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            if (menu == null)
+                return;
+            menu.open(player);
+        }
+    }
 }

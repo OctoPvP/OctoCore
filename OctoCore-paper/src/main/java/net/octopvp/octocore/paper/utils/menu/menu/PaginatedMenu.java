@@ -106,7 +106,13 @@ public abstract class PaginatedMenu extends Menu {
     @Override
     public String getName(Player player) {
         if (showPageNumbersInTitle()) {
-            return this.getPagesTitle(player) + CC.R + " (" + page + "/" + getPages(player) + ")";
+            String end = CC.R + " (" + page + "/" + getPages(player) + ")";
+            int length = end.length();
+            String title = getPagesTitle(player);
+            if (title.length() + length > 32) {
+                title = title.substring(0, 32 - length - 3) + "...";
+            }
+            return title + end;
         } else return this.getPagesTitle(player);
     }
 

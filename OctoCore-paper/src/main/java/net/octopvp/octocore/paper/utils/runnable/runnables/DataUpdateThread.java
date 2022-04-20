@@ -57,23 +57,6 @@ public class DataUpdateThread extends Thread {
             }
             String name = playerData.getName();
             if (name == null && playerData.isOnline()) name = player.getName();
-            /*
-            JsonBuilder playerDataChain = new JsonBuilder()
-                    .addProperty("name", name)
-                    .addProperty("uuid", playerData.getUuid().toString())
-                    .addProperty("server", OctoCore.getServerName())
-                    .addProperty("rankName", playerData.getRankName())
-                    .addProperty("lastSeen", playerData.getLastLogin())
-                    .addProperty("firstJoined", playerData.getFirstJoin())
-                    .addProperty("vanished", playerData.isVanished())
-                    .addProperty("lastActivity", System.currentTimeMillis())
-                    .addProperty("lastServer", OctoCore.getServerName())
-                    .addProperty("staffChatAlerts", playerData.isStaffChatAlerts())
-                    .addProperty("adminChatAlerts", playerData.isAdminChatAlerts())
-                    .addProperty("reportAlerts", playerData.isReportAlerts())
-                    .addProperty("allTags", GsonSerializer.serializeUUIDSet(playerData.getAllowedTagsID()))
-                    .addProperty("permissions", OctoCore.getGson().toJson(playerData.getAllEffectivePermissions()));
-             */
             JsonBuilder pdata = new JsonBuilder()
                     .add("name", name)
                     .add("uuid", playerData.getUuid().toString())

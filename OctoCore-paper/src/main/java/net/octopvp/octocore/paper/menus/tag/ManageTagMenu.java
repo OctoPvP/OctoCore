@@ -222,7 +222,7 @@ public class ManageTagMenu extends Menu {
 
         @Override
         public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.REDSTONE_BLOCK).name(CC.RED + "Delete").lore(CC.YELLOW + "Click to delete this tag.").build();
+            return new ItemBuilder(Material.TNT).name(CC.RED + "Delete").lore(CC.YELLOW + "Click to delete this tag.").build();
         }
 
         @Override

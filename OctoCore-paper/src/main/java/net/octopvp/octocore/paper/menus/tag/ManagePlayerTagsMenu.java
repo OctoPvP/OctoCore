@@ -56,7 +56,7 @@ public class ManagePlayerTagsMenu extends PaginatedMenu {
                     CC.AQUA + "Description: " + CC.WHITE + tag.getDescription(),
                     CC.AQUA + "ID: " + CC.WHITE + tag.getId(),
                     CC.SEPARATOR,
-                    CC.YELLOW + "Shift-Right-Click to remove this tag."
+                    CC.YELLOW + "Shift-Right Click to remove this tag."
             );
             return builder.build();
         }
