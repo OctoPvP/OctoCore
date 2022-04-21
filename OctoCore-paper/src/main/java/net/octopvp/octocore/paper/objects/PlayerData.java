@@ -58,7 +58,8 @@ public class PlayerData implements IPlayerData, IPunishData {
     private double dataVersion = 0.0;
 
     private long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
-    private String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName, lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default", lastAuthedIp = "", lastSeenIp = "", address;
+    private String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName, lowerName = name.toLowerCase(),
+            server, authSecret, lastSeenServer = "Unknown", rankName = "default", lastAuthedIp = "", lastSeenIp = "", address, lastServerOn = "Unknown";
     private List<String> metaDataList = new ArrayList<>();
     private Map<String, String> metaData = new ConcurrentHashMap<>();
     private WorldTime worldTime = WorldTime.DAY;
@@ -68,11 +69,12 @@ public class PlayerData implements IPlayerData, IPunishData {
     private HashSet<UUID> allowedTagsID = new HashSet<>();
     private ChatColor nameColor = ChatColor.GREEN;
     private boolean nameColorBold = false, nameColorItalic = false, staffChatAlerts = true, adminChatAlerts = true, reportAlerts = true, staffChat = false, adminChat = false, build = false;
-    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false;
+    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false, joinAlert = false;
 
     private ArrayList<Grant> grants = new ArrayList<>();
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
     private List<Node> nodes = new ArrayList<>();
+    private List<Node> bungeePerms = new ArrayList<>();
 
     private transient boolean fullyJoined = false, op = false;
     private transient int lastDataSave = 0;
@@ -146,6 +148,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         this.worldTime = WorldTime.valueOf(document.getString("worldTime"));
         if (document.containsKey("nickTagID")) this.nickTagID = UUID.fromString(document.getString("nickTagID"));
         if (document.containsKey("nickUUID")) this.nickUUID = UUID.fromString(document.getString("nickUUID"));
+        if (document.containsKey("tagID")) this.tagID = UUID.fromString(document.getString("tagID"));
         this.playTime = getInt(document, "playTime");
         this.allowedTagsID = gson.fromJson(document.getString("allowedTagsID"), GsonType.UUID_SET);
         if (document.containsKey("nameColor")) this.nameColor = ChatColor.of(document.getString("nameColor"));
@@ -235,6 +238,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         document.put("worldTime", worldTime.name());
         if (nickTagID != null) document.put("nickTagID", nickTagID.toString());
         if (nickUUID != null) document.put("nickUUID", nickUUID.toString());
+        if (tagID != null) document.put("tagID", tagID.toString());
         document.put("playTime", playTime);
         document.put("allowedTagsID", OctoCore.getGson().toJson(allowedTagsID));
         if (nameColor != null) document.put("nameColor", nameColor.name().toUpperCase());
@@ -268,7 +272,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         lastKnownName = name;
         this.address = player.getAddress().getAddress().getHostAddress();
 
-        if (hasPermission(Permission.SEND_JOIN_MESSAGE.getNode()))
+        if (hasPermission(Permission.SEND_JOIN_MESSAGE.getNode()) && joinAlert)
             new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName()).send();
     }
 

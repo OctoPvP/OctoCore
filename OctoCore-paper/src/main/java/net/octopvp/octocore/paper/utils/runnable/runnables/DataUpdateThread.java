@@ -77,9 +77,11 @@ public class DataUpdateThread extends Thread {
                     .add("negated-permissions", OctoCore.getGson().toJson(playerData.getAllNegatedPermissions()))
                     .add("alts", OctoCore.getGson().toJson(playerData.getAltsSafely(), GsonType.ALT))
                     .add("addresses", StringUtils.getStringFromList(playerData.getAddresses()))
-                    .add("rankWeight", playerData.getHighestRank().getWeight())
-                    .add("op", player.isOp());
+                    .add("rankWeight", playerData.getHighestRank().getWeight());
 
+            if (player != null) {
+                pdata.add("op", player.isOp());
+            }
 
             new PlayerDataPacket(pdata).send();
             if (player != null)

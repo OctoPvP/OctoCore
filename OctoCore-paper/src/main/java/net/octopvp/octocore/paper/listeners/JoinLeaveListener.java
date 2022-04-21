@@ -4,10 +4,7 @@ import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
-import net.octopvp.octocore.paper.manager.impl.PermissionManager;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.manager.impl.ScoreBoardManager;
-import net.octopvp.octocore.paper.manager.impl.TabManager;
+import net.octopvp.octocore.paper.manager.impl.*;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.objects.CachedData;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -98,6 +95,11 @@ public class JoinLeaveListener implements Listener {
     public void onLogin(PlayerLoginEvent event) {
         PlayerData data = PlayerManager.getInstance().getData(event.getPlayer());
         PermissionManager.injectPermissible(event.getPlayer(), data);
+        if (ServerManager.getInstance().isPlayerOnline(event.getPlayer().getUniqueId())) {
+            data.setLastServerOn(ServerManager.getInstance().getGlobalPlayer(event.getPlayer().getUniqueId()).getServer());
+        } else {
+            data.setJoinAlert(true);
+        }
         if (data == null)
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
     }

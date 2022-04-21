@@ -124,6 +124,8 @@ public enum Lang {
     JOIN_BANNED("&b%1 &3tried to join but is &bBANNED&b. &7(&b%2&7)"),
     JOIN_BLACKLISTED("&4%1 &ctried to join but is &4BLACKLISTED&c. &7(&c%2&7)"),
 
+    POSSIBLE_BAN_EVADING("&c%1 may be ban evading! Alts: &7%2"),
+
     PUNISHMENT_SILENT("&f[&7Silent&f] "),
     PUNISHMENT_UNDO("&c%1&c was un-%2 by %3&c for &7%4"),
     //PUNISHMENT_UNDO("$s%1$m was $sun%2 $mby $s%3 $mfor $v%4"),
@@ -181,7 +183,9 @@ public enum Lang {
             "&aDuration: &e%3",
             "",
             CC.YELLOW + "Click to view punishments!"
-    );
+    ),
+
+    ;
     private final String msg;
 
     Lang(String msg) {

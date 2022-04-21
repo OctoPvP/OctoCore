@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.database.redis.packets.player.TagUpdatePacket;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
@@ -70,8 +72,16 @@ public class ManagePlayerTagsMenu extends PaginatedMenu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             super.onClick(player, slot, clickType, event);
             if (clickType == ClickType.SHIFT_RIGHT) {
-                new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "REMOVE_TAG").addProperty("tagId", tag.getId().toString())).send();
+                if (ServerManager.getInstance().isPlayerOnline(data.getUuid())) {
+                    new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "REMOVE_TAG").addProperty("tagId", tag.getId().toString())).send();
+                } else {
+                    PlayerData d = PlayerManager.getInstance().getOfflineData(data.getUniqueId());
+                    d.removeTag(tag.getId());
+                    d.save();
+                }
                 SoundUtil.playPing(player);
+                //data.load();
+                //update(player);
                 player.closeInventory();
             }
         }

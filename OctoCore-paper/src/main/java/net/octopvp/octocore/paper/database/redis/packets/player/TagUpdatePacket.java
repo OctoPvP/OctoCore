@@ -33,10 +33,12 @@ public class TagUpdatePacket extends RedisPacket {
         switch (type) {
             case "GIVE_TAG": {
                 playerData.addTag(tag);
+                playerData.save();
                 return;
             }
             case "REMOVE_TAG": {
                 playerData.removeTag(tagId);
+                playerData.save();
                 return;
             }
         }

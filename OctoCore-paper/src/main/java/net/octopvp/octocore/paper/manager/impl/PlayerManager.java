@@ -66,6 +66,7 @@ public class PlayerManager extends Manager {
         return new PlayerData(uuid, document.getString("name"));
     }
 
+
     public PlayerData getOfflineData(String name) {
         PlayerData data = getData(name);
         if (data != null) {
