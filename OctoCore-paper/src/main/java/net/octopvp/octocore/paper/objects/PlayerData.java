@@ -255,7 +255,11 @@ public class PlayerData implements IPlayerData, IPunishData {
         document.put("addresses", StringUtils.getStringFromList(this.addresses));
 
         document.entrySet().removeIf(e -> e.getValue() == null);
-        if (getDoc) return document;
+        if (getDoc) {
+            document.put("bungeePermissions", OctoCore.getGson().toJson(this.bungeePerms, GsonType.NODE_LIST));
+
+            return document;
+        }
         if (PlayerManager.getInstance().doesDocumentExistByUUID(uuid))
             PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document);
         else
@@ -362,6 +366,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         return CC.translate(getHighestRank().getPrefix() + getNameColor() + " " + lastKnownName) + (tag != null ? " " + getTagString() : "");
          */
     }
+
 
     public PlayerData addLoadNote(LoadNote note) {
         this.loadNotes.add(note);
@@ -548,17 +553,12 @@ public class PlayerData implements IPlayerData, IPunishData {
                 }
             });
         }
-        /*
-        Rank rankData = this.getHighestRank();
-        if (!player.getDisplayName().equals(CC.translate(rankData.getPrefix(this.getPrefixColorOrNull()) + rankData.getColor() + (this.nameColor != null ? this.nameColor.toString() : "") + this.getName()) + CC.R)) {
-            player.setDisplayName(CC.translate(rankData.getPrefix(getPrefixColorOrNull()) + rankData.getColor() + (this.nameColor != null ? this.nameColor.toString() : "") + this.getName()) + CC.R);
-        }
-         */
         if (!player.getDisplayName().equals(this.getDisplayName())) //TODO handle nicks
             player.setDisplayName(this.getDisplayName());
-        //bungeePermissions.forEach((permission,bool) -> RankManager.getInstance().sendPermissionToBungee(player, player.getName(), permission, bool,
-        //        "global")); //TODO use nodes
-        bungeePermissions.forEach(node -> RankManager.getInstance().sendPermissionToBungee(player, player.getName(), node));
+        this.bungeePerms.clear();
+        this.bungeePerms.addAll(bungeePermissions);
+
+        RankManager.getInstance().resetBungeePerms(player);
     }
 
     public String getPrefix() {

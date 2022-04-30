@@ -5,9 +5,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import net.octopvp.octocore.common.PluginMsgChannels;
-import net.octopvp.octocore.common.object.PermUpdateType;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.database.redis.packets.other.ReloadRanksPacket;
@@ -75,20 +73,15 @@ public class RankManager extends Manager {
             broadcastReload();
     }
 
-    public void sendPermissionToBungee(Player player, String name, Node node) {
+    public void resetBungeePerms(Player player) {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
         try {
-            out.writeUTF(PluginMsgChannels.SubChannels.PERMISSIONS);
-            out.writeUTF(PermUpdateType.ADD.name());
-            out.writeUTF(name);
-            out.writeUTF(node.getPermission());
-            out.writeUTF(String.valueOf(node.isAllowed() && node.getServer().isBungee()));
-            out.writeUTF(node.getScope().getServer());
+            out.writeUTF(PluginMsgChannels.SubChannels.PERMISSION_UPDATED);
+            out.writeUTF(player.getUniqueId().toString());
         } catch (IOException e) {
             Logger.error("Failed to send permission to bungee. for " + player.getName());
         }
-        String channel = PluginMsgChannels.SubChannels.PERMISSIONS;
         player.sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.PLUGIN_MSG, b.toByteArray());
     }
 

@@ -8,13 +8,12 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.octopvp.octocore.common.PluginMsgChannels;
-import net.octopvp.octocore.common.object.PermUpdateType;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.permissions.NodeBuilder;
 import net.octopvp.octocore.waterfall.manager.OnlinePlayersManager;
 import net.octopvp.octocore.waterfall.util.object.OnlinePlayerData;
 
 import java.io.*;
+import java.util.UUID;
 
 public class PermissionListener implements Listener {
 
@@ -26,31 +25,20 @@ public class PermissionListener implements Listener {
             if (tag.equalsIgnoreCase(PluginMsgChannels.PLUGIN_MSG)) {
                 DataInputStream in = new DataInputStream(new ByteArrayInputStream(event.getData()));
                 String channel = in.readUTF();
-                Logger.debug("is permissions tag\nChannel: %1", channel);
-                if (!channel.equalsIgnoreCase(PluginMsgChannels.SubChannels.PERMISSIONS)) {
+                Logger.debug("Is update request\nChannel: %1", channel);
+                if (!channel.equalsIgnoreCase(PluginMsgChannels.SubChannels.PERMISSION_UPDATED)) {
                     return;
                 }
-                PermUpdateType type = PermUpdateType.valueOf(in.readUTF());
-                if (type == PermUpdateType.CLEAR_CACHE) {
-                    ProxiedPlayer player = ProxyServer.getInstance().getPlayer(in.readUTF());
-                    if (player != null) {
-                        OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
-                        data.getCachedPermResults().clear();
-                    }
+                UUID uuid = UUID.fromString(in.readUTF());
+                if (ProxyServer.getInstance().getPlayer(uuid) == null) {
                     return;
                 }
-                ProxiedPlayer player = ProxyServer.getInstance().getPlayer(in.readUTF());
-                NodeBuilder nodeBuilder = new NodeBuilder();
-                nodeBuilder.setPermission(in.readUTF()).setAllowed(Boolean.parseBoolean(in.readUTF())).setScope(in.readUTF());
-
-                Logger.debug("Permission update: " + nodeBuilder.getPermission() + " | " + nodeBuilder.isAllowed());
-
-                if (player != null) {
-                    OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
-                    if (data.isPermSet(nodeBuilder.getPermission()))
-                        data.unSetPerm(nodeBuilder.getPermission());
-                    data.getNodes().add(nodeBuilder.build());
+                ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
+                OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
+                if (data == null) {
+                    return;
                 }
+                data.update();
             }
         } catch (IOException ex) {
             ex.printStackTrace();

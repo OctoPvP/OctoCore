@@ -18,7 +18,7 @@ public class CachedData {
     private final UUID uuid;
 
     public Document getData() {
-        if (!OctoCore.getInstance().getRedisHandler().isRedisConnected()) return null;
+        if (!OctoCore.getInstance().getRedisHandler().isConnected()) return null;
 
         try (Jedis jedis = OctoCore.getInstance().getRedisHandler().getSubscriberPool().getResource()) {
             String json = jedis.hget("player-data", this.uuid.toString());
@@ -33,13 +33,13 @@ public class CachedData {
     }
 
     public void update(Document document) {
-        if (!OctoCore.getInstance().getRedisHandler().isRedisConnected()) return;
+        if (!OctoCore.getInstance().getRedisHandler().isConnected()) return;
 
         try (Jedis jedis = OctoCore.getInstance().getRedisHandler().getSubscriberPool().getResource()) {
             jedis.hset("player-data", this.uuid.toString(), document.toJson());
             jedis.expire("player-data", 3600);
         } catch (Exception e) {
-            if (OctoCore.getInstance().getRedisHandler().isRedisConnected() && System.currentTimeMillis() - OctoCore.getInstance().getRedisHandler().getLastConnect() >= 3000L) {
+            if (OctoCore.getInstance().getRedisHandler().isConnected() && System.currentTimeMillis() - OctoCore.getInstance().getRedisHandler().getLastConnect() >= 3000L) {
                 e.printStackTrace();
                 Logger.error("Failed to cache data for " + uuid + ": " + e.getMessage());
             }

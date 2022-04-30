@@ -22,8 +22,9 @@ public class OctoCoreCommon {
     @Setter
     private static boolean disabling = false;
 
-    public static void init(ServerInfo info) {
+    public static void init(ServerInfo info, Gson gson) {
         OctoCoreCommon.info = info;
+        OctoCoreCommon.gson = gson;
     }
 
     public static String getServerName() {

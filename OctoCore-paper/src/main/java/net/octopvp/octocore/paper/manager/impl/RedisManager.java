@@ -47,7 +47,7 @@ public class RedisManager extends Manager {
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
             e.printStackTrace();
         }
-        if (OctoCore.getInstance().getRedisHandler() == null || !OctoCore.getInstance().getRedisHandler().isRedisConnected())
+        if (OctoCore.getInstance().getRedisHandler() == null || !OctoCore.getInstance().getRedisHandler().isConnected())
             Logger.error("Could not connect to redis!");
         else {
             new ServerOnlinePacket(OctoCore.getServerName()).send();

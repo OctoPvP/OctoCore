@@ -191,8 +191,7 @@ public final class OctoCore extends JavaPlugin {
             public String getCommitBranch() {
                 return Bukkit.getCommitBranch();
             }
-        });
-        OctoCoreCommon.setGson(gson);
+        }, gson);
         OctoCoreCommon.setPluginClassLoader(getClassLoader());
         try {
             serverType = ServerType.valueOf(getConfig().getString("server-type").toUpperCase());

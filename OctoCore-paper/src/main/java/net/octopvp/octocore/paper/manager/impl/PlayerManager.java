@@ -203,6 +203,7 @@ public class PlayerManager extends Manager {
         data.onJoin(player);
         data.loadPunishmentsPerformed();
         data.setFullJoined(true);
+        RankManager.getInstance().resetBungeePerms(player);
     }
 
 }

@@ -1,5 +1,7 @@
 package net.octopvp.octocore.waterfall;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ProxyServer;
@@ -16,6 +18,7 @@ import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
 import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
 import net.octopvp.octocore.waterfall.listeners.*;
+import net.octopvp.octocore.waterfall.manager.OnlinePlayersManager;
 import net.octopvp.octocore.waterfall.redis.BungeeRedisManager;
 
 import java.io.File;
@@ -24,6 +27,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public final class OctoCoreWaterfall extends Plugin {
     @Getter
@@ -34,6 +38,11 @@ public final class OctoCoreWaterfall extends Plugin {
     @Getter
     @Setter
     private RedisHandler redisHandler;
+
+    @Getter
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting()
+            .serializeNulls()
+            .enableComplexMapKeySerialization().create();
 
     @Override
     public void onEnable() {
@@ -61,7 +70,7 @@ public final class OctoCoreWaterfall extends Plugin {
             public String getCommitBranch() {
                 return "UNKNOWN";
             }
-        });
+        }, gson);
         File file = new File(getDataFolder(), "config.yml");
 
 
@@ -91,7 +100,11 @@ public final class OctoCoreWaterfall extends Plugin {
         Logger.debug(config.getBoolean("protocol.enabled"));
         Logger.debug(config.getString("protocol.version"));
         getProxy().getPluginManager().registerListener(this, new PingEvent());
+
+        getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 10, 10, TimeUnit.SECONDS);
+
         Logger.debug("OctoBungee Started! " + (System.currentTimeMillis() - start) + "ms");
+        Logger.debug("Redis connected: " + redisHandler.isConnected());
     }
 
     public Configuration getConfig() {

@@ -67,7 +67,7 @@ public class RedisHandler {
             e.printStackTrace();
         }
 
-        Logger.info(isRedisConnected() ? "Successfully connected to redis!" : "Failed to connect to redis!");
+        Logger.info(isConnected() ? "Successfully connected to redis!" : "Failed to connect to redis!");
         this.lastConnect = System.currentTimeMillis();
     }
 
@@ -84,10 +84,13 @@ public class RedisHandler {
                         e.printStackTrace();
                         return;
                     }
+                    if (json.get("name").isJsonNull()) {
+                        return;
+                    }
                     String name = json.get("name").getAsString();
                     JsonObject data = json.get("data").getAsJsonObject();
                     RedisPacket packet = packetData.get(name);
-                    if (isRedisConnected()) {
+                    if (isConnected()) {
                         if (packet != null) {
                             if (OctoCoreCommon.isDisabling()) {
                                 try {
@@ -129,6 +132,7 @@ public class RedisHandler {
             } catch (Exception e) {
                 subscriberPool = null;
                 publisherPool = null;
+                e.printStackTrace();
             }
         });
     }
@@ -163,12 +167,12 @@ public class RedisHandler {
                 i++;
             }
         }
-        if (isRedisConnected()) {
+        if (isConnected()) {
             Logger.info("Successfully registered %1 packets", i);
         }
     }
 
-    public boolean isRedisConnected() {
+    public boolean isConnected() {
         return this.subscriberPool != null && !this.subscriberPool.isClosed() && this.publisherPool != null && !this.publisherPool.isClosed();
     }
 
@@ -182,7 +186,7 @@ public class RedisHandler {
     }
 
     public void sendRequest(RedisPacket packet, boolean here) {
-        if (!isRedisConnected() || here) {
+        if (!isConnected() || here) {
             try {
                 JsonBuilder d = packet.getData();
                 if (d == null)

@@ -13,4 +13,11 @@ public class OnlinePlayersManager {
     @Getter
     @Setter
     private static Map<UUID, OnlinePlayerData> dataMap = new ConcurrentHashMap<>();
+
+    public static void update() {
+        dataMap.forEach((uuid, data) -> {
+            //Logger.debug("Updating player data for " + uuid.toString());
+            data.update();
+        });
+    }
 }

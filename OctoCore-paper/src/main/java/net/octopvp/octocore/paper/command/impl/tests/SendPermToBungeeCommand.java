@@ -5,6 +5,7 @@ import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.utils.Sender;
 
 import java.io.ByteArrayOutputStream;
@@ -14,12 +15,9 @@ import java.io.IOException;
 public class SendPermToBungeeCommand extends BaseCommand {
     @Command(name = "sendpermtobungee", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
-        if (args.length == 1) {
-
-            sender.sendMessage("&aSent permission to BungeeCord!");
-            return CommandResult.SUCCESS;
-        }
-        return CommandResult.INVALID_ARGS;
+        RankManager.getInstance().resetBungeePerms(sender.getPlayer());
+        sender.sendMessage("Done!");
+        return CommandResult.SUCCESS;
     }
 
     @Command(name = "testpluginmsg", playerOnly = true)
