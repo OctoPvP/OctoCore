@@ -14,24 +14,17 @@ import java.util.UUID;
 @Getter
 @Setter
 public class CachedData {
-
     private final UUID uuid;
-
     public Document getData() {
         if (!OctoCore.getInstance().getRedisHandler().isConnected()) return null;
-
         try (Jedis jedis = OctoCore.getInstance().getRedisHandler().getSubscriberPool().getResource()) {
             String json = jedis.hget("player-data", this.uuid.toString());
-
-            if (json == null) {
-                return null;
-            }
+            if (json == null) return null;
             return Document.parse(json);
         } catch (Exception e) {
             return null;
         }
     }
-
     public void update(Document document) {
         if (!OctoCore.getInstance().getRedisHandler().isConnected()) return;
 

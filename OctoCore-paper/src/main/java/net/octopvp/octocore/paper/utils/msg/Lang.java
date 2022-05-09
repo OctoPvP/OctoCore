@@ -184,7 +184,23 @@ public enum Lang {
             "",
             CC.YELLOW + "Click to view punishments!"
     ),
+    MSG_PLAYER("&7(From &a%1&7) %2"),
+    MSG_PLAYER_TO("&7(To &a%1&7) %2"),
+    MSG_IGNORED("&cThat player has ignored you!"),
+    MSG_DISABLED("&cThat player has direct messages disabled!"),
+    SELF_MSG_DISABLED("&cYou have direct messages disabled!"),
+    CANNOT_MESSAGE_SELF("&cYou cannot message yourself!"),
+    CANNOT_IGNORE_SELF("&cYou cannot ignore yourself!"),
+    CANNOT_MESSAGE_SENDER_IGNORED("&cYou cannot message a player you are ignoring!"),
+    SUCCESS_IGNORE("&aYou are now ignoring &e%1&a."),
+    SUCCESS_UNIGNORE("&aYou are no longer ignoring &e%1&a."),
+    SOCIAL_SPY("&7(&a%1 &7-> &a%2&7) &7%3"),
+    NO_LAST_MSG("&cYou have not received or sent any messages recently!"),
+    NOT_IGNORED("&cYou're not ignoring that player!"),
 
+    IGNORE_LIST_HEADER("&bYou're ignoring these players:"),
+    IGNORE_LIST_ENTRY("&7 - &e%1"),
+    NOT_IGNORING_ANYONE("&cYou're not ignoring anyone!"),
     ;
     private final String msg;
 

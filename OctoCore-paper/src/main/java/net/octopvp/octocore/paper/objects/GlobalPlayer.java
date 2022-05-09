@@ -3,6 +3,7 @@ package net.octopvp.octocore.paper.objects;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.octopvp.octocore.common.object.MessageSettings;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.PlayerMessagePacket;
@@ -23,7 +24,7 @@ public class GlobalPlayer {
     private final UUID uuid;
     private final String name;
 
-    private String server, firstJoined, lastServer, address, rankName;
+    private String server, firstJoined, lastServer, address, rankName, coloredName;
     private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving, op;
     private long lastSeen, lastActivity = -1L;
     private List<PlayerTag> allTags = new ArrayList<>();
@@ -31,7 +32,11 @@ public class GlobalPlayer {
     private Map<String, ServerContext> negatedPermissions = new ConcurrentHashMap<>();
     private List<Alt> alts = new ArrayList<>();
     private List<String> addresses = new ArrayList<>();
+    private List<Integer> ignored = new ArrayList<>();
     private int rankWeight;
+    private UUID lastMessaged;
+
+    private MessageSettings messageSettings = new MessageSettings();
 
     public boolean isOnline() {
         return OctoCore.getInstance().getServerManager().getConnectedServers().stream().filter(serverData ->
@@ -80,5 +85,10 @@ public class GlobalPlayer {
             return permissions.get(permission).isThisServer();
         }
         return false;
+    }
+
+    public boolean isIgnoring(String name) {
+        if (name == null) return false;
+        return messageSettings.getIgnoreList().stream().anyMatch(u -> u.equalsIgnoreCase(name));
     }
 }

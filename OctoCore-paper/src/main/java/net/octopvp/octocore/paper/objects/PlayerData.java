@@ -10,10 +10,7 @@ import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.common.object.PermUpdateType;
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.common.object.ServerContext;
-import net.octopvp.octocore.common.object.WorldTime;
+import net.octopvp.octocore.common.object.*;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.permissions.Node;
@@ -58,8 +55,9 @@ public class PlayerData implements IPlayerData, IPunishData {
     private double dataVersion = 0.0;
 
     private long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
-    private String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName, lowerName = name.toLowerCase(),
-            server, authSecret, lastSeenServer = "Unknown", rankName = "default", lastAuthedIp = "", lastSeenIp = "", address, lastServerOn = "Unknown";
+    private String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName;
+    private String lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default";
+    private String lastAuthedIp = "", lastSeenIp = "", address, lastServerOn = "Unknown";
     private List<String> metaDataList = new ArrayList<>();
     private Map<String, String> metaData = new ConcurrentHashMap<>();
     private WorldTime worldTime = WorldTime.DAY;
@@ -68,8 +66,11 @@ public class PlayerData implements IPlayerData, IPunishData {
             playTime = 0, coins;
     private HashSet<UUID> allowedTagsID = new HashSet<>();
     private ChatColor nameColor = ChatColor.GREEN;
-    private boolean nameColorBold = false, nameColorItalic = false, staffChatAlerts = true, adminChatAlerts = true, reportAlerts = true, staffChat = false, adminChat = false, build = false;
-    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false, customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false, joinAlert = false;
+    private boolean nameColorBold = false, nameColorItalic = false, staffChatAlerts = true, adminChatAlerts = true;
+    private boolean reportAlerts = true, staffChat = false, adminChat = false, build = false;
+    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false;
+    private boolean customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false;
+    private boolean joinAlert = false, socialSpy = false;
 
     private ArrayList<Grant> grants = new ArrayList<>();
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
@@ -85,10 +86,15 @@ public class PlayerData implements IPlayerData, IPunishData {
     private transient GrantProcedure grantProcedure = null;
     private transient Map<String, PermissionResult> cachedPermissions = new ConcurrentHashMap<>();
 
+    private UUID lastMessaged = null;
+
     private PunishData punishData = new PunishData(this);
     private Collection<Alt> alts = new ArrayList<>();
     private List<String> addresses = new ArrayList<>();
 
+    private List<UUID> ignoredPlayers = new ArrayList<>();
+
+    private MessageSettings messageSettings = new MessageSettings();
 
     public PlayerData(UUID uuid, String name) {
         this.uuid = uuid;
@@ -113,6 +119,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         }
         Gson gson = OctoCore.getGson();
         this.name = requestName();
+
         this.lowerName = name.toLowerCase();
         this.lastLoaded = System.currentTimeMillis();
         this.grants = gson.fromJson(document.getString("grants"), GsonType.GRANT);
@@ -163,6 +170,16 @@ public class PlayerData implements IPlayerData, IPunishData {
         this.nodes = gson.fromJson(document.getString("nodes"), GsonType.NODE_LIST);
         this.nodes.removeIf(Objects::isNull);
         this.address = document.getString("address");
+        this.socialSpy = document.getBoolean("socialSpy");
+
+        this.messageSettings.setMessagesOff(document.getBoolean("messagesOff"));
+        this.messageSettings.getIgnoreList().clear();
+        this.messageSettings.setSoundsEnabled(document.getBoolean("sounds"));
+        this.messageSettings.setGlobalChat(document.getBoolean("globalChat"));
+        this.messageSettings.setChatMention(document.getBoolean("chatMention"));
+        this.messageSettings.setIgnoreList(gson.fromJson(document.getString("ignoreList"), GsonType.STRING_LIST));
+
+        this.messageSettings.getIgnoreList().removeIf(u -> u == null || u.isEmpty() || u.equalsIgnoreCase(this.name));
 
         if (cachedPermissions == null) cachedPermissions = new ConcurrentHashMap<>();
         if (loadNotes == null) loadNotes = new ArrayList<>();
@@ -172,8 +189,7 @@ public class PlayerData implements IPlayerData, IPunishData {
 
     private long getLong(Document doc, String key, long... def) {
         Number number = getNumber(doc, key);
-        if (number == null)
-            return def.length > 0 ? def[0] : -1L;
+        if (number == null) return def.length > 0 ? def[0] : -1L;
         return number.longValue();
     }
 
@@ -185,8 +201,7 @@ public class PlayerData implements IPlayerData, IPunishData {
 
     private double getDouble(Document doc, String key, double... def) {
         Number n = getNumber(doc, key).doubleValue();
-        if (n == null)
-            return def.length > 0 ? def[0] : -1;
+        if (n == null) return def.length > 0 ? def[0] : -1;
         return n.doubleValue();
     }
 
@@ -253,6 +268,14 @@ public class PlayerData implements IPlayerData, IPunishData {
         document.put("nodes", OctoCore.getGson().toJson(nodes));
         document.put("address", address);
         document.put("addresses", StringUtils.getStringFromList(this.addresses));
+        document.put("socialSpy", socialSpy);
+
+        document.put("ignoreList", OctoCore.getGson().toJson(this.messageSettings.getIgnoreList(), GsonType.STRING_LIST));
+
+        document.put("globalChat", messageSettings.isGlobalChat());
+        document.put("chatMention", messageSettings.isChatMention());
+        document.put("sounds", messageSettings.isSoundsEnabled());
+        document.put("messagesOff", messageSettings.isMessagesOff());
 
         document.entrySet().removeIf(e -> e.getValue() == null);
         if (getDoc) {
@@ -262,8 +285,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         }
         if (PlayerManager.getInstance().doesDocumentExistByUUID(uuid))
             PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document);
-        else
-            PlayerManager.getInstance().getPdataCollection().insertOne(document);
+        else PlayerManager.getInstance().getPdataCollection().insertOne(document);
         new CachedData(this.uuid).update(document);
         return document;
     }
@@ -278,6 +300,12 @@ public class PlayerData implements IPlayerData, IPunishData {
 
         if (hasPermission(Permission.SEND_JOIN_MESSAGE.getNode()) && joinAlert)
             new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName()).send();
+    }
+
+    public void postPermissionLoad(Player player) {
+        if (socialSpy && !hasPermission(Permission.SOCIAL_SPY.getNode())) {
+            socialSpy = false;
+        }
     }
 
     public void loadAlts(UUID uuid) {
@@ -354,12 +382,28 @@ public class PlayerData implements IPlayerData, IPunishData {
         return getNode(perm) != null;
     }
 
+    private transient String cachedFormattedNameNoNickNoTag = null;
+
+    public String getCachedFormattedNameNoNickNoTag() {
+        if (cachedFormattedNameNoNickNoTag == null) {
+            cachedFormattedNameNoNickNoTag = getFormattedName(false, Bukkit.getPlayer(uuid), false);
+        }
+        return cachedFormattedNameNoNickNoTag;
+    }
+
     public String getFormattedName(boolean nicked, Player player, boolean... showtag) {
         String prefix = getHighestRank().getPrefix();
         boolean shouldShowTag = showtag.length == 0 || showtag[0];
         if (nicked)
             return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
-        return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).equals("") ? player.getName() : " " + player.getName())) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
+        return CC.translate(prefix +
+                getCurrentColor() +
+                (CC.strip(prefix).equals("") ?
+                        player.getName() : " " +
+                        player.getName())) +
+                (getTag() != null &&
+                        shouldShowTag ? " " +
+                        getTagString() : "");
         /*
         if (nicked)
             return CC.translate((this.isNicked() ? nickPrefix : getHighestRank().getPrefix()) + (this.isNicked() ? nickColor : getCurrentColor()) + " " + (this.isNicked() ? nick : lastKnownName)) + (tag != null ? " " + getTagString() : "");
@@ -497,8 +541,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     public boolean hasPermission(String perm) { //haha this is a laggy mess
-        if (op)
-            return true;
+        if (op) return true;
         PermissionResult cachedResult = cachedPermissions.get(perm);
         if (cachedResult != null) {
             if (cachedResult.getTimestamp() + 600000 < System.currentTimeMillis()) { //10 minutes ttl
@@ -523,10 +566,12 @@ public class PlayerData implements IPlayerData, IPunishData {
         grants.add(grant);
         if (Bukkit.getPlayer(uuid) != null) loadPerms(Bukkit.getPlayer(uuid));
         save();
+        this.cachedFormattedNameNoNickNoTag = null;
     }
 
     public void loadPerms(Player player) {
         //Map<String,Boolean> bungeePermissions = new HashMap<>();
+        this.cachedFormattedNameNoNickNoTag = null;
         Set<Node> bungeePermissions = new HashSet<>();
         List<Grant> currentGrants = new ArrayList<>(this.grants);
         for (Grant grant : currentGrants) {
@@ -559,6 +604,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         this.bungeePerms.addAll(bungeePermissions);
 
         RankManager.getInstance().resetBungeePerms(player);
+        postPermissionLoad(player);
     }
 
     public String getPrefix() {

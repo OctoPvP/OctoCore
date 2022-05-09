@@ -53,6 +53,12 @@ public class PlayerDataPacket extends RedisPacket {
 
         player.setOp(data.get("op").getAsBoolean());
 
+
+        player.getMessageSettings().setIgnoreList(OctoCore.getGson().fromJson(data.get("ignoreList").getAsString(), GsonType.STRING_LIST));
+        player.getMessageSettings().setMessagesOff(data.get("messagesToggled").getAsBoolean());
+        player.getMessageSettings().setGlobalChat(data.get("globalChat").getAsBoolean());
+        player.getMessageSettings().setChatMention(data.get("chatMention").getAsBoolean()); //i know theres more but these are the only useful ones
+
         Set<UUID> tagsUUID = GsonSerializer.deserializeUUIDSet(data.get("allTags").getAsString());
         List<PlayerTag> tags = new ArrayList<>();
         for (UUID uuid1 : tagsUUID) {
@@ -67,6 +73,11 @@ public class PlayerDataPacket extends RedisPacket {
         player.setAddresses(StringUtils.getListFromString(data.get("addresses").getAsString()));
 
         player.setRankWeight(data.get("rankWeight").getAsInt());
+
+        player.setColoredName(data.get("coloredName").getAsString());
+
+        if (data.has("lastMessaged"))
+            player.setLastMessaged(UUID.fromString(data.get("lastMessaged").getAsString()));
     }
 
     @Override

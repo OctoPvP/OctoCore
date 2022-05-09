@@ -101,6 +101,9 @@ public enum Permission {
 
     TAG_ADMIN_MENU("octocore.command.tagadmin"),
 
+    IGNORE_BYPASS("octocore.ignore.bypass"),
+    SOCIAL_SPY("octocore.socialspy"),
+
     TEST("test");
     private final String node;
 

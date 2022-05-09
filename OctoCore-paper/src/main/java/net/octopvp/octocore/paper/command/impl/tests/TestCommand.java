@@ -29,6 +29,17 @@ import java.util.List;
 public class TestCommand extends BaseCommand {
     private static final String perm = PermissionUtil.fromEnum(Permission.COMMAND_NICK);
 
+    @Command(name = "settestmeta", description = "Sets test meta", playerOnly = true)
+    public CommandResult setTest(Sender sender, String[] args) {
+        PlayerData data = PlayerManager.getInstance().getData(sender.getPlayer());
+        if (args.length == 1) {
+            data.getMetaData().put("abc", args[0]);
+        } else {
+            sender.sendMessage("Meta: " + data.getMetaData().get("abc"));
+        }
+        return CommandResult.SUCCESS;
+    }
+
     @Command(name = "test", description = "test", aliases = {"test1", "test2"}, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         PlayerData data = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
