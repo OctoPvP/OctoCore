@@ -201,7 +201,9 @@ public enum Lang {
     IGNORE_LIST_HEADER("&bYou're ignoring these players:"),
     IGNORE_LIST_ENTRY("&7 - &e%1"),
     NOT_IGNORING_ANYONE("&cYou're not ignoring anyone!"),
-    ;
+
+    TOGGLE_ON("&aToggled %1 ON!"),
+    TOGGLE_OFF("&aToggled %1 &cOFF");
     private final String msg;
 
     Lang(String msg) {

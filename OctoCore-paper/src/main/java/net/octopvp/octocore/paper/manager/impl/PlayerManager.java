@@ -205,5 +205,4 @@ public class PlayerManager extends Manager {
         data.setFullJoined(true);
         RankManager.getInstance().resetBungeePerms(player);
     }
-
 }

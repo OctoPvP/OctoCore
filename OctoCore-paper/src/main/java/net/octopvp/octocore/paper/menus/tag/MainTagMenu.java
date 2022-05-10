@@ -102,7 +102,7 @@ public class MainTagMenu extends Menu {
         }
     }
 
-    public class PlaceHolderButton extends PlaceholderButton {
+    private class PlaceHolderButton extends PlaceholderButton {
 
         @Override
         public int[] getSlots() {

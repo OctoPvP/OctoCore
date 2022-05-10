@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.utils.menu.buttons;
 
 import net.octopvp.octocore.common.object.QuadConsumer;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public abstract class Button {
                 .findFirst().orElse(null) != null;
     }
 
-    public static ItemBuilder GLASS_BUILDER = new ItemBuilder(Material.STAINED_GLASS_PANE).durability((short) 7);
+    public static ItemBuilder GLASS_BUILDER = new ItemBuilder(Material.STAINED_GLASS_PANE).name(CC.GRAY).durability((short) 7);
     public static ItemStack GLASS = GLASS_BUILDER.build();
 
     public static Button getGlass(int slot) {

@@ -8,6 +8,7 @@ import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
+import net.octopvp.octocore.paper.utils.SoundUtil;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -41,6 +42,9 @@ public class MessagePacket extends RedisPacket {
                 player.sendMessage(Lang.MSG_PLAYER.getMsg(from, message));
                 PlayerData d = PlayerManager.getInstance().getData(player);
                 if (d != null) {
+                    if (d.getMessageSettings().isSoundsEnabled()) {
+                        SoundUtil.playPing(player);
+                    }
                     d.setLastMessaged(fromId);
                 }
                 continue;

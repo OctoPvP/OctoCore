@@ -176,7 +176,6 @@ public class PlayerData implements IPlayerData, IPunishData {
         this.messageSettings.getIgnoreList().clear();
         this.messageSettings.setSoundsEnabled(document.getBoolean("sounds"));
         this.messageSettings.setGlobalChat(document.getBoolean("globalChat"));
-        this.messageSettings.setChatMention(document.getBoolean("chatMention"));
         this.messageSettings.setIgnoreList(gson.fromJson(document.getString("ignoreList"), GsonType.STRING_LIST));
 
         this.messageSettings.getIgnoreList().removeIf(u -> u == null || u.isEmpty() || u.equalsIgnoreCase(this.name));
@@ -273,7 +272,6 @@ public class PlayerData implements IPlayerData, IPunishData {
         document.put("ignoreList", OctoCore.getGson().toJson(this.messageSettings.getIgnoreList(), GsonType.STRING_LIST));
 
         document.put("globalChat", messageSettings.isGlobalChat());
-        document.put("chatMention", messageSettings.isChatMention());
         document.put("sounds", messageSettings.isSoundsEnabled());
         document.put("messagesOff", messageSettings.isMessagesOff());
 
@@ -300,6 +298,8 @@ public class PlayerData implements IPlayerData, IPunishData {
 
         if (hasPermission(Permission.SEND_JOIN_MESSAGE.getNode()) && joinAlert)
             new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName()).send();
+
+        updateTime(player);
     }
 
     public void postPermissionLoad(Player player) {
@@ -369,6 +369,25 @@ public class PlayerData implements IPlayerData, IPunishData {
         this.alts.addAll(alts);
     }
 
+    public void updateTime(Player player) {
+        switch (worldTime) {
+            case DEFAULT:
+                player.resetPlayerTime();
+                return;
+            case SUNRISE:
+                player.setPlayerTime(WorldTime.SUNRISE.getTime(), false);
+                break;
+            case DAY:
+                player.setPlayerTime(WorldTime.DAY.getTime(), false);
+                break;
+            case SUNSET:
+                player.setPlayerTime(WorldTime.SUNSET.getTime(), false);
+                break;
+            case NIGHT:
+                player.setPlayerTime(WorldTime.NIGHT.getTime(), false);
+                break;
+        }
+    }
 
     public String requestName() {
         return Bukkit.getOfflinePlayer(uuid).getName();

@@ -57,7 +57,6 @@ public class PlayerDataPacket extends RedisPacket {
         player.getMessageSettings().setIgnoreList(OctoCore.getGson().fromJson(data.get("ignoreList").getAsString(), GsonType.STRING_LIST));
         player.getMessageSettings().setMessagesOff(data.get("messagesToggled").getAsBoolean());
         player.getMessageSettings().setGlobalChat(data.get("globalChat").getAsBoolean());
-        player.getMessageSettings().setChatMention(data.get("chatMention").getAsBoolean()); //i know theres more but these are the only useful ones
 
         Set<UUID> tagsUUID = GsonSerializer.deserializeUUIDSet(data.get("allTags").getAsString());
         List<PlayerTag> tags = new ArrayList<>();

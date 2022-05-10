@@ -1,8 +1,5 @@
 package net.octopvp.octocore.paper.utils.menu.buttons;
 
-import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.utils.ItemBuilder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,7 +10,8 @@ public class PlaceholderButton extends Button {
 
     @Override
     public ItemStack getItem(Player player) {
-        return new ItemBuilder(Material.STAINED_GLASS_PANE).durability((short) 7).name(CC.GRAY).build();
+        return GLASS;
+        //return new ItemBuilder(Material.STAINED_GLASS_PANE).durability((short) 7).name(CC.GRAY).build();
     }
 
     @Override

@@ -9,10 +9,13 @@ import net.octopvp.octocore.paper.manager.impl.FilterManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.msg.Lang;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.Iterator;
 
 public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
@@ -72,5 +75,13 @@ public class ChatListener implements Listener {
             e.getPlayer().sendMessage(Lang.PDATA_DID_NOT_LOAD.getMsg());
         }
         e.setFormat(format);
+
+        Iterator<Player> iterator = e.getRecipients().iterator();
+        while (iterator.hasNext()) {
+            Player player = iterator.next();
+            PlayerData data = PlayerManager.getInstance().getData(player.getUniqueId());
+            if (!data.getMessageSettings().isGlobalChat())
+                iterator.remove();
+        }
     }
 }

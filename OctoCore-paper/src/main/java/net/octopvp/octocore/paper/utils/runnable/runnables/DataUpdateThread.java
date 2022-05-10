@@ -81,7 +81,6 @@ public class DataUpdateThread extends Thread {
                     .add("messagesToggled", playerData.getMessageSettings().isMessagesOff())
                     .add("ignoreList", OctoCore.getGson().toJson(playerData.getMessageSettings().getIgnoreList(), GsonType.STRING_LIST))
                     .add("globalChat", playerData.getMessageSettings().isGlobalChat())
-                    .add("chatMention", playerData.getMessageSettings().isChatMention())
                     .add("coloredName", playerData.getCachedFormattedNameNoNickNoTag());
 
             if (player != null) {
