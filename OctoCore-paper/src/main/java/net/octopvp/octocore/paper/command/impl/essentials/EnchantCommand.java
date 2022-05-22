@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.List;
 
-public class EnchantCommand extends BaseCommand {
+public class EnchantCommand {
     @Command(name = "enchant", aliases = {"ench", "e"}, playerOnly = true, permission = Permission.ENCHANT, usage = "<enchant> [level>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1) {

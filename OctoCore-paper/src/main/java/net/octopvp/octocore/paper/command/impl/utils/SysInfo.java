@@ -3,15 +3,13 @@ package net.octopvp.octocore.paper.command.impl.utils;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Utilities;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
 
 import java.util.Arrays;
-import java.util.List;
 
-public class SysInfo extends BaseCommand {
+public class SysInfo {
     @Command(name = "sysinfo", permission = Permission.SYS_INFO, cooldown = 1)
     public CommandResult execute(Sender sender, String[] args) {
         StringBuilder msg = new StringBuilder(CC.SEPARATOR + CC.NL);
@@ -30,8 +28,5 @@ public class SysInfo extends BaseCommand {
         return CommandResult.SUCCESS;
     }
 
-    @Override
-    public List<String> tabComplete(Sender sender, String[] args) {
-        return null;
-    }
+
 }

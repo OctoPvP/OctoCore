@@ -4,7 +4,6 @@ import com.mongodb.client.model.Filters;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -19,7 +18,7 @@ import org.bukkit.OfflinePlayer;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class StaffRollBackCommand extends BaseCommand {
+public class StaffRollBackCommand {
     @Command(name = "staffrollback", permission = Permission.PUNISHMENT_STAFFROLLBACK)
     public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {

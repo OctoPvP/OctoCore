@@ -5,7 +5,6 @@ import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataUpdatePacket;
@@ -18,7 +17,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
 
-public class RemoveTagCommand extends BaseCommand {
+public class RemoveTagCommand {
     @Command(name = "removetag", permission = Permission.ADMIN, cooldown = 1, usage = "<player> [tag]")
     public CommandResult execute(Sender sender, String[] args) {
         if (!(args.length >= 2)) {

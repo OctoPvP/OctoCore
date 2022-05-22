@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class GiveCommand extends BaseCommand {
+public class GiveCommand {
     @Command(name = "give", aliases = {"i", "g", "item"}, permission = Permission.GIVE, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1) {

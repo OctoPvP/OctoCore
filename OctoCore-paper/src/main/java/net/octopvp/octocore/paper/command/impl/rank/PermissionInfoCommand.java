@@ -3,7 +3,6 @@ package net.octopvp.octocore.paper.command.impl.rank;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -12,7 +11,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PermissionInfoCommand extends BaseCommand {
+public class PermissionInfoCommand {
     @Command(name = "haspermission", aliases = {"permissioninfo", "perminfo"}, permission = Permission.COMMAND_PERMISSION_INFO, usage = "<permission> [player]", description = "Shows information about a player's permission")
     public CommandResult execute(Sender sender, String[] args) {
         String target = "", permission = "";

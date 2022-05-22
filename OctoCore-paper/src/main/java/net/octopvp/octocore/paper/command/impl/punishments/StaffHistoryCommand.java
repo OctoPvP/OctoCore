@@ -1,7 +1,6 @@
 package net.octopvp.octocore.paper.command.impl.punishments;
 
 import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -13,7 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-public class StaffHistoryCommand extends BaseCommand {
+public class StaffHistoryCommand {
 
     @Command(name = "staffhistory", aliases = {"staffhist", "staffh"}, usage = "<player>", playerOnly = true, permission = Permission.PUNISHMENT_STAFF_HISTORY)
     public CommandResult execute(Sender sender, String[] args) {

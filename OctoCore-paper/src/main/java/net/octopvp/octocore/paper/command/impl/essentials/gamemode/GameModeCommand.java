@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GameModeCommand extends BaseCommand {
+public class GameModeCommand {
     private static final HashMap<String, GameMode> gameModes = new HashMap<>();
 
     static {

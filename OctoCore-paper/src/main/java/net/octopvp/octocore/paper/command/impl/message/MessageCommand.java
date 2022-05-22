@@ -3,7 +3,6 @@ package net.octopvp.octocore.paper.command.impl.message;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.MessagePacket;
@@ -22,7 +21,7 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class MessageCommand extends BaseCommand {
+public class MessageCommand {
     @Command(name = "message", playerOnly = true, aliases = {"msg", "w", "m", "tell", "t"}, usage = "<user> <message>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length < 2) {

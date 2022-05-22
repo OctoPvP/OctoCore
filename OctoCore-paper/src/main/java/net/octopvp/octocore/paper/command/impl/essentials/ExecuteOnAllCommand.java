@@ -10,7 +10,7 @@ import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 
-public class ExecuteOnAllCommand extends BaseCommand {
+public class ExecuteOnAllCommand {
     @Command(name = "executeonall", permission = Permission.EXECUTE_ON_ALL_SERVERS, cooldown = 3, aliases = {"globalexecute"}, usage = "<command>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 0) {

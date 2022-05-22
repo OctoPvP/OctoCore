@@ -9,7 +9,7 @@ import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 
-public class GStopCommand extends BaseCommand {
+public class GStopCommand {
     @Command(name = "gstop", permission = Permission.ADMIN)
     public CommandResult execute(Sender sender, String[] args) {
         String command = "stop";

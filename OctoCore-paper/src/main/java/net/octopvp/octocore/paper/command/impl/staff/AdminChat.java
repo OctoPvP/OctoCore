@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.command.impl.staff;
 
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.staff.AdminChatPacket;
@@ -11,7 +10,7 @@ import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 
-public class AdminChat extends BaseCommand {
+public class AdminChat {
     @Command(name = "adminchat", aliases = {"ac"}, permission = Permission.ADMINCHAT, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         PlayerData playerData = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());

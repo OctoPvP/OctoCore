@@ -13,7 +13,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
-public class UnMuteCommand extends BaseCommand {
+public class UnMuteCommand {
 
     @Command(name = "unmute", usage = "<player> <reason>", permission = Permission.PUNISHMENT_UNMUTE)
     public CommandResult execute(Sender sender, String[] args) {

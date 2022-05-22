@@ -7,7 +7,7 @@ import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.objects.OctoPermissible;
 import net.octopvp.octocore.paper.utils.Sender;
 
-public class UseOldPermissibleCommand extends BaseCommand {
+public class UseOldPermissibleCommand {
     @Command(name = "useoldpermissible", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         if (sender.getPlayer().getPermissibleBase() instanceof OctoPermissible) {

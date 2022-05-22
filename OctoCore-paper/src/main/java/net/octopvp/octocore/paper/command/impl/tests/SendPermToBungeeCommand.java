@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.command.impl.tests;
 
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
@@ -12,7 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class SendPermToBungeeCommand extends BaseCommand {
+public class SendPermToBungeeCommand {
     @Command(name = "sendpermtobungee", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         RankManager.getInstance().resetBungeePerms(sender.getPlayer());

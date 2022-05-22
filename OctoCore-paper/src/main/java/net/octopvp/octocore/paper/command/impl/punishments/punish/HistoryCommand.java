@@ -12,7 +12,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bson.Document;
 
-public class HistoryCommand extends BaseCommand {
+public class HistoryCommand {
 
     @Command(name = "history", permission = Permission.PUNISHMENT_HISTORY, aliases = {"c", "cpunishments", "checkpunishments", "hist", "check"})
     public CommandResult execute(Sender sender, String[] args) {

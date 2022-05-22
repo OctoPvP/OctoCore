@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.command.impl.staff;
 
 import net.octopvp.octocore.common.object.Disable;
 import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.NickManager;
@@ -13,10 +12,8 @@ import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 @Disable
-public class NickCommand extends BaseCommand {
+public class NickCommand {
     @Command(name = "nick", description = "nick", usage = "[name]", permission = Permission.COMMAND_NICK)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1) {
@@ -44,8 +41,5 @@ public class NickCommand extends BaseCommand {
         return CommandResult.INVALID_ARGS;
     }
 
-    @Override
-    public List<String> tabComplete(Sender sender, String[] args) {
-        return null;
-    }
+
 }

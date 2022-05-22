@@ -1,7 +1,6 @@
 package net.octopvp.octocore.paper.command.impl.tests;
 
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.autoinit.SongManager;
@@ -12,7 +11,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 
 import java.io.File;
 
-public class PlaySongCommand extends BaseCommand {
+public class PlaySongCommand {
     @Command(name = "playsong", aliases = {"playnbssong"}, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1) {

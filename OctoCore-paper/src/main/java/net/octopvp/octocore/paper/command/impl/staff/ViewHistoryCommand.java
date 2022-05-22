@@ -6,7 +6,7 @@ import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
 
-public class ViewHistoryCommand extends BaseCommand { //FIXME fix o7
+public class ViewHistoryCommand { //FIXME fix o7
     @Command(name = "viewhistory", aliases = {"vh", "h"}, permission = Permission.VIEW_HISTORY, playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1) {

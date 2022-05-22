@@ -3,7 +3,6 @@ package net.octopvp.octocore.paper.command.impl.utils;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
@@ -11,7 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class LoopCommand extends BaseCommand {
+public class LoopCommand {
     @Command(name = "loop", permission = Permission.LOOP, usage = "<times> <ticks delay> <command to execute>")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length <= 2) {

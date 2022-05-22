@@ -3,7 +3,6 @@ package net.octopvp.octocore.paper.command.impl.tests;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.object.ServerContext;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -26,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestCommand extends BaseCommand {
+public class TestCommand {
     private static final String perm = PermissionUtil.fromEnum(Permission.COMMAND_NICK);
 
     @Command(name = "settestmeta", description = "Sets test meta", playerOnly = true)

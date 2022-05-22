@@ -16,7 +16,7 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.entity.Player;
 
-public class WarnCommand extends BaseCommand {
+public class WarnCommand {
 
     @Command(name = "warn", permission = Permission.PUNISHMENT_WARN)
     public CommandResult execute(Sender sender, String[] args) {

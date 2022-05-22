@@ -1,6 +1,5 @@
 package net.octopvp.octocore.paper.command.impl.tests;
 
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
@@ -11,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WonkyChestCommand extends BaseCommand {
+public class WonkyChestCommand {
     @Command(name = "wonkychest")
     public CommandResult execute(Sender sender, String[] args) {
         new WonkyMenu().open(sender);

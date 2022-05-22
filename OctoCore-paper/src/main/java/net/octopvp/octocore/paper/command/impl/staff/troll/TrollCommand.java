@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
@@ -12,7 +11,7 @@ import net.octopvp.octocore.paper.utils.trolls.CrashClient;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class TrollCommand extends BaseCommand {
+public class TrollCommand {
     @Command(name = "Troll", playerOnly = true, permission = Permission.TEST)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length >= 1) {

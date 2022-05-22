@@ -1,7 +1,6 @@
 package net.octopvp.octocore.paper.command.impl.tests;
 
 import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
@@ -10,7 +9,7 @@ import net.octopvp.octocore.paper.objects.enums.RankType;
 import net.octopvp.octocore.paper.utils.Sender;
 import org.bukkit.ChatColor;
 
-public class CreateOwnerRankCommand extends BaseCommand {
+public class CreateOwnerRankCommand {
     @Command(name = "createtestrank", permission = Permission.ADMIN)
     public CommandResult execute(Sender sender, String[] args) {
         RankBuilder builder = new RankBuilder("Owner")

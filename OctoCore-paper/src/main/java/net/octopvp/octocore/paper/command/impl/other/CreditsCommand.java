@@ -3,12 +3,11 @@ package net.octopvp.octocore.paper.command.impl.other;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
 
-public class CreditsCommand extends BaseCommand {
+public class CreditsCommand {
     @Command(name = "credits", playerOnly = true)
     public CommandResult execute(Sender sender, String[] args) {
         //https://github.com/mcardy/CommandFramework/

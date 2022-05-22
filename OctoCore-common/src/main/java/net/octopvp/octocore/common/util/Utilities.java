@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class Utilities {
     private static SystemInfo systemInfo;
@@ -92,13 +93,18 @@ public class Utilities {
         return Runtime.getRuntime().maxMemory() / 1024L / 1024L;
     }
 
+    private static final Pattern UUID_DASH_PATTERN = Pattern.compile("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)");
+
     public static UUID addDashes(String unformatted) { // ty https://stackoverflow.com/questions/18986712/creating-a-uuid-from-a-string-with-no-dashes
+        /*
         return UUID.fromString(
                 unformatted
                         .replaceFirst(
-                                "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"
+                                "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)" , "$1-$2-$3-$4-$5"
                         )
         );
+         */
+        return UUID.fromString(UUID_DASH_PATTERN.matcher(unformatted).replaceFirst("$1-$2-$3-$4-$5"));
     }
 
     /**

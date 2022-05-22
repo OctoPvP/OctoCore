@@ -10,7 +10,7 @@ import net.octopvp.octocore.paper.menus.grant.MainGrantMenu;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 
-public class GrantCommand extends BaseCommand {
+public class GrantCommand {
     @Command(name = "grant", permission = Permission.GRANT)
     public CommandResult execute(Sender sender, String[] args) {
         return e1(sender, args);

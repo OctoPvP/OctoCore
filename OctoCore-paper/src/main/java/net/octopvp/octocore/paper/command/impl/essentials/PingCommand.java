@@ -2,7 +2,6 @@ package net.octopvp.octocore.paper.command.impl.essentials;
 
 import net.octopvp.octocore.common.object.Permission;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.BaseCommand;
 import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
@@ -10,9 +9,7 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class PingCommand extends BaseCommand {
+public class PingCommand {
     @Command(name = "ping", description = "pong!")
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1) {
@@ -38,8 +35,5 @@ public class PingCommand extends BaseCommand {
         return CommandResult.SUCCESS;
     }
 
-    @Override
-    public List<String> tabComplete(Sender sender, String[] args) {
-        return null;
-    }
+
 }
