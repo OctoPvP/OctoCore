@@ -2,7 +2,7 @@ package net.octopvp.octocore.paper.database.redis.packets.staff;
 
 import com.google.gson.JsonObject;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
@@ -21,7 +21,7 @@ public class AuditLogPacket extends RedisPacket {
             String command = data.get("command").getAsString();
 
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.hasPermission(Permission.RECEIVE_AUDIT_WORLDEDIT.getNode())) {
+                if (p.hasPermission(Permissions.RECEIVE_AUDIT_WORLDEDIT.getNode())) {
                     //TODO finish audit log
                 }
             }

@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.player;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
@@ -53,7 +53,7 @@ public class UndoPunishmentPacket extends RedisPacket {
         Bukkit.getConsoleSender().sendMessage(CC.translate(clickable.getText()));
 
         if (data.get("silent").getAsBoolean()) {
-            for (Player player : Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission(Permission.PUNISHMENT_SEE_SILENT.getNode())).collect(Collectors.toList())) {
+            for (Player player : Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission(Permissions.PUNISHMENT_SEE_SILENT.getNode())).collect(Collectors.toList())) {
                 String reason = data.get("reason").getAsString().trim();
                 String currentMessage = clickable.getText();
                 Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason), null);
@@ -68,7 +68,7 @@ public class UndoPunishmentPacket extends RedisPacket {
             String currentMessage = clickable.getText();
             Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason), null);
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (player.hasPermission(Permission.PUNISHMENT_SEE_SILENT.getNode())) {
+                if (player.hasPermission(Permissions.PUNISHMENT_SEE_SILENT.getNode())) {
                     click.sendToPlayer(player);
                 } else {
                     clickable.sendToPlayer(player);

@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.listeners;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.staff.AdminChatPacket;
 import net.octopvp.octocore.paper.database.redis.packets.staff.StaffChatPacket;
@@ -27,7 +27,7 @@ public class ChatListener implements Listener {
                 playerData.setAdminChat(false);
                 e.getPlayer().sendMessage(Lang.ADMIN_CHAT_DISABLED.toString());
             }
-            if (e.getPlayer().hasPermission(Permission.STAFFCHAT.getNode())) {
+            if (e.getPlayer().hasPermission(Permissions.STAFFCHAT.getNode())) {
                 new StaffChatPacket(e.getPlayer().getName(), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId());
                 e.setCancelled(true);
                 return;
@@ -41,7 +41,7 @@ public class ChatListener implements Listener {
                 playerData.setStaffChat(false);
                 e.getPlayer().sendMessage(Lang.STAFF_CHAT_DISABLED.toString());
             }
-            if (e.getPlayer().hasPermission(Permission.ADMINCHAT.getNode())) {
+            if (e.getPlayer().hasPermission(Permissions.ADMINCHAT.getNode())) {
                 new AdminChatPacket(e.getPlayer().getName(), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId());
                 e.setCancelled(true);
                 return;
@@ -62,14 +62,14 @@ public class ChatListener implements Listener {
             return;
         }
          */
-        if (FilterManager.containsUnicode(e.getMessage()) && !e.getPlayer().hasPermission(Permission.USE_UNICODE_CHAT.getNode())) {
+        if (FilterManager.containsUnicode(e.getMessage()) && !e.getPlayer().hasPermission(Permissions.USE_UNICODE_CHAT.getNode())) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(Lang.NOT_ALLOWED_TO_USE_UNICODE.getMsg());
             return;
         }
         playerData.setLastMessage(e.getMessage());
         //String format = ChatManager.formatChat(e.getPlayer().getUniqueId(),e.getPlayer().getDisplayName(),FilterManager.process(e.getMessage(),e.getPlayer()),e.getPlayer().hasPermission(Permission.USE_COLOR_CHAT.getNode()));
-        String format = ChatManager.formatChat(e.getPlayer(), FilterManager.process(e.getMessage(), e.getPlayer()), e.getPlayer().hasPermission(Permission.USE_COLOR_CHAT.getNode()));
+        String format = ChatManager.formatChat(e.getPlayer(), FilterManager.process(e.getMessage(), e.getPlayer()), e.getPlayer().hasPermission(Permissions.USE_COLOR_CHAT.getNode()));
         if (format == null) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(Lang.PDATA_DID_NOT_LOAD.getMsg());

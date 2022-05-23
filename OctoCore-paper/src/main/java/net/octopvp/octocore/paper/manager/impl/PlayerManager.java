@@ -5,7 +5,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import net.octopvp.octocore.common.object.ObjectConsumer;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
@@ -181,7 +181,7 @@ public class PlayerManager extends Manager {
         BukkitTask task = Tasks.runAsyncLater(() -> {
             GlobalPlayer globalPlayer = ServerManager.getInstance().getGlobalPlayer(name);
 
-            if (globalPlayer != null && globalPlayer.isLeaving() && globalPlayer.hasPermission(Permission.SEND_LEAVE_MESSAGE.getNode())) {
+            if (globalPlayer != null && globalPlayer.isLeaving() && globalPlayer.hasPermission(Permissions.SEND_LEAVE_MESSAGE.getNode())) {
                 new StaffLeavePacket(globalPlayer.getName(), globalPlayer.getServer() != null ? globalPlayer.getServer() : "Unknown").send();
             }
             quitting.remove(uuid);

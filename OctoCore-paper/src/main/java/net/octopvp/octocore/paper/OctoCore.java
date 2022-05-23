@@ -9,6 +9,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import net.octopvp.commander.Commander;
 import net.octopvp.commander.bukkit.BukkitCommander;
+import net.octopvp.commander.exception.InvalidArgsException;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
@@ -20,12 +21,16 @@ import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.Utilities;
+import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.command.providers.GameModeProvider;
 import net.octopvp.octocore.paper.command.providers.PlayerDataProvider;
+import net.octopvp.octocore.paper.command.providers.SenderProvider;
 import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.impl.*;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.setup.*;
 import net.octopvp.octocore.paper.utils.PacketUtil;
+import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorHandling;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
@@ -39,6 +44,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public final class OctoCore extends JavaPlugin {
@@ -177,8 +183,9 @@ public final class OctoCore extends JavaPlugin {
                 .registerDependency(ServerManager.class, serverManager)
 
                 .registerProvider(PlayerData.class, new PlayerDataProvider())
+                .registerProvider(Sender.class, new SenderProvider())
+                .registerProvider(GameModeProvider.class, new GameModeProvider())
 
-                /*
                 .registerCommandPostProcessor((ctx,obj)-> {
                     if (obj instanceof CommandResult) {
                         CommandResult result = (CommandResult) obj;
@@ -195,7 +202,6 @@ public final class OctoCore extends JavaPlugin {
                         }
                     }
                 })
-                 */
         ;
 
 

@@ -1,16 +1,18 @@
 package net.octopvp.octocore.paper.command.impl.utils;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Utilities;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
 
 import java.util.Arrays;
 
 public class SysInfo {
-    @Command(name = "sysinfo", permission = Permission.SYS_INFO, cooldown = 1)
+    @Command(name = "sysinfo")
+    @Permission(Permissions.SYS_INFO)
     public CommandResult execute(Sender sender, String[] args) {
         StringBuilder msg = new StringBuilder(CC.SEPARATOR + CC.NL);
         msg.append(CC.GREEN + "OS: " + Utilities.getSystemInfo().getOperatingSystem().getFamily()).append(CC.NL);
@@ -27,6 +29,4 @@ public class SysInfo {
         sender.sendMessage(msg.toString());
         return CommandResult.SUCCESS;
     }
-
-
 }

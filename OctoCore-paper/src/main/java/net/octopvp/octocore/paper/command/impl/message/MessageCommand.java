@@ -1,9 +1,10 @@
 package net.octopvp.octocore.paper.command.impl.message;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.bukkit.annotation.PlayerOnly;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.MessagePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -22,7 +23,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class MessageCommand {
-    @Command(name = "message", playerOnly = true, aliases = {"msg", "w", "m", "tell", "t"}, usage = "<user> <message>")
+    @Command(name = "message", aliases = {"msg", "w", "m", "tell", "t"}, usage = "<user> <message>")
+    @PlayerOnly
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length < 2) {
             return CommandResult.INVALID_ARGS;
@@ -35,7 +37,7 @@ public class MessageCommand {
         if (target == null) {
             return CommandResult.PLAYER_NOT_FOUND;
         }
-        boolean ignoreBypass = sender.hasPermission(Permission.IGNORE_BYPASS);
+        boolean ignoreBypass = sender.hasPermission(Permissions.IGNORE_BYPASS);
 
         if (senderPlayer.getUuid().equals(target.getUuid())) {
             sender.sendMessage(Lang.CANNOT_MESSAGE_SELF);
@@ -63,7 +65,8 @@ public class MessageCommand {
         return CommandResult.SUCCESS;
     }
 
-    @Command(name = "reply", playerOnly = true, aliases = "r")
+    @Command(name = "reply", aliases = "r")
+    @PlayerOnly
     public CommandResult executeReply(Sender sender, String[] args) {
         if (args.length < 1) {
             return CommandResult.INVALID_ARGS;
@@ -82,7 +85,7 @@ public class MessageCommand {
             return CommandResult.PLAYER_NOT_FOUND;
         }
         GlobalPlayer senderPlayer = ServerManager.getInstance().getGlobalPlayer(sender.getUUID());
-        boolean ignoreBypass = sender.hasPermission(Permission.IGNORE_BYPASS);
+        boolean ignoreBypass = sender.hasPermission(Permissions.IGNORE_BYPASS);
         if (senderPlayer.getUuid().equals(target.getUuid())) {
             sender.sendMessage(Lang.CANNOT_MESSAGE_SELF);
             return CommandResult.SUCCESS;
@@ -108,7 +111,8 @@ public class MessageCommand {
         return CommandResult.SUCCESS;
     }
 
-    @Command(name = "ignore", playerOnly = true, description = "Ignore a player", usage = "<add/remove/list>")
+    @Command(name = "ignore", description = "Ignore a player", usage = "<add/remove/list>")
+    @PlayerOnly
     public CommandResult executeIgnore(Sender sender, String[] args) {
         if (args.length < 1) {
             return CommandResult.INVALID_ARGS;

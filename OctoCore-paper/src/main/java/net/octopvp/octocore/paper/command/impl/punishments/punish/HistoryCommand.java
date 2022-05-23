@@ -1,9 +1,9 @@
 package net.octopvp.octocore.paper.command.impl.punishments.punish;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.menus.HistoryMenu;
@@ -13,8 +13,8 @@ import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bson.Document;
 
 public class HistoryCommand {
-
-    @Command(name = "history", permission = Permission.PUNISHMENT_HISTORY, aliases = {"c", "cpunishments", "checkpunishments", "hist", "check"})
+    @Command(name = "history", aliases = {"c", "cpunishments", "checkpunishments", "hist", "check"})
+    @Permission(Permissions.PUNISHMENT_HISTORY)
     public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {
             if (args.length == 0) {

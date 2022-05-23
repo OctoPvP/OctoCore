@@ -1,8 +1,9 @@
 package net.octopvp.octocore.paper.command.impl.punishments.punish;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
@@ -12,8 +13,8 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 public class BlacklistCommand {
-
-    @Command(name = "blacklist", permission = Permission.PUNISHMENT_BLACKLIST, aliases = {"bl", "blplayer", "blacklistplayer"})
+    @Command(name = "blacklist", aliases = {"bl", "blplayer", "blacklistplayer"})
+    @Permission(Permissions.PUNISHMENT_BLACKLIST)
     public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {
             if (args.length < 2) {

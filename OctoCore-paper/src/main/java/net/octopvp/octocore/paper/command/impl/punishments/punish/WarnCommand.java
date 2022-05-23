@@ -1,27 +1,23 @@
 package net.octopvp.octocore.paper.command.impl.punishments.punish;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
-import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
-import org.bukkit.entity.Player;
 
 public class WarnCommand {
 
-    @Command(name = "warn", permission = Permission.PUNISHMENT_WARN)
+    @Command(name = "warn")
+    @Permission(Permissions.PUNISHMENT_WARN)
     public CommandResult execute(Sender sender, String[] args) {
-
-
         Tasks.runAsync(() -> {
             if (args.length < 2) {
                 sender.sendMessage(CC.translate("&cUsage: /warn <player> [duration] <reason> [-s]"));

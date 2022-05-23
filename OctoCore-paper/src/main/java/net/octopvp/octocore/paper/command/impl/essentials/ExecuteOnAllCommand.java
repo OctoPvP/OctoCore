@@ -1,9 +1,10 @@
 package net.octopvp.octocore.paper.command.impl.essentials;
 
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Cooldown;
+import net.octopvp.commander.annotation.Permission;
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.server.GlobalCommandPacket;
 import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
@@ -11,7 +12,9 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 
 public class ExecuteOnAllCommand {
-    @Command(name = "executeonall", permission = Permission.EXECUTE_ON_ALL_SERVERS, cooldown = 3, aliases = {"globalexecute"}, usage = "<command>")
+    @Command(name = "executeonall", aliases = {"globalexecute"}, usage = "<command>")
+    @Permission(Permissions.EXECUTE_ON_ALL_SERVERS)
+    @Cooldown(3)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 0) {
             return CommandResult.INVALID_ARGS;

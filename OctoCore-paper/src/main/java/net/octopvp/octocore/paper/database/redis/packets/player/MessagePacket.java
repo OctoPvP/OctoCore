@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.player;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -50,7 +50,7 @@ public class MessagePacket extends RedisPacket {
                 continue;
             }
 
-            if (player.hasPermission(Permission.SOCIAL_SPY.getNode())) {
+            if (player.hasPermission(Permissions.SOCIAL_SPY.getNode())) {
                 PlayerData d = PlayerManager.getInstance().getData(player.getUniqueId());
                 if (d.isSocialSpy()) {
                     player.sendMessage(Lang.SOCIAL_SPY.getMsg(from, to, message));

@@ -1,7 +1,7 @@
 package net.octopvp.octocore.paper.menus.grant;
 
 import lombok.AllArgsConstructor;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
@@ -42,7 +42,7 @@ public class AddGrantMenu extends PaginatedMenu {
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> buttons = new ArrayList<>();
-        RankManager.getInstance().getRanks().stream().sorted(Comparator.comparingInt(Rank::getWeight).reversed()).forEach(rank -> buttons.add(new RankButton(rank, data)));
+        RankManager.getRanks().stream().sorted(Comparator.comparingInt(Rank::getWeight).reversed()).forEach(rank -> buttons.add(new RankButton(rank, data)));
         return buttons;
     }
 
@@ -111,7 +111,7 @@ public class AddGrantMenu extends PaginatedMenu {
                 return;
             }
             PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-            if (!RankManager.getInstance().canGrant(playerData, rankData) && !player.hasPermission(Permission.GRANT_ALL.toString())) {
+            if (!RankManager.getInstance().canGrant(playerData, rankData) && !player.hasPermission(Permissions.GRANT_ALL)) {
                 player.sendMessage(Lang.GRANT_CANNOT_GRANT_HIGHER_RANK.getMsg());
                 return;
             }

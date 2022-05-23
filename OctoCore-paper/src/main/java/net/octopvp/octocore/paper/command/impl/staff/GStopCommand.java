@@ -1,8 +1,8 @@
 package net.octopvp.octocore.paper.command.impl.staff;
 
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.server.GlobalCommandPacket;
 import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
@@ -10,7 +10,8 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 
 public class GStopCommand {
-    @Command(name = "gstop", permission = Permission.ADMIN)
+    @Command(name = "gstop")
+    @Permission(Permissions.ADMIN)
     public CommandResult execute(Sender sender, String[] args) {
         String command = "stop";
         new GlobalCommandPacket(command).send();

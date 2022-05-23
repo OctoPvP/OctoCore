@@ -1,7 +1,8 @@
 package net.octopvp.octocore.paper.command.impl.punishments.undo;
 
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.Command;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.UndoPunishmentPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -13,7 +14,8 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 public class UnBanCommand {
-    @Command(name = "unban", permission = Permission.PUNISHMENT_UNBAN)
+    @Command(name = "unban")
+    @Permission(Permissions.PUNISHMENT_UNBAN)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length < 2) {
             return CommandResult.INVALID_ARGS;

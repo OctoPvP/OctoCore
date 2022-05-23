@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.listeners;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.objects.AuditLogEntry;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class CommandProcessEvent implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        if (event.getPlayer().hasPermission(Permission.LOG_WORLDEDIT.getNode()) && event.getMessage().startsWith("//")) {
+        if (event.getPlayer().hasPermission(Permissions.LOG_WORLDEDIT.getNode()) && event.getMessage().startsWith("//")) {
             HashMap<String, String> entries = new HashMap<>();
             entries.put("Player", event.getPlayer().getName());
             entries.put("Command", event.getMessage());

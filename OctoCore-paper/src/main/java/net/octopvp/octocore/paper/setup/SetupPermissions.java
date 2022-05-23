@@ -1,6 +1,6 @@
 package net.octopvp.octocore.paper.setup;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.OctoCore;
 import org.bukkit.Bukkit;
 
@@ -10,9 +10,9 @@ public class SetupPermissions implements Setup {
 
     @Override
     public void setup(OctoCore plugin) {
-        Permission[] permissions = Permission.values();
+        Permissions[] permissions = Permissions.values();
         List<String> perms = Bukkit.getPluginManager().getPermissionsString();
-        for (Permission permission : permissions) {
+        for (Permissions permission : permissions) {
             String node = permission.getNode();
             if (node == "") {
                 continue;

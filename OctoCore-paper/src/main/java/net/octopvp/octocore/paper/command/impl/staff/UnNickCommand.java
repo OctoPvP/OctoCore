@@ -1,9 +1,10 @@
 package net.octopvp.octocore.paper.command.impl.staff;
 
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Disable;
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.NickManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -15,7 +16,9 @@ import org.bukkit.entity.Player;
 
 @Disable
 public class UnNickCommand {
-    @Command(name = "unnick", description = "unnick", permission = Permission.COMMAND_UNNICK)
+    @Command(name = "unnick", description = "unnick")
+    @Permission(Permissions.COMMAND_UNNICK)
+    @PlayerOnly
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 0) {
             if (sender.getDisplayName() == sender.getName()) {
