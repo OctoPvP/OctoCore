@@ -181,7 +181,7 @@ public class PlayerManager extends Manager {
         BukkitTask task = Tasks.runAsyncLater(() -> {
             GlobalPlayer globalPlayer = ServerManager.getInstance().getGlobalPlayer(name);
 
-            if (globalPlayer != null && globalPlayer.isLeaving() && globalPlayer.hasPermission(Permissions.SEND_LEAVE_MESSAGE.getNode())) {
+            if (globalPlayer != null && globalPlayer.isLeaving() && globalPlayer.hasPermission(Permissions.SEND_LEAVE_MESSAGE)) {
                 new StaffLeavePacket(globalPlayer.getName(), globalPlayer.getServer() != null ? globalPlayer.getServer() : "Unknown").send();
             }
             quitting.remove(uuid);

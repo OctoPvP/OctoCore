@@ -51,7 +51,8 @@ public class PlayerDataPacket extends RedisPacket {
         player.setLastSeen(data.get("lastSeen").getAsLong());
         player.setLastActivity(data.get("lastActivity").getAsLong());
 
-        player.setOp(data.get("op").getAsBoolean());
+        if (data.has("op"))
+            player.setOp(data.get("op").getAsBoolean());
 
 
         player.getMessageSettings().setIgnoreList(OctoCore.getGson().fromJson(data.get("ignoreList").getAsString(), GsonType.STRING_LIST));

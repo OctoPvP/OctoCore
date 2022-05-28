@@ -27,7 +27,7 @@ public class PunishedJoinPacket extends RedisPacket {
             clickable = new Clickable(Lang.PUNISH_JOIN_ALERT.getMsg(name, type), Lang.PUNISH_JOIN_ALERT_HOVER.getMsg(expire, addedBy), "/history " + name);
         } else clickable = new Clickable(Lang.PUNISH_JOIN_ALERT.getMsg(name, type));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission(Permissions.PUNISHMENT_SEE_JOIN_ALERT.getNode())) {
+            if (player.hasPermission(Permissions.PUNISHMENT_SEE_JOIN_ALERT)) {
                 clickable.sendToPlayer(player);
             }
         }

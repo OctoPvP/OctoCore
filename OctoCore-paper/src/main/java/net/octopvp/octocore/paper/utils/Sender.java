@@ -1,7 +1,6 @@
 package net.octopvp.octocore.paper.utils;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.manager.impl.PlaceholderManager;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
@@ -72,15 +71,6 @@ public class Sender implements CommandSender {
     @Override
     public boolean hasPermission(String s) {
         return commandSender.hasPermission(s);
-    }
-
-    public boolean hasPermission(Permissions permission) {
-        return commandSender.hasPermission(permission.getNode());
-    }
-
-    @Override
-    public boolean hasPermission(Permission permission) {
-        return commandSender.hasPermission(permission);
     }
 
     @Override

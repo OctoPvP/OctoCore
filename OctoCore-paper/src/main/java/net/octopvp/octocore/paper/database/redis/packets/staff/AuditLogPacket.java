@@ -21,7 +21,7 @@ public class AuditLogPacket extends RedisPacket {
             String command = data.get("command").getAsString();
 
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.hasPermission(Permissions.RECEIVE_AUDIT_WORLDEDIT.getNode())) {
+                if (p.hasPermission(Permissions.RECEIVE_AUDIT_WORLDEDIT)) {
                     //TODO finish audit log
                 }
             }

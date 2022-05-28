@@ -37,7 +37,7 @@ public class StaffChatPacket extends RedisPacket {
         String message = data.get("message").getAsString();
         String msg = Lang.STAFF_CHAT_FORMAT.getMsg(name, server, message);
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission(Permissions.STAFFCHAT.getNode())) {
+            if (player.hasPermission(Permissions.STAFFCHAT)) {
                 player.sendMessage(msg);
             }
         }

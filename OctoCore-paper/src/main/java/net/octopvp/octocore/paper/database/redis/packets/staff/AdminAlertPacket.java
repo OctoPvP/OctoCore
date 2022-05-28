@@ -20,7 +20,7 @@ public class AdminAlertPacket extends RedisPacket {
         String m = data.get("message").getAsString();
         String msg = Lang.ADMIN_ALERTS.getMsg(m);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission(Permissions.ADMIN_ALERT.getNode())) {
+            if (onlinePlayer.hasPermission(Permissions.ADMIN_ALERT)) {
                 onlinePlayer.sendMessage(msg);
             }
         }

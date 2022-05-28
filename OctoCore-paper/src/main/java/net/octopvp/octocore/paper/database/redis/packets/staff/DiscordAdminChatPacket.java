@@ -28,7 +28,7 @@ public class DiscordAdminChatPacket extends RedisPacket {
         TextComponent mainComponent = new TextComponent(msg);
         mainComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rank: " + role + "\nUser: " + tag).create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission(Permissions.ADMINCHAT.getNode()))
+            if (player.hasPermission(Permissions.ADMINCHAT))
                 player.sendMessage(mainComponent);
         }
     }

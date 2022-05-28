@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class CommandProcessEvent implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        if (event.getPlayer().hasPermission(Permissions.LOG_WORLDEDIT.getNode()) && event.getMessage().startsWith("//")) {
+        if (event.getPlayer().hasPermission(Permissions.LOG_WORLDEDIT) && event.getMessage().startsWith("//")) {
             HashMap<String, String> entries = new HashMap<>();
             entries.put("Player", event.getPlayer().getName());
             entries.put("Command", event.getMessage());

@@ -20,7 +20,7 @@ public class StaffLeavePacket extends RedisPacket {
         String name = data.get("name").getAsString();
         String server = data.get("server").getAsString();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission(Permissions.RECEIVE_JOIN_MESSAGE.getNode())) {
+            if (onlinePlayer.hasPermission(Permissions.RECEIVE_JOIN_MESSAGE)) {
                 onlinePlayer.sendMessage(Lang.STAFF_ALERTS.getMsg(Lang.STAFF_LEAVE_ALERT_FORMAT.getMsg(name, server)));
             }
         }

@@ -21,7 +21,7 @@ public class StaffSwitchPacket extends RedisPacket {
         String to = data.get("to").getAsString();
         String from = data.get("from").getAsString();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission(Permissions.RECEIVE_JOIN_MESSAGE.getNode())) {
+            if (onlinePlayer.hasPermission(Permissions.RECEIVE_JOIN_MESSAGE)) {
                 onlinePlayer.sendMessage(Lang.STAFF_ALERTS.getMsg(Lang.STAFF_SWITCH_ALERT_FORMAT.getMsg(name, from, to)));
             }
         }

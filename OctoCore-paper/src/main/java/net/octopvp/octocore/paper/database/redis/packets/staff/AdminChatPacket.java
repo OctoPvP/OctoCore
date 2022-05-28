@@ -37,7 +37,7 @@ public class AdminChatPacket extends RedisPacket {
         String message = data.get("message").getAsString();
         String msg = Lang.ADMIN_CHAT_FORMAT.getMsg(name, server, message);
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission(Permissions.ADMINCHAT.getNode())) {
+            if (player.hasPermission(Permissions.ADMINCHAT)) {
                 player.sendMessage(msg);
             }
         }

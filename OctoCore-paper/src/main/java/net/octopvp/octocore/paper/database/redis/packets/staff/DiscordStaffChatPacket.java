@@ -28,7 +28,7 @@ public class DiscordStaffChatPacket extends RedisPacket {
         TextComponent mainComponent = new TextComponent(msg);
         mainComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rank: " + role + "\nUser: " + tag).create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission(Permissions.STAFFCHAT.getNode()))
+            if (player.hasPermission(Permissions.STAFFCHAT))
                 player.sendMessage(mainComponent);
         }
     }

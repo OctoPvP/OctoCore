@@ -53,7 +53,7 @@ public class UndoPunishmentPacket extends RedisPacket {
         Bukkit.getConsoleSender().sendMessage(CC.translate(clickable.getText()));
 
         if (data.get("silent").getAsBoolean()) {
-            for (Player player : Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission(Permissions.PUNISHMENT_SEE_SILENT.getNode())).collect(Collectors.toList())) {
+            for (Player player : Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission(Permissions.PUNISHMENT_SEE_SILENT)).collect(Collectors.toList())) {
                 String reason = data.get("reason").getAsString().trim();
                 String currentMessage = clickable.getText();
                 Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason), null);
@@ -68,7 +68,7 @@ public class UndoPunishmentPacket extends RedisPacket {
             String currentMessage = clickable.getText();
             Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason), null);
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (player.hasPermission(Permissions.PUNISHMENT_SEE_SILENT.getNode())) {
+                if (player.hasPermission(Permissions.PUNISHMENT_SEE_SILENT)) {
                     click.sendToPlayer(player);
                 } else {
                     clickable.sendToPlayer(player);

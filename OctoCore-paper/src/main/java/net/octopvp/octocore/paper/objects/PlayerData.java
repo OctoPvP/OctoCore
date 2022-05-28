@@ -296,14 +296,14 @@ public class PlayerData implements IPlayerData, IPunishData {
         lastKnownName = name;
         this.address = player.getAddress().getAddress().getHostAddress();
 
-        if (hasPermission(Permissions.SEND_JOIN_MESSAGE.getNode()) && joinAlert)
+        if (hasPermission(Permissions.SEND_JOIN_MESSAGE) && joinAlert)
             new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName()).send();
 
         updateTime(player);
     }
 
     public void postPermissionLoad(Player player) {
-        if (socialSpy && !hasPermission(Permissions.SOCIAL_SPY.getNode())) {
+        if (socialSpy && !hasPermission(Permissions.SOCIAL_SPY)) {
             socialSpy = false;
         }
     }
@@ -445,7 +445,11 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     public String getActualMainColor() {
-        return (customColor != null && isCustomColorEnabled() ? customColor : getHighestRank().getColor().toString());
+        return (customColor != null && isCustomColorEnabled() ?
+                customColor :
+                getHighestRank()
+                        .getColor()
+                        .toString());
     }
 
     public String getPrefixColorOrNull() {

@@ -50,7 +50,7 @@ public class MessagePacket extends RedisPacket {
                 continue;
             }
 
-            if (player.hasPermission(Permissions.SOCIAL_SPY.getNode())) {
+            if (player.hasPermission(Permissions.SOCIAL_SPY)) {
                 PlayerData d = PlayerManager.getInstance().getData(player.getUniqueId());
                 if (d.isSocialSpy()) {
                     player.sendMessage(Lang.SOCIAL_SPY.getMsg(from, to, message));
