@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class StaffListener implements Listener {
     @EventHandler(priority = 64)
     public void onSwitch(ServerSwitchEvent event) {
-        if (event.getPlayer().hasPermission(Permissions.SEND_SWITCH_MESSAGE.getNode())) {
+        if (event.getPlayer().hasPermission(Permissions.SEND_SWITCH_MESSAGE)) {
             //StaffManager.sendSwitch(event.getFrom(),event.getPlayer());
             ProxyServer.getInstance().getScheduler().schedule(OctoCoreWaterfall.getInstance(), () -> {
                 ProxyServer.getInstance().getPluginManager().dispatchCommand(ProxyServer.getInstance().getConsole(), "bungeeinternal sendswitch " + event.getPlayer().getName() + " " + event.getFrom().getName());
@@ -24,7 +24,7 @@ public class StaffListener implements Listener {
 
     @EventHandler(priority = 64)
     public void onJoin(PostLoginEvent event) {
-        if (event.getPlayer().hasPermission(Permissions.SEND_JOIN_MESSAGE.getNode())) {
+        if (event.getPlayer().hasPermission(Permissions.SEND_JOIN_MESSAGE)) {
             ProxyServer.getInstance().getScheduler().schedule(OctoCoreWaterfall.getInstance(), () -> {
                 ProxyServer.getInstance().getPluginManager().dispatchCommand(ProxyServer.getInstance().getConsole(), "bungeeinternal sendjoin " + event.getPlayer().getName());
             }, 0, TimeUnit.MILLISECONDS);
@@ -34,7 +34,7 @@ public class StaffListener implements Listener {
 
     @EventHandler(priority = 64)
     public void onLeave(PlayerDisconnectEvent event) {
-        if (event.getPlayer().hasPermission(Permissions.SEND_LEAVE_MESSAGE.getNode())) {
+        if (event.getPlayer().hasPermission(Permissions.SEND_LEAVE_MESSAGE)) {
             //StaffManager.leave(event.getPlayer().getServer().getInfo(),event.getPlayer());
             ProxyServer.getInstance().getScheduler().schedule(OctoCoreWaterfall.getInstance(), () -> {
                 ProxyServer.getInstance().getPluginManager().dispatchCommand(ProxyServer.getInstance().getConsole(), "bungeeinternal sendleave " + event.getPlayer().getName());
