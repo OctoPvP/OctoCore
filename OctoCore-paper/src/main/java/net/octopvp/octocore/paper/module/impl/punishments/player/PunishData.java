@@ -4,11 +4,12 @@ import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.octopvp.octocore.common.object.punish.Alt;
+import net.octopvp.octocore.common.object.punish.IPunishData;
+import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
-import net.octopvp.octocore.paper.objects.IPunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import org.bson.Document;
 
@@ -53,19 +54,23 @@ public class PunishData implements IPunishData {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE && punishment.isIPRelative()).findFirst().orElse(null) != null;
     }
 
+    @Override
     public Punishment getActiveBan() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null);
     }
 
+    @Override
     public Punishment getActiveMute() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE).findFirst().orElse(null);
     }
 
+    @Override
     public Punishment getActiveBlacklist() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).findFirst().orElse(null);
     }
 
-    public List<Punishment> getPunishments(PunishmentType type) {
+    @Override
+    public List<IPunishment> getPunishments(PunishmentType type) {
         return this.punishments.stream().filter(punishment -> punishment.getType() == type).collect(Collectors.toList());
     }
 

@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.module.impl.punishments.util;
+package net.octopvp.octocore.common.object.punish;
 
 public enum PunishmentType {
 

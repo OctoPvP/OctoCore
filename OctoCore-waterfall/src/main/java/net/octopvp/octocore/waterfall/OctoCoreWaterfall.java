@@ -70,6 +70,11 @@ public final class OctoCoreWaterfall extends Plugin {
             public String getCommitBranch() {
                 return "UNKNOWN";
             }
+
+            @Override
+            public boolean isOnline(UUID uuid) {
+                return ProxyServer.getInstance().getPlayer(uuid) != null; //TODO
+            }
         }, gson);
         File file = new File(getDataFolder(), "config.yml");
 

@@ -175,35 +175,7 @@ public final class OctoCore extends JavaPlugin {
         Tasks.init(this);
         if (getConfig().getBoolean("sentry.enable", false))
             SentryManager.init(getConfig().getString("sentry.sentry-dsn", ""));
-        //commandFramework = new CommandFramework(this);
-        commander = BukkitCommander.getCommander(this)
-                .registerPackage("net.octopvp.octocore.paper.command")
-                .registerDependency(OctoCore.class, this)
-                .registerDependency(PlayerManager.class, playerManager)
-                .registerDependency(ServerManager.class, serverManager)
-
-                .registerProvider(PlayerData.class, new PlayerDataProvider())
-                .registerProvider(Sender.class, new SenderProvider())
-                .registerProvider(GameModeProvider.class, new GameModeProvider())
-
-                .registerCommandPostProcessor((ctx,obj)-> {
-                    if (obj instanceof CommandResult) {
-                        CommandResult result = (CommandResult) obj;
-                        if (result == CommandResult.SUCCESS) return;
-                        else if (result == CommandResult.INVALID_ARGS) {
-                            throw new InvalidArgsException(ctx.getCommandInfo());
-                        } else if (Objects.equals(result.getMsg(), "") || Objects.equals(result.getMsg(), " ")) {
-                            return;
-                        } else if (result.getMsg() == null) {
-                            return;
-                        } else {
-                            ctx.getCommandSender().sendMessage(result.getMsg());
-                            return;
-                        }
-                    }
-                })
-        ;
-
+        commander = BukkitCommander.getCommander(this);
 
         tab = new Tab(this);
 
@@ -226,6 +198,11 @@ public final class OctoCore extends JavaPlugin {
             @Override
             public String getCommitBranch() {
                 return Bukkit.getCommitBranch();
+            }
+
+            @Override
+            public boolean isOnline(UUID uuid) {
+                return ServerManager.getInstance().isPlayerOnline(uuid);
             }
         }, gson);
         OctoCoreCommon.setPluginClassLoader(getClassLoader());
@@ -264,7 +241,33 @@ public final class OctoCore extends JavaPlugin {
         new SetupHooks().setup(this);
         setupVault();
         Logger.info("Setting up commands.");
-        new SetupCommands().setup(this);
+        commander
+                .registerPackage("net.octopvp.octocore.paper.command")
+                .registerDependency(OctoCore.class, this)
+                .registerDependency(PlayerManager.class, playerManager)
+                .registerDependency(ServerManager.class, serverManager)
+
+                .registerProvider(PlayerData.class, new PlayerDataProvider())
+                .registerProvider(Sender.class, new SenderProvider())
+                .registerProvider(GameModeProvider.class, new GameModeProvider())
+
+                .registerCommandPostProcessor((ctx, obj) -> {
+                    if (obj instanceof CommandResult) {
+                        CommandResult result = (CommandResult) obj;
+                        if (result == CommandResult.SUCCESS) return;
+                        else if (result == CommandResult.INVALID_ARGS) {
+                            throw new InvalidArgsException(ctx.getCommandInfo());
+                        } else if (Objects.equals(result.getMsg(), "") || Objects.equals(result.getMsg(), " ")) {
+                            return;
+                        } else if (result.getMsg() == null) {
+                            return;
+                        } else {
+                            ctx.getCommandSender().sendMessage(result.getMsg());
+                            return;
+                        }
+                    }
+                })
+        ;
         Logger.info("Setting up permissions.");
         new SetupPermissions().setup(this);
         Logger.info("Setting up modules.");

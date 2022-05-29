@@ -3,11 +3,11 @@ package net.octopvp.octocore.paper.command.impl.punishments.undo;
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.UndoPunishmentPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -43,7 +43,7 @@ public class UnBanCommand {
                 reason = reason.replace("-silent", "").replace("-s", "").trim();
             }
 
-            Punishment punishment = data.getActiveBan();
+            IPunishment punishment = data.getActiveBan();
             punishment.setActive(false);
             punishment.setLast(false);
             punishment.setRemovedBy(sender.getName());

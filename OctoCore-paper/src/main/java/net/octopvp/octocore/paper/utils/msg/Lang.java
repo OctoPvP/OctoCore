@@ -104,7 +104,7 @@ public enum Lang {
     WRONG_DATE_FORMAT("&bYou have entered wrong date format. &3Example &7(&b1d&7, &b1h&7, &b1m&7)&b."),
 
     ALREADY_BANNED("&cThis player is already banned!"),
-    NOT_BANNED("&cThis player isn't banned!"),
+    NOT_BANNED("&c%1 isn't banned!"),
 
     BLACKLIST_ALREADY_BLACKLISTED("&cThis player is already blacklisted!"),
     BLACKLIST_NOT_BLACKLISTED("&cThis player isn't blacklisted!"),
@@ -203,7 +203,10 @@ public enum Lang {
     NOT_IGNORING_ANYONE("&cYou're not ignoring anyone!"),
 
     TOGGLE_ON("&aToggled %1 ON!"),
-    TOGGLE_OFF("&aToggled %1 &cOFF");
+    TOGGLE_OFF("&aToggled %1 &cOFF"),
+
+    GLOBAL_CHAT_IS_DISABLED("&cYou have global chat disabled! do /settings to enable it!"),
+    ;
     private final String msg;
 
     Lang(String msg) {

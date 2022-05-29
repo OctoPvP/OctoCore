@@ -1,7 +1,7 @@
 package net.octopvp.octocore.paper.module.impl.punishments.util;
 
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

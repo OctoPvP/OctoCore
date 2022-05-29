@@ -1,4 +1,4 @@
-package net.octopvp.octocore.paper.objects;
+package net.octopvp.octocore.common.object;
 
 import java.util.UUID;
 

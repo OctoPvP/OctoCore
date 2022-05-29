@@ -1,14 +1,14 @@
-package net.octopvp.octocore.paper.module.impl.punishments.util;
+package net.octopvp.octocore.common.object.punish;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.octopvp.octocore.paper.manager.impl.ServerManager;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
-import net.octopvp.octocore.paper.objects.IPunishData;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
+import net.octopvp.octocore.common.OctoCoreCommon;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,7 +18,7 @@ public class Alt implements IPunishData {
 
     private final UUID uniqueId;
     private final String name;
-    private final transient PunishData punishData;
+    private final transient IPunishData punishData;
 
     private String displayName;
 
@@ -35,7 +35,7 @@ public class Alt implements IPunishData {
         if (punishData != null && punishData.isBlacklisted()) return ChatColor.DARK_RED;
         if (punishData != null && punishData.isBanned()) return ChatColor.DARK_RED;
 
-        if (ServerManager.getInstance().getGlobalPlayer(this.name) == null) {
+        if (OctoCoreCommon.getInfo().isOnline(uniqueId)) {
             return ChatColor.RED;
         } else {
             return ChatColor.GREEN;
@@ -43,7 +43,7 @@ public class Alt implements IPunishData {
     }
 
     @Override
-    public Collection<Punishment> getPunishments() {
+    public Collection<IPunishment> getPunishments() {
         return punishData.getPunishments();
     }
 
@@ -70,6 +70,26 @@ public class Alt implements IPunishData {
     @Override
     public boolean isWarned() {
         return punishData != null && punishData.isWarned();
+    }
+
+    @Override
+    public IPunishment getActiveBan() {
+        return punishData != null ? punishData.getActiveBan() : null;
+    }
+
+    @Override
+    public IPunishment getActiveMute() {
+        return punishData != null ? punishData.getActiveMute() : null;
+    }
+
+    @Override
+    public IPunishment getActiveBlacklist() {
+        return punishData != null ? punishData.getActiveBlacklist() : null;
+    }
+
+    @Override
+    public List<IPunishment> getPunishments(PunishmentType type) {
+        return punishData != null ? punishData.getPunishments(type) : new ArrayList<>();
     }
 
     @Override
