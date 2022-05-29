@@ -2,12 +2,12 @@ package net.octopvp.octocore.paper.utils.runnable.runnables;
 
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.StringUtils;
+import net.octopvp.octocore.common.util.CachedData;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataPacket;
 import net.octopvp.octocore.paper.database.redis.packets.server.ServerUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.objects.CachedData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.GsonSerializer;
 import net.octopvp.octocore.paper.utils.GsonType;

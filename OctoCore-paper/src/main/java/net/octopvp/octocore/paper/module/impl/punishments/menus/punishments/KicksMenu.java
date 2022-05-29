@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.object.punish.IPunishData;
+import net.octopvp.octocore.common.object.punish.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
@@ -49,7 +49,7 @@ public class KicksMenu extends PaginatedMenu {
         List<Button> slots = new ArrayList<>();
 
         AtomicInteger order = new AtomicInteger(1);
-        List<Punishment> punishments = punishData.getPunishments().stream().sorted(Comparator.comparingLong(Punishment::getAddedAt).reversed()).filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
+        List<IPunishment> punishments = punishData.getPunishments().stream().sorted(Comparator.comparingLong(IPunishment::getAddedAt).reversed()).filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
 
         punishments.forEach(punishment -> slots.add(new PunishmentButton(punishment, order.getAndIncrement())));
 
@@ -63,7 +63,7 @@ public class KicksMenu extends PaginatedMenu {
 
     @AllArgsConstructor
     private class PunishmentButton extends Button {
-        private Punishment punishment;
+        private IPunishment punishment;
         private int order;
 
         @Override

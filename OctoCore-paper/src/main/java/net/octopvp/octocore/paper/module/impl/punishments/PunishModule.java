@@ -11,7 +11,6 @@ import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.staff.PunishedJoinPacket;
 import net.octopvp.octocore.paper.module.Module;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bson.Document;
@@ -38,13 +37,13 @@ public class PunishModule implements Module {
 
     public static boolean checkPunishments(AsyncPlayerPreLoginEvent event, PlayerData data, String name, UUID uuid) {
         if (data.getPunishData().isBlacklisted()) {
-            Punishment activeBlacklist = data.getPunishData().getActiveBlacklist();
+            IPunishment activeBlacklist = data.getPunishData().getActiveBlacklist();
             disallowBlacklist(event, activeBlacklist);
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
             return true;
         }
         if (data.getPunishData().isBanned()) {
-            Punishment activeBan = data.getPunishData().getActiveBan();
+            IPunishment activeBan = data.getPunishData().getActiveBan();
             boolean temp = activeBan.isTemporary();
             event.disallow(
                     AsyncPlayerPreLoginEvent.Result.KICK_BANNED,

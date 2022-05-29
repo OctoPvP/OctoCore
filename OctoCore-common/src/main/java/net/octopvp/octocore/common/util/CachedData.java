@@ -1,10 +1,9 @@
-package net.octopvp.octocore.paper.objects;
+package net.octopvp.octocore.common.util;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.paper.OctoCore;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import org.bson.Document;
 import redis.clients.jedis.Jedis;
 
@@ -16,8 +15,8 @@ import java.util.UUID;
 public class CachedData {
     private final UUID uuid;
     public Document getData() {
-        if (!OctoCore.getInstance().getRedisHandler().isConnected()) return null;
-        try (Jedis jedis = OctoCore.getInstance().getRedisHandler().getSubscriberPool().getResource()) {
+        if (!OctoCoreCommon.getRedisHandler().isConnected()) return null;
+        try (Jedis jedis = OctoCoreCommon.getRedisHandler().getSubscriberPool().getResource()) {
             String json = jedis.hget("player-data", this.uuid.toString());
             if (json == null) return null;
             return Document.parse(json);
@@ -26,13 +25,13 @@ public class CachedData {
         }
     }
     public void update(Document document) {
-        if (!OctoCore.getInstance().getRedisHandler().isConnected()) return;
+        if (!OctoCoreCommon.getRedisHandler().isConnected()) return;
 
-        try (Jedis jedis = OctoCore.getInstance().getRedisHandler().getSubscriberPool().getResource()) {
+        try (Jedis jedis = OctoCoreCommon.getRedisHandler().getSubscriberPool().getResource()) {
             jedis.hset("player-data", this.uuid.toString(), document.toJson());
             jedis.expire("player-data", 3600);
         } catch (Exception e) {
-            if (OctoCore.getInstance().getRedisHandler().isConnected() && System.currentTimeMillis() - OctoCore.getInstance().getRedisHandler().getLastConnect() >= 3000L) {
+            if (OctoCoreCommon.getRedisHandler().isConnected() && System.currentTimeMillis() - OctoCoreCommon.getRedisHandler().getLastConnect() >= 3000L) {
                 e.printStackTrace();
                 Logger.error("Failed to cache data for " + uuid + ": " + e.getMessage());
             }

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class PunishData implements IPunishData {
     private final PlayerData playerData;
 
-    private Collection<Punishment> punishments = new HashSet<>();
+    private Collection<IPunishment> punishments = new HashSet<>();
 
     @Override
     public boolean isBanned() {
@@ -55,17 +55,17 @@ public class PunishData implements IPunishData {
     }
 
     @Override
-    public Punishment getActiveBan() {
+    public IPunishment getActiveBan() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null);
     }
 
     @Override
-    public Punishment getActiveMute() {
+    public IPunishment getActiveMute() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE).findFirst().orElse(null);
     }
 
     @Override
-    public Punishment getActiveBlacklist() {
+    public IPunishment getActiveBlacklist() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).findFirst().orElse(null);
     }
 
