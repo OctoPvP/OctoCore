@@ -1,12 +1,14 @@
 package net.octopvp.octocore.paper.command.impl.cosmetic;
 
 import com.google.gson.JsonObject;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Cooldown;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.Required;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -18,14 +20,11 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
 
-public class RemoveTagCommand extends BaseCommand {
-    @Command(name = "removetag", permission = Permission.ADMIN, cooldown = 1, usage = "<player> [tag]")
-    public CommandResult execute(Sender sender, String[] args) {
-        if (!(args.length >= 2)) {
-            return CommandResult.INVALID_ARGS;
-        }
-        String target = args[0];
-        String tag = args[1];
+public class RemoveTagCommand {
+    @Command(name = "removetag", usage = "<player> [tag]")
+    @Permission(Permissions.ADMIN)
+    @Cooldown(1)
+    public CommandResult execute(Sender sender, @Required String target, @Required String tag) {
         if (OctoCore.getInstance().getServerManager().isPlayerOnline(target)) {
             if (Bukkit.getPlayer(target) != null) {
                 //on this server

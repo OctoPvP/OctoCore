@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -28,7 +28,7 @@ public class DiscordStaffChatPacket extends RedisPacket {
         TextComponent mainComponent = new TextComponent(msg);
         mainComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rank: " + role + "\nUser: " + tag).create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission(Permission.STAFFCHAT.getNode()))
+            if (player.hasPermission(Permissions.STAFFCHAT))
                 player.sendMessage(mainComponent);
         }
     }

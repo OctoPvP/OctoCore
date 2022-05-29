@@ -1,25 +1,24 @@
 package net.octopvp.octocore.paper.command.impl.rank;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.menus.grant.MainGrantMenu;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 
-public class GrantCommand extends BaseCommand {
-    @Command(name = "grant", permission = Permission.GRANT)
+public class GrantCommand {
+    @Command(name = "grant")
+    @Permission(Permissions.GRANT)
     public CommandResult execute(Sender sender, String[] args) {
         return e1(sender, args);
     }
 
-    @Command(
-            name = "g1",
-            permission = Permission.GRANT
-    )
+    @Command(name = "g1")
+    @Permission(Permissions.GRANT)
     public CommandResult e1(Sender sender, String[] args) {
         sender.sendMessage(CC.GREEN + "Getting PlayerData...");
         PlayerData data = PlayerManager.getInstance().getOfflineData(args[0]);

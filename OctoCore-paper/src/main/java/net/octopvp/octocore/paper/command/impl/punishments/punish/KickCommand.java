@@ -1,25 +1,21 @@
 package net.octopvp.octocore.paper.command.impl.punishments.punish;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
-import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.util.Random;
 
-public class KickCommand extends BaseCommand {
+public class KickCommand {
 
     private static final String[] errorMessages = {
             "java.net.ConnectException: Connection timed out: no further information:",
@@ -28,7 +24,8 @@ public class KickCommand extends BaseCommand {
             "Internal Exception: java.net.SocketException: Connection reset"
     };
 
-    @Command(name = "kick", permission = Permission.PUNISHMENT_KICK, aliases = {"kickplayer"})
+    @Command(name = "kick", aliases = {"kickplayer"})
+    @Permission(Permissions.PUNISHMENT_KICK)
     public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {
             if (args.length < 2) {

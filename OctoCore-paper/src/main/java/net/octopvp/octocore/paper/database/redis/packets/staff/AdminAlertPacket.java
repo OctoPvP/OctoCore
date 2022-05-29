@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.staff;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -20,7 +20,7 @@ public class AdminAlertPacket extends RedisPacket {
         String m = data.get("message").getAsString();
         String msg = Lang.ADMIN_ALERTS.getMsg(m);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission(Permission.ADMIN_ALERT.getNode())) {
+            if (onlinePlayer.hasPermission(Permissions.ADMIN_ALERT)) {
                 onlinePlayer.sendMessage(msg);
             }
         }

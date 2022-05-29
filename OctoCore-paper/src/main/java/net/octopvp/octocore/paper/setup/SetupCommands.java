@@ -1,8 +1,6 @@
 package net.octopvp.octocore.paper.setup;
 
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.CommandFramework;
 import net.octopvp.octocore.paper.utils.ReflectionUtils;
 
 import java.lang.reflect.Constructor;

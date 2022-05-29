@@ -1,9 +1,9 @@
 package net.octopvp.octocore.paper.command.impl.essentials;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.menus.ListMenu;
@@ -13,10 +13,9 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class ListCommand extends BaseCommand {
-    @Command(name = "list", aliases = {"players"}, description = "List all online players (gui)", permission = Permission.LIST_PLAYERS)
+public class ListCommand {
+    @Command(name = "list", aliases = {"players"}, description = "List all online players (gui)")
+    @Permission(Permissions.LIST_PLAYERS)
     public CommandResult execute(Sender sender, String[] args) {
         if (false) {
             new ListMenu(args).open(sender.getPlayer());
@@ -53,8 +52,5 @@ public class ListCommand extends BaseCommand {
         return null;
     }
 
-    @Override
-    public List<String> tabComplete(Sender sender, String[] args) {
-        return null;
-    }
+
 }

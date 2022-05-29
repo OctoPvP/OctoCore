@@ -1,18 +1,15 @@
 package net.octopvp.octocore.paper.module.impl.auth;
 
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
-import net.octopvp.octocore.paper.command.CommandResult;
+import net.badbird5907.jdacommand.CommandResult;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 
-public class AuthCommand extends BaseCommand {
-    @Command(name = "2fa", playerOnly = true, aliases = {"auth"})
+public class AuthCommand {
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("setup")) {
-                if (sender.hasPermission(Permission.SETUP_2FA)) {
+                if (sender.hasPermission(Permissions.SETUP_2FA)) {
                     AuthModule.enableAuth(sender.getPlayer());
                     return CommandResult.SUCCESS;
                 }

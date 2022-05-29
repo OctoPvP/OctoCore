@@ -1,10 +1,11 @@
 package net.octopvp.octocore.paper.command.impl.tests;
 
 import lombok.RequiredArgsConstructor;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.bukkit.annotation.PlayerOnly;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.ServerContext;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
@@ -15,7 +16,6 @@ import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
-import net.octopvp.octocore.paper.utils.permission.PermissionUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,10 +26,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestCommand extends BaseCommand {
-    private static final String perm = PermissionUtil.fromEnum(Permission.COMMAND_NICK);
+public class TestCommand {
+    private static final String perm = Permissions.COMMAND_NICK;
 
-    @Command(name = "settestmeta", description = "Sets test meta", playerOnly = true)
+    @Command(name = "settestmeta", description = "Sets test meta")
+    @PlayerOnly
+    @Permission(Permissions.ADMIN)
     public CommandResult setTest(Sender sender, String[] args) {
         PlayerData data = PlayerManager.getInstance().getData(sender.getPlayer());
         if (args.length == 1) {
@@ -40,8 +42,10 @@ public class TestCommand extends BaseCommand {
         return CommandResult.SUCCESS;
     }
 
-    @Command(name = "test", description = "test", aliases = {"test1", "test2"}, playerOnly = true)
-    public CommandResult execute(Sender sender, String[] args) {
+    @Command(name = "test", description = "test", aliases = {"test1", "test2"})
+    @PlayerOnly
+    @Permission(Permissions.ADMIN)
+    public CommandResult execute(Sender sender) {
         PlayerData data = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
         if (data == null) {
             sender.sendMessage(ChatColor.RED + "Data is null!");
@@ -54,8 +58,9 @@ public class TestCommand extends BaseCommand {
     }
 
     @Command(name = "testmenu")
-    public CommandResult exec(Sender sender, String[] args) {
-        Player player = sender.getPlayer();
+    @PlayerOnly
+    @Permission(Permissions.ADMIN)
+    public CommandResult exec(Sender sender) {
         new TestMenu().open(sender);
         return CommandResult.SUCCESS;
     }

@@ -1,9 +1,10 @@
 package net.octopvp.octocore.paper.command.impl.staff;
 
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Disable;
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.NickManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -13,11 +14,11 @@ import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 @Disable
-public class NickCommand extends BaseCommand {
-    @Command(name = "nick", description = "nick", usage = "[name]", permission = Permission.COMMAND_NICK)
+public class NickCommand {
+    @Command(name = "nick", description = "nick", usage = "[name]")
+    @Permission(Permissions.COMMAND_NICK)
+    @PlayerOnly
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1) {
             NameTagChanger.INSTANCE.changePlayerName(sender.getPlayer(), args[0]);
@@ -44,8 +45,5 @@ public class NickCommand extends BaseCommand {
         return CommandResult.INVALID_ARGS;
     }
 
-    @Override
-    public List<String> tabComplete(Sender sender, String[] args) {
-        return null;
-    }
+
 }

@@ -24,6 +24,7 @@ public class Grant {
     private String addedBy, reason, removedBy;
     private UUID addedByUUID, removedByUUID;
     private boolean active, permanent;
+
     private ServerContext server = new ServerContext("Global");
 
     public Grant(Rank rank) {
@@ -38,8 +39,12 @@ public class Grant {
         if (server.isThisServer()) {
             if (!this.isActive()) return true;
             if (RankManager.getInstance().getRankById(rankId) == null) {
-                setActive(false);
-                Logger.debug("cant find rank by rankid: " + rankId); //FIXME - remove on expire
+                if (RankManager.isLoadingRanks()) {
+                    return false;
+                } else {
+                    setActive(false);
+                    Logger.debug("cant find rank by rankid: " + rankId); //FIXME - remove on expire
+                }
                 return true;
             }
             if (this.isPermanent() || duration < 0) return false;

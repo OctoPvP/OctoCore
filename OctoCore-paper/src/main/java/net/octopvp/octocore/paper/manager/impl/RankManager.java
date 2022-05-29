@@ -35,8 +35,12 @@ public class RankManager extends Manager {
     @Getter
     private static final Set<Rank> ranks = new HashSet<>();
 
+    @Getter
+    private static boolean loadingRanks = false;
+
     public void loadRanks() {
         Logger.info("Loading ranks...");
+        loadingRanks = true;
         for (Document document : ranksCollection.find()) {
             Rank rank = OctoCore.getGson().fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()), Rank.class);
             if (rank == null)
@@ -45,6 +49,7 @@ public class RankManager extends Manager {
                 continue;
             ranks.add(rank);
         }
+        loadingRanks = false;
         Logger.info("Loaded (%1) ranks.", ranks.size());
     }
 
@@ -54,7 +59,7 @@ public class RankManager extends Manager {
     }
 
     public Rank getRankById(UUID uuid) {
-        return ranks.stream().filter(rank -> rank.getRankId().toString().equalsIgnoreCase(uuid.toString())).findFirst().orElse(null);
+        return ranks.stream().filter(rank -> rank.getRankId().equals(uuid)).findFirst().orElse(null);
     }
 
     public Rank getRankByName(String name) {

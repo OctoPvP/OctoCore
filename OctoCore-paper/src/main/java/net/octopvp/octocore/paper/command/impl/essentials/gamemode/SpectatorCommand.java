@@ -1,17 +1,19 @@
 package net.octopvp.octocore.paper.command.impl.essentials.gamemode;
 
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.bukkit.annotation.PlayerOnly;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.GameMode;
 
-public class SpectatorCommand extends BaseCommand {
-
-    @Command(name = "spectator", aliases = {"gmsp"}, permission = Permission.SPECTATOR, playerOnly = true)
-    public CommandResult execute(Sender sender, String[] args) {
+public class SpectatorCommand {
+    @Command(name = "spectator", aliases = {"gmsp"})
+    @Permission(Permissions.SPECTATOR)
+    @PlayerOnly
+    public CommandResult execute(Sender sender) {
         sender.sendMessage(Lang.GAMEMODE.getMsg("SPECTATOR"));
         sender.getPlayer().setGameMode(GameMode.SPECTATOR);
         return CommandResult.SUCCESS;

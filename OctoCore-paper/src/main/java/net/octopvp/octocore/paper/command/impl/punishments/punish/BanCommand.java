@@ -1,10 +1,10 @@
 package net.octopvp.octocore.paper.command.impl.punishments.punish;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
@@ -13,9 +13,9 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
-public class BanCommand extends BaseCommand {
-
-    @Command(name = "ban", permission = Permission.PUNISHMENT_BAN, aliases = {"tempban"}, usage = "[-s] <player> [duration] <reason>")
+public class BanCommand {
+    @Command(name = "ban", aliases = {"tempban"}, usage = "[-s] <player> [duration] <reason>")
+    @Permission(Permissions.PUNISHMENT_BAN)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length < 2) {
             return CommandResult.INVALID_ARGS;

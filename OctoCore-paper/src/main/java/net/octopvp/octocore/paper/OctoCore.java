@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
+import net.octopvp.commander.Commander;
+import net.octopvp.commander.bukkit.BukkitCommander;
+import net.octopvp.commander.exception.InvalidArgsException;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
@@ -18,11 +21,16 @@ import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.Utilities;
-import net.octopvp.octocore.paper.command.CommandFramework;
+import net.octopvp.octocore.paper.command.CommandResult;
+import net.octopvp.octocore.paper.command.providers.GameModeProvider;
+import net.octopvp.octocore.paper.command.providers.PlayerDataProvider;
+import net.octopvp.octocore.paper.command.providers.SenderProvider;
 import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.impl.*;
+import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.setup.*;
 import net.octopvp.octocore.paper.utils.PacketUtil;
+import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.paper.utils.errorhandling.ErrorHandling;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
@@ -36,6 +44,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public final class OctoCore extends JavaPlugin {
@@ -43,7 +52,6 @@ public final class OctoCore extends JavaPlugin {
     private static Chat chat;
     private static Permission perms = null;
     private static OctoCore instance;
-    private static CommandFramework commandFramework;
     private static Location spawn;
 
     @Getter
@@ -107,16 +115,15 @@ public final class OctoCore extends JavaPlugin {
     private TagManager tagManager;
     //Setup End
 
+    @Getter
+    private Commander commander;
+
     public static Chat getChat() {
         return OctoCore.chat;
     }
 
     public static OctoCore getInstance() {
         return OctoCore.instance;
-    }
-
-    public static CommandFramework getCommandFramework() {
-        return OctoCore.commandFramework;
     }
 
     public static Tab getTab() {
@@ -168,7 +175,36 @@ public final class OctoCore extends JavaPlugin {
         Tasks.init(this);
         if (getConfig().getBoolean("sentry.enable", false))
             SentryManager.init(getConfig().getString("sentry.sentry-dsn", ""));
-        commandFramework = new CommandFramework(this);
+        //commandFramework = new CommandFramework(this);
+        commander = BukkitCommander.getCommander(this)
+                .registerPackage("net.octopvp.octocore.paper.command")
+                .registerDependency(OctoCore.class, this)
+                .registerDependency(PlayerManager.class, playerManager)
+                .registerDependency(ServerManager.class, serverManager)
+
+                .registerProvider(PlayerData.class, new PlayerDataProvider())
+                .registerProvider(Sender.class, new SenderProvider())
+                .registerProvider(GameModeProvider.class, new GameModeProvider())
+
+                .registerCommandPostProcessor((ctx,obj)-> {
+                    if (obj instanceof CommandResult) {
+                        CommandResult result = (CommandResult) obj;
+                        if (result == CommandResult.SUCCESS) return;
+                        else if (result == CommandResult.INVALID_ARGS) {
+                            throw new InvalidArgsException(ctx.getCommandInfo());
+                        } else if (Objects.equals(result.getMsg(), "") || Objects.equals(result.getMsg(), " ")) {
+                            return;
+                        } else if (result.getMsg() == null) {
+                            return;
+                        } else {
+                            ctx.getCommandSender().sendMessage(result.getMsg());
+                            return;
+                        }
+                    }
+                })
+        ;
+
+
         tab = new Tab(this);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.SubChannels.PERMISSIONS);

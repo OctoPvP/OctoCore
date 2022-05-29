@@ -1,17 +1,18 @@
 package net.octopvp.octocore.paper.command.impl.fun;
 
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.trolls.KaboomTroll;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class KaboomCommand extends BaseCommand {
-    @Command(name = "kaboom", permission = Permission.KABOOM)
+public class KaboomCommand {
+    @Command(name = "kaboom")
+    @Permission(Permissions.ADMIN)
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length == 1) {
             Player player;

@@ -23,6 +23,7 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class SettingsMenu extends Menu {
     private final PlayerData data;
+    private boolean changed;
 
     @Override
     public List<Button> getButtons(Player player) {
@@ -37,6 +38,14 @@ public class SettingsMenu extends Menu {
     @Override
     public String getName(Player player) {
         return "Settings";
+    }
+
+    @Override
+    public void onClose(Player player) {
+        super.onClose(player);
+        if (changed) {
+            data.save();
+        }
     }
 
     private class Placeholders extends Button {
@@ -78,6 +87,7 @@ public class SettingsMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            changed = true;
             data.getMessageSettings().setMessagesOff(!data.getMessageSettings().isMessagesOff());
             player.sendMessage(data.getMessageSettings().isMessagesOff() ? Lang.TOGGLE_OFF.getMsg("Private Messages") : Lang.TOGGLE_ON.getMsg("Private Messages"));
             update(player);
@@ -100,6 +110,7 @@ public class SettingsMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            changed = true;
             data.getMessageSettings().setGlobalChat(!data.getMessageSettings().isGlobalChat());
             player.sendMessage(data.getMessageSettings().isGlobalChat() ? Lang.TOGGLE_ON.getMsg("Global chat") : Lang.TOGGLE_OFF.getMsg("Global chat"));
             update(player);
@@ -134,6 +145,7 @@ public class SettingsMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
+            changed = true;
             SoundUtil.playPing(player);
             WorldTime type = data.getWorldTime();
             if (clickType == ClickType.LEFT) { // Default -> Sunrise -> Day -> Sunset -> Night -> Default

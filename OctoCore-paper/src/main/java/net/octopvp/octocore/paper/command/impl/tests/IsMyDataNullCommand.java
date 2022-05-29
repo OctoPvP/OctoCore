@@ -1,15 +1,16 @@
 package net.octopvp.octocore.paper.command.impl.tests;
 
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 
-public class IsMyDataNullCommand extends BaseCommand {
-    @Command(name = "ismydatanull", playerOnly = true)
-    public CommandResult execute(Sender sender, String[] args) {
+public class IsMyDataNullCommand {
+    @Command(name = "ismydatanull")
+    @PlayerOnly
+    public CommandResult execute(Sender sender) {
         boolean isNull = PlayerManager.getInstance().getData(sender.getPlayer()) == null;
         sender.sendMessage("Your data is " + (isNull ? "null" : "not null"));
         if (!isNull) {

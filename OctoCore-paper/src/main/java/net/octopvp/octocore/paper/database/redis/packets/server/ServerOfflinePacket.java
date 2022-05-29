@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.server;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.object.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
@@ -21,7 +21,7 @@ public class ServerOfflinePacket extends RedisPacket {
         String server = data.get("server").getAsString();
         OctoCore.getInstance().getServerManager().getServerData(server).setSafelyStopped(true); //so master dosen't send the crash alert
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission(Permission.RECEIVE_SERVER_OFFLINE_MESSAGE.getNode())) {
+            if (onlinePlayer.hasPermission(Permissions.RECEIVE_SERVER_OFFLINE_MESSAGE)) {
                 onlinePlayer.sendMessage(Lang.ADMIN_ALERTS.getMsg(Lang.SERVER_OFFLINE_FORMAT.getMsg(server)));
             }
         }

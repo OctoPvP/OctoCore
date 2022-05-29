@@ -1,50 +1,32 @@
 package net.octopvp.octocore.paper.command.impl.utils;
 
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.common.util.CC;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.utils.Sender;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class LoopCommand extends BaseCommand {
-    @Command(name = "loop", permission = Permission.LOOP, usage = "<times> <ticks delay> <command to execute>")
-    public CommandResult execute(Sender sender, String[] args) {
-        if (args.length <= 2) {
-            sender.sendMessage(CC.RED + "Usage: /loop <times> <ticks delay> <command to execute>" + CC.NL + CC.RED + "Notes: use 0 as the delay to execute instantly" + CC.NL + CC.RED + "Example: /loop 10 1 summon cow");
+public class LoopCommand {
+    @Command(name = "loop")
+    @Permission(Permissions.LOOP)
+    public CommandResult execute(Sender sender, int times, int delay, String[] command) {
+        if (command == null || command.length == 0) {
             return CommandResult.INVALID_ARGS;
         }
-        int times, delay;
-        try {
-            times = Integer.parseInt(args[0]);
-        } catch (NumberFormatException e) {
-            sender.sendMessage(CC.RED + args[0] + " is not an integer!");
-            return CommandResult.INVALID_ARGS;
-        }
-        try {
-            delay = Integer.parseInt(args[1]);
-        } catch (NumberFormatException e) {
-            sender.sendMessage(CC.RED + args[1] + " is not an integer!");
-            return CommandResult.INVALID_ARGS;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < args.length; i++) {
-            if (i == 0)
-                sb.append(args[i]);
-            sb.append(" ").append(args[i]);
-        }
+
+        String cmd = String.join(" ", command);
         if (delay == 0) {
             for (int i = 0; i < times; i++) {
-                Bukkit.dispatchCommand(sender.getCommandSender(), sb.toString());
+                Bukkit.dispatchCommand(sender.getCommandSender(), cmd);
             }
             return CommandResult.SUCCESS;
         }
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCore.getInstance(), new LoopScheduler(times, sender.getCommandSender(), sb.toString()), 0l, delay);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(OctoCore.getInstance(), new LoopScheduler(times, sender.getCommandSender(), cmd), 0l, delay);
         return CommandResult.SUCCESS;
     }
 

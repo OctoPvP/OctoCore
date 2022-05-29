@@ -46,7 +46,7 @@ public class AuthModule implements Module {
     @Getter
     private static boolean serverAuthEnabled;
     @Getter
-    private static HashMap<UUID, String> settingUpAuth = new HashMap<>();
+    private static final HashMap<UUID, String> settingUpAuth = new HashMap<>();
 
     public static boolean verify(String secret, String code) {
         return verifier.isValidCode(secret, code);
@@ -173,8 +173,6 @@ public class AuthModule implements Module {
             verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
             triesLeft = new HashMap<>();
             Bukkit.getServer().getPluginManager().registerEvents(new AuthListener(), plugin);
-            OctoCore.getCommandFramework().registerCommands(new AuthCommand());
-            OctoCore.getCommandFramework().registerCommands(new ForceAuthCommand());
         } else serverAuthEnabled = false;
     }
 

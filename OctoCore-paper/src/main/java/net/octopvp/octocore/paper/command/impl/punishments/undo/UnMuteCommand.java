@@ -1,8 +1,9 @@
 package net.octopvp.octocore.paper.command.impl.punishments.undo;
 
-import net.octopvp.octocore.common.object.Permission;
-import net.octopvp.octocore.paper.command.BaseCommand;
-import net.octopvp.octocore.paper.command.Command;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.bukkit.annotation.PlayerOnly;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.UndoPunishmentPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -13,9 +14,10 @@ import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
-public class UnMuteCommand extends BaseCommand {
-
-    @Command(name = "unmute", usage = "<player> <reason>", permission = Permission.PUNISHMENT_UNMUTE)
+public class UnMuteCommand {
+    @Command(name = "unmute", usage = "<player> <reason>")
+    @Permission(Permissions.PUNISHMENT_UNMUTE)
+    @PlayerOnly
     public CommandResult execute(Sender sender, String[] args) {
         if (args.length < 2) {
             return CommandResult.INVALID_ARGS;
