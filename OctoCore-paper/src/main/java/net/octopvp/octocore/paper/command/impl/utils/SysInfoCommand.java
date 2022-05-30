@@ -10,10 +10,10 @@ import net.octopvp.octocore.paper.utils.Sender;
 
 import java.util.Arrays;
 
-public class SysInfo {
+public class SysInfoCommand {
     @Command(name = "sysinfo")
     @Permission(Permissions.SYS_INFO)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         StringBuilder msg = new StringBuilder(CC.SEPARATOR + CC.NL);
         msg.append(CC.GREEN + "OS: " + Utilities.getSystemInfo().getOperatingSystem().getFamily()).append(CC.NL);
         msg.append(CC.GREEN + "OS Family: " + Utilities.getSystemInfo().getOperatingSystem().getFamily()).append(CC.NL);

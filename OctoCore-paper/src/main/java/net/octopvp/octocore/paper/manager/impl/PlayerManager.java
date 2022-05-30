@@ -20,6 +20,7 @@ import net.octopvp.octocore.paper.utils.GsonType;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -77,6 +78,20 @@ public class PlayerManager extends Manager {
             return null;
         }
         return new PlayerData(UUID.fromString(document.getString("uuid")), document.getString("name"));
+    }
+
+    public PlayerData getDataEvenIfOffline(UUID uuid, boolean create) {
+        PlayerData data = getData(uuid);
+        if (data != null) {
+            return data;
+        }
+        data = getOfflineData(uuid);
+        if (data == null && create) {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+            data = createProfile(uuid, player.getName());
+            data.save();
+        }
+        return data;
     }
 
     public void modifyData(UUID uuid, ObjectConsumer<PlayerData> callback) {

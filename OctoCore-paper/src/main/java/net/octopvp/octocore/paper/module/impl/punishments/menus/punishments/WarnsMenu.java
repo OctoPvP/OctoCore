@@ -14,6 +14,7 @@ import net.octopvp.octocore.paper.utils.menu.MenuManager;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.PlayerInfoButton;
+import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.ChatColor;
@@ -33,10 +34,11 @@ import java.util.stream.Collectors;
 @Getter
 public class WarnsMenu extends PaginatedMenu {
     private final IPunishData punishData;
+    private final Menu parent;
 
     @Override
     public String getPagesTitle(Player player) {
-        return CC.translate("&7" + punishData.getName() + "'s warns");
+        return CC.translate(punishData.getName() + "'s warns");
     }
 
     @Override
@@ -63,7 +65,7 @@ public class WarnsMenu extends PaginatedMenu {
 
     @Override
     public Button getBackButton(Player player) {
-        return new BackButton.DefaultBackButton(this);
+        return new BackButton.SuppliedBackButton(parent);
     }
 
     @AllArgsConstructor

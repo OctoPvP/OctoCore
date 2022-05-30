@@ -91,7 +91,7 @@ public class HistoryMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new BansMenu(playerData).open(player);
+            new BansMenu(playerData, HistoryMenu.this).open(player);
         }
     }
 
@@ -122,7 +122,7 @@ public class HistoryMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new BlacklistsMenu(playerData).open(player);
+            new BlacklistsMenu(playerData, HistoryMenu.this).open(player);
 
         }
     }
@@ -154,7 +154,7 @@ public class HistoryMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new MutesMenu(playerData).open(player);
+            new MutesMenu(playerData, HistoryMenu.this).open(player);
         }
     }
 
@@ -184,7 +184,7 @@ public class HistoryMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new KicksMenu(playerData).open(player);
+            new KicksMenu(playerData, HistoryMenu.this).open(player);
         }
     }
 
@@ -215,7 +215,7 @@ public class HistoryMenu extends Menu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new WarnsMenu(playerData).open(player);
+            new WarnsMenu(playerData, HistoryMenu.this).open(player);
         }
     }
 

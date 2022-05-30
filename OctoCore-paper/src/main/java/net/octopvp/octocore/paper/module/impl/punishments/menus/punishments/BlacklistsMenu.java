@@ -13,6 +13,7 @@ import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.PlayerInfoButton;
+import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,10 +30,11 @@ import java.util.stream.Collectors;
 @Getter
 public class BlacklistsMenu extends PaginatedMenu {
     private final IPunishData punishData;
+    private final Menu parent;
 
     @Override
     public String getPagesTitle(Player player) {
-        return CC.translate("&7" + punishData.getName() + "'s blacklists");
+        return CC.translate(punishData.getName() + "'s blacklists");
     }
 
     @Override
@@ -46,7 +48,7 @@ public class BlacklistsMenu extends PaginatedMenu {
 
     @Override
     public Button getBackButton(Player player) {
-        return new BackButton.DefaultBackButton(this);
+        return new BackButton.SuppliedBackButton(parent);
     }
 
     @Override
