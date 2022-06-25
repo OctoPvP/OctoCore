@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.command.providers;
 
 import net.octopvp.commander.bukkit.BukkitCommandSender;
+import net.octopvp.commander.bukkit.annotation.DefaultSelf;
 import net.octopvp.commander.command.CommandContext;
 import net.octopvp.commander.command.CommandInfo;
 import net.octopvp.commander.command.ParameterInfo;
@@ -9,7 +10,6 @@ import net.octopvp.commander.provider.Provider;
 import net.octopvp.commander.sender.CoreCommandSender;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.annotation.CreateData;
-import net.octopvp.octocore.paper.command.annotation.DefaultSelf;
 import net.octopvp.octocore.paper.command.annotation.OnlineOnly;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
@@ -55,8 +55,8 @@ public class PlayerDataProvider implements Provider<PlayerData> {
     }
 
     @Override
-    public List<String> provideSuggestions(String input, CoreCommandSender sender) {
-        return OctoCore.getInstance().getCommander().getArgumentProviders().get(Player.class).provideSuggestions(input, sender);
+    public List<String> provideSuggestions(String input, String lastArg, CoreCommandSender sender) {
+        return OctoCore.getInstance().getCommander().getArgumentProviders().get(Player.class).provideSuggestions(input, lastArg, sender);
     }
 
     @Override

@@ -14,7 +14,7 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 public class MuteCommand {
-    @Command(name = "mute", aliases = "tempmute")
+    @Command(name = "mute", aliases = "tempmute", usage = "<player> [duration] <reason> [-s]")
     @Permission(Permissions.PUNISHMENT_MUTE)
     public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {

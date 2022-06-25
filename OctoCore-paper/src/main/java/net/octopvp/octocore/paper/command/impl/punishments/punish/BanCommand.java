@@ -1,10 +1,8 @@
 package net.octopvp.octocore.paper.command.impl.punishments.punish;
 
-import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.*;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
-import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
@@ -14,15 +12,10 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 public class BanCommand {
-    @Command(name = "ban", aliases = {"tempban"}, usage = "[-s] <player> [duration] <reason>")
+    @Command(name = "ban", aliases = {"tempban"})
     @Permission(Permissions.PUNISHMENT_BAN)
-    public CommandResult execute(Sender sender, String[] args) {
-        if (args.length < 2) {
-            return CommandResult.INVALID_ARGS;
-        }
+    public CommandResult execute(Sender sender, @Switch(value = "s", aliases = "silent") boolean silent, @Name("player") OfflinePunishData data, @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason, @GetArgumentFor(1) String durationString) {
         Tasks.runAsync(() -> {
-
-            OfflinePunishData data = new OfflinePunishData(args[0]);
             data.load();
 
             if (data.isBanned()) {
@@ -31,50 +24,17 @@ public class BanCommand {
                 return;
             }
 
-            long duration = -5L;
-            int reasonStart = 2;
-            boolean durationCorrect = false;
-
-            if (args[1].equalsIgnoreCase("perm") || args[1].equalsIgnoreCase("permanent")) {
-                duration = -5L;
-            } else {
-                try {
-                    duration = DateUtils.parseDateDiff(args[1], true);
-                    durationCorrect = true;
-                } catch (Exception e) {
-                    reasonStart = 1;
-                }
-            }
-            Logger.debug("Duration: %1", duration);
-            if (reasonStart == 2 && !durationCorrect) {
-                Logger.debug("Invalid date format!");
-                sender.sendMessage(Lang.WRONG_DATE_FORMAT.toString());
-                return;
-            }
-            StringBuilder reasonBuilder = new StringBuilder();
-
-            for (int i = reasonStart; i < args.length; ++i) {
-                reasonBuilder.append(args[i]).append(" ");
-            }
-            if (reasonBuilder.length() == 0) reasonBuilder.append("Banned");
-
-            String reason = reasonBuilder.toString().trim();
-            boolean silent = reason.contains("-silent") || reason.contains("-s");
-
-            if (silent) {
-                reason = reason.replace("-silent", "").replace("-s", "").trim();
-            }
-            Logger.debug("Silent: %1", silent);
+            Logger.debug("Silent: %1, DurationString: %2", silent, durationString);
 
             Punishment punishment = new Punishment(data, PunishmentType.BAN);
             punishment.setSilent(silent);
-            if (duration != -5L) {
+            if (duration != -1L) {
                 punishment.setPermanent(false);
                 punishment.setDurationTime(duration);
             } else {
                 punishment.setPermanent(true);
             }
-            punishment.setEnteredDuration(args[1]);
+            punishment.setEnteredDuration(durationString);
             punishment.setLast(true);
             punishment.setAddedBy(sender.getUniqueId());
             punishment.setAddedByName(sender.getName());

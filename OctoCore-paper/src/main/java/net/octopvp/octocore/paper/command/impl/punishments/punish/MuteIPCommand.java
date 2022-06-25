@@ -14,7 +14,7 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 public class MuteIPCommand {
-    @Command(name = "muteip", aliases = {"tempipmute", "ipmute", "tempmuteip"})
+    @Command(name = "muteip", aliases = {"tempipmute", "ipmute", "tempmuteip"}, usage = "<player> [duration] <reason> [-s]")
     @Permission(Permissions.PUNISHMENT_MUTE)
     public CommandResult execute(Sender sender, String[] args) {
         if (true) {

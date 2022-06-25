@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.conversations.grant;
 
 import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.menus.grant.GrantConfirmationMenu;
 import net.octopvp.octocore.paper.objects.GrantProcedureState;
@@ -26,6 +27,10 @@ public class GrantReasonConversation extends StringPrompt {
     @Override
     public Prompt acceptInput(ConversationContext conversationContext, String s) {
         Logger.debug(s);
+        if (playerData == null || playerData.getGrantProcedure() == null) {
+            player.sendMessage(CC.RED + "Cancelled.");
+            return END_OF_CONVERSATION;
+        }
         playerData.getGrantProcedure().setEnteredReason(s);
         player.sendMessage(Lang.GRANT_REASON_SET.getMsg(s));
         playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.CONFIRMATION);

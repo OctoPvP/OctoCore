@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.Switch;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
@@ -15,11 +16,11 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.InvocationTargetException;
 
 public class TrollCommand {
-    @Command(name = "Troll")
+    @Command(name = "troll")
     @Permission(Permissions.ADMIN)
     @PlayerOnly
-    public CommandResult execute(Sender sender, String[] args) {
-        if (args.length >= 1) {
+    public CommandResult execute(Sender sender, @Switch(value = "c", aliases = "crash") boolean crash) {
+        if (crash) {
             CrashClient.getInstance().activate(sender.getPlayer());
             return CommandResult.SUCCESS;
         }

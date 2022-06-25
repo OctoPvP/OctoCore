@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper.command.impl.rank;
 
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.Required;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.CommandResult;
@@ -14,20 +15,15 @@ import org.bukkit.entity.Player;
 public class DeleteRankCommand {
     @Command(name = "deleterank", aliases = {"delrank"})
     @Permission(Permissions.DELETE_RANK)
-    public CommandResult execute(Sender sender, String[] args) {
-        if (args.length != 1) {
-            sender.sendMessage(CC.RED + "Usage: /deleterank <rank name>");
-            return CommandResult.SUCCESS;
-        }
-        Rank targetRank = RankManager.getInstance().getRankByName(args[0]);
-        if (targetRank == null) {
+    public CommandResult execute(Sender sender, @Required Rank rank) {
+        if (rank == null) {
             sender.sendMessage(CC.RED + "Could not find that rank!");
             return CommandResult.SUCCESS;
         }
         if (sender.getCommandSender() instanceof Player) {
-            new ConfirmDeleteMenu(targetRank).open(sender);
+            new ConfirmDeleteMenu(rank).open(sender);
         } else {
-            RankManager.getInstance().delete(targetRank);
+            RankManager.getInstance().delete(rank);
         }
         return CommandResult.SUCCESS;
     }

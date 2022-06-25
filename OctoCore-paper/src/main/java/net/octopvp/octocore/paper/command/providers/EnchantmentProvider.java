@@ -23,7 +23,7 @@ public class EnchantmentProvider implements Provider<Enchantment> {
     }
 
     @Override
-    public List<String> provideSuggestions(String input, CoreCommandSender sender) {
+    public List<String> provideSuggestions(String input, String lastArg, CoreCommandSender sender) {
         return Arrays.asList("sharp", "sharpness", "ff", "featherfalling", "feather", "fire", "fireaspect", "kb", "knock", "knockback", "smi", "smite", "bane", "baneof", "baneofarthropods", "prot", "protection", "firep", "fireprot", "fireprotection",
                 "blast", "blastprot", "blastprotection", "proj", "projprot", "projectileprotection", "loot", "looting", "fort", "fortune", "silk", "silktouch", "pow", "power", "pun", "punch", "fla", "flame", "inf", "infinity", "unb", "unbreaking", "eff", "efficiency");
     }

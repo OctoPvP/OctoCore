@@ -11,7 +11,7 @@ public class HologramCommand {
     @Command(name = "hologram")
     @PlayerOnly
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
 
         return CommandResult.SUCCESS;
     }

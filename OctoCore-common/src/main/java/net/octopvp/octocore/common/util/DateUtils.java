@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public class DateUtils {
 
     private static final Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", 2);
+    private static final Pattern LONG_DATE_PATTERN = Pattern.compile("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
 
     public static String removeTimePattern(String input) {
         return timePattern.matcher(input).replaceFirst("").trim();
@@ -27,7 +28,6 @@ public class DateUtils {
 
         StringBuilder number = new StringBuilder();
 
-        // Can't do lambda here because of variable
         for (int i = 0; i < input.length(); ++i) {
             char c = input.charAt(i);
 
@@ -115,8 +115,8 @@ public class DateUtils {
 
         while (matcher.find()) {
             String s = matcher.group();
-            Long value = Long.parseLong(s.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")[0]);
-            String type = s.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")[1];
+            Long value = Long.parseLong(LONG_DATE_PATTERN.split(s)[0]);
+            String type = LONG_DATE_PATTERN.split(s)[1];
 
             switch (type) {
                 case "s": {
@@ -204,13 +204,13 @@ public class DateUtils {
 
         GregorianCalendar var13 = new GregorianCalendar();
 
-        if (years > 0) var13.add(1, years * (future ? 1 : -1));
-        if (months > 0) var13.add(2, months * (future ? 1 : -1));
-        if (weeks > 0) var13.add(3, weeks * (future ? 1 : -1));
-        if (days > 0) var13.add(5, days * (future ? 1 : -1));
-        if (hours > 0) var13.add(11, hours * (future ? 1 : -1));
-        if (minutes > 0) var13.add(12, minutes * (future ? 1 : -1));
-        if (seconds > 0) var13.add(13, seconds * (future ? 1 : -1));
+        if (years > 0) var13.add(Calendar.YEAR, years * (future ? 1 : -1));
+        if (months > 0) var13.add(Calendar.MONTH, months * (future ? 1 : -1));
+        if (weeks > 0) var13.add(Calendar.WEEK_OF_YEAR, weeks * (future ? 1 : -1));
+        if (days > 0) var13.add(Calendar.DATE, days * (future ? 1 : -1));
+        if (hours > 0) var13.add(Calendar.HOUR_OF_DAY, hours * (future ? 1 : -1));
+        if (minutes > 0) var13.add(Calendar.MINUTE, minutes * (future ? 1 : -1));
+        if (seconds > 0) var13.add(Calendar.SECOND, seconds * (future ? 1 : -1));
 
         GregorianCalendar max = new GregorianCalendar();
 
@@ -218,7 +218,7 @@ public class DateUtils {
         return var13.after(max) ? max.getTimeInMillis() : var13.getTimeInMillis();
     }
 
-    static int dateDiff(int type, Calendar fromDate, Calendar toDate, boolean future) {
+    public static int dateDiff(int type, Calendar fromDate, Calendar toDate, boolean future) {
         int diff = 0;
         long savedDate = fromDate.getTimeInMillis();
 
@@ -227,7 +227,7 @@ public class DateUtils {
 
             fromDate.add(type, future ? 1 : -1);
 
-            ++diff;
+            diff++;
         }
 
         fromDate.setTimeInMillis(savedDate);
@@ -236,11 +236,8 @@ public class DateUtils {
 
     public static String formatDateDiff(long date) {
         GregorianCalendar c = new GregorianCalendar();
-
         c.setTimeInMillis(date);
-
         GregorianCalendar now = new GregorianCalendar();
-
         return DateUtils.formatDateDiff(now, c);
     }
 

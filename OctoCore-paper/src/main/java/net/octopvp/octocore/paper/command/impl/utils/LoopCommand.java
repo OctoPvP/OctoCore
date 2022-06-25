@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.command.impl.utils;
 
 import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.JoinStrings;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.OctoCore;
@@ -13,15 +14,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class LoopCommand {
     @Command(name = "loop")
     @Permission(Permissions.LOOP)
-    public CommandResult execute(Sender sender, int times, int delay, String[] command) {
-        if (command == null || command.length == 0) {
+    public CommandResult execute(Sender sender, int times, int delay, @JoinStrings String cmd) {
+        if (cmd == null || cmd.length() == 0) {
             return CommandResult.INVALID_ARGS;
         }
-
-        String cmd = String.join(" ", command);
         if (delay == 0) {
             for (int i = 0; i < times; i++) {
-                Bukkit.dispatchCommand(sender.getCommandSender(), cmd);
+                Bukkit.dispatchCommand(sender.getCommandSender(), cmd.replace("%i", i + ""));
             }
             return CommandResult.SUCCESS;
         }
@@ -31,10 +30,10 @@ public class LoopCommand {
     }
 
     public class LoopScheduler extends BukkitRunnable {
-        int a = 0;
         private final int times;
         private final String command;
         private final org.bukkit.command.CommandSender sender;
+        int a = 0;
 
         public LoopScheduler(int times, CommandSender sender, String command) {
             this.times = times;

@@ -15,7 +15,7 @@ import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 public class WarnCommand {
 
-    @Command(name = "warn")
+    @Command(name = "warn", usage = "<player> [duration] <reason> [-s]")
     @Permission(Permissions.PUNISHMENT_WARN)
     public CommandResult execute(Sender sender, String[] args) {
         Tasks.runAsync(() -> {

@@ -9,25 +9,23 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import net.octopvp.commander.Commander;
 import net.octopvp.commander.bukkit.BukkitCommander;
+import net.octopvp.commander.exception.CommandException;
 import net.octopvp.commander.exception.InvalidArgsException;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
-import net.octopvp.octocore.common.object.DisconnectReason;
-import net.octopvp.octocore.common.object.ServerInfo;
-import net.octopvp.octocore.common.object.ServerType;
-import net.octopvp.octocore.common.object.Settings;
+import net.octopvp.octocore.common.object.*;
 import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.command.providers.GameModeProvider;
-import net.octopvp.octocore.paper.command.providers.PlayerDataProvider;
-import net.octopvp.octocore.paper.command.providers.SenderProvider;
+import net.octopvp.octocore.paper.command.providers.*;
 import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.impl.*;
+import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
+import net.octopvp.octocore.paper.objects.permissions.Rank;
 import net.octopvp.octocore.paper.setup.*;
 import net.octopvp.octocore.paper.utils.PacketUtil;
 import net.octopvp.octocore.paper.utils.Sender;
@@ -38,6 +36,7 @@ import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import net.octopvp.octocore.paper.utils.runnable.runnables.DataUpdateThread;
 import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.Player;
@@ -48,14 +47,18 @@ import java.util.Objects;
 import java.util.UUID;
 
 public final class OctoCore extends JavaPlugin {
+    @Getter
+    private static final Settings settings = new Settings();
+    private static final SetupModules setupModules = new SetupModules();
+    @Getter
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting()
+            .serializeNulls()
+            .enableComplexMapKeySerialization().create();    // https://stackoverflow.com/a/44800004/11588583
     public static String prefix = "[OctoCore] ";
     private static Chat chat;
     private static Permission perms = null;
     private static OctoCore instance;
     private static Location spawn;
-
-    @Getter
-    private static final Settings settings = new Settings();
     @Getter
     private static String serverName;
     @Getter
@@ -63,17 +66,11 @@ public final class OctoCore extends JavaPlugin {
     @Getter
     @Setter
     private static ServerType serverType;
-    private static final SetupModules setupModules = new SetupModules();
-    @Getter
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting()
-            .serializeNulls()
-            .enableComplexMapKeySerialization().create();    // https://stackoverflow.com/a/44800004/11588583
     private static Tab tab;
+    private final ConversationFactory conversationFactory = new ConversationFactory(this);
     //Setup Start
     @Getter
     SetupManager setupManager = new SetupManager();
-    private final ConversationFactory conversationFactory = new ConversationFactory(this);
-
     @Getter
     private DataUpdateThread dataUpdateThread;
 
@@ -249,7 +246,9 @@ public final class OctoCore extends JavaPlugin {
 
                 .registerProvider(PlayerData.class, new PlayerDataProvider())
                 .registerProvider(Sender.class, new SenderProvider())
-                .registerProvider(GameModeProvider.class, new GameModeProvider())
+                .registerProvider(GameMode.class, new GameModeProvider())
+                .registerProvider(Rank.class, new RankProvider())
+                .registerProvider(OfflinePunishData.class, new OfflinePunishDataProvider())
 
                 .registerCommandPostProcessor((ctx, obj) -> {
                     if (obj instanceof CommandResult) {
@@ -265,6 +264,11 @@ public final class OctoCore extends JavaPlugin {
                             ctx.getCommandSender().sendMessage(result.getMsg());
                             return;
                         }
+                    }
+                })
+                .registerCommandPreProcessor(ctx -> {
+                    if (ctx.getCommandInfo().getInstance().getClass().isAnnotationPresent(Disable.class) || ctx.getCommandInfo().getMethod().isAnnotationPresent(Disable.class)) {
+                        throw new CommandException("This command is disabled.");
                     }
                 })
         ;

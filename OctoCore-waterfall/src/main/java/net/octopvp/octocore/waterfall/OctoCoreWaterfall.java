@@ -106,7 +106,7 @@ public final class OctoCoreWaterfall extends Plugin {
         Logger.debug(config.getString("protocol.version"));
         getProxy().getPluginManager().registerListener(this, new PingEvent());
 
-        getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 10, 10, TimeUnit.SECONDS);
+        getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1, TimeUnit.MINUTES);
 
         Logger.debug("OctoBungee Started! " + (System.currentTimeMillis() - start) + "ms");
         Logger.debug("Redis connected: " + redisHandler.isConnected());

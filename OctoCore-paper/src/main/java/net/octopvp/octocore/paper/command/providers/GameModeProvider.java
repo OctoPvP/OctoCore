@@ -41,7 +41,7 @@ public class GameModeProvider implements Provider<GameMode> {
     }
 
     @Override
-    public List<String> provideSuggestions(String input, CoreCommandSender sender) {
+    public List<String> provideSuggestions(String input, String lastArg, CoreCommandSender sender) {
         return Arrays.asList("c", "s", "sp", "a", "creative", "survival", "spectator", "adventure", "0", "1", "2", "3");
     }
 }

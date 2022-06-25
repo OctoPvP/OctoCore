@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 public class CallGcCommand {
     @Command(name = "callgc")
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         if (sender.getCommandSender() instanceof Player)
             OctoCore.getConversationFactory().withFirstPrompt(new ConfirmConversation("call System.gc()? This may cause players to be kicked!", (bool) -> {
                 if (bool) {
