@@ -1,66 +1,21 @@
 package net.octopvp.octocore.paper.command.impl.punishments.punish;
 
-import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.*;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
-import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.utils.Sender;
-import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 public class WarnCommand {
 
     @Command(name = "warn", usage = "<player> [duration] <reason> [-s]")
     @Permission(Permissions.PUNISHMENT_WARN)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender, @Name("player") OfflinePunishData data, @Switch(value = "s", aliases = "silent") boolean silent, @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason, @GetArgumentFor(1) String durationString) {
         Tasks.runAsync(() -> {
-            if (args.length < 2) {
-                sender.sendMessage(CC.translate("&cUsage: /warn <player> [duration] <reason> [-s]"));
-                return;
-            }
-
-            OfflinePunishData data = new OfflinePunishData(args[0]);
             data.load();
-
-            long duration = -5L;
-            int reasonStart = 2;
-            boolean durationCorrect = false;
-
-            if (args[1].equalsIgnoreCase("perm") || args[1].equalsIgnoreCase("permanent")) {
-                duration = -5L;
-            } else {
-                try {
-                    duration = DateUtils.parseDateDiff(args[1], true);
-                    durationCorrect = true;
-                } catch (Exception e) {
-                    reasonStart = 1;
-                }
-            }
-            if (reasonStart == 2 && !durationCorrect) {
-                sender.sendMessage(Lang.WRONG_DATE_FORMAT.toString());
-                return;
-            }
-
-            StringBuilder reasonBuilder = new StringBuilder();
-
-            for (int i = reasonStart; i < args.length; ++i) {
-                reasonBuilder.append(args[i]).append(" ");
-            }
-            if (reasonBuilder.length() == 0) reasonBuilder.append("Warned");
-
-            String reason = reasonBuilder.toString().trim();
-            boolean silent = reason.contains("-silent") || reason.contains("-s");
-
-            if (reason.contains("-silent")) {
-                reason = reason.replace("-silent", "");
-            } else if (reason.contains("-s")) {
-                reason = reason.replace("-s", "");
-            }
 
             Punishment punishment = new Punishment(data, PunishmentType.WARN);
             punishment.setSilent(silent);
@@ -70,7 +25,7 @@ public class WarnCommand {
             } else {
                 punishment.setPermanent(true);
             }
-            punishment.setEnteredDuration(args[1]);
+            punishment.setEnteredDuration(durationString);
             punishment.setLast(true);
             punishment.setAddedBy(sender.getUniqueId());
             punishment.setAddedByName(sender.getName());

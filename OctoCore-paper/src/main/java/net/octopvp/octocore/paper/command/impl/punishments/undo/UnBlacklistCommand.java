@@ -14,7 +14,7 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 public class UnBlacklistCommand {
-    @Command(name = "unblacklist", usage = "<player> <reason>", aliases = {"unbl", "unblplayer", "unblacklistplayer"})
+    @Command(name = "unblacklist", aliases = {"unbl", "unblplayer", "unblacklistplayer"})
     @Permission(Permissions.PUNISHMENT_UNBLACKLIST)
     @PlayerOnly
     public CommandResult execute(Sender sender, String player, @JoinStrings @Optional @Name("reason") String r) {

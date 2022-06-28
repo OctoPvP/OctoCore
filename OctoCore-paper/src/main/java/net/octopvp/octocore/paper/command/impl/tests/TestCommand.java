@@ -44,15 +44,15 @@ public class TestCommand {
         return CommandResult.SUCCESS;
     }
 
-    @Command(name = "test")
+    @Command(name = "test1")
     @Permission(Permissions.ADMIN)
     public void test(Sender sender, @Required String s) {
         sender.sendMessage(s);
     }
 
-    //@Command(name = "test", description = "test", aliases = {"test1", "test2"})
+    @Command(name = "test", description = "test", aliases = {"test1", "test2"})
     @PlayerOnly
-    @Permission(Permissions.ADMIN)
+    //@Permission(Permissions.ADMIN)
     public CommandResult execute(Sender sender) {
         PlayerData data = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
         if (data == null) {

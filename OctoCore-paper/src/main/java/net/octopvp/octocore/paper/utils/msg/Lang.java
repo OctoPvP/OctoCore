@@ -137,9 +137,9 @@ public enum Lang {
     WARN_MESSAGE("&cYou have been &4%1&c warned for &e%2.%3"),
     TEMP_WARN_ENTRY_MESSAGE("\n&cExpires: &e%1"),
 
-    STAFF_ROLLBACK_WIPING("&aWiping all &2%1&a. Please wait..."),
+    STAFF_ROLLBACK_WIPING("&aWiping &b%1&a's &b%2&a."),
     STAFF_ROLLBACK_DONT_HAVE_HISTORY("&c%1 doesn't have any &2%2 &aperformed."),
-    STAFF_ROLLBACK_WIPED("&mSuccessfully rollbacked %1. &7($s%2 %3s&7) ($s%4 Active&7,&s%5 Expired&7)"),
+    STAFF_ROLLBACK_WIPED("&aSuccessfully rollbacked %1. &7($s%2 %3s&7) ($s%4 Active&7,$s%5 Expired&7)"),
     PUNISH_INFO_FORMAT(
             CC.SEPARATOR +
                     "\n$m%1's $sHistory" +

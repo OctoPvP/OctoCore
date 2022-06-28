@@ -52,10 +52,9 @@ public class DataUpdateThread extends Thread {
                 playerData.save();
             playerData.setPlayTime(playerData.getPlayTime() + 1); //increment playtime by 1 second
             Player player = Bukkit.getPlayer(playerData.getUuid());
+            if (player == null) continue;
             if (player.getName() == null || player.getUniqueId() == null) continue;
-            if (player != null) {
-                playerData.setOp(player.isOp());
-            }
+            playerData.setOp(player.isOp());
             String name = playerData.getName();
             if (name == null && playerData.isOnline()) name = player.getName();
             JsonBuilder pdata = new JsonBuilder()
