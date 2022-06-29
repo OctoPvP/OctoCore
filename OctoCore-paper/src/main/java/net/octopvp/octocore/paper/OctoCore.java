@@ -23,6 +23,7 @@ import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.command.providers.*;
 import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.impl.*;
+import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
@@ -249,6 +250,7 @@ public final class OctoCore extends JavaPlugin {
                 .registerProvider(GameMode.class, new GameModeProvider())
                 .registerProvider(Rank.class, new RankProvider())
                 .registerProvider(OfflinePunishData.class, new OfflinePunishDataProvider())
+                .registerProvider(GlobalPlayer.class, new GlobalPlayerProvider())
 
                 .registerCommandPostProcessor((ctx, obj) -> {
                     if (obj instanceof CommandResult) {

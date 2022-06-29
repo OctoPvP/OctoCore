@@ -19,7 +19,7 @@ public class Permissions {
 
     CREATIVE = "octocore.command.gamemode.creative", SPECTATOR = "octocore.command.gamemode.spectator", ADVENTURE = "octocore.command.gamemode.adventure", SURVIVAL = "octocore.command.gamemode.survival", LOOP = "octocore.command.loop",
 
-    EXECUTE_ON_ALL_SERVERS = "octocore.command.executeall", CONSOLE_EXECUTE = "octocore.command.console",
+    EXECUTE_ON_ALL_SERVERS = "octocore.command.executeall",
 
     GIVE_TAG = "octocore.command.givetag", CUSTOM_COLOR = "octocore.customcolor",
 

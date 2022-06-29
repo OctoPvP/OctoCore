@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.command.impl.fun;
 
 import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Optional;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
@@ -13,21 +14,15 @@ import org.bukkit.entity.Player;
 public class KaboomCommand {
     @Command(name = "kaboom")
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender, String[] args) {
-        if (args.length == 1) {
-            Player player;
-            try {
-                player = Bukkit.getPlayer(args[0]);
-            } catch (Exception e) {
-                return CommandResult.PLAYER_NOT_FOUND;
-            }
+    public CommandResult execute(Sender sender, @Optional Player player) {
+        if (player != null) {
             KaboomTroll.getInstance().activate(player);
             sender.sendMessage(CC.GREEN + "Launched " + player.getName());
             return CommandResult.SUCCESS;
         }
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            KaboomTroll.getInstance().activate(player);
-            sender.sendMessage(CC.GREEN + "Launched " + player.getName());
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            KaboomTroll.getInstance().activate(p);
+            sender.sendMessage(CC.GREEN + "Launched " + p.getName());
         });
         return CommandResult.SUCCESS;
     }

@@ -12,7 +12,7 @@ public class TrashCommand {
     @Command(name = "trash", aliases = {"garbage"})
     @Permission(Permissions.TRASH)
     @PlayerOnly
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         sender.getPlayer().openInventory(Bukkit.createInventory(null, 54));
         return CommandResult.SUCCESS;
     }

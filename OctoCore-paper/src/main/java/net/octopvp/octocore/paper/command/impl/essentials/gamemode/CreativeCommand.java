@@ -14,7 +14,7 @@ public class CreativeCommand {
     @Command(name = "creative", aliases = {"gmc"})
     @PlayerOnly
     @Permission(Permissions.CREATIVE)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         sender.sendMessage(Lang.GAMEMODE.getMsg("CREATIVE"));
         sender.getPlayer().setGameMode(GameMode.CREATIVE);
         return CommandResult.SUCCESS;

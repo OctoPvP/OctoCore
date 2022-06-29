@@ -11,7 +11,7 @@ public class SeenCommand {
     @Command(name = "seen", description = "When the player was last seen on the network")
     @Cooldown(3)
     @Permission(Permissions.SEEN)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         // /seen Badbird5907
 
         return CommandResult.SUCCESS;

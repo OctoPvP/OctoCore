@@ -13,7 +13,7 @@ public class DupeCommand {
     @Command(name = "dupethis")
     @Permission(Permissions.ADMIN)
     @PlayerOnly
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         Player player = sender.getPlayer();
         ItemStack item = player.getInventory().getItemInHand();
         player.getInventory().addItem(item);

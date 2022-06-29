@@ -1,26 +1,21 @@
 package net.octopvp.octocore.paper.command.impl.essentials;
 
-import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.Cooldown;
-import net.octopvp.commander.annotation.Permission;
-import net.octopvp.octocore.common.StringUtils;
+import net.octopvp.commander.annotation.*;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.utils.Sender;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 
 public class ConsoleCommand {
-    @Command(name = "console", usage = "<command>")
+    @Command(name = "console")
     @Cooldown(3)
-    @Permission(Permissions.CONSOLE_EXECUTE)
-    public CommandResult execute(Sender sender, String[] args) {
-        if (args.length == 0) {
-            return CommandResult.INVALID_ARGS;
-        }
-        String command = StringUtils.buildString(args, 0);
+    @Permission(Permissions.ADMIN)
+    public CommandResult execute(@Sender CommandSender sender, @JoinStrings String command) {
         if (command.startsWith("/"))
             command.substring(1);
+        sender.sendMessage("Executing...");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        sender.sendMessage("Done");
         return CommandResult.SUCCESS;
     }
 }

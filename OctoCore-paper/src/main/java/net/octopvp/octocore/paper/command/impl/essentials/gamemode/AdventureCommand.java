@@ -14,7 +14,7 @@ public class AdventureCommand {
     @Command(name = "adventure", aliases = {"gma"})
     @Permission(Permissions.ADVENTURE)
     @PlayerOnly
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         sender.sendMessage(Lang.GAMEMODE.getMsg("ADVENTURE"));
         sender.getPlayer().setGameMode(GameMode.ADVENTURE);
         return CommandResult.SUCCESS;

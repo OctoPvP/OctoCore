@@ -2,6 +2,8 @@ package net.octopvp.octocore.paper.command.impl.message;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.JoinStrings;
+import net.octopvp.commander.annotation.Name;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
@@ -19,19 +21,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 public class MessageCommand {
-    @Command(name = "message", aliases = {"msg", "w", "m", "tell", "t"}, usage = "<user> <message>")
+    @Command(name = "message", aliases = {"msg", "w", "m", "tell", "t"})
     @PlayerOnly
-    public CommandResult execute(Sender sender, String[] args) {
-        if (args.length < 2) {
-            return CommandResult.INVALID_ARGS;
-        }
-        String user = args[0];
-        String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-        GlobalPlayer target = ServerManager.getInstance().getGlobalPlayer(user);
+    public CommandResult execute(Sender sender, @Name("player") GlobalPlayer target, @JoinStrings String message) {
         GlobalPlayer senderPlayer = ServerManager.getInstance().getGlobalPlayer(sender.getUUID());
 
         if (target == null) {

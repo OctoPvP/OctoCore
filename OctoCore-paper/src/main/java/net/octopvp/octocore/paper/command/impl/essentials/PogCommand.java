@@ -9,7 +9,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 public class PogCommand {
     @Command(name = "pog", aliases = {"poggers"})
     @Cooldown(69420)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         sender.sendMessage(CC.GREEN + "POGGERS");
         return CommandResult.SUCCESS;
     }
