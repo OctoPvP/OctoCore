@@ -74,6 +74,11 @@ public class Sender implements CommandSender {
     }
 
     @Override
+    public boolean hasPermission(Permission permission) {
+        return commandSender.hasPermission(permission);
+    }
+
+    @Override
     public PermissionAttachment addAttachment(Plugin plugin, String s, boolean b) {
         return commandSender.addAttachment(plugin, s, b);
     }

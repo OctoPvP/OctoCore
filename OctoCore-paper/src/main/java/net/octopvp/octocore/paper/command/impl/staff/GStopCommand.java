@@ -12,7 +12,7 @@ import net.octopvp.octocore.paper.utils.msg.Lang;
 public class GStopCommand {
     @Command(name = "gstop")
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         String command = "stop";
         new GlobalCommandPacket(command).send();
         new AdminAlertPacket(Lang.ADMIN_ALERT_GLOBAL_EXECUTE.getMsg(sender.getName(), command)).send();

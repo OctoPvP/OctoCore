@@ -1,43 +1,20 @@
 package net.octopvp.octocore.paper.command.impl.rank;
 
 import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.Optional;
+import net.octopvp.commander.annotation.Required;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
-import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 public class PermissionInfoCommand {
-    @Command(name = "haspermission", aliases = {"permissioninfo", "perminfo"}, usage = "<permission> [player]", description = "Shows information about a player's permission")
-    @Permission(Permissions.COMMAND_PERMISSION_INFO)
+    @Command(name = "haspermission", aliases = {"permissioninfo", "perminfo"}, description = "Shows information about a player's permission")
     @PlayerOnly
-    public CommandResult execute(Sender sender, String[] args) {
-        String target = "", permission = "";
-        if (args.length == 0) {
-            return CommandResult.INVALID_ARGS;
-        }
-        //args[0] is the permission
-        //args[1] is the target player
-        if (args.length == 2) {
-            permission = args[0];
-            target = args[1];
-        }
-        if (args.length == 1) {
-            if (!sender.isPlayer()) {
-                return CommandResult.INVALID_ARGS;
-            }
-            permission = args[0];
-            target = sender.getName();
-        }
-        Player targetPlayer = Bukkit.getPlayer(target);
-        PlayerData data = PlayerManager.getInstance().getData(targetPlayer);
-        PermissionResult result = data.getPermissionResult(permission);
+    public CommandResult execute(Sender sender, @Required String permission, @Optional PlayerData target) {
+        PermissionResult result = target.getPermissionResult(permission);
         sender.sendMessage(CC.SEPARATOR);
         sender.sendMessage(CC.PRIMARY + "Permission Info For: " + CC.SECONDARY + target);
         sender.sendMessage(CC.PRIMARY + "Permission: " + CC.SECONDARY + permission);

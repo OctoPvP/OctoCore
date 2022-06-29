@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.command.impl.fun;
 
 import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Optional;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.paper.command.CommandResult;
@@ -12,12 +13,11 @@ import org.bukkit.entity.Player;
 public class DemoMenuCommand {
     @Command(name = "demomenu")
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender, String[] args) {
-        if (args.length == 0) {
+    public CommandResult execute(Sender sender, @Optional String target) {
+        if (target == null) {
             DemoMenuTroll.getInstance().activate(sender.getPlayer());
             return CommandResult.SUCCESS;
         }
-        String target = args[0];
         if (target.equalsIgnoreCase("all") || target.equals("*")) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 DemoMenuTroll.getInstance().activate(player);

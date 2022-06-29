@@ -3,14 +3,12 @@ package net.octopvp.octocore.paper.module.impl.punishments.menus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.common.object.punish.IPunishData;
+import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.module.impl.punishments.menus.alts.AltsMenu;
 import net.octopvp.octocore.paper.module.impl.punishments.menus.alts.PotentialAltsMenu;
 import net.octopvp.octocore.paper.module.impl.punishments.menus.punishments.*;
-import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
-import net.octopvp.octocore.paper.objects.IPunishData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
@@ -76,7 +74,7 @@ public class HistoryMenu extends Menu {
             item.setDurability(WoolUtils.convertChatColorToWoolData(ChatColor.RED));
             item.setName("&cBans");
             item.addLoreLine("");
-            List<Punishment> bans = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
+            List<IPunishment> bans = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
             item.addLoreLine(CC.GREEN + "Currently banned&7: " + (playerData.isBanned() ? "&aYes" : "&cNo"));
             item.addLoreLine(CC.GREEN + "User was banned " + CC.YELLOW + bans.size() + CC.GREEN + " times.");
             item.addLoreLine("");
@@ -91,9 +89,9 @@ public class HistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<Punishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
+            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new BansMenu(playerData).open(player);
+            new BansMenu(playerData, HistoryMenu.this).open(player);
         }
     }
 
@@ -107,7 +105,7 @@ public class HistoryMenu extends Menu {
             item.setDurability(14);
             item.setName("&4Blacklists");
             item.addLoreLine("");
-            List<Punishment> blacklists = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
+            List<IPunishment> blacklists = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
             item.addLoreLine(CC.GREEN + "Currently blacklisted&7: " + (playerData.isBlacklisted() ? "&aYes" : "&cNo"));
             item.addLoreLine(CC.GREEN + "User was blacklisted " + CC.YELLOW + blacklists.size() + CC.GREEN + " times.");
             item.addLoreLine("");
@@ -122,9 +120,9 @@ public class HistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<Punishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
+            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new BlacklistsMenu(playerData).open(player);
+            new BlacklistsMenu(playerData, HistoryMenu.this).open(player);
 
         }
     }
@@ -139,7 +137,7 @@ public class HistoryMenu extends Menu {
             item.setDurability(WoolUtils.convertChatColorToWoolData(ChatColor.GOLD));
             item.setName("&eMutes");
             item.addLoreLine("");
-            List<Punishment> mutes = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
+            List<IPunishment> mutes = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
             item.addLoreLine(CC.GREEN + "Currently muted&7: " + (playerData.isMuted() ? "&aYes" : "&cNo"));
             item.addLoreLine(CC.GREEN + "User was muted " + CC.YELLOW + mutes.size() + CC.GREEN + " times.");
             item.addLoreLine("");
@@ -154,9 +152,9 @@ public class HistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<Punishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
+            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new MutesMenu(playerData).open(player);
+            new MutesMenu(playerData, HistoryMenu.this).open(player);
         }
     }
 
@@ -170,7 +168,7 @@ public class HistoryMenu extends Menu {
             item.setDurability(9);
             item.setName("&3Kicks");
             item.addLoreLine("");
-            List<Punishment> kicks = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
+            List<IPunishment> kicks = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
             item.addLoreLine(CC.GREEN + "User was kicked " + CC.YELLOW + kicks.size() + CC.GREEN + " times.");
             item.addLoreLine("");
             item.addLoreLine(CC.YELLOW + "Click to view all kicks.");
@@ -184,9 +182,9 @@ public class HistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<Punishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
+            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new KicksMenu(playerData).open(player);
+            new KicksMenu(playerData, HistoryMenu.this).open(player);
         }
     }
 
@@ -200,7 +198,7 @@ public class HistoryMenu extends Menu {
             item.setDurability(WoolUtils.convertChatColorToWoolData(ChatColor.YELLOW));
             item.setName("&eWarns");
             item.addLoreLine("");
-            List<Punishment> warns = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
+            List<IPunishment> warns = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
             item.addLoreLine(CC.GREEN + "Currently warned&7: " + (playerData.isWarned() ? "&aYes" : "&cNo"));
             item.addLoreLine(CC.GREEN + "User was warned " + CC.YELLOW + warns.size() + CC.GREEN + " times.");
             item.addLoreLine("");
@@ -215,9 +213,9 @@ public class HistoryMenu extends Menu {
 
         @Override
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<Punishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
+            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
             if (punishments.size() == 0) return;
-            new WarnsMenu(playerData).open(player);
+            new WarnsMenu(playerData, HistoryMenu.this).open(player);
         }
     }
 

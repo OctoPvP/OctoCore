@@ -3,17 +3,17 @@ package net.octopvp.octocore.paper.module.impl.punishments.menus.punishments;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.common.object.punish.IPunishData;
+import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
-import net.octopvp.octocore.paper.objects.IPunishData;
-import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.paper.utils.menu.buttons.impl.PlayerInfoButton;
+import net.octopvp.octocore.paper.utils.menu.menu.Menu;
 import net.octopvp.octocore.paper.utils.menu.menu.PaginatedMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,10 +30,11 @@ import java.util.stream.Collectors;
 @Getter
 public class BansMenu extends PaginatedMenu {
     private final IPunishData punishData;
+    private final Menu parent;
 
     @Override
     public String getPagesTitle(Player player) {
-        return CC.translate("&7" + punishData.getName() + "'s bans");
+        return CC.translate(punishData.getName() + "'s bans");
     }
 
     @Override
@@ -47,7 +48,7 @@ public class BansMenu extends PaginatedMenu {
 
     @Override
     public Button getBackButton(Player player) {
-        return new BackButton.DefaultBackButton(this);
+        return new BackButton.SuppliedBackButton(parent);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class BansMenu extends PaginatedMenu {
         List<Button> slots = new ArrayList<>();
 
         AtomicInteger order = new AtomicInteger(1);
-        List<Punishment> punishments = punishData.getPunishments().stream().sorted(Comparator.comparingLong(Punishment::getAddedAt).reversed()).filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
+        List<IPunishment> punishments = punishData.getPunishments().stream().sorted(Comparator.comparingLong(IPunishment::getAddedAt).reversed()).filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
 
         punishments.forEach(punishment -> slots.add(new PunishmentButton(punishment, order.getAndIncrement())));
 
@@ -64,7 +65,7 @@ public class BansMenu extends PaginatedMenu {
 
     @AllArgsConstructor
     private class PunishmentButton extends Button {
-        private Punishment punishment;
+        private IPunishment punishment;
         private int order;
 
         @Override

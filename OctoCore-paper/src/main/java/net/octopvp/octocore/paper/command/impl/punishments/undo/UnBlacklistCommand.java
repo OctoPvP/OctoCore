@@ -1,29 +1,25 @@
 package net.octopvp.octocore.paper.command.impl.punishments.undo;
 
-import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.*;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.UndoPunishmentPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 
 public class UnBlacklistCommand {
-    @Command(name = "unblacklist", usage = "<player> <reason>", aliases = {"unbl", "unblplayer", "unblacklistplayer"})
+    @Command(name = "unblacklist", aliases = {"unbl", "unblplayer", "unblacklistplayer"})
     @Permission(Permissions.PUNISHMENT_UNBLACKLIST)
     @PlayerOnly
-    public CommandResult execute(Sender sender, String[] args) {
-        if (args.length < 2) {
-            return CommandResult.INVALID_ARGS;
-        }
+    public CommandResult execute(Sender sender, String player, @JoinStrings @Optional @Name("reason") String r) {
         Tasks.runAsync(() -> {
-            OfflinePunishData data = new OfflinePunishData(args[0]);
+            OfflinePunishData data = new OfflinePunishData(player);
             data.load();
 
             if (!data.isBlacklisted()) {
@@ -31,21 +27,15 @@ public class UnBlacklistCommand {
                 return;
             }
 
-            StringBuilder reasonBuilder = new StringBuilder();
+            String reason = r == null ? "No reason provided." : r;
 
-            for (int i = 1; i < args.length; ++i) {
-                reasonBuilder.append(args[i]).append(" ");
-            }
-            if (reasonBuilder.length() == 0) reasonBuilder.append("unblacklisted");
-
-            String reason = reasonBuilder.toString().trim();
             boolean silent = reason.contains("-silent") || reason.contains("-s");
 
             if (silent) {
                 reason = reason.replace("-silent", "").replace("-s", "").trim();
             }
 
-            Punishment punishment = data.getActiveBlacklist();
+            IPunishment punishment = data.getActiveBlacklist();
             punishment.setActive(false);
             punishment.setLast(false);
             punishment.setRemovedBy(sender.getName());

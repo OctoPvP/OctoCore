@@ -4,11 +4,12 @@ import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.octopvp.octocore.common.object.punish.Alt;
+import net.octopvp.octocore.common.object.punish.IPunishData;
+import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
-import net.octopvp.octocore.paper.objects.IPunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import org.bson.Document;
 
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class PunishData implements IPunishData {
     private final PlayerData playerData;
 
-    private Collection<Punishment> punishments = new HashSet<>();
+    private Collection<IPunishment> punishments = new HashSet<>();
 
     @Override
     public boolean isBanned() {
@@ -53,19 +54,23 @@ public class PunishData implements IPunishData {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE && punishment.isIPRelative()).findFirst().orElse(null) != null;
     }
 
-    public Punishment getActiveBan() {
+    @Override
+    public IPunishment getActiveBan() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null);
     }
 
-    public Punishment getActiveMute() {
+    @Override
+    public IPunishment getActiveMute() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE).findFirst().orElse(null);
     }
 
-    public Punishment getActiveBlacklist() {
+    @Override
+    public IPunishment getActiveBlacklist() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).findFirst().orElse(null);
     }
 
-    public List<Punishment> getPunishments(PunishmentType type) {
+    @Override
+    public List<IPunishment> getPunishments(PunishmentType type) {
         return this.punishments.stream().filter(punishment -> punishment.getType() == type).collect(Collectors.toList());
     }
 

@@ -1,13 +1,11 @@
-package net.octopvp.octocore.paper.objects;
-
-import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
+package net.octopvp.octocore.common.object.punish;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public interface IPunishData {
-    Collection<Punishment> getPunishments();
+    Collection<IPunishment> getPunishments();
 
     Collection<Alt> getAlts();
 
@@ -28,4 +26,12 @@ public interface IPunishData {
     boolean isBlacklisted();
 
     boolean isWarned();
+
+    IPunishment getActiveBan();
+
+    IPunishment getActiveMute();
+
+    IPunishment getActiveBlacklist();
+
+    List<IPunishment> getPunishments(PunishmentType type);
 }

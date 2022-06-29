@@ -5,7 +5,7 @@ public class Permissions {
 
     ADMIN = "octocore.admin",
 
-    COMMAND_NICK = "octocore.command.nick", COMMAND_UNNICK = "octocore.command.unnick", COMMAND_NICK_OTHERS = "octocore.command.nick.others", COMMAND_UNNICK_OTHERS = "octocore.command.unnick.others", COMMAND_PERMISSION_INFO = "octocore.command.perminfo", USE_UNICODE_CHAT = "octocore.chat.unicode", USE_COLOR_CHAT = "octocore.chat.color", STAFF_MODULES = "octocore.lunar.staff", SEEN = "octocore.command.seen", CLEAR_CHAT = "octocore.command.clearchat", BYPASS_CLEAR_CHAT = "octocore.command.clearchat.bypass", LOG_WORLDEDIT = "octocore.action.logworldedit", START_RAFFLE = "octocore.raffle.start", END_RAFFLE = "octocore.raffle.end", ENTER_RAFFLE = "octocore.raffle.enter", SYS_INFO = "octocore.command.sysinfo", USE_COLOR_NAME = "octocore.usecolorname", LIST_PLAYERS = "octocore.command.list", PING_COMMAND_OTHER = "octocore.command.ping.others", PUNISH_PLAYER = "octocore.command.punish", SETUP_2FA = "octocore.command.2fa.setup", VIEW_HISTORY = "octocore.command.history", FORCE_AUTH = "octocore.command.forceauth", VANISH = "octocore.action.vanish", TRASH = "octocore.command.trash", REFRESH_SKIN = "octocore.command.refreshskin",
+    COMMAND_NICK = "octocore.command.nick", COMMAND_UNNICK = "octocore.command.unnick", COMMAND_NICK_OTHERS = "octocore.command.nick.others", COMMAND_UNNICK_OTHERS = "octocore.command.unnick.others", USE_UNICODE_CHAT = "octocore.chat.unicode", USE_COLOR_CHAT = "octocore.chat.color", STAFF_MODULES = "octocore.lunar.staff", SEEN = "octocore.command.seen", CLEAR_CHAT = "octocore.command.clearchat", BYPASS_CLEAR_CHAT = "octocore.command.clearchat.bypass", LOG_WORLDEDIT = "octocore.action.logworldedit", START_RAFFLE = "octocore.raffle.start", END_RAFFLE = "octocore.raffle.end", ENTER_RAFFLE = "octocore.raffle.enter", SYS_INFO = "octocore.command.sysinfo", USE_COLOR_NAME = "octocore.usecolorname", LIST_PLAYERS = "octocore.command.list", PING_COMMAND_OTHER = "octocore.command.ping.others", PUNISH_PLAYER = "octocore.command.punish", SETUP_2FA = "octocore.command.2fa.setup", VIEW_HISTORY = "octocore.command.history", FORCE_AUTH = "octocore.command.forceauth", VANISH = "octocore.action.vanish", TRASH = "octocore.command.trash", REFRESH_SKIN = "octocore.command.refreshskin",
 
     SEND_JOIN_MESSAGE = "octocore.staff.message.send.join", SEND_LEAVE_MESSAGE = "octocore.staff.message.send.leave", RECEIVE_JOIN_MESSAGE = "octocore.staff.message.receive.join", RECEIVE_LEAVE_MESSAGE = "octocore.staff.message.receive.leave", RECEIVE_SWITCH_MESSAGE = "octocore.staff.message.receive.switch", SEND_SWITCH_MESSAGE = "octocore.staff.message.send.switch", RECEIVE_SERVER_ONLINE_MESSAGE = "octocore.staff.message.receive.server.online", RECEIVE_SERVER_OFFLINE_MESSAGE = "octocore.staff.message.receive.server.offline",
 
@@ -19,7 +19,7 @@ public class Permissions {
 
     CREATIVE = "octocore.command.gamemode.creative", SPECTATOR = "octocore.command.gamemode.spectator", ADVENTURE = "octocore.command.gamemode.adventure", SURVIVAL = "octocore.command.gamemode.survival", LOOP = "octocore.command.loop",
 
-    EXECUTE_ON_ALL_SERVERS = "octocore.command.executeall", CONSOLE_EXECUTE = "octocore.command.console",
+    EXECUTE_ON_ALL_SERVERS = "octocore.command.executeall",
 
     GIVE_TAG = "octocore.command.givetag", CUSTOM_COLOR = "octocore.customcolor",
 

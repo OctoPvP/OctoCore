@@ -1,7 +1,7 @@
 package net.octopvp.octocore.paper.listeners;
 
+import net.octopvp.octocore.common.object.punish.IPunishment;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.entity.Player;
@@ -22,15 +22,15 @@ public class PunishmentListener implements Listener {
 
         if (playerData == null) return;
 
-        AtomicReference<Punishment> ipmute = new AtomicReference<>();
+        AtomicReference<IPunishment> ipmute = new AtomicReference<>();
         playerData.getAlts().forEach(alt -> {
-            Punishment punishment = alt.getPunishData().getActiveMute();
+            IPunishment punishment = alt.getPunishData().getActiveMute();
             if (punishment != null) {
                 ipmute.set(alt.getPunishData().getActiveMute());
             }
         });
         if (ipmute.get() != null) {
-            Punishment mute = ipmute.get();
+            IPunishment mute = ipmute.get();
             event.setCancelled(true);
 
             if (mute.isPermanent()) {
@@ -43,7 +43,7 @@ public class PunishmentListener implements Listener {
 
         if (!playerData.getPunishData().isMuted()) return;
 
-        Punishment mute = playerData.getPunishData().getActiveMute();
+        IPunishment mute = playerData.getPunishData().getActiveMute();
         event.setCancelled(true);
 
         if (mute.isPermanent()) {

@@ -2,12 +2,12 @@ package net.octopvp.octocore.paper.utils.runnable.runnables;
 
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.StringUtils;
+import net.octopvp.octocore.common.util.CachedData;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataPacket;
 import net.octopvp.octocore.paper.database.redis.packets.server.ServerUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
-import net.octopvp.octocore.paper.objects.CachedData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.GsonSerializer;
 import net.octopvp.octocore.paper.utils.GsonType;
@@ -52,9 +52,9 @@ public class DataUpdateThread extends Thread {
                 playerData.save();
             playerData.setPlayTime(playerData.getPlayTime() + 1); //increment playtime by 1 second
             Player player = Bukkit.getPlayer(playerData.getUuid());
-            if (player != null) {
-                playerData.setOp(player.isOp());
-            }
+            if (player == null) continue;
+            if (player.getName() == null || player.getUniqueId() == null) continue;
+            playerData.setOp(player.isOp());
             String name = playerData.getName();
             if (name == null && playerData.isOnline()) name = player.getName();
             JsonBuilder pdata = new JsonBuilder()

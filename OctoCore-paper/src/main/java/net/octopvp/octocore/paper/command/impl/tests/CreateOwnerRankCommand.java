@@ -7,13 +7,12 @@ import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
 import net.octopvp.octocore.paper.objects.builders.RankBuilder;
 import net.octopvp.octocore.paper.objects.enums.RankType;
-import net.octopvp.octocore.paper.utils.Sender;
 import org.bukkit.ChatColor;
 
 public class CreateOwnerRankCommand {
     @Command(name = "createtestrank")
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute() {
         RankBuilder builder = new RankBuilder("Owner")
                 .setPrefix("&7[&4OWNER&7]")
                 .setColor(ChatColor.DARK_RED)

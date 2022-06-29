@@ -19,7 +19,7 @@ public class InventoryAdapter extends PacketAdapter {
     private static Set<UUID> currentlyOpen;
 
     static {
-        InventoryAdapter.currentlyOpen = new HashSet<UUID>();
+        InventoryAdapter.currentlyOpen = new HashSet<>();
     }
 
     public InventoryAdapter() {

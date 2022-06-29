@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.MessageSettings;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.PlayerMessagePacket;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 
 import java.util.ArrayList;
 import java.util.List;

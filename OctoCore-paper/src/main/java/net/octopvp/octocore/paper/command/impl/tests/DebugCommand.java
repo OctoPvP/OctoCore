@@ -24,7 +24,7 @@ public class DebugCommand {
     @Command(name = "debug")
     @Permission(Permissions.ADMIN)
     @PlayerOnly
-    public CommandResult executeDbg(Sender sender, String[] args) {
+    public CommandResult executeDbg(Sender sender) {
         if (Logger.getDebugPlayers().contains(sender.getUniqueId()))
             Logger.getDebugPlayers().remove(sender.getUniqueId());
         else

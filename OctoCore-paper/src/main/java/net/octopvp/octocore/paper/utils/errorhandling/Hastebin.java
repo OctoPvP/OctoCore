@@ -26,7 +26,8 @@ public class Hastebin {
                 byte[] postData = s.getBytes(StandardCharsets.UTF_8);
                 int postDataLength = postData.length;
 
-                String requestURL = "https://paste.badbird5907.net/documents";
+                String requestURL = "https://www.toptal.com/developers/hastebin/documents";
+                //"https://paste.badbird5907.net/documents";
                 URL url = null;
                 try {
                     url = new URL(requestURL);

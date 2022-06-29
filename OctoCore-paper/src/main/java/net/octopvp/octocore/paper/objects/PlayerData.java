@@ -11,7 +11,12 @@ import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.*;
+import net.octopvp.octocore.common.object.punish.Alt;
+import net.octopvp.octocore.common.object.punish.IPunishData;
+import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.CachedData;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
@@ -26,9 +31,7 @@ import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.enums.RankType;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
@@ -820,7 +823,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     @Override
-    public Collection<Punishment> getPunishments() {
+    public Collection<IPunishment> getPunishments() {
         return punishData.getPunishments();
     }
 
@@ -857,6 +860,26 @@ public class PlayerData implements IPlayerData, IPunishData {
     @Override
     public boolean isWarned() {
         return punishData.isWarned();
+    }
+
+    @Override
+    public IPunishment getActiveBan() {
+        return punishData.getActiveBan();
+    }
+
+    @Override
+    public IPunishment getActiveMute() {
+        return punishData.getActiveMute();
+    }
+
+    @Override
+    public IPunishment getActiveBlacklist() {
+        return punishData.getActiveBlacklist();
+    }
+
+    @Override
+    public List<IPunishment> getPunishments(PunishmentType type) {
+        return punishData.getPunishments(type);
     }
 
     public enum SaveState {

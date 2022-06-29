@@ -30,4 +30,8 @@ public class OctoCoreCommon {
     public static String getServerName() {
         return info.getServerName();
     }
+
+    public static ServerInfo getInfo() {
+        return info;
+    }
 }

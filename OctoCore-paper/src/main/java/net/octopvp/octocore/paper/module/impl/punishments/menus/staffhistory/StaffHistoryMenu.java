@@ -1,8 +1,8 @@
 package net.octopvp.octocore.paper.module.impl.punishments.menus.staffhistory;
 
 import lombok.AllArgsConstructor;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.paper.module.impl.punishments.util.PunishmentType;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.item.WoolUtils;

@@ -6,16 +6,16 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.common.object.IPlayerData;
+import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.ExecutePunishmentPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.paper.objects.IPlayerData;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bson.Document;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,8 +25,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class Punishment {
-    private transient final OctoCore plugin = OctoCore.getInstance();
+public class Punishment implements IPunishment {
     private PunishmentType punishmentType;
 
     private boolean active = true, permanent = true, silent = false, removedSilent = false, last = false, IPRelative = false;
@@ -55,6 +54,7 @@ public class Punishment {
         this.targetId = uuid;
     }
 
+    @Override
     public boolean isTemporary() {
         return !this.permanent;
     }
@@ -83,7 +83,7 @@ public class Punishment {
             document.put("id", this.id.toString());
             document.put("type", this.punishmentType.name());
             if (replace) {
-                this.getCollection().replaceOne(
+                getCollection().replaceOne(
                         Filters.and(
                                 Filters.eq(
                                         "uuid",
@@ -128,21 +128,7 @@ public class Punishment {
         this.punishmentType = PunishmentType.valueOf(document.getString("type"));
     }
 
-    public String getNiceDuration() {
-        if (this.permanent) return "Permanent";
-        if (this.durationTime == -5L) return "";
-
-        return DurationFormatUtils.formatDurationWords(DateUtils.handleParseTime(this.enteredDuration), true, true);
-    }
-
-    public String getNiceExpire() {
-        if (this.permanent) return "Never";
-        if (hasExpired()) return "Expired";
-        if (this.durationTime == -5L) return "";
-
-        return DateUtils.formatDateDiff(this.getDurationTime());
-    }
-
+    @Override
     public boolean hasExpired() {
         if (!isActive()) return true;
         if (isPermanent()) return false;
@@ -151,7 +137,12 @@ public class Punishment {
         return System.currentTimeMillis() >= durationTime;
     }
 
-    private MongoCollection<Document> getCollection() {
+    @Override
+    public void setType(PunishmentType type) {
+        this.punishmentType = type;
+    }
+
+    private static MongoCollection<Document> getCollection() {
         return PunishModule.getPunishments();
     }
 
@@ -183,33 +174,6 @@ public class Punishment {
                 .addProperty("punishment", OctoCore.getGson().toJson(this));
 
         new ExecutePunishmentPacket(jsonChain).send();
-    }
-
-    @Override
-    public String toString() {
-        return "Punishment{" +
-                "plugin=" + plugin +
-                ", punishmentType=" + punishmentType +
-                ", active=" + active +
-                ", permanent=" + permanent +
-                ", silent=" + silent +
-                ", removedSilent=" + removedSilent +
-                ", last=" + last +
-                ", IPRelative=" + IPRelative +
-                ", addedAt=" + addedAt +
-                ", durationTime=" + durationTime +
-                ", whenRemoved=" + whenRemoved +
-                ", reason='" + reason + '\'' +
-                ", removedBy='" + removedBy + '\'' +
-                ", enteredDuration='" + enteredDuration + '\'' +
-                ", removedFor='" + removedFor + '\'' +
-                ", addedByName='" + addedByName + '\'' +
-                ", name='" + name + '\'' +
-                ", targetAddress='" + targetAddress + '\'' +
-                ", addedBy=" + addedBy +
-                ", id=" + id +
-                ", targetId=" + targetId +
-                '}';
     }
 
     public PunishmentType getType() {

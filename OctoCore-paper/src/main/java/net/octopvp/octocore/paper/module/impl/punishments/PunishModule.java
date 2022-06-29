@@ -4,13 +4,13 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import net.octopvp.octocore.common.object.DisconnectReason;
+import net.octopvp.octocore.common.object.punish.Alt;
+import net.octopvp.octocore.common.object.punish.IPunishment;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.staff.PunishedJoinPacket;
 import net.octopvp.octocore.paper.module.Module;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bson.Document;
@@ -37,13 +37,13 @@ public class PunishModule implements Module {
 
     public static boolean checkPunishments(AsyncPlayerPreLoginEvent event, PlayerData data, String name, UUID uuid) {
         if (data.getPunishData().isBlacklisted()) {
-            Punishment activeBlacklist = data.getPunishData().getActiveBlacklist();
+            IPunishment activeBlacklist = data.getPunishData().getActiveBlacklist();
             disallowBlacklist(event, activeBlacklist);
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
             return true;
         }
         if (data.getPunishData().isBanned()) {
-            Punishment activeBan = data.getPunishData().getActiveBan();
+            IPunishment activeBan = data.getPunishData().getActiveBan();
             boolean temp = activeBan.isTemporary();
             event.disallow(
                     AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
@@ -67,12 +67,12 @@ public class PunishModule implements Module {
 
         for (Alt alt : data.getAlts()) {
             if (alt.isBlacklisted()) {
-                Punishment activeBlacklist = alt.getPunishData().getActiveBlacklist();
+                IPunishment activeBlacklist = alt.getPunishData().getActiveBlacklist();
                 disallowBlacklist(event, activeBlacklist);
                 event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
                 return true;
             } else if (alt.isIPBanned()) {
-                Punishment activeBan = alt.getPunishData().getActiveBan();
+                IPunishment activeBan = alt.getPunishData().getActiveBan();
                 boolean temp = activeBan.isTemporary();
                 event.disallow(
                         AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
@@ -114,7 +114,7 @@ public class PunishModule implements Module {
         return false;
     }
 
-    private static void disallowBlacklist(AsyncPlayerPreLoginEvent event, Punishment punishment) {
+    private static void disallowBlacklist(AsyncPlayerPreLoginEvent event, IPunishment punishment) {
         boolean temp = punishment.isTemporary();
         event.disallow(
                 AsyncPlayerPreLoginEvent.Result.KICK_BANNED,

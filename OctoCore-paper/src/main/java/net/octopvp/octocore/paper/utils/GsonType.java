@@ -2,8 +2,8 @@ package net.octopvp.octocore.paper.utils;
 
 import com.google.gson.reflect.TypeToken;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.util.permissions.Node;
-import net.octopvp.octocore.paper.module.impl.punishments.util.Alt;
 import net.octopvp.octocore.paper.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.paper.objects.permissions.Grant;
 

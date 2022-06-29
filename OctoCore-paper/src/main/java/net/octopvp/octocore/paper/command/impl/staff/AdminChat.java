@@ -1,6 +1,8 @@
 package net.octopvp.octocore.paper.command.impl.staff;
 
 import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.JoinStrings;
+import net.octopvp.commander.annotation.Optional;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
@@ -16,9 +18,9 @@ public class AdminChat {
     @Command(name = "adminchat", aliases = {"ac"})
     @Permission(Permissions.ADMINCHAT)
     @PlayerOnly
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender, @Optional @JoinStrings String message) {
         PlayerData playerData = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
-        if (args.length == 0) {
+        if (message == null) {
             playerData.setStaffChat(!playerData.isStaffChat());
             sender.sendMessage((playerData.isStaffChat() ? Lang.ADMIN_CHAT_ENABLED : Lang.ADMIN_CHAT_DISABLED));
             if (playerData.isStaffChat()) {
@@ -26,13 +28,7 @@ public class AdminChat {
                 sender.sendMessage(Lang.STAFF_CHAT_DISABLED);
             }
         } else {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < args.length; i++) {
-                if (i == 0)
-                    sb.append(args[i]);
-                else sb.append(" ").append(args[i]);
-            }
-            new AdminChatPacket(sender.getPlayer().getName(), OctoCore.getServerName(), sb.toString(), sender.getPlayer().getUniqueId());
+            new AdminChatPacket(sender.getPlayer().getName(), OctoCore.getServerName(), message, sender.getPlayer().getUniqueId());
         }
         return CommandResult.SUCCESS;
     }

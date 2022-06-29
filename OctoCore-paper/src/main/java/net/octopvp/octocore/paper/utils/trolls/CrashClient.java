@@ -32,7 +32,7 @@ public class CrashClient implements Troll {
         target.sendBlockChange(target.getLocation(), 6666, (byte) 0);
            */
 
-        if (true) {
+        if (false) {
             final EntityPlayer px = ((CraftPlayer) target).getHandle();
             final EntityCreeper entity = new EntityCreeper(px.world);
 

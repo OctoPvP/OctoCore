@@ -13,7 +13,7 @@ public class MessageSettings {
     private UUID lastMessage;
     private List<String> ignoreList = new ArrayList<>();
     private boolean soundsEnabled = true;
-    private boolean globalChat = false;
+    private boolean globalChat = true;
     private boolean messagesOff = false;
 
     public boolean isIgnoring(String name) {

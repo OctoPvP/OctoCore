@@ -70,6 +70,11 @@ public final class OctoCoreWaterfall extends Plugin {
             public String getCommitBranch() {
                 return "UNKNOWN";
             }
+
+            @Override
+            public boolean isOnline(UUID uuid) {
+                return ProxyServer.getInstance().getPlayer(uuid) != null; //TODO
+            }
         }, gson);
         File file = new File(getDataFolder(), "config.yml");
 
@@ -101,7 +106,7 @@ public final class OctoCoreWaterfall extends Plugin {
         Logger.debug(config.getString("protocol.version"));
         getProxy().getPluginManager().registerListener(this, new PingEvent());
 
-        getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 10, 10, TimeUnit.SECONDS);
+        getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1, TimeUnit.MINUTES);
 
         Logger.debug("OctoBungee Started! " + (System.currentTimeMillis() - start) + "ms");
         Logger.debug("Redis connected: " + redisHandler.isConnected());

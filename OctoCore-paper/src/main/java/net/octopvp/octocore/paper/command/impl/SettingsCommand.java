@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 public class SettingsCommand {
     @Command(name = "settings")
-    public void execute(@Sender Player player, PlayerData sender) {
+    public void execute(@Sender Player player, @Sender PlayerData sender) {
         new SettingsMenu(sender).open(player);
     }
 }

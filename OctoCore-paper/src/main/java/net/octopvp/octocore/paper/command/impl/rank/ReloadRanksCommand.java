@@ -11,7 +11,7 @@ import net.octopvp.octocore.paper.utils.Sender;
 public class ReloadRanksCommand {
     @Command(name = "reloadranks")
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(Sender sender) {
         RankManager.getInstance().reloadRanks();
         sender.sendMessage(CC.GREEN + "Done!");
         return CommandResult.SUCCESS;
