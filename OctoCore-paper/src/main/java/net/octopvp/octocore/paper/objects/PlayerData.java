@@ -98,6 +98,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     private List<UUID> ignoredPlayers = new ArrayList<>();
 
     private MessageSettings messageSettings = new MessageSettings();
+    private transient String cachedFormattedNameNoNickNoTag = null;
 
     public PlayerData(UUID uuid, String name) {
         this.uuid = uuid;
@@ -298,7 +299,6 @@ public class PlayerData implements IPlayerData, IPunishData {
         lowerName = name.toLowerCase();
         lastKnownName = name;
         this.address = player.getAddress().getAddress().getHostAddress();
-        player.setPlayerListName(getDisplayName());
 
         if (hasPermission(Permissions.SEND_JOIN_MESSAGE) && joinAlert)
             new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName()).send();
@@ -310,6 +310,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         if (socialSpy && !hasPermission(Permissions.SOCIAL_SPY)) {
             socialSpy = false;
         }
+        player.setPlayerListName(getDisplayName());
     }
 
     public void loadAlts(UUID uuid) {
@@ -405,8 +406,6 @@ public class PlayerData implements IPlayerData, IPunishData {
         return getNode(perm) != null;
     }
 
-    private transient String cachedFormattedNameNoNickNoTag = null;
-
     public String getCachedFormattedNameNoNickNoTag() {
         if (cachedFormattedNameNoNickNoTag == null) {
             cachedFormattedNameNoNickNoTag = getFormattedName(false, Bukkit.getPlayer(uuid), false);
@@ -432,12 +431,6 @@ public class PlayerData implements IPlayerData, IPunishData {
             return CC.translate((this.isNicked() ? nickPrefix : getHighestRank().getPrefix()) + (this.isNicked() ? nickColor : getCurrentColor()) + " " + (this.isNicked() ? nick : lastKnownName)) + (tag != null ? " " + getTagString() : "");
         return CC.translate(getHighestRank().getPrefix() + getNameColor() + " " + lastKnownName) + (tag != null ? " " + getTagString() : "");
          */
-    }
-
-
-    public PlayerData addLoadNote(LoadNote note) {
-        this.loadNotes.add(note);
-        return this;
     }
 
     public String getCurrentPrefix() {
@@ -809,13 +802,13 @@ public class PlayerData implements IPlayerData, IPunishData {
         return TagManager.getTag(tagID);
     }
 
-    public PlayerTag getNickTag() {
-        return TagManager.getTag(nickTagID);
-    }
-
     public void setTag(PlayerTag tag) {
         this.tagID = tag.getId();
         this.allowedTags = null;
+    }
+
+    public PlayerTag getNickTag() {
+        return TagManager.getTag(nickTagID);
     }
 
     @Override
