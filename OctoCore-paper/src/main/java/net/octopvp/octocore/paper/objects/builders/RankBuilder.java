@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class RankBuilder implements Cloneable {
     @Getter
-    private Rank rank;
+    private final Rank rank;
 
     public RankBuilder(String name) {
         rank = new Rank();

@@ -1,9 +1,9 @@
 package net.octopvp.octocore.paper.utils.menu.buttons.impl;
 
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;
 import org.bukkit.Bukkit;
@@ -16,8 +16,8 @@ import java.util.Date;
 import java.util.UUID;
 
 public class PlayerInfoButton extends Button {
-    private PlayerData playerData;
     private final int slot;
+    private final PlayerData playerData;
 
     public PlayerInfoButton(PlayerData playerData, int slot) {
         this.playerData = playerData;

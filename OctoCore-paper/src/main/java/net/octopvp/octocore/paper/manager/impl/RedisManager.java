@@ -44,7 +44,8 @@ public class RedisManager extends Manager {
         OctoCoreCommon.setRedisHandler(OctoCore.getInstance().getRedisHandler());
         try {
             OctoCore.getInstance().getRedisHandler().setupPackets();
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException |
+                 InstantiationException e) {
             e.printStackTrace();
         }
         if (OctoCore.getInstance().getRedisHandler() == null || !OctoCore.getInstance().getRedisHandler().isConnected())

@@ -1,6 +1,9 @@
 package net.octopvp.octocore.paper.utils;
 
-import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_8_R3.MinecraftServer;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityStatus;
+import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.protocol.InventoryAdapter;
 import net.octopvp.octocore.paper.protocol.PingAdapter;

@@ -11,10 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter
 public class Broadcast {
     private static final HashMap<UUID, Broadcast> broadcastIds = new HashMap<>();
-    private String message;
-    private UUID player;
     private final UUID broadcastId = UUID.randomUUID();
     private final Map<String, Integer> responses = new ConcurrentHashMap<>();
+    private String message;
+    private UUID player;
 
     public Broadcast(String s, UUID player) {
         this.player = player;

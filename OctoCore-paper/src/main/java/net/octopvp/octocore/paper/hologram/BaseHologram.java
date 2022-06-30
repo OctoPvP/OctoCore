@@ -25,11 +25,10 @@ import java.util.stream.Collectors;
 public class BaseHologram implements Hologram {
     protected static final double distance = 0.23D;
     protected final Set<UUID> currentWatchers;
+    private final Collection<UUID> viewers;
     protected Location location;
     protected List<HologramLine> lastLines = new ArrayList<>();
-
     protected List<HologramLine> lines = new ArrayList<>();
-    private final Collection<UUID> viewers;
 
     protected BaseHologram(HologramBuilder builder) {
         this.currentWatchers = new HashSet<>();

@@ -34,6 +34,8 @@ import java.util.UUID;
 @Getter
 public class AuthModule implements Module {
     @Getter
+    private static final HashMap<UUID, String> settingUpAuth = new HashMap<>();
+    @Getter
     private static SecretGenerator secretGenerator;
     @Getter
     private static TimeProvider timeProvider;
@@ -45,8 +47,6 @@ public class AuthModule implements Module {
     private static HashMap<UUID, Integer> triesLeft;
     @Getter
     private static boolean serverAuthEnabled;
-    @Getter
-    private static final HashMap<UUID, String> settingUpAuth = new HashMap<>();
 
     public static boolean verify(String secret, String code) {
         return verifier.isValidCode(secret, code);

@@ -32,6 +32,7 @@ public class InheritedRanksMenu extends PaginatedMenu {
     private final Menu prev = this;
     private boolean showOnlyInherited = false;
     private boolean changed = false;
+
     @SneakyThrows
     public InheritedRanksMenu(Menu previousMenu, RankBuilder builder, ReturnableTypeCallback<RankBuilder> callback) {
         this.previousMenu = previousMenu;
@@ -48,7 +49,7 @@ public class InheritedRanksMenu extends PaginatedMenu {
     @Override
     public List<Button> getPaginatedButtons(Player player) {
         List<Button> list = new ArrayList<>();
-        for (Rank rank : RankManager.getInstance().getRanks()) {
+        for (Rank rank : RankManager.getRanks()) {
             if (showOnlyInherited) {
                 if (builder.getRank().getInheritedRanks().contains(rank.getRankId()))
                     list.add(new RankButton(rank));

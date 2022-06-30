@@ -13,7 +13,7 @@ public class Logger {
     private static String prefix = "[OctoCore] ";
     private static Messenger messenger = new NoOpMessenger();
     @Getter
-    private static Set<UUID> debugPlayers = new HashSet<>();
+    private static final Set<UUID> debugPlayers = new HashSet<>();
     private final java.util.logging.Logger actualLogger;
 
     public Logger(java.util.logging.Logger logger, String prefix, Messenger messenger) {

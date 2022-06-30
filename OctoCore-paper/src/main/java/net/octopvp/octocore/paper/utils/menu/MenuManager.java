@@ -12,9 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter
 public class MenuManager {
     @Getter
-    private static Map<UUID, Menu> openedMenus = new ConcurrentHashMap<>();
+    private static final Map<UUID, Menu> openedMenus = new ConcurrentHashMap<>();
     @Getter
-    private static Map<UUID, Menu> lastOpenedMenus = new ConcurrentHashMap<>();
+    private static final Map<UUID, Menu> lastOpenedMenus = new ConcurrentHashMap<>();
 
     static {
         Tasks.runTimer(() -> Bukkit.getOnlinePlayers().forEach(player -> {

@@ -16,6 +16,7 @@ public class GameProfileWrapper {
     private final UUID uuid;
     private final String name;
     private final Multimap<String, PropertyWrapper> properties = LinkedHashMultimap.create();
+
     public GameProfileWrapper(UUID uuid, String name) {
         Validate.notNull(uuid, "uuid cannot be null");
         Validate.notNull(name, "name cannot be null");
@@ -86,6 +87,7 @@ public class GameProfileWrapper {
         private final String name;
         private final String value;
         private final String signature;
+
         public PropertyWrapper(String name, String value, String signature) {
             this.name = name;
             this.value = value;

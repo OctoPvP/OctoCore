@@ -28,6 +28,7 @@ public class ManageTagMenu extends Menu {
         process = new ManageTagProcess(player);
         builder = process.getBuilder();
     }
+
     public ManageTagMenu(Menu prev, PlayerTagBuilder builder, ManageTagProcess process) {
         this.builder = builder;
         this.process = process;

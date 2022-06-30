@@ -8,21 +8,35 @@ import java.util.UUID;
 public interface IPunishment {
     PunishmentType getType();
 
+    void setType(PunishmentType type);
+
     default PunishmentType getPunishmentType() {
         return getType();
     }
 
     boolean isActive();
 
+    void setActive(boolean active);
+
     boolean isPermanent();
+
+    void setPermanent(boolean permanent);
 
     boolean isSilent();
 
+    void setSilent(boolean silent);
+
     boolean isRemovedSilent();
+
+    void setRemovedSilent(boolean removedSilent);
 
     boolean isLast();
 
+    void setLast(boolean last);
+
     boolean isIPRelative();
+
+    void setIPRelative(boolean IPRelative);
 
     boolean isTemporary();
 
@@ -30,68 +44,53 @@ public interface IPunishment {
 
     long getAddedAt();
 
-    long getDurationTime();
-
-    long getWhenRemoved();
-
-    String getReason();
-
-    String getRemovedBy();
-
-    String getEnteredDuration();
-
-    String getRemovedFor();
-
-    String getAddedByName();
-
-    String getName();
-
-    String getTargetAddress();
-
-    UUID getAddedBy();
-
-    UUID getId();
-
-    UUID getTargetId();
-
-
-    void setType(PunishmentType type);
-
-    void setActive(boolean active);
-
-    void setPermanent(boolean permanent);
-
-    void setSilent(boolean silent);
-
-    void setRemovedSilent(boolean removedSilent);
-
-    void setLast(boolean last);
-
-    void setIPRelative(boolean IPRelative);
-
     void setAddedAt(long addedAt);
+
+    long getDurationTime();
 
     void setDurationTime(long durationTime);
 
+    long getWhenRemoved();
+
     void setWhenRemoved(long whenRemoved);
+
+    String getReason();
 
     void setReason(String reason);
 
+    String getRemovedBy();
+
     void setRemovedBy(String removedBy);
+
+    String getEnteredDuration();
 
     void setEnteredDuration(String enteredDuration);
 
+    String getRemovedFor();
+
     void setRemovedFor(String removedFor);
+
+    String getAddedByName();
 
     void setAddedByName(String addedByName);
 
+    String getName();
+
     void setName(String name);
+
+    String getTargetAddress();
 
     void setTargetAddress(String targetAddress);
 
+    UUID getAddedBy();
+
     void setAddedBy(UUID addedBy);
 
+    UUID getId();
+
     void setId(UUID id);
+
+    UUID getTargetId();
 
     void setTargetId(UUID targetId);
 

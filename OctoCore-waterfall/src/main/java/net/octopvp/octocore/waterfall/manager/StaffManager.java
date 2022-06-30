@@ -2,9 +2,6 @@ package net.octopvp.octocore.waterfall.manager;
 
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.octopvp.octocore.waterfall.redis.packet.impl.staff.StaffConnectPacket;
-import net.octopvp.octocore.waterfall.redis.packet.impl.staff.StaffLeavePacket;
-import net.octopvp.octocore.waterfall.redis.packet.impl.staff.StaffSwitchPacket;
 
 public class StaffManager {
     public static void join(ServerInfo serverInfo, ProxiedPlayer player) {

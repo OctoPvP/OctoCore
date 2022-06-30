@@ -929,7 +929,7 @@ public abstract class SongPlayer {
             m.setAccessible(true);
             m.invoke(oldSongPlayer, key, value);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException e) {
+                 | SecurityException e) {
             e.printStackTrace();
         }
     }
@@ -940,7 +940,7 @@ public abstract class SongPlayer {
             c.setAccessible(true);
             oldSongPlayer = (net.octopvp.octocore.paper.module.impl.noteblockapi.SongPlayer) c.newInstance(new Object[]{this});
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                | NoSuchMethodException | SecurityException e) {
+                 | NoSuchMethodException | SecurityException e) {
             e.printStackTrace();
         }
     }

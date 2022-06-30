@@ -6,7 +6,6 @@ import net.octopvp.octocore.paper.protocol.PingAdapter;
 import net.octopvp.octocore.paper.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class LagCheck extends BukkitRunnable {

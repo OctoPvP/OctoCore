@@ -37,7 +37,8 @@ public class SetupManager implements Setup {
             try {
                 Object o = clazz.getConstructor().newInstance();
                 managers.add((Manager) o);
-            } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+            } catch (InstantiationException | InvocationTargetException | NoSuchMethodException |
+                     IllegalAccessException e) {
                 e.printStackTrace();
             }
         }

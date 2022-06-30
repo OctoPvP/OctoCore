@@ -31,15 +31,12 @@ import java.util.stream.Collectors;
 public class PlayerManager extends Manager {
     @Getter
     private static PlayerManager instance;
-
-    @Getter
-    private MongoCollection<Document> pdataCollection = null;
-
     @Getter
     private final Map<UUID, PlayerData> playerProfiles = new ConcurrentHashMap<>();
     @Getter
     private final Map<UUID, Integer> quitting = new HashMap<>();
-
+    @Getter
+    private MongoCollection<Document> pdataCollection = null;
 
     public PlayerData getData(UUID uuid) {
         return playerProfiles.get(uuid);

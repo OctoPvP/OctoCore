@@ -21,7 +21,7 @@ public class DatabaseManager extends Manager {
     private static MongoDatabase mongoDatabase = null;
     private static MongoClient mongoClient;
     @Getter
-    private static JsonWriterSettings jsonWriterSettings = JsonWriterSettings.builder()
+    private static final JsonWriterSettings jsonWriterSettings = JsonWriterSettings.builder()
             .int64Converter((value, writer) -> writer.writeNumber(value.toString()))
             .build();
 

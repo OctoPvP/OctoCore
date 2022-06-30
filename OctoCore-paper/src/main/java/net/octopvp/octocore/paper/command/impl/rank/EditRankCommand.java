@@ -16,7 +16,7 @@ public class EditRankCommand {
     @Command(name = "editrank")
     @Permission(Permissions.EDIT_RANK)
     @PlayerOnly
-    public CommandResult execute(Sender sender, @Required @Name("rank") Rank target) {;
+    public CommandResult execute(Sender sender, @Required @Name("rank") Rank target) {
         if (target == null) {
             sender.sendMessage(CC.RED + "Could not find that rank!");
             return CommandResult.SUCCESS;

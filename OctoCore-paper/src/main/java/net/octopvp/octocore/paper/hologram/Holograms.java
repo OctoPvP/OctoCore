@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class Holograms {

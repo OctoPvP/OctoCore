@@ -2,8 +2,8 @@ package net.octopvp.octocore.paper.objects;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 
 import java.util.UUID;
 
@@ -15,6 +15,7 @@ public class GrantProcedure {
     private long enteredDuration;
     private String enteredReason, rankName, server, playerName;
     private boolean permanent = false;
+
     public GrantProcedure(PlayerData data) {
         this.uuid = data.getUuid();
         this.playerName = data.getName();

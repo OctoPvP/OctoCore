@@ -203,7 +203,8 @@ public class CompatibilityUtils {
                 Method method = getPlaySoundMethod(sound.getClass(), false);
                 method.invoke(player, MathUtils.stereoPan(location, distance), sound, volume, pitch);
             }
-        } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException |
+                 InvocationTargetException e) {
             e.printStackTrace();
         }
     }

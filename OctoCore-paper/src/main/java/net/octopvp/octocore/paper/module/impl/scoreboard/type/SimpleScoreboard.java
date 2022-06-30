@@ -27,15 +27,13 @@ public class SimpleScoreboard implements Scoreboard {
 
     private final org.bukkit.scoreboard.Scoreboard scoreboard;
     private final Objective objective;
-
-    protected Player holder;
-    protected long updateInterval = 10L;
-
-    private boolean activated;
-    private ScoreboardHandler handler;
     private final Map<FakePlayer, Integer> entryCache = new ConcurrentHashMap<>();
     private final Table<String, Integer, FakePlayer> playerCache = HashBasedTable.create();
     private final Table<Team, String, String> teamCache = HashBasedTable.create();
+    protected Player holder;
+    protected long updateInterval = 10L;
+    private boolean activated;
+    private ScoreboardHandler handler;
     private BukkitRunnable updateTask;
 
     public SimpleScoreboard(Player holder) {
@@ -221,9 +219,8 @@ public class SimpleScoreboard implements Scoreboard {
     private static class FakePlayer implements OfflinePlayer {
 
         private final String name;
-
-        private Team team;
         private final int offset;
+        private Team team;
 
         FakePlayer(String name, Team team, int offset) {
             this.name = name;

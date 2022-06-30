@@ -54,6 +54,10 @@ public class Punishment implements IPunishment {
         this.targetId = uuid;
     }
 
+    private static MongoCollection<Document> getCollection() {
+        return PunishModule.getPunishments();
+    }
+
     @Override
     public boolean isTemporary() {
         return !this.permanent;
@@ -137,15 +141,6 @@ public class Punishment implements IPunishment {
         return System.currentTimeMillis() >= durationTime;
     }
 
-    @Override
-    public void setType(PunishmentType type) {
-        this.punishmentType = type;
-    }
-
-    private static MongoCollection<Document> getCollection() {
-        return PunishModule.getPunishments();
-    }
-
     public void execute(CommandSender sender) {
         JsonBuilder jsonChain = new JsonBuilder();
         if (sender instanceof Player) {
@@ -178,5 +173,10 @@ public class Punishment implements IPunishment {
 
     public PunishmentType getType() {
         return punishmentType;
+    }
+
+    @Override
+    public void setType(PunishmentType type) {
+        this.punishmentType = type;
     }
 }

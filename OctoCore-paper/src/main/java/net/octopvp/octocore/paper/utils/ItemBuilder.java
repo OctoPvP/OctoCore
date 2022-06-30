@@ -1101,7 +1101,8 @@ public class ItemBuilder {
                     profileField = meta.getClass().getDeclaredField("profile");
                     profileField.setAccessible(true);
                     profileField.set(meta, profile);
-                } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+                } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException |
+                         SecurityException e) {
                     e.printStackTrace();
                 }
             }

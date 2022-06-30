@@ -27,14 +27,11 @@ import java.util.UUID;
 
 public class RankManager extends Manager {
     @Getter
-    private static RankManager instance;
-
-    @Getter
     private static final MongoCollection<Document> ranksCollection = DatabaseManager.getMongoDatabase().getCollection("ranks");
-
     @Getter
     private static final Set<Rank> ranks = new HashSet<>();
-
+    @Getter
+    private static RankManager instance;
     @Getter
     private static boolean loadingRanks = false;
 

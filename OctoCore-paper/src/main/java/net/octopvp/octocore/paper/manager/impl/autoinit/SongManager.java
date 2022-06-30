@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SongManager extends Manager {
     @Getter
-    private static Map<UUID, RadioSongPlayer> songPlayerMap = new ConcurrentHashMap<>();
+    private static final Map<UUID, RadioSongPlayer> songPlayerMap = new ConcurrentHashMap<>();
 
     @Override
     public void init(OctoCore plugin) {

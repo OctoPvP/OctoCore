@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import java.util.*;
 
 public class HologramBuilder {
-    protected List<String> lines = new ArrayList<>();
     private final Collection<UUID> viewers;
+    protected List<String> lines = new ArrayList<>();
     private Location location;
 
     protected HologramBuilder(Collection<UUID> viewers) {

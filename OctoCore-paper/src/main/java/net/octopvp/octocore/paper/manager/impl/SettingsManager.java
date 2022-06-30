@@ -9,7 +9,7 @@ public class SettingsManager extends Manager {
     @Getter
     private static SettingsManager instance;
     @Getter
-    private static Settings settings = OctoCore.getSettings();
+    private static final Settings settings = OctoCore.getSettings();
 
     @Override
     public void init(OctoCore plugin) {

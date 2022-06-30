@@ -15,15 +15,15 @@ import java.util.List;
 
 public abstract class Button {
 
+    public static ItemBuilder GLASS_BUILDER = new ItemBuilder(Material.STAINED_GLASS_PANE).name(CC.GRAY).durability((short) 7);
+    public static ItemStack GLASS = GLASS_BUILDER.build();
+
     public static boolean hasSlot(List<Button> buttons, int value) {
         return buttons.stream()
                 .filter(slot -> slot.getSlot() == value || slot.getSlots() != null
                         && Arrays.stream(slot.getSlots()).anyMatch(i -> i == value))
                 .findFirst().orElse(null) != null;
     }
-
-    public static ItemBuilder GLASS_BUILDER = new ItemBuilder(Material.STAINED_GLASS_PANE).name(CC.GRAY).durability((short) 7);
-    public static ItemStack GLASS = GLASS_BUILDER.build();
 
     public static Button getGlass(int slot) {
         return new Button() {

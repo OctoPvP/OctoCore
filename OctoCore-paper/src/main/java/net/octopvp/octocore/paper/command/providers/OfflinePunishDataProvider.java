@@ -15,7 +15,7 @@ import java.util.List;
 public class OfflinePunishDataProvider implements Provider<OfflinePunishData> {
     @Override
     public OfflinePunishData provide(CommandContext context, CommandInfo commandInfo, ParameterInfo parameterInfo, Deque<String> args) {
-        return  new OfflinePunishData(args.pop());
+        return new OfflinePunishData(args.pop());
     }
 
     @Override

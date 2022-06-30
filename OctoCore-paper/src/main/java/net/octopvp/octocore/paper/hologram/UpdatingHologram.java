@@ -13,10 +13,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public final class UpdatingHologram extends BaseHologram {
-    private long interval = 1L;
-
     private final Consumer<Hologram> updateFunction;
-
+    private long interval = 1L;
     private boolean showing = false;
 
     public UpdatingHologram(UpdatingHologramBuilder builder) {

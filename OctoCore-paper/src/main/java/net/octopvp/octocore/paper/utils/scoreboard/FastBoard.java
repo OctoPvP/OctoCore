@@ -97,10 +97,8 @@ public class FastBoard {
 
     private final Player player;
     private final String id;
-
-    private String title = ChatColor.RESET.toString();
     private final List<String> lines = new ArrayList<>();
-
+    private String title = ChatColor.RESET.toString();
     private boolean deleted = false;
 
     /**

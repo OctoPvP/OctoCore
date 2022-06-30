@@ -31,18 +31,16 @@ import java.util.concurrent.TimeUnit;
 
 public final class OctoCoreWaterfall extends Plugin {
     @Getter
-    private static OctoCoreWaterfall instance;
-    @Getter
-    private static Configuration config;
-
-    @Getter
-    @Setter
-    private RedisHandler redisHandler;
-
-    @Getter
     private static final Gson gson = new GsonBuilder().setPrettyPrinting()
             .serializeNulls()
             .enableComplexMapKeySerialization().create();
+    @Getter
+    private static OctoCoreWaterfall instance;
+    @Getter
+    private static Configuration config;
+    @Getter
+    @Setter
+    private RedisHandler redisHandler;
 
     @Override
     public void onEnable() {

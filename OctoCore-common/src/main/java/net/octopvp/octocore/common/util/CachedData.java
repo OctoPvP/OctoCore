@@ -14,6 +14,7 @@ import java.util.UUID;
 @Setter
 public class CachedData {
     private final UUID uuid;
+
     public Document getData() {
         if (!OctoCoreCommon.getRedisHandler().isConnected()) return null;
         try (Jedis jedis = OctoCoreCommon.getRedisHandler().getSubscriberPool().getResource()) {
@@ -24,6 +25,7 @@ public class CachedData {
             return null;
         }
     }
+
     public void update(Document document) {
         if (!OctoCoreCommon.getRedisHandler().isConnected()) return;
 
