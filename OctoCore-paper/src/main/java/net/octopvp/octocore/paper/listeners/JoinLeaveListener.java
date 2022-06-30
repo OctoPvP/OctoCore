@@ -5,7 +5,10 @@ import net.octopvp.octocore.common.util.CachedData;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
-import net.octopvp.octocore.paper.manager.impl.*;
+import net.octopvp.octocore.paper.manager.impl.PermissionManager;
+import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.manager.impl.ScoreBoardManager;
+import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
@@ -86,7 +89,6 @@ public class JoinLeaveListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent e) {
         PlayerManager.getInstance().leave(e.getPlayer());
-        TabManager.onLeave(e.getPlayer());
         MainRedisHandler.getSaving().remove(e.getPlayer().getUniqueId());
         unfreezePlayer(e.getPlayer());
     }

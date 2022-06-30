@@ -298,6 +298,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         lowerName = name.toLowerCase();
         lastKnownName = name;
         this.address = player.getAddress().getAddress().getHostAddress();
+        player.setPlayerListName(getDisplayName());
 
         if (hasPermission(Permissions.SEND_JOIN_MESSAGE) && joinAlert)
             new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName()).send();

@@ -35,7 +35,6 @@ import net.octopvp.octocore.paper.utils.errorhandling.ErrorHandling;
 import net.octopvp.octocore.paper.utils.nametag.NameTagChanger;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import net.octopvp.octocore.paper.utils.runnable.runnables.DataUpdateThread;
-import net.octopvp.octocore.paper.utils.tab.Tab;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -67,7 +66,6 @@ public final class OctoCore extends JavaPlugin {
     @Getter
     @Setter
     private static ServerType serverType;
-    private static Tab tab;
     private final ConversationFactory conversationFactory = new ConversationFactory(this);
     //Setup Start
     @Getter
@@ -124,10 +122,6 @@ public final class OctoCore extends JavaPlugin {
         return OctoCore.instance;
     }
 
-    public static Tab getTab() {
-        return OctoCore.tab;
-    }
-
     public static boolean isVaultEnabled() {
         return Bukkit.getPluginManager().isPluginEnabled("Vault");
     }
@@ -143,6 +137,9 @@ public final class OctoCore extends JavaPlugin {
     @Override
     public void onLoad() {
         super.onLoad();
+        if (instance != null)
+            throw new IllegalStateException("OctoCore is already initialized");
+        instance = this;
         if (Bukkit.getOnlineMode()) {
             System.err.println("fucking idiot, you have online mode on, OctoCore can't work alone");
             System.exit(-69);
@@ -166,16 +163,12 @@ public final class OctoCore extends JavaPlugin {
                 }
             }
         });
-        if (instance != null)
-            throw new IllegalStateException("OctoCore is already initialized");
-        instance = this;
         loading = true;
         Tasks.init(this);
         if (getConfig().getBoolean("sentry.enable", false))
             SentryManager.init(getConfig().getString("sentry.sentry-dsn", ""));
         commander = BukkitCommander.getCommander(this);
 
-        tab = new Tab(this);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.SubChannels.PERMISSIONS);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.PLUGIN_MSG);
