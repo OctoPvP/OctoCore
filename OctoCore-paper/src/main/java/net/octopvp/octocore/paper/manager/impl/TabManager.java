@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper.manager.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.utils.tab.DefaultTabProvider;
@@ -10,7 +11,6 @@ import net.octopvp.octocore.paper.utils.tab.TabProvider;
 import net.octopvp.octocore.paper.utils.tab.entry.TabElement;
 import net.octopvp.octocore.paper.utils.tab.implementation.v1_8_R3TabAdapter;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -28,8 +28,8 @@ public class TabManager extends Manager {
             tabProvider = new DefaultTabProvider();
         }
 
-        header = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.header")).replace("\\n", "\n");
-        footer = ChatColor.translateAlternateColorCodes('&', OctoCore.getInstance().getConfig().getString("tab.footer").replace("\\n", "\n"));
+        header = CC.translate(OctoCore.getInstance().getConfig().getString("tab.header")).replace("\\n", "\n");
+        footer = CC.translate(OctoCore.getInstance().getConfig().getString("tab.footer").replace("\\n", "\n"));
         if (tabProvider.useDefaultTab()) {
             new TabUpdateRunnable().runTaskTimer(plugin, 20L, tabProvider.getInterval());
         } else setupTab();
