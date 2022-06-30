@@ -36,8 +36,8 @@ database:
       password: default
       db: default
 tab:
-  header: '&a&lYou are playing on the OctoPvP network.&r\n'
-  footer: '\n&a&l&kA &r&6&lplay.octopvp.net&a&l&k A&r\n\n&b&ldiscord.gg/<discord>\n\n&b&loctopvp.net'
+  header: '&b&lOctoPvP&r\n'
+  footer: '\n&aOctoPvP.net\n'
 update-tab-interval: 45
 update-pdata-interval: 100
 default-tab: true
