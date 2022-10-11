@@ -1,6 +1,12 @@
 package net.octopvp.octocore.paper.listeners;
 
+import com.lunarclient.bukkitapi.LunarClientAPI;
+import com.lunarclient.bukkitapi.nethandler.client.LCPacketModSettings;
+import com.lunarclient.bukkitapi.nethandler.client.LCPacketServerUpdate;
+import com.lunarclient.bukkitapi.nethandler.client.obj.ModSettings;
+import com.lunarclient.bukkitapi.object.LCWaypoint;
 import net.octopvp.octocore.common.object.DisconnectReason;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.CachedData;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
@@ -14,6 +20,7 @@ import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,6 +29,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class JoinLeaveListener implements Listener {
@@ -114,6 +122,20 @@ public class JoinLeaveListener implements Listener {
         PlayerManager.getInstance().join(event.getPlayer());
 
         ScoreBoardManager.handleJoin(event.getPlayer());
+        Tasks.runLater(()-> {
+            LunarClientAPI.getInstance().sendPacket(event.getPlayer(), new LCPacketServerUpdate("hypixel.net"));
+            Player player = event.getPlayer();
+            LunarClientAPI.getInstance().sendWaypoint(player, new LCWaypoint("Test", player.getLocation(), Color.AQUA.asRGB(), true, true));
+            ModSettings.ModSetting disabled = new ModSettings.ModSetting(false, new HashMap<>());
+            LunarClientAPI.getInstance().sendPacket(player, new LCPacketModSettings(
+                    new ModSettings()
+                            .addModSetting("Coordinates", disabled)
+                            .addModSetting("textHotKey", disabled)
+            ));
+            for (Player player1 : LunarClientAPI.getInstance().getPlayersRunningLunarClient()) {
+                player.sendMessage(CC.GREEN + player1.getName());
+            }
+        }, 40L);
     }
 
     @EventHandler
