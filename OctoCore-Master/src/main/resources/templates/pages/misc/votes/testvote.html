@@ -1,0 +1,68 @@
+<!doctype html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+
+<body>
+<!-- Content starts -->
+<div layout:fragment="content">
+    <h1 class="center-text">Test Votes</h1>
+    <br/>
+    <a th:href="@{/votes}" class="btn btn-primary centered">Vote Manager</a>
+    <br/>
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+    <form action="#" method="post" target="dummyframe">
+        <div class="form-group">
+            <label for="player">Username</label>
+            <input type="text" class="form-control" id="player" placeholder="Enter player username" required>
+            <small id="playerHelp" class="form-text text-muted" style="color: white">Username</small>
+        </div>
+        <div class="form-group">
+            <label for="service">Vote Service</label>
+            <input type="text" class="form-control" id="service" placeholder="Vote Service">
+            <small id="serviceHelp" class="form-text text-muted" style="color: white">Defaults to "Test"</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <script>
+        $('button[type=submit]').click(function (event) {
+            event.preventDefault();
+            const player = $('#player').val();
+            const service = $('#service').val();
+            const voterequest = {
+                player: player,
+                service: service
+            };
+            console.log(voterequest);
+            /*
+            $.post("/api/authenticated/votes/testvote", JSON.stringify(voterequest), function (data) {
+                iziToast.success({
+                    title: 'Success',
+                    message: 'Vote sent to server',
+                    position: 'bottomRight'
+                });
+            });
+             */
+            $.ajax({
+                url: '/api/authenticated/votes/testvote',
+                type: 'POST',
+                data: JSON.stringify(voterequest),
+                contentType: 'application/json',
+                success: function (data) {
+                    iziToast.success({
+                        title: 'Success',
+                        message: 'Vote sent to server',
+                        position: 'bottomRight'
+                    });
+                }
+            });
+        })
+    </script>
+</div>
+<!-- Content ends -->
+</body>
+
+</html>

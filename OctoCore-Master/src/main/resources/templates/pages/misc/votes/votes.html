@@ -1,0 +1,20 @@
+<!doctype html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+
+<body>
+<!-- Content starts -->
+<div layout:fragment="content">
+    <h1 class="center-text">Vote Manager</h1>
+    <br/>
+    <a th:href="@{/votes/test}" class="btn btn-primary centered">Test Votes</a>
+    <br/>
+</div>
+<!-- Content ends -->
+</body>
+
+</html>

@@ -57,7 +57,6 @@ dependencies {
     implementation("redis.clients:jedis:2.9.0")
     implementation("org.apache.commons:commons-compress:1.21")
     implementation("org.apache.commons:commons-lang3:3.12.0")
-    implementation("net.dv8tion:JDA:4.2.1_253")
     implementation("net.badbird5907:JDACommand:2.0.0-REL")
     implementation("club.minnced:discord-webhooks:0.5.7")
     implementation("org.javatuples:javatuples:1.2")

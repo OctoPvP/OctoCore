@@ -1,0 +1,28 @@
+<!doctype html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+
+<body>
+<!-- Content starts -->
+<div layout:fragment="content">
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <div class="center-text">
+        <h1 th:text="${status}">Error!</h1>
+        <h2>Something went wrong!</h2>
+        <h3>Please check if you're logged in, and if you have the correct permissions.</h3>
+        <h4>If not, please contact your staff manager.</h4>
+        <button class="btn btn-primary" onclick="goBack()">Go Back</button>
+    </div>
+</div>
+<!-- Content ends -->
+</body>
+
+</html>
