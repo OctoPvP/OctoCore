@@ -69,10 +69,13 @@ public class WebSecurityConfig extends VaadinWebSecurityConfigurerAdapter {
                     httpServletResponse.setStatus(HttpServletResponse.SC_OK);
                 });
          */
+        http.authorizeRequests()
+                .antMatchers("/img/**", "/dist/**", "/js/**", "/css/**").permitAll();
+
         super.configure(http);
 
-        //http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
+        //http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         setLoginView(http, LoginView.class);
         setStatelessAuthentication(http, new SecretKeySpec(secretKey.getBytes(), JwsAlgorithms.HS256), "OctoCore");
