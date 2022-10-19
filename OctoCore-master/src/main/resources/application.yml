@@ -4,7 +4,7 @@ spring:
     pretty-printing: true
   data:
     mongodb:
-      database: 'Launchpad'
+      database: 'OctoCore'
       host: 'localhost'
       port: 27017
   mvc:
@@ -15,6 +15,8 @@ spring:
       max-file-size: 200MB
       max-request-size: 200MB
 auth:
-  secret-key: haushfdiuashgbfdgvbyuigfsyi927u5
+  secret: jsdogh298gh92uihuiheg29jfewiohg2
+  expiration: 86400000 # 1 day
+  cookieName: 'auth'
 vaadin:
   pnpm-enabled: true
