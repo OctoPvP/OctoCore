@@ -1,0 +1,20 @@
+# App Properties
+spring:
+  gson:
+    pretty-printing: true
+  data:
+    mongodb:
+      database: 'Launchpad'
+      host: 'localhost'
+      port: 27017
+  mvc:
+    converters:
+      preferred-json-mapper: 'gson'
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+auth:
+  secret-key: haushfdiuashgbfdgvbyuigfsyi927u5
+vaadin:
+  pnpm-enabled: true

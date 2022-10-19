@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = uri("https://maven.vaadin.com/vaadin-prereleases") }
+        maven { url = uri("https://maven.vaadin.com/vaadin-addons") }
+    }
+}
+plugins {
+    id("org.springframework.boot") version "2.7.4"
+    id("io.spring.dependency-management") version "1.0.14.RELEASE"
+    id("java")
+    id("com.vaadin") version "23.2.2"
+}
+
+defaultTasks("clean", "build")
+
+//sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+    maven { url = uri("https://maven.vaadin.com/vaadin-prereleases") }
+    maven { url = uri("https://maven.vaadin.com/vaadin-addons") }
+}
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("org.springframework.security:spring-security-oauth2-jose")
+
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    compileOnly("org.projectlombok:lombok:1.18.24")
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
+
+    testCompileOnly("org.projectlombok:lombok:1.18.24")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
+
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("javax.validation:validation-api:2.0.1.Final")
+    implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
+    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("net.badbird5907:Lightning:1.1.3-REL")
+    implementation("commons-validator:commons-validator:1.7")
+    implementation("org.apache.commons:commons-lang3:3.12.0")
+
+    implementation("com.vaadin:vaadin-spring-boot-starter")
+    //testImplementation("org.springframework.boot:spring-boot-starter-test") {
+    //    exclude(group = "org.junit.vintage") module = "junit-vintage-engine"
+    //}
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("com.vaadin:vaadin-bom:23.2.2")
+    }
+}
+
+// The val pnpmEnable: following = true is not needed as pnpm is used by default,
+// this is just an example of how to configure the Gradle Vaadin Plugin:
+// for more configuration options please see: https://vaadin.com/docs/latest/guide/start/gradle/#all-options
+vaadin {
+    pnpmEnable = true
+}
+//tasks.register("prepareKotlinBuildScriptModel"){}
+description = "OctoCore Master"
