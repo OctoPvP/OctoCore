@@ -3,6 +3,8 @@ package net.octopvp.octocore.master.views;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -17,7 +19,7 @@ import javax.annotation.security.PermitAll;
 @Route(value = "hello", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 @PermitAll
-public class HelloWorldView extends VerticalLayout {
+public class HelloWorldView extends PageLayout {
 
     @Autowired
     UserService authenticatedUser;
@@ -43,4 +45,14 @@ public class HelloWorldView extends VerticalLayout {
         add(sayHello);
     }
 
+    @Override
+    public Tabs getTabs() {
+        Tabs tabs = new Tabs();
+        tabs.add(
+                new Tab("Test1"),
+                new Tab("Test2"),
+                new Tab("Test3")
+        );
+        return tabs;
+    }
 }

@@ -1,5 +1,6 @@
 package net.octopvp.octocore.master.views;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -9,6 +10,9 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
@@ -19,9 +23,57 @@ import net.octopvp.octocore.master.views.components.ThemeToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @PageTitle("Main")
 public class MainLayout extends AppLayout {
+    private H1 viewTitle;
+
+    private UserService authenticatedUser;
+    private AccessAnnotationChecker accessChecker;
+
+    private MongoUserRepository mongoUserRepository;
+
+    public MainLayout(UserService authenticatedUser, AccessAnnotationChecker accessChecker, MongoUserRepository mongoUserRepository) {
+        this.authenticatedUser = authenticatedUser;
+        this.accessChecker = accessChecker;
+        this.mongoUserRepository = mongoUserRepository;
+
+        setPrimarySection(Section.DRAWER);
+        addToNavbar(true, createHeaderContent());
+        User user = authenticatedUser.get();
+        addToDrawer(createDrawerContent(user.isDarkMode()));
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        UI ui = getUI().orElse(null);
+        System.out.println("UI: " + ui);
+        if (ui != null) {
+            List<PageLayout> content = ui.getChildren().filter(component -> {
+                System.out.println("Component - " + component.getClass().getName());
+                return component instanceof PageLayout;
+            }).map(component -> (PageLayout) component).toList();
+            Tabs tabs = null;
+            for (PageLayout pageLayout : content) {
+                Tabs pageTabs = pageLayout.getTabs();
+                if (pageTabs != null) {
+                    if (tabs == null) {
+                        tabs = pageTabs;
+                    } else {
+                        tabs.add(pageTabs.getChildren().toArray(Component[]::new));
+                    }
+                    break;
+                }
+            }
+            if (tabs != null) {
+                addToNavbar(tabs);
+            }
+        }
+    }
 
     /**
      * A simple navigation item component, based on ListItem element.
@@ -66,25 +118,6 @@ public class MainLayout extends AppLayout {
 
     }
 
-    private H1 viewTitle;
-
-    private UserService authenticatedUser;
-    private AccessAnnotationChecker accessChecker;
-
-    private MongoUserRepository mongoUserRepository;
-
-    public MainLayout(UserService authenticatedUser, AccessAnnotationChecker accessChecker, MongoUserRepository mongoUserRepository) {
-        this.authenticatedUser = authenticatedUser;
-        this.accessChecker = accessChecker;
-        this.mongoUserRepository = mongoUserRepository;
-
-        setPrimarySection(Section.DRAWER);
-        addToNavbar(true, createHeaderContent());
-        User user = authenticatedUser.get();
-        addToDrawer(createDrawerContent(user.isDarkMode()));
-    }
-
-
     private Component createHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
         toggle.addClassName("text-secondary");
@@ -97,18 +130,16 @@ public class MainLayout extends AppLayout {
         Header header = new Header(toggle, viewTitle);
         header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center",
                 "w-full");
+
         return header;
     }
 
     private Component createDrawerContent(boolean dark) {
         Div top = new Div();
-        Image logo = new Image(getLogoURL(dark), "OctoPvP Logo");
-        logo.setId("logo");
-        logo.setHeight("40px");
-        logo.setWidth("40px");
         H2 appName = new H2("OctoCore");
         appName.addClassNames("flex", "items-center", "h-xl", "m-0", "px-m", "text-m");
-        top.add(logo, appName);
+        top.add(appName);
+
         //appName.add(logo);
         com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(
                 top,
@@ -123,10 +154,12 @@ public class MainLayout extends AppLayout {
         section.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
         return section;
     }
+
     public static String getLogoURL(boolean dark) {
         //return dark ? "https://cdn.carbonhost.cloud/6201479d7b237373ab269385/assets/launchpad/launchpad-transparent-dark.png" : "https://cdn.carbonhost.cloud/6201479d7b237373ab269385/assets/launchpad/launchpad-transparent-light.png";
         return "/img/logo.png";
     }
+
     private Nav createNavigation() {
         Nav nav = new Nav();
         nav.addClassNames("border-b", "border-contrast-10", "flex-grow", "overflow-auto");
@@ -181,7 +214,7 @@ public class MainLayout extends AppLayout {
             Anchor loginLink = new Anchor("login", "Sign in");
             layout.add(loginLink);
         }
-        ThemeToggleButton toggleButton = new ThemeToggleButton(mongoUserRepository,authenticatedUser,user.getUserID());
+        ThemeToggleButton toggleButton = new ThemeToggleButton(mongoUserRepository, authenticatedUser, user.getUserID());
         // align to the right side
         toggleButton.getElement().getStyle().set("margin-left", "auto");
         layout.add(toggleButton);
