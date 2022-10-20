@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.player;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ public class PlayerMessagePacket extends RedisPacket {
     private String name, message;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         Player player = Bukkit.getPlayer(data.get("name").getAsString());
         if (player != null) {
             player.sendMessage(data.get("message").getAsString());

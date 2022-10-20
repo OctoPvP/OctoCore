@@ -43,10 +43,8 @@ public class PositionSongPlayer extends RangeSongPlayer {
     void update(String key, Object value) {
         super.update(key, value);
 
-        switch (key) {
-            case "targetLocation":
-                targetLocation = (Location) value;
-                break;
+        if ("targetLocation".equals(key)) {
+            targetLocation = (Location) value;
         }
     }
 

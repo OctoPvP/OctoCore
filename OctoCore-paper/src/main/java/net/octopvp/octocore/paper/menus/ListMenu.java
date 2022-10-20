@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ListMenu extends PaginatedMenu {
@@ -74,7 +75,7 @@ public class ListMenu extends PaginatedMenu {
     public List<Button> getToolbarButtons() {
         if (true)
             return null;
-        return Arrays.asList(new Button() {
+        return Collections.singletonList(new Button() {
 
             @Override
             public ItemStack getItem(Player player) {

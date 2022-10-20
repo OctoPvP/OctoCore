@@ -4,8 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.octopvp.octocore.common.redis.RedisPacket;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.JDAManager;
 
@@ -15,7 +14,7 @@ public class DiscordMessagePacket extends RedisPacket {
     private String messagejson, channel;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         if (OctoCore.isMaster()) {
             if (!JDAManager.isEnabled())
                 return;
@@ -27,14 +26,7 @@ public class DiscordMessagePacket extends RedisPacket {
     }
 
     @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder()
-                .addProperty("messagejson", messagejson)
-                .addProperty("channel", channel);
-    }
-
-    @Override
-    public String getName() {
-        return "DiscordMessagePacket";
+    public String getType() {
+        return "DISCORD_MESSAGE";
     }
 }

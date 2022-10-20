@@ -7,9 +7,9 @@ import net.octopvp.octocore.paper.manager.Manager;
 
 public class SettingsManager extends Manager {
     @Getter
-    private static SettingsManager instance;
-    @Getter
     private static final Settings settings = OctoCore.getSettings();
+    @Getter
+    private static SettingsManager instance;
 
     @Override
     public void init(OctoCore plugin) {

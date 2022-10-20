@@ -1,10 +1,8 @@
-package net.octopvp.octocore.paper.objects;
+package net.octopvp.octocore.common.object;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.octopvp.octocore.common.object.MessageSettings;
-import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.PlayerMessagePacket;
@@ -18,16 +16,15 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 
 public class GlobalPlayer {
-    private final UUID uuid;
-    private final String name;
+    private UUID uuid;
+    private String name;
 
-    private String server, firstJoined, lastServer, address, rankName, coloredName;
-    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving, op;
+    private String server, firstJoined, lastServer, address, rankName, coloredName, prefix, color;
+    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving, op, staff;
     private long lastSeen, lastActivity = -1L;
-    private List<PlayerTag> allTags = new ArrayList<>();
+    private List<UUID> allTags = new ArrayList<>();
     private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
     private Map<String, ServerContext> negatedPermissions = new ConcurrentHashMap<>();
     private List<Alt> alts = new ArrayList<>();
@@ -38,8 +35,13 @@ public class GlobalPlayer {
 
     private MessageSettings messageSettings = new MessageSettings();
 
+    public GlobalPlayer(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
+    }
+
     public boolean isOnline() {
-        return OctoCore.getInstance().getServerManager().getConnectedServers().stream().filter(serverData ->
+        return OctoCoreCommon.getInstance().getServerManager().getConnectedServers().stream().filter(serverData ->
                 serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
                         .contains(name.toLowerCase())).findFirst().orElse(null) != null;
     }

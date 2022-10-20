@@ -51,19 +51,19 @@ public class TimeUtils {
         int hours = 0;
         if (time.contains("h")) {
             hours = (int) Math.floor(milisTotal / 1000 / 60 / 60);
-            milisTotal -= hours * 1000 * 60 * 60;
+            milisTotal -= (long) hours * 1000 * 60 * 60;
         }
 
         int minutes = 0;
         if (time.contains("m")) {
             minutes = (int) Math.floor(milisTotal / 1000 / 60);
-            milisTotal -= minutes * 1000 * 60;
+            milisTotal -= (long) minutes * 1000 * 60;
         }
 
         int seconds = 0;
         if (time.contains("s")) {
             seconds = (int) Math.floor(milisTotal / 1000);
-            milisTotal -= seconds * 1000;
+            milisTotal -= seconds * 1000L;
         }
 
         time = time.replace("hh", String.format("%02", hours));

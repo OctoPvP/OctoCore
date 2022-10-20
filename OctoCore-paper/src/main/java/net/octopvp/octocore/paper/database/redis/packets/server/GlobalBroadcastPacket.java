@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.server;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import org.bukkit.Bukkit;
@@ -14,7 +14,7 @@ public class GlobalBroadcastPacket extends RedisPacket {
     private String message;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         String message = CC.translate(data.get("message").getAsString());
         Bukkit.broadcastMessage(message);
     }

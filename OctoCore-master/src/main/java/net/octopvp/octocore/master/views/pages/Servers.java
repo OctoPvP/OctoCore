@@ -1,4 +1,4 @@
-package net.octopvp.octocore.master.views;
+package net.octopvp.octocore.master.views.pages;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
@@ -7,19 +7,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import net.octopvp.octocore.master.services.UserService;
+import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.PermitAll;
 
-@PageTitle("Test")
-@Route(value = "test", layout = MainLayout.class)
+@PageTitle("Servers")
+@Route(value = "servers", layout = MainLayout.class)
 @PermitAll
-public class AnotherTestView extends VerticalLayout {
+public class Servers extends VerticalLayout {
     @Autowired
     UserService authenticatedUser;
     private Button button;
-    public AnotherTestView() {
+    public Servers() {
         H1 h1 = new H1("Test");
         button = new Button("Test");
         button.addClickListener(e -> {

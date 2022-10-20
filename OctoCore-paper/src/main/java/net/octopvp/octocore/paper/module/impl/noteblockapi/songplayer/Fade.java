@@ -23,19 +23,17 @@ public class Fade {
     }
 
     protected byte calculateFade() {
-        switch (type) {
-            case LINEAR:
-                if (fadeDone == fadeDuration) {
-                    return -1; // no fade today
-                }
-                double targetVolume = Interpolator.interpLinear(
-                        new double[]{0, fadeStart, fadeDuration, fadeTarget}, fadeDone);
-                fadeDone++;
-                return (byte) targetVolume;
-            default:
-                fadeDone++;
-                return -1;
+        if (type == FadeType.LINEAR) {
+            if (fadeDone == fadeDuration) {
+                return -1; // no fade today
+            }
+            double targetVolume = Interpolator.interpLinear(
+                    new double[]{0, fadeStart, fadeDuration, fadeTarget}, fadeDone);
+            fadeDone++;
+            return (byte) targetVolume;
         }
+        fadeDone++;
+        return -1;
     }
 
     protected int getFadeDone() {

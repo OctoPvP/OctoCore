@@ -1,6 +1,5 @@
 package net.octopvp.octocore.master.views;
 
-import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -10,9 +9,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
@@ -20,12 +16,11 @@ import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
 import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.components.ThemeToggleButton;
+import net.octopvp.octocore.master.views.pages.Servers;
+import net.octopvp.octocore.master.views.pages.HomeView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @PageTitle("Main")
 public class MainLayout extends AppLayout {
@@ -45,34 +40,6 @@ public class MainLayout extends AppLayout {
         addToNavbar(true, createHeaderContent());
         User user = authenticatedUser.get();
         addToDrawer(createDrawerContent(user.isDarkMode()));
-    }
-
-    @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        super.onAttach(attachEvent);
-        UI ui = getUI().orElse(null);
-        System.out.println("UI: " + ui);
-        if (ui != null) {
-            List<PageLayout> content = ui.getChildren().filter(component -> {
-                System.out.println("Component - " + component.getClass().getName());
-                return component instanceof PageLayout;
-            }).map(component -> (PageLayout) component).toList();
-            Tabs tabs = null;
-            for (PageLayout pageLayout : content) {
-                Tabs pageTabs = pageLayout.getTabs();
-                if (pageTabs != null) {
-                    if (tabs == null) {
-                        tabs = pageTabs;
-                    } else {
-                        tabs.add(pageTabs.getChildren().toArray(Component[]::new));
-                    }
-                    break;
-                }
-            }
-            if (tabs != null) {
-                addToNavbar(tabs);
-            }
-        }
     }
 
     /**
@@ -127,11 +94,50 @@ public class MainLayout extends AppLayout {
         viewTitle = new H1();
         viewTitle.addClassNames("m-0", "text-l");
 
-        Header header = new Header(toggle, viewTitle);
+        //User user = authenticatedUser.get();
+        //Avatar avatar = new Avatar(user.getUsername(), user.getProfilePictureURL());
+        //avatar.addClassNames("ml-auto", "mr-s");
+        Header header = new Header(toggle, viewTitle/*, avatar*/);
         header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center",
                 "w-full");
 
+
         return header;
+    }
+
+    private Footer createFooter() {
+        Footer layout = new Footer();
+        layout.addClassNames("flex", "items-center", "my-s", "px-m", "py-xs");
+
+        User user = authenticatedUser.get();
+        if (user != null) {
+            Avatar avatar = new Avatar(user.getUsername(), user.getProfilePictureURL());
+            avatar.addClassNames("me-xs", "pointer-hover");
+
+            Span name = new Span(user.getUsername());
+            name.addClassNames("font-medium", "text-s", "text-secondary", "noselect", "pointer-hover");
+
+            List<ContextMenu> contextMenus = new ArrayList<>();
+            contextMenus.add(new ContextMenu(avatar));
+            contextMenus.add(new ContextMenu(name));
+
+            for (ContextMenu contextMenu : contextMenus) { // Jfc div doesn't work
+                contextMenu.setOpenOnClick(true);
+                contextMenu.addItem("Logout", e -> {
+                    authenticatedUser.logout();
+                });
+            }
+
+            layout.add(avatar, name);
+        } else {
+            Anchor loginLink = new Anchor("login", "Sign in");
+            layout.add(loginLink);
+        }
+        ThemeToggleButton toggleButton = new ThemeToggleButton(mongoUserRepository, authenticatedUser, user.getUserID());
+        // align to the right side
+        toggleButton.getElement().getStyle().set("margin-left", "auto");
+        layout.add(toggleButton);
+        return layout;
     }
 
     private Component createDrawerContent(boolean dark) {
@@ -181,44 +187,9 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", "la la-globe", HelloWorldView.class),
-                new MenuItemInfo("Test", "la la-globe", AnotherTestView.class),
+                new MenuItemInfo("Home", "la la-home", HomeView.class),
+                new MenuItemInfo("Servers", "la la-server", Servers.class),
         };
-    }
-
-    private Footer createFooter() {
-        Footer layout = new Footer();
-        layout.addClassNames("flex", "items-center", "my-s", "px-m", "py-xs");
-
-        User user = authenticatedUser.get();
-        if (user != null) {
-            Avatar avatar = new Avatar(user.getUsername(), user.getProfilePictureURL());
-            avatar.addClassNames("me-xs", "pointer-hover");
-
-            Span name = new Span(user.getUsername());
-            name.addClassNames("font-medium", "text-s", "text-secondary", "noselect", "pointer-hover");
-
-            List<ContextMenu> contextMenus = new ArrayList<>();
-            contextMenus.add(new ContextMenu(avatar));
-            contextMenus.add(new ContextMenu(name));
-
-            for (ContextMenu contextMenu : contextMenus) { // Jfc div doesn't work
-                contextMenu.setOpenOnClick(true);
-                contextMenu.addItem("Logout", e -> {
-                    authenticatedUser.logout();
-                });
-            }
-
-            layout.add(avatar, name);
-        } else {
-            Anchor loginLink = new Anchor("login", "Sign in");
-            layout.add(loginLink);
-        }
-        ThemeToggleButton toggleButton = new ThemeToggleButton(mongoUserRepository, authenticatedUser, user.getUserID());
-        // align to the right side
-        toggleButton.getElement().getStyle().set("margin-left", "auto");
-        layout.add(toggleButton);
-        return layout;
     }
 
     @Override

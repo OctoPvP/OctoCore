@@ -3,35 +3,19 @@ package net.octopvp.octocore.common;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.common.object.ServerInfo;
-import net.octopvp.octocore.common.redis.RedisHandler;
+import net.octopvp.octocore.common.redis.RedisManager;
 
 @Getter
+@Setter
 public class OctoCoreCommon {
-    private static ServerInfo info;
-    @Setter
     @Getter
-    private static RedisHandler redisHandler;
-    @Getter
-    @Setter
-    private static Gson gson;
-    @Getter
-    @Setter
-    private static ClassLoader pluginClassLoader;
-    @Getter
-    @Setter
-    private static boolean disabling = false;
-
-    public static void init(ServerInfo info, Gson gson) {
-        OctoCoreCommon.info = info;
-        OctoCoreCommon.gson = gson;
+    private static final OctoCoreCommon instance = new OctoCoreCommon();
+    public void init(Gson gson, ServerImplementation serverImplementation) {
+        this.gson = gson;
+        this.serverImplementation = serverImplementation;
     }
-
-    public static String getServerName() {
-        return info.getServerName();
-    }
-
-    public static ServerInfo getInfo() {
-        return info;
-    }
+    private RedisManager redisManager;
+    private ServerImplementation serverImplementation;
+    private Gson gson;
+    private boolean bungee = false;
 }

@@ -8,17 +8,17 @@ public final class UpdatingHologramBuilder extends HologramBuilder {
 
     private Consumer<Hologram> updateFunction;
 
-    protected UpdatingHologramBuilder(HologramBuilder hologramBuilder) {
+    UpdatingHologramBuilder(HologramBuilder hologramBuilder) {
         super(hologramBuilder.getViewers());
         this.lines = hologramBuilder.getLines();
         at(hologramBuilder.getLocation());
     }
 
-    protected long getInterval() {
+    long getInterval() {
         return this.interval;
     }
 
-    protected Consumer<Hologram> getUpdateFunction() {
+    Consumer<Hologram> getUpdateFunction() {
         return this.updateFunction;
     }
 

@@ -1,12 +1,6 @@
 package net.octopvp.octocore.paper.listeners;
 
-import com.lunarclient.bukkitapi.LunarClientAPI;
-import com.lunarclient.bukkitapi.nethandler.client.LCPacketModSettings;
-import com.lunarclient.bukkitapi.nethandler.client.LCPacketServerUpdate;
-import com.lunarclient.bukkitapi.nethandler.client.obj.ModSettings;
-import com.lunarclient.bukkitapi.object.LCWaypoint;
 import net.octopvp.octocore.common.object.DisconnectReason;
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.CachedData;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
@@ -14,13 +8,11 @@ import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.paper.manager.impl.PermissionManager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.ScoreBoardManager;
-import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,7 +21,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 public class JoinLeaveListener implements Listener {
@@ -89,7 +80,6 @@ public class JoinLeaveListener implements Listener {
 
             if (PlayerManager.getInstance().getData(event.getUniqueId()) == null) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
-                return;
             }
         }
     }
@@ -105,8 +95,8 @@ public class JoinLeaveListener implements Listener {
     public void onLogin(PlayerLoginEvent event) {
         PlayerData data = PlayerManager.getInstance().getData(event.getPlayer());
         PermissionManager.injectPermissible(event.getPlayer(), data);
-        if (ServerManager.getInstance().isPlayerOnline(event.getPlayer().getUniqueId())) {
-            data.setLastServerOn(ServerManager.getInstance().getGlobalPlayer(event.getPlayer().getUniqueId()).getServer());
+        if (OctoCore.getInstance().getServerManager().isPlayerOnline(event.getPlayer().getUniqueId())) {
+            data.setLastServerOn(OctoCore.getInstance().getServerManager().getGlobalPlayer(event.getPlayer().getUniqueId()).getServer());
         } else {
             data.setJoinAlert(true);
         }
@@ -122,7 +112,8 @@ public class JoinLeaveListener implements Listener {
         PlayerManager.getInstance().join(event.getPlayer());
 
         ScoreBoardManager.handleJoin(event.getPlayer());
-        Tasks.runLater(()-> {
+        /*
+        Tasks.runLater(() -> {
             LunarClientAPI.getInstance().sendPacket(event.getPlayer(), new LCPacketServerUpdate("hypixel.net"));
             Player player = event.getPlayer();
             LunarClientAPI.getInstance().sendWaypoint(player, new LCWaypoint("Test", player.getLocation(), Color.AQUA.asRGB(), true, true));
@@ -136,6 +127,7 @@ public class JoinLeaveListener implements Listener {
                 player.sendMessage(CC.GREEN + player1.getName());
             }
         }, 40L);
+         */
     }
 
     @EventHandler

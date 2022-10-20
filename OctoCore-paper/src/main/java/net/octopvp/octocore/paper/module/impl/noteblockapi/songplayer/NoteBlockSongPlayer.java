@@ -46,10 +46,8 @@ public class NoteBlockSongPlayer extends RangeSongPlayer {
     void update(String key, Object value) {
         super.update(key, value);
 
-        switch (key) {
-            case "noteBlock":
-                noteBlock = (Block) value;
-                break;
+        if ("noteBlock".equals(key)) {
+            noteBlock = (Block) value;
         }
     }
 

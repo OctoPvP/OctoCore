@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.DisconnectReason;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
@@ -17,7 +17,7 @@ public class ExecuteAltKickPacket extends RedisPacket {
     private JsonBuilder jsonBuilder;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         String name = data.get("name").getAsString();
         String sender = data.get("sender").getAsString();
         String reason = data.get("reason").getAsString();

@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.player;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
@@ -17,7 +17,7 @@ public class PlayerDataUpdatePacket extends RedisPacket {
     private JsonObject data;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         DataUpdateReason reason = DataUpdateReason.valueOf(data.get("reason").getAsString());
         switch (reason) {
             case TAGS_UPDATE_GIVE:

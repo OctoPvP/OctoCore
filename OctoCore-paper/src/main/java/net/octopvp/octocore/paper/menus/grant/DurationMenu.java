@@ -60,7 +60,7 @@ public class DurationMenu extends Menu {
                 player.closeInventory();
                 return;
             }
-            playerData.getGrantProcedure().setEnteredDuration(-1l);
+            playerData.getGrantProcedure().setEnteredDuration(-1L);
             playerData.getGrantProcedure().setPermanent(true);
             playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
             player.sendMessage(Lang.GRANT_DURATION_SET.getMsg("Permanent"));
@@ -101,7 +101,7 @@ public class DurationMenu extends Menu {
                     if (playerData.getGrantProcedure() == null)
                         playerData.setGrantProcedure(new GrantProcedure(playerData));
                     if (s.equalsIgnoreCase("perm") || s.equalsIgnoreCase("permanent")) {
-                        playerData.getGrantProcedure().setEnteredDuration(-1l);
+                        playerData.getGrantProcedure().setEnteredDuration(-1L);
                         playerData.getGrantProcedure().setPermanent(true);
                         playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
                         player.sendMessage(Lang.GRANT_DURATION_SET.getMsg("Permanent"));

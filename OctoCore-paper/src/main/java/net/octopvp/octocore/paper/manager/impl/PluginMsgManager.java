@@ -32,9 +32,7 @@ public class PluginMsgManager extends Manager implements PluginMessageListener {
             return;
         ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
         String subChannel = in.readUTF();
-        switch (subChannel) {
-            case PluginMsgChannels.SubChannels.SYNC:
-                break;
+        if (PluginMsgChannels.SubChannels.SYNC.equals(subChannel)) {
         }
     }
 }

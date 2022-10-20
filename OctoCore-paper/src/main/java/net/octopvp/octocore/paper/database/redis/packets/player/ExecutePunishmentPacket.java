@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
@@ -45,7 +45,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
     }
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         try {
             Punishment punishment = OctoCore.getGson().fromJson(data.get("punishment").getAsString(), GsonType.PUNISHMENT);
             UUID uuid = UUID.fromString(data.get("uuid").getAsString());

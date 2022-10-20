@@ -2,7 +2,7 @@ package net.octopvp.octocore.paper.database.redis.packets.staff;
 
 import com.google.gson.JsonObject;
 import net.octopvp.octocore.common.object.Permissions;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.JDAManager;
@@ -31,7 +31,7 @@ public class AdminChatPacket extends RedisPacket {
     }
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         String name = data.get("name").getAsString();
         String server = data.get("server").getAsString();
         String message = data.get("message").getAsString();

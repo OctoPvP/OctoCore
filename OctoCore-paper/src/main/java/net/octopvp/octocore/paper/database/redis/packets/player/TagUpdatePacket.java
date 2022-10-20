@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.player;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
@@ -22,7 +22,7 @@ public class TagUpdatePacket extends RedisPacket {
     private JsonBuilder builder;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         Logger.debug("Tag update: " + OctoCore.getGson().toJson(data));
         String type = data.get("type").getAsString();
         Player player = Bukkit.getPlayer(UUID.fromString(data.get("uuid").getAsString()));
@@ -39,7 +39,6 @@ public class TagUpdatePacket extends RedisPacket {
             case "REMOVE_TAG": {
                 playerData.removeTag(tagId);
                 playerData.save();
-                return;
             }
         }
     }

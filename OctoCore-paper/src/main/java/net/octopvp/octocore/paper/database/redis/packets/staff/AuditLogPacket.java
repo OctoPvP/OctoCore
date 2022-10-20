@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.staff;
 import com.google.gson.JsonObject;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.Permissions;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.objects.enums.AuditLogType;
 import org.bukkit.Bukkit;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 @NoArgsConstructor
 public class AuditLogPacket extends RedisPacket {
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         AuditLogType logType = AuditLogType.valueOf(data.get("type").getAsString());
         if (logType != AuditLogType.WORLDEDIT_ACTION && logType != AuditLogType.AUTH_FAIL)
             return;
@@ -25,9 +25,7 @@ public class AuditLogPacket extends RedisPacket {
                     //TODO finish audit log
                 }
             }
-            return;
         }
-        return;
     }
 
     @Override

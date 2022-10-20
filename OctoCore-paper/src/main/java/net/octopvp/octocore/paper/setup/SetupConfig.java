@@ -25,8 +25,8 @@ public class SetupConfig implements Setup {
         config.addDefault("tab.header", "&a&lPlaying on the OctoPvP Network&r");
         config.addDefault("tab.footer", "\n&a&l&kA &r&6&lplay.octopvp.net&a&l&k A&r\n\n&b&ldiscord.gg/<discord>\n\n&b&loctopvp.net");
 
-        config.addDefault("update-pdata-interval", 100l);
-        config.addDefault("update-tab-interval", 45l);
+        config.addDefault("update-pdata-interval", 100L);
+        config.addDefault("update-tab-interval", 45L);
         config.addDefault("default-tab", true);
 
         config.addDefault("cooldown.pearl.time", 16);

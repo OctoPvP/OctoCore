@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.other;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
@@ -19,7 +19,7 @@ public class GrantsUpdatePacket extends RedisPacket {
     private boolean add;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         String name = data.get("name").getAsString();
         String tochange = data.get("tochange").getAsString();
         boolean add = data.get("add").getAsBoolean();
@@ -33,6 +33,11 @@ public class GrantsUpdatePacket extends RedisPacket {
             playerData.loadPerms(player);
             playerData.save();
         }
+    }
+
+    @Override
+    public String getType() {
+        return "GRANTS_UPDATE";
     }
 
     @Override

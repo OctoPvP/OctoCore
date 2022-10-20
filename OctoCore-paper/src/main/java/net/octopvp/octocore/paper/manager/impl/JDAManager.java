@@ -133,7 +133,7 @@ public class JDAManager extends Manager {
                                 jsonObject
                         ).send();
                     }
-                    if (event.getMessage().getChannel().getIdLong() == 808700037290786886l) {
+                    if (event.getMessage().getChannel().getIdLong() == 808700037290786886L) {
                         JsonObject jsonObject = new JsonObject();
                         Color color = event.getMember().getColor();
                         jsonObject.addProperty("name", StringUtils.fromRGB(color.getRed(), color.getGreen(), color.getBlue()) + event.getAuthor().getName());

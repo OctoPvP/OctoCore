@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.server;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import org.bukkit.Bukkit;
@@ -17,7 +17,7 @@ public class SaveRequestMiscPacket extends RedisPacket {
     private JsonBuilder jsonBuilder;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         if (data.has("uuid")) {
             String id = data.get("uuid").getAsString();
 

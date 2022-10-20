@@ -3,10 +3,10 @@ package net.octopvp.octocore.paper.database.redis.packets.player;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
-import net.octopvp.octocore.paper.manager.impl.ServerManager;
-import net.octopvp.octocore.paper.objects.GlobalPlayer;
+import net.octopvp.octocore.paper.OctoCore;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,11 +16,16 @@ public class GlobalPlayerStatusUpdatePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        GlobalPlayer player = ServerManager.getInstance().getRealGlobalPlayer(data.get("name").getAsString());
+        GlobalPlayer player = OctoCore.getInstance().getServerManager().getGlobalPlayer(data.get("name").getAsString());
 
         if (player != null) {
             player.setLeaving(data.has("quited") && data.get("quited").getAsBoolean());
         }
+    }
+
+    @Override
+    public String getType() {
+        return "GLOBAL_PLAYER_STATUS_UPDATE";
     }
 
     @Override

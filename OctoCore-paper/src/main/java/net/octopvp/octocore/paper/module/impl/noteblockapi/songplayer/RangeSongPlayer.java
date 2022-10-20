@@ -36,10 +36,8 @@ public abstract class RangeSongPlayer extends SongPlayer {
     void update(String key, Object value) {
         super.update(key, value);
 
-        switch (key) {
-            case "distance":
-                distance = (int) value;
-                break;
+        if ("distance".equals(key)) {
+            distance = (int) value;
         }
     }
 

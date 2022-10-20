@@ -20,8 +20,10 @@ repositories {
     mavenCentral()
     maven { url = uri("https://maven.vaadin.com/vaadin-prereleases") }
     maven { url = uri("https://maven.vaadin.com/vaadin-addons") }
+    maven { url = uri("https://jitpack.io/") }
 }
 dependencies {
+    implementation(project(":OctoCore-common"))
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -37,9 +39,13 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok:1.18.24")
     annotationProcessor("org.projectlombok:lombok:1.18.24")
-
     testCompileOnly("org.projectlombok:lombok:1.18.24")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
+
+    implementation("com.github.NuVotifier.NuVotifier:nuvotifier-api:2.7.2")
+    implementation("com.github.NuVotifier.NuVotifier:nuvotifier-common:2.7.2")
+
+    implementation("com.google.guava:guava:31.1-jre") // Guava for utils and cache
 
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation("javax.validation:validation-api:2.0.1.Final")

@@ -3,7 +3,7 @@ package net.octopvp.octocore.paper.database.redis.packets.server;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
@@ -19,7 +19,7 @@ public class SaveRequestSwitchPacket extends RedisPacket {
     private UUID uuid;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         String id = data.get("uuid").getAsString();
         UUID uuid = UUID.fromString(id);
         Player player = Bukkit.getPlayer(uuid);

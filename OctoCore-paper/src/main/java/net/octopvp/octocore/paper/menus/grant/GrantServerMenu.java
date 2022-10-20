@@ -2,12 +2,12 @@ package net.octopvp.octocore.paper.menus.grant;
 
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.GrantProcedureState;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.objects.ServerData;
 import net.octopvp.octocore.paper.utils.ItemBuilder;
 import net.octopvp.octocore.paper.utils.Skulls;
 import net.octopvp.octocore.paper.utils.menu.buttons.Button;

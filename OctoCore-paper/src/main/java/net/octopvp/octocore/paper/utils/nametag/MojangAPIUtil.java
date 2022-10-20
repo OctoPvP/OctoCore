@@ -875,9 +875,9 @@ public class MojangAPIUtil {
             }
             SkinData skinData = (SkinData) obj;
             return this.uuid.equals(skinData.uuid) && this.name.equals(skinData.name) &&
-                    (this.skinURL == null ? skinData.skinURL == null : this.skinURL.equals(skinData.skinURL)) &&
+                    (Objects.equals(this.skinURL, skinData.skinURL)) &&
                     (this.capeURL == null ? skinData.capeURL == null : this.capeURL.equals(skinData.skinURL)) && this.timeStamp == skinData.timeStamp &&
-                    this.base64.equals(skinData.base64) && (this.signedBase64 == null ? skinData.signedBase64 == null : this.signedBase64.equals(skinData.signedBase64));
+                    this.base64.equals(skinData.base64) && (Objects.equals(this.signedBase64, skinData.signedBase64));
 
         }
 

@@ -2,100 +2,100 @@ package net.octopvp.octocore.paper.manager.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
+import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
 import net.octopvp.octocore.paper.manager.Manager;
-import net.octopvp.octocore.paper.objects.GlobalPlayer;
-import net.octopvp.octocore.paper.objects.ServerData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Setter
-public class ServerManager extends Manager {
+public class ServerManager extends Manager implements IServerManager {
     @Getter
-    private static ServerManager instance;
-    private Map<String, ServerData> serverData = new ConcurrentHashMap<>();
-    private Map<String, GlobalPlayer> globalPlayers = new ConcurrentHashMap<>();
+    private Set<ServerData> connectedServers = ConcurrentHashMap.newKeySet();
 
-    public Map<String, GlobalPlayer> getRealGlobalPlayers() {
-        if (globalPlayers == null) return new ConcurrentHashMap<>();
-        return this.globalPlayers;
+    @Override
+    public boolean isOnline(GlobalPlayer player) {
+        return getConnectedServers().stream().filter(serverData ->
+                serverData.getNames().stream().map(String::toLowerCase).toList()
+                        .contains(player.getName().toLowerCase())).findFirst().orElse(null) != null;
     }
 
-    public Map<String, GlobalPlayer> getGlobalPlayers() {
-        return new HashMap<>(this.globalPlayers);
-    }
-
-    public Map<String, ServerData> getServerData() {
-        return new HashMap<>(this.serverData);
-    }
-
-    public Set<ServerData> getConnectedServers() {
-        return new HashSet<>(this.serverData.values());
-    }
-
-    public void removeInActivePlayers() {
-        this.globalPlayers.entrySet().removeIf(next -> System.currentTimeMillis() - next.getValue().getLastActivity() >= 6000L);
-    }
-
-    public void removeInActiveServers() {
-        this.serverData.entrySet().removeIf(next -> {
-            if (System.currentTimeMillis() - next.getValue().getLastTick() >= 15000L) {
-                if (!next.getValue().isSafelyStopped()) {
-                    try {
-                        new AdminAlertPacket().onReceive(new JsonBuilder().add("message", CC.RED + next.getValue().getServerName() + " may have crashed (has not responded for 15 seconds)").get());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                return true;
-            }
-            return false;
-        });
-    }
-
+    @Override
     public ServerData createServerData(String name) {
-        if (this.getServerData(name) != null) return this.getServerData(name);
-        this.serverData.put(name.toLowerCase(), new ServerData(name));
-        return this.getServerData(name);
+        if (getServerData(name) != null) return null;
+        this.connectedServers.add(new ServerData(name));
+        return getServerData(name);
     }
 
+    @Override
     public ServerData getServerData(String name) {
-        return this.getServerData().get(name.toLowerCase());
+        return this.connectedServers.stream().filter(serverData -> serverData.getServerName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
-    public int getGlobalMaxPlayers() {
-        return new HashMap<>(this.serverData).values().stream().mapToInt(ServerData::getMaxPlayers).sum();
+    @Override
+    public List<GlobalPlayer> getGlobalPlayers() {
+        List<GlobalPlayer> players = new ArrayList<>();
+        this.connectedServers.forEach(serverData -> players.addAll(serverData.getOnlinePlayers()));
+        return players;
     }
 
+    @Override
     public GlobalPlayer getGlobalPlayer(String name) {
-        return this.getGlobalPlayers().get(name.toLowerCase());
+        for (ServerData server : this.connectedServers) {
+            for (GlobalPlayer globalPlayer : server.getOnlinePlayers()) {
+                if (globalPlayer.getName().equalsIgnoreCase(name)) {
+                    return globalPlayer;
+                }
+            }
+        }
+        return null;
     }
 
+    @Override
     public GlobalPlayer getGlobalPlayer(UUID uuid) {
-        return this.getGlobalPlayers().values().stream().filter(p -> p.getUniqueId().equals(uuid)).findFirst().orElse(null);
+        for (ServerData server : this.connectedServers) {
+            for (GlobalPlayer globalPlayer : server.getOnlinePlayers()) {
+                if (globalPlayer.getUuid().equals(uuid)) {
+                    return globalPlayer;
+                }
+            }
+        }
+        return null;
     }
 
-    public GlobalPlayer getRealGlobalPlayer(String name) {
-        return this.getRealGlobalPlayers().get(name.toLowerCase());
-    }
-
+    @Override
     public boolean isPlayerOnline(String name) {
-        return this.getGlobalPlayer(name) != null;
+        boolean r = false;
+        for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
+            if (globalPlayer.getName().equalsIgnoreCase(name)) {
+                r = true;
+                break;
+            }
+        }
+        return r;
     }
 
     public boolean isPlayerOnline(UUID uuid) {
-        return this.getGlobalPlayer(uuid) != null;
+        boolean r = false;
+        for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
+            if (globalPlayer.getUuid().equals(uuid)) {
+                r = true;
+                break;
+            }
+        }
+        return r;
     }
-
 
     @Override
     public void init(OctoCore plugin) {
-        instance = this;
+
     }
 
     @Override

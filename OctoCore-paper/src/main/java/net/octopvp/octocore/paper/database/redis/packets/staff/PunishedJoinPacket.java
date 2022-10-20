@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.Permissions;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.utils.chat.Clickable;
 import net.octopvp.octocore.paper.utils.msg.Lang;
@@ -17,7 +17,7 @@ public class PunishedJoinPacket extends RedisPacket {
     private JsonBuilder builder;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         String type = data.get("type").getAsString(),
                 name = data.get("name").getAsString();
         Clickable clickable;

@@ -32,7 +32,6 @@ public class KaboomTroll implements Troll {
         int a = Utils.getBlockAbove(player);
         if (a >= 65) { //no blocks obstructing
             kaboom(player);
-            return;
         } else {
             kaboom(player, a - 1);
         }

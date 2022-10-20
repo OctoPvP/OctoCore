@@ -11,11 +11,13 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.Manager;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
+import net.octopvp.octocore.paper.manager.impl.RedisManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import org.bson.json.JsonWriterSettings;
 import redis.clients.jedis.Jedis;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class DatabaseManager extends Manager {
     @Getter
@@ -34,7 +36,7 @@ public class DatabaseManager extends Manager {
     }
 
     public static Jedis getJedis() {
-        return OctoCore.getInstance().getRedisHandler().getJedis();
+        return RedisManager.getJedis();
     }
 
     @Override
@@ -47,14 +49,14 @@ public class DatabaseManager extends Manager {
             mongoClient = MongoClients.create(
                     MongoClientSettings.builder()
                             .applyToClusterSettings(builder ->
-                                    builder.hosts(Arrays.asList(new ServerAddress(plugin.getConfig().getString("database.mongo.host"), plugin.getConfig().getInt("database.mongo.port")))))
+                                    builder.hosts(Collections.singletonList(new ServerAddress(plugin.getConfig().getString("database.mongo.host"), plugin.getConfig().getInt("database.mongo.port")))))
                             .credential(credentials)
                             .build());
         } else {
             mongoClient = MongoClients.create(
                     MongoClientSettings.builder()
                             .applyToClusterSettings(builder ->
-                                    builder.hosts(Arrays.asList(new ServerAddress(plugin.getConfig().getString("database.mongo.host"), plugin.getConfig().getInt("database.mongo.port")))))
+                                    builder.hosts(Collections.singletonList(new ServerAddress(plugin.getConfig().getString("database.mongo.host"), plugin.getConfig().getInt("database.mongo.port")))))
                             .build());
         }
         mongoDatabase = mongoClient.getDatabase("OctoCore");

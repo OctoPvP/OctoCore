@@ -12,10 +12,6 @@ public class JedisSettings {
     private String password = null;
     private boolean auth;
 
-    public boolean hasPassword() {
-        return this.password != null && !this.password.equals("");
-    }
-
     @Override
     public String toString() {
         return "JedisSettings{" +

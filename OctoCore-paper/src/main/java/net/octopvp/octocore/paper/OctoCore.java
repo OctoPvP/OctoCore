@@ -14,8 +14,9 @@ import net.octopvp.commander.exception.InvalidArgsException;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
+import net.octopvp.octocore.common.ServerImplementation;
+import net.octopvp.octocore.common.manager.IServerManager;
 import net.octopvp.octocore.common.object.*;
-import net.octopvp.octocore.common.redis.RedisHandler;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.Utilities;
@@ -23,7 +24,6 @@ import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.command.providers.*;
 import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.impl.*;
-import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
@@ -56,8 +56,8 @@ public final class OctoCore extends JavaPlugin {
             .enableComplexMapKeySerialization().create();    // https://stackoverflow.com/a/44800004/11588583
     public static String prefix = "[OctoCore] ";
     private static Chat chat;
-    private static Permission perms = null;
     private static OctoCore instance;
+    @Getter
     private static Location spawn;
     @Getter
     private static String serverName;
@@ -75,7 +75,7 @@ public final class OctoCore extends JavaPlugin {
 
     @Getter
     @Setter
-    private RedisHandler redisHandler;
+    private RedisManager redisHandler;
     //they init from up to down
     @Getter
     private PlayerManager playerManager;
@@ -175,28 +175,53 @@ public final class OctoCore extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.BUNGEE);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "test");
         serverName = getInstance().getConfig().getString("name");
-        OctoCoreCommon.init(new ServerInfo() {
+        OctoCoreCommon.getInstance().init(gson, new ServerImplementation() {
             @Override
-            public String getServerName() {
-                return Bukkit.getName();
+            public void sendMessage(UUID uuid, String message) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    player.sendMessage(message);
+                }
             }
 
             @Override
-            public String getCommitHash() {
-                return Bukkit.getCommitString();
+            public void sendMessage(String name, String message) {
+                Player player = Bukkit.getPlayer(name);
+                if (player != null) {
+                    player.sendMessage(message);
+                }
             }
 
             @Override
-            public String getCommitBranch() {
-                return Bukkit.getCommitBranch();
+            public void logError(String message, Object... placeholders) {
+                Logger.error(message, placeholders);
             }
 
             @Override
-            public boolean isOnline(UUID uuid) {
-                return ServerManager.getInstance().isPlayerOnline(uuid);
+            public void logInfo(String message, Object... placeholders) {
+                Logger.info(message, placeholders);
             }
-        }, gson);
-        OctoCoreCommon.setPluginClassLoader(getClassLoader());
+
+            @Override
+            public void logDebug(String message, Object... placeholders) {
+                Logger.debug(message, placeholders);
+            }
+
+            @Override
+            public void logWarn(String message, Object... placeholders) {
+                Logger.warn(message, placeholders);
+            }
+
+            @Override
+            public IServerManager getServerManager() {
+                return serverManager;
+            }
+
+            @Override
+            public ClassLoader getPluginClassLoader() {
+                return getClassLoader();
+            }
+        });
         try {
             serverType = ServerType.valueOf(getConfig().getString("server-type").toUpperCase());
             master = (serverType == ServerType.MASTER);
@@ -248,16 +273,14 @@ public final class OctoCore extends JavaPlugin {
                 .registerCommandPostProcessor((ctx, obj) -> {
                     if (obj instanceof CommandResult) {
                         CommandResult result = (CommandResult) obj;
-                        if (result == CommandResult.SUCCESS) return;
+                        if (result == CommandResult.SUCCESS) {
+                        }
                         else if (result == CommandResult.INVALID_ARGS) {
                             throw new InvalidArgsException(ctx.getCommandInfo());
                         } else if (Objects.equals(result.getMsg(), "") || Objects.equals(result.getMsg(), " ")) {
-                            return;
                         } else if (result.getMsg() == null) {
-                            return;
                         } else {
                             ctx.getCommandSender().sendMessage(result.getMsg());
-                            return;
                         }
                     }
                 })
@@ -297,7 +320,7 @@ public final class OctoCore extends JavaPlugin {
 
     private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
+        Permission perms = rsp.getProvider();
         return perms != null;
     }
 

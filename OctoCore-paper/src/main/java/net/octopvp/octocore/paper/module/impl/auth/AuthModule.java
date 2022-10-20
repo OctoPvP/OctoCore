@@ -127,12 +127,11 @@ public class AuthModule implements Module {
                 return;
             if (pdata.getLastAuthedIp().equals(player.getAddress().getHostName())) {
                 player.sendMessage(Lang.AUTH_NO_NEED_JOIN_SAME_IP.getMsg());
-                return;
             } else {
                 //TODO admin alert "<staff> joined on new ip"
                 player.sendMessage(Lang.PLEASE_AUTH.getMsg());
             }
-        }, 10l);
+        }, 10L);
     }
 
     public static void enableAuth(Player player) {

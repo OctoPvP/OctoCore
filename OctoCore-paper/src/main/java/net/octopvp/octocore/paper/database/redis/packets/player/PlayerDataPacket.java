@@ -4,13 +4,13 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.common.redis.RedisPacket;
+import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
-import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.PlayerTag;
 import net.octopvp.octocore.paper.utils.GsonSerializer;
 import net.octopvp.octocore.paper.utils.GsonType;
@@ -26,7 +26,7 @@ public class PlayerDataPacket extends RedisPacket {
     private JsonBuilder jsonBuilder;
 
     @Override
-    public void onReceive(JsonObject data) throws Exception {
+    public void onReceive(JsonObject data) {
         if (!data.has("name") || data.get("name").isJsonNull()) {
             Logger.error("Received data without name: " + OctoCore.getGson().toJson(data));
             return;

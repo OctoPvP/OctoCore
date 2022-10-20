@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.menus.grant;
 
 import com.google.common.collect.Lists;
+import net.octopvp.octocore.common.object.GlobalPlayer;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
@@ -9,7 +10,6 @@ import net.octopvp.octocore.paper.database.redis.packets.other.GrantsUpdatePacke
 import net.octopvp.octocore.paper.database.redis.packets.staff.AdminAlertPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
-import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.GrantProcedure;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.builders.GrantBuilder;

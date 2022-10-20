@@ -5,13 +5,13 @@ import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.JoinStrings;
 import net.octopvp.commander.annotation.Name;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
+import net.octopvp.octocore.common.object.GlobalPlayer;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.database.redis.packets.player.MessagePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.ServerManager;
-import net.octopvp.octocore.paper.objects.GlobalPlayer;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.chat.Clickable;
@@ -132,7 +132,6 @@ public class MessageCommand {
                     sender.sendMessage(Lang.SUCCESS_IGNORE.getMsg(target.getName()));
                 } else {
                     sender.sendMessage(Lang.PLAYER_NOT_FOUND);
-                    return;
                 }
             });
             return CommandResult.SUCCESS;

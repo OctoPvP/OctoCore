@@ -3,7 +3,7 @@ package net.octopvp.octocore.waterfall.redis.packet.impl.staff;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.redis.RedisPacket;
+
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 
 @AllArgsConstructor

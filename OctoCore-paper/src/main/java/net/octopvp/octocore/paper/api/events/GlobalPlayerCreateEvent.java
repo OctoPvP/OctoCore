@@ -2,7 +2,7 @@ package net.octopvp.octocore.paper.api.events;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.octocore.paper.objects.GlobalPlayer;
+import net.octopvp.octocore.common.object.GlobalPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

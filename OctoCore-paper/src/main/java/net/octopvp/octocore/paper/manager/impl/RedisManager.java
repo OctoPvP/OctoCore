@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class RedisManager extends Manager {
     public static Jedis getJedis() {
-        return OctoCore.getInstance().getRedisHandler().getJedis();
+        return getJedis();
     }
 
     //Load after db manager start

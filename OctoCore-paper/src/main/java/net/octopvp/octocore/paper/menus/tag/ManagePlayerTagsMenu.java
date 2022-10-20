@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,7 +43,7 @@ public class ManagePlayerTagsMenu extends PaginatedMenu {
 
     @Override
     public List<Button> getToolbarButtons() {
-        return Arrays.asList(new AddTagButton());
+        return Collections.singletonList(new AddTagButton());
     }
 
     @RequiredArgsConstructor
