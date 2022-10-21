@@ -20,36 +20,15 @@ public class GrantsUpdatePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String name = data.get("name").getAsString();
-        String tochange = data.get("tochange").getAsString();
-        boolean add = data.get("add").getAsBoolean();
         Player player = Bukkit.getPlayer(name);
         if (player != null) {
             PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-            Grant grant = OctoCore.getGson().fromJson(tochange, Grant.class);
+            Grant grant = OctoCore.getGson().fromJson(toChange, Grant.class);
             if (add)
                 playerData.getGrants().add(grant);
             else playerData.getGrants().remove(grant);
             playerData.loadPerms(player);
             playerData.save();
         }
-    }
-
-    @Override
-    public String getType() {
-        return "GRANTS_UPDATE";
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder()
-                .addProperty("name", name)
-                .addProperty("tochange", toChange)
-                .addProperty("add", add);
-    }
-
-    @Override
-    public String getName() {
-        return "GrantsUpdatePacket";
     }
 }

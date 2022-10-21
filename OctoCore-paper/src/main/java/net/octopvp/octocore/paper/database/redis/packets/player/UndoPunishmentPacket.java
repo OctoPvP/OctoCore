@@ -27,7 +27,6 @@ public class UndoPunishmentPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        this.type = PunishmentType.valueOf(data.get("type").getAsString());
         String t;
         if (this.type == PunishmentType.BAN) {
             t = "banned";
@@ -39,32 +38,30 @@ public class UndoPunishmentPacket extends RedisPacket {
             t = "punished";
         }
 
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(data.get("target").getAsString());
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(target);
 
         String userName = PlayerManager.getInstance().getFormattedName(offlinePlayer.getName());
-        String coloredName = data.get("coloredName").getAsString();
-        String reason0 = data.get("reason").getAsString();
         Clickable clickable = new Clickable((silent ? Lang.PUNISHMENT_SILENT.toString() : "") + Lang.PUNISHMENT_UNDO.getMsg(
                 userName,
                 t,
                 coloredName,
-                reason0
+                reason
         )/*,Lang.PUNISHMENT_UNMUTE_HOVER.getMsg(reason)*/);
         Bukkit.getConsoleSender().sendMessage(CC.translate(clickable.getText()));
 
-        if (data.get("silent").getAsBoolean()) {
+        if (silent) {
             for (Player player : Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission(Permissions.PUNISHMENT_SEE_SILENT)).collect(Collectors.toList())) {
-                String reason = data.get("reason").getAsString().trim();
                 String currentMessage = clickable.getText();
-                Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason), null);
+                Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason.trim()), null);
                 click.sendToPlayer(player);
             }
         } else {
-            String reason = data.get("reason").getAsString()
+            String reason = this.reason
+                    .replace("--s", "")
+                    .replace("--silent", "")
                     .replace("-s", "")
                     .replace("-silent", "")
-                    .replace("-c", "")
-                    .replace("-clear", "").trim();
+                    .trim();
             String currentMessage = clickable.getText();
             Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason), null);
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -76,7 +73,7 @@ public class UndoPunishmentPacket extends RedisPacket {
             }
         }
 
-        Player target = Bukkit.getPlayer(data.get("target").getAsString());
+        Player target = Bukkit.getPlayer(this.target);
         if (target != null && (type == PunishmentType.WARN || type == PunishmentType.MUTE)) {
             String punishType = "";
             switch (type) {
@@ -89,22 +86,5 @@ public class UndoPunishmentPacket extends RedisPacket {
             }
             target.sendMessage(CC.translate("&bYou have been &a" + punishType + "&b."));
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder()
-                .addProperty("type", this.type.toString())
-                .addProperty("senderDisplay", this.senderDisplay)
-                .addProperty("coloredName", this.coloredName)
-                .addProperty("sender", this.sender)
-                .addProperty("target", this.target)
-                .addProperty("reason", this.reason)
-                .addProperty("silent", this.silent);
-    }
-
-    @Override
-    public String getName() {
-        return "UndoPunishmentPacket";
     }
 }

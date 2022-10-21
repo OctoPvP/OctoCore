@@ -6,6 +6,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.IPlayerData;
 import net.octopvp.octocore.common.object.punish.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
@@ -142,16 +143,17 @@ public class Punishment implements IPunishment {
     }
 
     public void execute(CommandSender sender) {
-        JsonBuilder jsonChain = new JsonBuilder();
+        String senderStr, coloredName;
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            jsonChain.addProperty("sender", player.getDisplayName());
-
+            senderStr = player.getDisplayName();
             PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-            jsonChain.addProperty("coloredName", playerData.getHighestRank().getColor() + playerData.getName());
+            coloredName = playerData.getHighestRank().getColor() + playerData.getName();
         } else {
-            jsonChain.addProperty("sender", sender.getName());
+            senderStr = "Console";
+            coloredName = null;
         }
+        /*
         jsonChain.addProperty("senderName", sender.getName())
                 .addProperty("name", name)
                 .addProperty("reason", this.getReason())
@@ -167,8 +169,12 @@ public class Punishment implements IPunishment {
                 .addProperty("type", this.punishmentType.name())
                 .addProperty("IPRelative", this.IPRelative)
                 .addProperty("punishment", OctoCore.getGson().toJson(this));
+         */
 
-        new ExecutePunishmentPacket(jsonChain).send();
+        new ExecutePunishmentPacket(senderStr, coloredName, sender.getName(), name, getReason(), getDurationTime(), getNiceDuration(), getNiceExpire(),
+                isPermanent(), targetId, isSilent(), addedByName, OctoCoreCommon.getInstance().getServerImplementation().getServerName(), punishmentType,
+                IPRelative, OctoCore.getGson().toJson(this)
+                ).send();
     }
 
     public PunishmentType getType() {

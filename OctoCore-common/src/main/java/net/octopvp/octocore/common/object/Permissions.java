@@ -3,7 +3,7 @@ package net.octopvp.octocore.common.object;
 public class Permissions {
     public static final String NOTHING = "",
 
-    ADMIN = "octocore.admin",
+    ADMIN = "octocore.admin", STAFF = "octocore.staff",
 
     COMMAND_NICK = "octocore.command.nick", COMMAND_UNNICK = "octocore.command.unnick", COMMAND_NICK_OTHERS = "octocore.command.nick.others", COMMAND_UNNICK_OTHERS = "octocore.command.unnick.others", USE_UNICODE_CHAT = "octocore.chat.unicode", USE_COLOR_CHAT = "octocore.chat.color", STAFF_MODULES = "octocore.lunar.staff", SEEN = "octocore.command.seen", CLEAR_CHAT = "octocore.command.clearchat", BYPASS_CLEAR_CHAT = "octocore.command.clearchat.bypass", LOG_WORLDEDIT = "octocore.action.logworldedit", START_RAFFLE = "octocore.raffle.start", END_RAFFLE = "octocore.raffle.end", ENTER_RAFFLE = "octocore.raffle.enter", SYS_INFO = "octocore.command.sysinfo", USE_COLOR_NAME = "octocore.usecolorname", LIST_PLAYERS = "octocore.command.list", PING_COMMAND_OTHER = "octocore.command.ping.others", PUNISH_PLAYER = "octocore.command.punish", SETUP_2FA = "octocore.command.2fa.setup", VIEW_HISTORY = "octocore.command.history", FORCE_AUTH = "octocore.command.forceauth", VANISH = "octocore.action.vanish", TRASH = "octocore.command.trash", REFRESH_SKIN = "octocore.command.refreshskin",
 

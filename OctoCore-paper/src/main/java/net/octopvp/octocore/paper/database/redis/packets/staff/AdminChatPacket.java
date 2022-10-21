@@ -32,9 +32,6 @@ public class AdminChatPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String name = data.get("name").getAsString();
-        String server = data.get("server").getAsString();
-        String message = data.get("message").getAsString();
         String msg = Lang.ADMIN_CHAT_FORMAT.getMsg(name, server, message);
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission(Permissions.ADMINCHAT)) {
@@ -44,22 +41,5 @@ public class AdminChatPacket extends RedisPacket {
         if (OctoCore.isMaster()) {
             JDAManager.sendDiscordAC(name, server, message);
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        JsonBuilder builder = new JsonBuilder()
-                .addProperty("name", name)
-                .addProperty("server", server)
-                .addProperty("message", message);
-        if (uuid != null) {
-            builder.addProperty("uuid", uuid.toString());
-        }
-        return builder;
-    }
-
-    @Override
-    public String getName() {
-        return "AdminChatPacket";
     }
 }

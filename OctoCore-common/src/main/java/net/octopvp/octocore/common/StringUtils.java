@@ -1,6 +1,7 @@
 package net.octopvp.octocore.common;
 
 import net.md_5.bungee.api.ChatColor;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -399,6 +400,26 @@ public class StringUtils {
         public B getBlue() {
             return blue;
         }
+    }
 
+    public static String classNameToPacketName(String name) {
+        // Classes are structured like ThisThatPacket, we want to convert it to THIS_THAT
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if (Character.isUpperCase(c)) {
+                if (i != 0) {
+                    sb.append("_");
+                }
+                sb.append(Character.toString(c).toUpperCase());
+            } else {
+                sb.append(Character.toString(c).toUpperCase());
+            }
+        }
+        String s = sb.toString();
+        if (s.endsWith("_PACKET")) {
+            s = s.substring(0, s.length() - 7);
+        }
+        return s;
     }
 }

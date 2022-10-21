@@ -67,7 +67,12 @@ public class GiveTagsMenu extends PaginatedMenu {
                 return;
             }
             SoundUtil.playPing(player);
-            new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "GIVE_TAG").addProperty("tagId", tag.getId().toString())).send();
+            //new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "GIVE_TAG").addProperty("tagId", tag.getId().toString())).send();
+            new TagUpdatePacket(
+                    TagUpdatePacket.TagUpdateReason.GIVE_TAG,
+                    data.getUuid(),
+                    tag.getId()
+            ).send();
             player.closeInventory();
             player.sendMessage(CC.GREEN + "Gave " + data.getName() + " the " + tag.getName() + " tag!");
         }

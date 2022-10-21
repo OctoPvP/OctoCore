@@ -107,7 +107,7 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
             }
         }
 
-        ServerManager.getInstance().getGlobalPlayers().values().forEach(globalPlayer -> {
+        OctoCoreCommon.getInstance().getServerManager().getGlobalPlayers().values().forEach(globalPlayer -> {
             if (!globalPlayer.getUniqueId().toString().equals(this.uniqueId.toString()) && globalPlayer.getAddress().equalsIgnoreCase(address) && this.getAlt(globalPlayer.getUniqueId()) == null) {
                 new AltUpdatePacket(this.uniqueId, this.name, globalPlayer.getUniqueId(), globalPlayer.getName());
             }

@@ -23,12 +23,6 @@ public class MessagePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        message = data.get("message").getAsString();
-        from = data.get("from").getAsString();
-        to = data.get("to").getAsString();
-        fromId = UUID.fromString(data.get("fromId").getAsString());
-        toId = UUID.fromString(data.get("toId").getAsString());
-
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getUniqueId().equals(fromId)) { // sender
                 player.sendMessage(Lang.MSG_PLAYER_TO.getMsg(to, message));
@@ -59,18 +53,4 @@ public class MessagePacket extends RedisPacket {
         }
     }
 
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder()
-                .add("message", message)
-                .add("from", from)
-                .add("to", to)
-                .add("fromId", fromId.toString())
-                .add("toId", toId.toString());
-    }
-
-    @Override
-    public String getName() {
-        return "MessagePacket";
-    }
 }

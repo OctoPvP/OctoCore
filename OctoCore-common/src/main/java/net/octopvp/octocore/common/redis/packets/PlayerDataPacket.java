@@ -5,29 +5,38 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.MessageSettings;
+import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.ServerData;
+import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.Logger;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlayerDataPacket extends RedisPacket {
 
-    private static List<UUID> alreadyCreating = new CopyOnWriteArrayList<>();
+    private static final List<UUID> alreadyCreating = new CopyOnWriteArrayList<>();
 
     private static PlayerDataPacketImplementation implementation;
 
     private UUID uuid;
     private String server;
-    private String prefix, color, name;
-    private long lastActivity;
-    private boolean vanished;
-    private boolean staff;
+    private String name, lastServer, address, rank;
+    private long lastActivity, firstJoined, lastSeen;
+    private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, staff;
+    private Set<UUID> allTags;
+    private Map<String, ServerContext> permissions, negatedPermissions;
+    private List<Alt> alts;
+    private List<String> addresses;
+    private int rankWeight;
+    private MessageSettings messageSettings;
+    private String coloredName;
+    private boolean op;
 
     @Override
     public void onReceive(JsonObject data) {
@@ -69,28 +78,33 @@ public class PlayerDataPacket extends RedisPacket {
         if (globalPlayer == null) return;
 
         globalPlayer.setServer(server);
-        globalPlayer.setName(name);
-        globalPlayer.setUuid(uuid);
+        globalPlayer.setLastServer(lastServer);
+        globalPlayer.setAddress(address);
+        globalPlayer.setRankName(rank);
         globalPlayer.setLastActivity(lastActivity);
-        globalPlayer.setStaff(staff);
-
-        if (prefix != null)
-            globalPlayer.setPrefix(prefix);
-        if (color != null)
-            globalPlayer.setColor(color);
+        globalPlayer.setFirstJoined(firstJoined);
+        globalPlayer.setLastSeen(lastSeen);
         globalPlayer.setVanished(vanished);
+        globalPlayer.setStaffChatAlerts(staffChatAlerts);
+        globalPlayer.setAdminChatAlerts(adminChatAlerts);
+        globalPlayer.setReportAlerts(reportAlerts);
+        globalPlayer.setStaff(staff);
+        globalPlayer.setAllTags(new ArrayList<>(allTags));
+        globalPlayer.setPermissions(permissions);
+        globalPlayer.setNegatedPermissions(negatedPermissions);
+        globalPlayer.setAlts(alts);
+        globalPlayer.setAddresses(addresses);
+        globalPlayer.setRankWeight(rankWeight);
+        globalPlayer.setMessageSettings(messageSettings);
+        globalPlayer.setColoredName(coloredName);
+        globalPlayer.setOp(op);
 
         if (created) {
             Logger.debug("Created global player: " + OctoCoreCommon.getInstance().getGson().toJson(globalPlayer));
         }
     }
 
-    @Override
-    public String getType() {
-        return "PLAYER_DATA";
-    }
-
-    public static interface PlayerDataPacketImplementation {
+    public interface PlayerDataPacketImplementation {
         void runLater(Runnable runnable, Duration duration);
 
         String getOfflineName(UUID uuid);

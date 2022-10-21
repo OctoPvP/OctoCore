@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.GlobalPlayer;
 import net.octopvp.octocore.common.object.ObjectConsumer;
 import net.octopvp.octocore.common.object.Permissions;
@@ -191,7 +192,7 @@ public class PlayerManager extends Manager {
         String name = player.getName();
         UUID uuid = player.getUniqueId();
         BukkitTask task = Tasks.runAsyncLater(() -> {
-            GlobalPlayer globalPlayer = ServerManager.getInstance().getGlobalPlayer(name);
+            GlobalPlayer globalPlayer = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(name);
 
             if (globalPlayer != null && globalPlayer.isLeaving() && globalPlayer.hasPermission(Permissions.SEND_LEAVE_MESSAGE)) {
                 new StaffLeavePacket(globalPlayer.getName(), globalPlayer.getServer() != null ? globalPlayer.getServer() : "Unknown").send();

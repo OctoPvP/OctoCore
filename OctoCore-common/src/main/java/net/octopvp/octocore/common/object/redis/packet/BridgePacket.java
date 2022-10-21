@@ -1,10 +1,10 @@
 package net.octopvp.octocore.common.object.redis.packet;
 
-import net.octopvp.aetheriacore.common.AetheriaCoreCommon;
+import net.octopvp.aetheriacore.common.OctoCoreCommon;
 
 public abstract class BridgePacket extends RedisPacket {
     @Override
     public void send() {
-        AetheriaCoreCommon.getInstance().getRedisManager().writeBridge(this);
+        OctoCoreCommon.getInstance().getRedisManager().writeBridge(this);
     }
 }

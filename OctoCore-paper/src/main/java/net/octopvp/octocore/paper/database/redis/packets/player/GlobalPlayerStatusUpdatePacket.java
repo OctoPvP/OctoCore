@@ -16,25 +16,10 @@ public class GlobalPlayerStatusUpdatePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        GlobalPlayer player = OctoCore.getInstance().getServerManager().getGlobalPlayer(data.get("name").getAsString());
+        GlobalPlayer player = OctoCore.getInstance().getServerManager().getGlobalPlayer(name);
 
         if (player != null) {
             player.setLeaving(data.has("quited") && data.get("quited").getAsBoolean());
         }
-    }
-
-    @Override
-    public String getType() {
-        return "GLOBAL_PLAYER_STATUS_UPDATE";
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder().addProperty("name", this.name).addProperty("quited", this.quited);
-    }
-
-    @Override
-    public String getName() {
-        return "GlobalPlayerStatusUpdate";
     }
 }

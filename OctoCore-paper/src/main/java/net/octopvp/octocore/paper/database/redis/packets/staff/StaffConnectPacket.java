@@ -18,23 +18,11 @@ public class StaffConnectPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String name = data.get("name").getAsString();
-        String server = data.get("server").getAsString();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission(Permissions.RECEIVE_JOIN_MESSAGE)) {
                 Logger.debug("Sending " + onlinePlayer.getName() + " staff connect message");
                 onlinePlayer.sendMessage(Lang.STAFF_ALERTS.getMsg(Lang.STAFF_JOIN_ALERT_FORMAT.getMsg(name, server)));
             }
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder().addProperty("name", name).addProperty("server", server);
-    }
-
-    @Override
-    public String getName() {
-        return "StaffConnectPacket";
     }
 }

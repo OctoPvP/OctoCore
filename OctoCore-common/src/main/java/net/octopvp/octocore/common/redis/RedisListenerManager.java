@@ -1,8 +1,8 @@
 package net.octopvp.octocore.common.redis;
 
 import lombok.Getter;
-import net.octopvp.aetheriacore.common.AetheriaCoreCommon;
-import net.octopvp.aetheriacore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
@@ -34,7 +34,7 @@ public class RedisListenerManager {
                         } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
                             throw new RuntimeException(e);
                         } catch (NoSuchMethodException e) {
-                            AetheriaCoreCommon.getInstance().getServerImplementation().logDebug("No constructor found for " + field.getType().getName() + " attempting to use experimental Objenesis");
+                            OctoCoreCommon.getInstance().getServerImplementation().logDebug("No constructor found for " + field.getType().getName() + " attempting to use experimental Objenesis");
                             ObjectInstantiator<?> instantiator = objenesis.getInstantiatorOf(field.getType());
                             RedisPacket packet = (RedisPacket) instantiator.newInstance();
                             packets.add(packet);
@@ -52,13 +52,13 @@ public class RedisListenerManager {
                 } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
                     throw new RuntimeException(e);
                 } catch (NoSuchMethodException e) {
-                    AetheriaCoreCommon.getInstance().getServerImplementation().logDebug("No constructor found for " + aClass.getName() + " attempting to use experimental Objenesis");
+                    OctoCoreCommon.getInstance().getServerImplementation().logDebug("No constructor found for " + aClass.getName() + " attempting to use experimental Objenesis");
                     ObjectInstantiator<?> instantiator = objenesis.getInstantiatorOf(aClass);
                     RedisPacket packet = (RedisPacket) instantiator.newInstance();
                     packets.add(packet);
                 }
             }
         }
-        AetheriaCoreCommon.getInstance().getServerImplementation().logDebug("Successfully registered %1 packets", packets.size());
+        OctoCoreCommon.getInstance().getServerImplementation().logDebug("Successfully registered %1 packets", packets.size());
     }
 }

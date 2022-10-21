@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
 
 @NoArgsConstructor
 public class AuditLogPacket extends RedisPacket {
+    private AuditLogType logType;
     @Override
     public void onReceive(JsonObject data) {
-        AuditLogType logType = AuditLogType.valueOf(data.get("type").getAsString());
         if (logType != AuditLogType.WORLDEDIT_ACTION && logType != AuditLogType.AUTH_FAIL)
             return;
         if (logType == AuditLogType.WORLDEDIT_ACTION) {
@@ -26,15 +26,5 @@ public class AuditLogPacket extends RedisPacket {
                 }
             }
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return "AuditLogPacket";
     }
 }

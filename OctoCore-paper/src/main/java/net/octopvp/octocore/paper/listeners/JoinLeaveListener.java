@@ -1,7 +1,7 @@
 package net.octopvp.octocore.paper.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
-import net.octopvp.octocore.common.util.CachedData;
+import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.paper.listeners.redis.MainRedisHandler;
@@ -72,7 +72,7 @@ public class JoinLeaveListener implements Listener {
                 return;
             }
 
-            CachedData cache = new CachedData(uuid);
+            DataCache cache = new DataCache(uuid);
             Document data0 = cache.getData();
 
             playerData.load(data0);

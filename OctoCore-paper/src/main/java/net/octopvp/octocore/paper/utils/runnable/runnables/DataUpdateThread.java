@@ -2,15 +2,14 @@ package net.octopvp.octocore.paper.utils.runnable.runnables;
 
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.common.util.CachedData;
+import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.redis.packets.PlayerDataPacket;
+import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataPacket;
 import net.octopvp.octocore.paper.database.redis.packets.server.ServerUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
-import net.octopvp.octocore.paper.utils.GsonSerializer;
-import net.octopvp.octocore.paper.utils.GsonType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -57,6 +56,7 @@ public class DataUpdateThread extends Thread {
             playerData.setOp(player.isOp());
             String name = playerData.getName();
             if (name == null && playerData.isOnline()) name = player.getName();
+            /*
             JsonBuilder pdata = new JsonBuilder()
                     .add("name", name)
                     .add("uuid", playerData.getUuid().toString())
@@ -86,10 +86,17 @@ public class DataUpdateThread extends Thread {
             if (player != null) {
                 pdata.add("op", player.isOp());
             }
+             */
 
-            new PlayerDataPacket(pdata).send();
-            if (player != null)
-                new CachedData(player.getUniqueId()).update(playerData.save(true));
+            new PlayerDataPacket(playerData.getUuid(), OctoCore.getServerName(), name, OctoCore.getServerName(), playerData.getAddress(),
+                    playerData.getRankName(), System.currentTimeMillis(), playerData.getFirstJoin(), playerData.getLastLogin(),
+                    playerData.isVanished(), playerData.isStaffChatAlerts(), playerData.isAdminChatAlerts(), playerData.isReportAlerts(),
+                    playerData.hasPermission(Permissions.STAFF), playerData.getAllowedTagsID(), playerData.getAllEffectivePermissions(),
+                    playerData.getAllNegatedPermissions(), playerData.getAltsSafely(), playerData.getAddresses(),
+                    playerData.getHighestRank().getWeight(), playerData.getMessageSettings(), playerData.getCachedFormattedNameNoNickNoTag(),
+                    playerData.isOp()
+                    ).send();
+            new DataCache(playerData.getUuid()).update(playerData.save(true));
         }
     }
 

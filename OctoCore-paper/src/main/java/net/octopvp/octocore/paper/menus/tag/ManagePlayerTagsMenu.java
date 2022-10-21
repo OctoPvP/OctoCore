@@ -1,6 +1,7 @@
 package net.octopvp.octocore.paper.menus.tag;
 
 import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.database.redis.packets.player.TagUpdatePacket;
@@ -73,8 +74,9 @@ public class ManagePlayerTagsMenu extends PaginatedMenu {
         public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
             super.onClick(player, slot, clickType, event);
             if (clickType == ClickType.SHIFT_RIGHT) {
-                if (ServerManager.getInstance().isPlayerOnline(data.getUuid())) {
-                    new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "REMOVE_TAG").addProperty("tagId", tag.getId().toString())).send();
+                if (OctoCoreCommon.getInstance().getServerManager().isPlayerOnline(data.getUuid())) {
+                    //new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "REMOVE_TAG").addProperty("tagId", tag.getId().toString())).send();
+                    new TagUpdatePacket(TagUpdatePacket.TagUpdateReason.REMOVE_TAG, data.getUuid(), tag.getId()).send();
                 } else {
                     PlayerData d = PlayerManager.getInstance().getOfflineData(data.getUniqueId());
                     d.removeTag(tag.getId());

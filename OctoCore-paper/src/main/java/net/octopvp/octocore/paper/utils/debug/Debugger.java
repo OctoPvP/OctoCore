@@ -1,5 +1,6 @@
 package net.octopvp.octocore.paper.utils.debug;
 
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.paper.listeners.JoinLeaveListener;
 import net.octopvp.octocore.paper.manager.impl.ServerManager;
@@ -113,7 +114,7 @@ public class Debugger {
     }
 
     public void listGlobal() {
-        ServerManager.getInstance().getGlobalPlayers().forEach((k, v) -> print(k + ": " + v));
+        OctoCoreCommon.getInstance().getServerManager().getGlobalPlayers().forEach((player) -> print(player.getName()));
     }
 
     public void isPermissibleInjected() {

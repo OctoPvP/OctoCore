@@ -3,21 +3,21 @@ package net.octopvp.octocore.common.redis;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Getter;
-import net.octopvp.aetheriacore.common.AetheriaCoreCommon;
-import net.octopvp.aetheriacore.common.object.redis.JedisSettings;
-import net.octopvp.aetheriacore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.object.redis.JedisSettings;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 @Getter
 public class JedisSubscriber {
-    private static JsonParser JSON_PARSER = new JsonParser();
+    private static final JsonParser JSON_PARSER = new JsonParser();
 
-    private String channel;
-    private Jedis jedis;
-    private JedisPubSub pubSub;
+    private final String channel;
+    private final Jedis jedis;
+    private final JedisPubSub pubSub;
 
-    private RedisListenerManager listenerManager;
+    private final RedisListenerManager listenerManager;
 
     public JedisSubscriber(String channel, JedisSettings settings, RedisListenerManager listenerManager) {
         System.out.println("Init Subscriber");
@@ -33,7 +33,7 @@ public class JedisSubscriber {
                     JsonObject data = object.get("data").getAsJsonObject();
 
                     for (RedisPacket redisPacket : listenerManager.getPackets().stream().filter(packet -> packet.getType().equalsIgnoreCase(type)).toList()) {
-                        RedisPacket newPacket = AetheriaCoreCommon.getInstance().getGson().fromJson(data, redisPacket.getClass());
+                        RedisPacket newPacket = OctoCoreCommon.getInstance().getGson().fromJson(data, redisPacket.getClass());
                         newPacket.onReceive(data);
                     }
                 } catch (Exception e) {

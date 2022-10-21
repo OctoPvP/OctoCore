@@ -3,7 +3,7 @@ package net.octopvp.octocore.master.master.votifier.models;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.aetheriacore.common.AetheriaCoreCommon;
+import net.octopvp.aetheriacore.common.OctoCoreCommon;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class VotifierConfig {
     }
 
     public void save() {
-        String json = AetheriaCoreCommon.getInstance().getGson().toJson(this);
+        String json = OctoCoreCommon.getInstance().getGson().toJson(this);
         try {
             if (!CONFIG_FILE.exists()) {
                 CONFIG_FILE.createNewFile();

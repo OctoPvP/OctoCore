@@ -134,14 +134,12 @@ public class JDAManager extends Manager {
                         ).send();
                     }
                     if (event.getMessage().getChannel().getIdLong() == 808700037290786886L) {
-                        JsonObject jsonObject = new JsonObject();
                         Color color = event.getMember().getColor();
-                        jsonObject.addProperty("name", StringUtils.fromRGB(color.getRed(), color.getGreen(), color.getBlue()) + event.getAuthor().getName());
-                        jsonObject.addProperty("message", event.getMessage().getContentDisplay());
-                        jsonObject.addProperty("role", getHighestRole(event.getMember()));
-                        jsonObject.addProperty("tag", event.getAuthor().getAsTag());
                         new DiscordAdminChatPacket(
-                                jsonObject
+                                StringUtils.fromRGB(color.getRed(), color.getGreen(), color.getBlue()) + event.getAuthor().getName(),
+                                event.getMessage().getContentDisplay(),
+                                getHighestRole(event.getMember()),
+                                event.getAuthor().getAsTag()
                         ).send();
                     }
                 }

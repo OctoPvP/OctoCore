@@ -16,30 +16,16 @@ import org.bukkit.entity.Player;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiscordAdminChatPacket extends RedisPacket {
-    private JsonObject jo;
+    private String name, message, role, tag;
 
     @Override
     public void onReceive(JsonObject data) {
-        String name = data.get("name").getAsString();
-        String message = data.get("message").getAsString();
         String msg = Lang.DISCORD_ADMIN_CHAT_FORMAT.getMsg(name, message);
-        String role = data.get("role").getAsString();
-        String tag = data.get("tag").getAsString();
         TextComponent mainComponent = new TextComponent(msg);
         mainComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rank: " + role + "\nUser: " + tag).create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission(Permissions.ADMINCHAT))
                 player.sendMessage(mainComponent);
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder(jo);
-    }
-
-    @Override
-    public String getName() {
-        return "DiscordAdminChatPacket";
     }
 }

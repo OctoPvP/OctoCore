@@ -1,6 +1,6 @@
 package net.octopvp.octocore.master.master.redis;
 
-import net.octopvp.aetheriacore.common.redis.packets.ServerDataPacket;
+import net.octopvp.octocore.common.redis.packets.ServerDataPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

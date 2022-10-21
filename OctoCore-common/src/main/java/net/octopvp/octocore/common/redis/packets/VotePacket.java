@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.aetheriacore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 
 import java.util.UUID;
 
@@ -14,6 +14,7 @@ public class VotePacket extends RedisPacket {
     @Setter
     private static VotePacketImplementation implementation;
     private UUID uuid;
+
     @Override
     public void onReceive(JsonObject data) {
         if (implementation != null) {
@@ -21,10 +22,6 @@ public class VotePacket extends RedisPacket {
         }
     }
 
-    @Override
-    public String getType() {
-        return "VOTE_PACKET";
-    }
     public interface VotePacketImplementation {
         void onVote(UUID uuid);
     }

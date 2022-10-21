@@ -6,7 +6,9 @@ import com.vexsoftware.votifier.model.Vote;
 import lombok.Getter;
 import net.badbird5907.lightning.annotation.EventHandler;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.ServerImplementation;
 import net.octopvp.octocore.common.StringUtils;
+import net.octopvp.octocore.common.manager.IServerManager;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.redis.packets.VotePacket;
 import net.octopvp.octocore.master.component.LightningHolder;
@@ -16,7 +18,9 @@ import net.octopvp.octocore.master.master.util.AccountUtil;
 import net.octopvp.octocore.master.master.votifier.NuVotifierMaster;
 import net.octopvp.octocore.master.master.votifier.VotifierEvent;
 import net.octopvp.octocore.master.models.Setting;
+import net.octopvp.octocore.master.models.VoteModel;
 import net.octopvp.octocore.master.repository.SettingRepository;
+import net.octopvp.octocore.master.repository.VotesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +94,16 @@ public class OctoCoreMaster {
             public IServerManager getServerManager() {
                 return serverManager;
             }
+
+            @Override
+            public ClassLoader getClassLoader() {
+                return OctoCoreMaster.class.getClassLoader();
+            }
+
+            @Override
+            public String getServerName() {
+                return null;
+            }
         });
     }
 
@@ -102,7 +116,7 @@ public class OctoCoreMaster {
     @PostConstruct
     public void init() {
         LOG.info("Starting Redis...");
-        AetheriaCoreCommon.getInstance().setRedisManager(redisManager = new RedisManager(
+        OctoCoreCommon.getInstance().setRedisManager(redisManager = new RedisManager(
                 hostname, port, password, "net.octopvp.aetheriacoremaster.master.redis.impl",
                 new RedisPackets()
         ));

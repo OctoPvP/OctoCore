@@ -12,14 +12,4 @@ public class ReloadTagsPacket extends RedisPacket {
     public void onReceive(JsonObject data) {
         TagManager.reloadTags();
     }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder();
-    }
-
-    @Override
-    public String getName() {
-        return "ReloadTagsPacket";
-    }
 }

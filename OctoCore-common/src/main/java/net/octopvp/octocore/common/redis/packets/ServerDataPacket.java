@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.octopvp.aetheriacore.common.AetheriaCoreCommon;
-import net.octopvp.aetheriacore.common.object.ServerData;
-import net.octopvp.aetheriacore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.object.ServerData;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,18 +34,16 @@ public class ServerDataPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject jsonObject) {
-        ServerData serverData = AetheriaCoreCommon.getInstance().getServerImplementation().getServerManager().getServerData(name);
+        ServerData serverData = OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getServerData(name);
         if (serverData == null)
-            serverData = AetheriaCoreCommon.getInstance().getServerImplementation().getServerManager().createServerData(name);
+            serverData = OctoCoreCommon.getInstance().getServerImplementation().getServerManager().createServerData(name);
         serverData.setNames(names);
         serverData.setMaxPlayers(maxPlayers);
-        serverData.setPlayers(players);
         serverData.setLastTick(lastTick);
         serverData.setWhitelisted(whitelisted);
         serverData.setRecentTps(new double[]{tps1, tps2, tps3});
         serverData.setMaintenance(maintenance);
-        serverData.setRpgServer(rpg);
-        Iterator<ServerData> iterator = AetheriaCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers().iterator();
+        Iterator<ServerData> iterator = OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers().iterator();
         while (iterator.hasNext()) {
             ServerData connectedServer = iterator.next();
             boolean time = System.currentTimeMillis() - connectedServer.getLastTick() >= 15000L, removed = false;
@@ -67,7 +65,7 @@ public class ServerDataPacket extends RedisPacket {
         return "SERVER_DATA";
     }
 
-    public static interface Implementation {
+    public interface Implementation {
         void onServerRemoved(ServerData connectedServer);
     }
 }

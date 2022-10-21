@@ -5,27 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.octopvp.aetheriacore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 
 @AllArgsConstructor
 @NoArgsConstructor
 public class GlobalServerRemovedPacket extends RedisPacket {
-    private String server;
-
     @Getter
     @Setter
     private static Implementation implementation = null;
+    private String server;
 
     @Override
     public void onReceive(JsonObject data) {
         if (implementation != null) {
             implementation.onServerRemoved(server);
         }
-    }
-
-    @Override
-    public String getType() {
-        return "GLOBAL_SERVER_REMOVED";
     }
 
     public interface Implementation {

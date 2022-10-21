@@ -19,5 +19,7 @@ public interface ServerImplementation {
 
     IServerManager getServerManager();
 
-    ClassLoader getPluginClassLoader();
+    ClassLoader getClassLoader();
+
+    String getServerName();
 }

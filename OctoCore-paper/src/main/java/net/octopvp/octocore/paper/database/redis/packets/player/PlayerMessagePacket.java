@@ -15,19 +15,9 @@ public class PlayerMessagePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        Player player = Bukkit.getPlayer(data.get("name").getAsString());
+        Player player = Bukkit.getPlayer(name);
         if (player != null) {
-            player.sendMessage(data.get("message").getAsString());
+            player.sendMessage(message);
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder().addProperty("name", name).addProperty("message", message);
-    }
-
-    @Override
-    public String getName() {
-        return "PlayerMessagePacket";
     }
 }

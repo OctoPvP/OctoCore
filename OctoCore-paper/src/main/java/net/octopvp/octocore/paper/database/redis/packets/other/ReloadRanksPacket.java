@@ -12,14 +12,4 @@ public class ReloadRanksPacket extends RedisPacket {
     public void onReceive(JsonObject data) {
         RankManager.getInstance().reloadRanks();
     }
-
-    @Override
-    public JsonBuilder getData() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return "ReloadTanksPacket";
-    }
 }

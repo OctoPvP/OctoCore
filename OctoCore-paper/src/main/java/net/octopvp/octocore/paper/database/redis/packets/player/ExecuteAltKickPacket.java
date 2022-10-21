@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import net.octopvp.octocore.paper.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
@@ -14,6 +13,7 @@ import org.bukkit.entity.Player;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExecuteAltKickPacket extends RedisPacket {
+    /*
     private JsonBuilder jsonBuilder;
 
     @Override
@@ -60,14 +60,44 @@ public class ExecuteAltKickPacket extends RedisPacket {
             }
         });
     }
+     */
+
+    private String name, sender, reason, niceDuration, type, alt, expire;
+    private boolean permanent;
 
     @Override
-    public JsonBuilder getData() {
-        return jsonBuilder;
-    }
-
-    @Override
-    public String getName() {
-        return "ExecuteAltKickPacket";
+    public void onReceive(JsonObject data) {
+        Tasks.runSync(() -> {
+            Player target = Bukkit.getPlayer(name);
+            if (target != null) {
+                if (type.equalsIgnoreCase("BAN")) {
+                    target.kickBungee(
+                            new DisconnectReason(
+                                    Lang.PUNISH_KICK_MESSAGE.getMsg(
+                                            (!permanent ? Lang.TEMP : Lang.PERM),
+                                            "BANNED",
+                                            "Banned",
+                                            sender,
+                                            reason,
+                                            (!permanent ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
+                                                    expire, niceDuration) : Lang.PERM_ENTRY),
+                                            true)).toString()
+                    );
+                } else if (type.equalsIgnoreCase("BLACKLIST")) {
+                    target.kickBungee(
+                            new DisconnectReason(
+                                    Lang.PUNISH_KICK_MESSAGE.getMsg(
+                                            (!permanent ? Lang.TEMP : Lang.PERM),
+                                            "BLACKLISTED",
+                                            "Blacklisted",
+                                            sender,
+                                            reason,
+                                            (!permanent ? Lang.PUNISH_KICK_TEMP_ENTRY.getMsg(
+                                                    expire, niceDuration) : Lang.PERM_ENTRY),
+                                            true)).toString()
+                    );
+                }
+            }
+        });
     }
 }

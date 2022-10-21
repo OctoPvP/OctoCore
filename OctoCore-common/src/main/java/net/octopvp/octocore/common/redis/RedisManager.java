@@ -4,9 +4,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.aetheriacore.common.AetheriaCoreCommon;
-import net.octopvp.aetheriacore.common.object.redis.JedisSettings;
-import net.octopvp.aetheriacore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.object.redis.JedisSettings;
+import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -14,17 +14,19 @@ import redis.clients.jedis.JedisPool;
 public class RedisManager {
 
     private static final String CHANNEL = "aec", DEV_BRIDGE_CHANNEL = "aec:dev_bridge";
-    private static JsonParser jsonParser = new JsonParser();
+    private static final JsonParser jsonParser = new JsonParser();
     @Getter
     @Setter
     private static RedisManager instance;
-    private JedisSettings settings, devBridgeSettings;
+    private final JedisSettings settings;
+    private JedisSettings devBridgeSettings;
     private JedisPool pool, devBridgePool;
     private boolean connected = true, devBridgeConnected = true;
     private JedisSubscriber subscriber, devBridgeSubscriber;
 
-    private RedisListenerManager listenerManager, devBridgeListenerManager;
-
+    private final RedisListenerManager listenerManager;
+    private RedisListenerManager devBridgeListenerManager;
+    private long lastConnect = -1;
     public RedisManager(String hostname, int port, String password, String packetsPackage, Object packetsClass) {
         instance = this;
         listenerManager = new RedisListenerManager();
@@ -40,7 +42,7 @@ public class RedisManager {
             try {
                 if (this.settings.isAuth())
                     jedis.auth(this.settings.getPassword());
-                AetheriaCoreCommon.getInstance().getServerImplementation().logDebug("Registering Pub/Sub");
+                OctoCoreCommon.getInstance().getServerImplementation().logDebug("Registering Pub/Sub");
                 this.subscriber = new JedisSubscriber(CHANNEL, settings, listenerManager);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -49,6 +51,7 @@ public class RedisManager {
             e.printStackTrace();
             connected = false;
         }
+        lastConnect = System.currentTimeMillis();
     }
 
     public static Jedis getJedis() {
@@ -78,7 +81,7 @@ public class RedisManager {
             try {
                 if (this.devBridgeSettings.isAuth())
                     jedis.auth(this.devBridgeSettings.getPassword());
-                AetheriaCoreCommon.getInstance().getServerImplementation().logDebug("Registering Pub/Sub [Dev Bridge]");
+                OctoCoreCommon.getInstance().getServerImplementation().logDebug("Registering Pub/Sub [Dev Bridge]");
                 this.devBridgeSubscriber = new JedisSubscriber(DEV_BRIDGE_CHANNEL, devBridgeSettings, devBridgeListenerManager);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -99,6 +102,7 @@ public class RedisManager {
     private void write(JsonObject object) {
         write(object.toString());
     }
+
     public void write(String data) {
         if (pool == null) {
             System.out.println("Pool is null!");
@@ -120,7 +124,7 @@ public class RedisManager {
             }
              */
             jedis.publish(CHANNEL, data);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

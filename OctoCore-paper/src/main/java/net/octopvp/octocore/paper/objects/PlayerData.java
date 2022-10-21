@@ -8,6 +8,7 @@ import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.*;
@@ -16,7 +17,7 @@ import net.octopvp.octocore.common.object.punish.IPunishData;
 import net.octopvp.octocore.common.object.punish.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.CachedData;
+import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
@@ -27,7 +28,6 @@ import net.octopvp.octocore.paper.database.redis.packets.player.AltUpdatePacket;
 import net.octopvp.octocore.paper.database.redis.packets.staff.StaffConnectPacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.RankManager;
-import net.octopvp.octocore.paper.manager.impl.ServerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.paper.module.impl.punishments.player.PunishData;
@@ -288,7 +288,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         if (PlayerManager.getInstance().doesDocumentExistByUUID(uuid))
             PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document);
         else PlayerManager.getInstance().getPdataCollection().insertOne(document);
-        new CachedData(this.uuid).update(document);
+        new DataCache(this.uuid).update(document);
         return document;
     }
 
@@ -322,6 +322,7 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     public Alt getAlt(UUID uuid) {
+        if (uuid == null) return null;
         return this.getAltsSafely().stream().filter(alt -> alt.getUniqueId() == uuid).findFirst().orElse(null);
     }
 
@@ -355,7 +356,7 @@ public class PlayerData implements IPlayerData, IPunishData {
             }
         }
 
-        ServerManager.getInstance().getGlobalPlayers().values().forEach(globalPlayer -> {
+        OctoCoreCommon.getInstance().getServerManager().getGlobalPlayers().forEach(globalPlayer -> {
             if (!globalPlayer.getUniqueId().toString().equals(this.uuid.toString()) && globalPlayer.getAddress().equalsIgnoreCase(address) && this.getAlt(globalPlayer.getUniqueId()) == null) {
                 new AltUpdatePacket(this.uuid, this.name, globalPlayer.getUniqueId(), globalPlayer.getName());
             }

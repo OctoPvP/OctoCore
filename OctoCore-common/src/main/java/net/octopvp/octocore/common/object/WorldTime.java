@@ -6,9 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 public enum WorldTime {
     DEFAULT(-1),
     SUNRISE(22550),
-    DAY(0l),
-    SUNSET(12500l),
-    NIGHT(20000l);
+    DAY(0L),
+    SUNSET(12500L),
+    NIGHT(20000L);
     @Getter
     private final long time;
 

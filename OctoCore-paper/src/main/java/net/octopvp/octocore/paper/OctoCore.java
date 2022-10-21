@@ -24,6 +24,7 @@ import net.octopvp.octocore.paper.command.CommandResult;
 import net.octopvp.octocore.paper.command.providers.*;
 import net.octopvp.octocore.paper.database.DatabaseManager;
 import net.octopvp.octocore.paper.manager.impl.*;
+import net.octopvp.octocore.paper.objects.BukkitServerImpl;
 import net.octopvp.octocore.paper.objects.OfflinePunishData;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.permissions.Rank;
@@ -42,6 +43,7 @@ import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -175,53 +177,8 @@ public final class OctoCore extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.BUNGEE);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "test");
         serverName = getInstance().getConfig().getString("name");
-        OctoCoreCommon.getInstance().init(gson, new ServerImplementation() {
-            @Override
-            public void sendMessage(UUID uuid, String message) {
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) {
-                    player.sendMessage(message);
-                }
-            }
+        OctoCoreCommon.getInstance().init(gson, new BukkitServerImpl());
 
-            @Override
-            public void sendMessage(String name, String message) {
-                Player player = Bukkit.getPlayer(name);
-                if (player != null) {
-                    player.sendMessage(message);
-                }
-            }
-
-            @Override
-            public void logError(String message, Object... placeholders) {
-                Logger.error(message, placeholders);
-            }
-
-            @Override
-            public void logInfo(String message, Object... placeholders) {
-                Logger.info(message, placeholders);
-            }
-
-            @Override
-            public void logDebug(String message, Object... placeholders) {
-                Logger.debug(message, placeholders);
-            }
-
-            @Override
-            public void logWarn(String message, Object... placeholders) {
-                Logger.warn(message, placeholders);
-            }
-
-            @Override
-            public IServerManager getServerManager() {
-                return serverManager;
-            }
-
-            @Override
-            public ClassLoader getPluginClassLoader() {
-                return getClassLoader();
-            }
-        });
         try {
             serverType = ServerType.valueOf(getConfig().getString("server-type").toUpperCase());
             master = (serverType == ServerType.MASTER);
@@ -330,5 +287,9 @@ public final class OctoCore extends JavaPlugin {
             return false;
         chat = rsp.getProvider();
         return chat != null;
+    }
+
+    public ClassLoader getClassLoader0() {
+        return getClassLoader();
     }
 }

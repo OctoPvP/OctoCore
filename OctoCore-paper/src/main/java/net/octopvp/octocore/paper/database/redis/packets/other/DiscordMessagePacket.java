@@ -24,9 +24,4 @@ public class DiscordMessagePacket extends RedisPacket {
             JDAManager.getJda().getTextChannelById(channel).sendMessage(embedBuilder.build()).queue();
         }
     }
-
-    @Override
-    public String getType() {
-        return "DISCORD_MESSAGE";
-    }
 }

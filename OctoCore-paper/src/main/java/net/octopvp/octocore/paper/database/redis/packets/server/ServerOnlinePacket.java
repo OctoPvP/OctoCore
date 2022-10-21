@@ -17,21 +17,10 @@ public class ServerOnlinePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String server = data.get("server").getAsString();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission(Permissions.RECEIVE_SERVER_ONLINE_MESSAGE)) {
                 onlinePlayer.sendMessage(Lang.ADMIN_ALERTS.getMsg(Lang.SERVER_ONLINE_FORMAT.getMsg(server)));
             }
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder().addProperty("server", server);
-    }
-
-    @Override
-    public String getName() {
-        return "ServerOnlinePacket";
     }
 }

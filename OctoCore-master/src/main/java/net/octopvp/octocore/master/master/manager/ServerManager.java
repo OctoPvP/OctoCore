@@ -1,10 +1,9 @@
 package net.octopvp.octocore.master.master.manager;
 
 import lombok.Getter;
-import net.octopvp.aetheriacore.common.manager.IServerManager;
-import net.octopvp.aetheriacore.common.object.GlobalPlayer;
-import net.octopvp.aetheriacore.common.object.ServerData;
-import net.octopvp.aetheriacoremaster.master.AetheriaCoreMaster;
+import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.ServerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class ServerManager implements IServerManager {
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(AetheriaCoreMaster.class);
+            .getLogger(ServerManager.class);
 
     @Getter
     private static ServerManager instance;
@@ -93,6 +92,17 @@ public class ServerManager implements IServerManager {
         boolean r = false;
         for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
             if (globalPlayer.getName().equalsIgnoreCase(name)) {
+                r = true;
+            }
+        }
+        return r;
+    }
+
+    @Override
+    public boolean isPlayerOnline(UUID uuid) {
+        boolean r = false;
+        for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
+            if (globalPlayer.getUuid().equals(uuid)) {
                 r = true;
             }
         }

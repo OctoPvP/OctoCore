@@ -16,11 +16,15 @@ public interface IServerManager {
 
     List<GlobalPlayer> getGlobalPlayers();
 
+
+
     GlobalPlayer getGlobalPlayer(String name);
 
     GlobalPlayer getGlobalPlayer(UUID uuid);
 
     boolean isPlayerOnline(String name);
+
+    boolean isPlayerOnline(UUID uuid);
 
     Collection<ServerData> getConnectedServers();
 }

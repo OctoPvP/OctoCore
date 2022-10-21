@@ -20,8 +20,6 @@ public class SaveRequestSwitchPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String id = data.get("uuid").getAsString();
-        UUID uuid = UUID.fromString(id);
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
             MainRedisHandler.getSaving().add(player.getUniqueId());
@@ -33,16 +31,5 @@ public class SaveRequestSwitchPacket extends RedisPacket {
                 }
             }, 100);
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder()
-                .add("uuid", uuid.toString());
-    }
-
-    @Override
-    public String getName() {
-        return "SaveRequestSwitchPacket";
     }
 }

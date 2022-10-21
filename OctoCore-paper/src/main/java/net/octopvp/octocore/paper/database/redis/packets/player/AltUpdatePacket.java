@@ -24,6 +24,7 @@ public class AltUpdatePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
+        /*
         Player player = Bukkit.getPlayer(UUID.fromString(data.get("uuid").getAsString()));
 
         if (player != null) {
@@ -44,19 +45,20 @@ public class AltUpdatePacket extends RedisPacket {
                 }
             }
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder()
-                .addProperty("uuid", this.uuid.toString())
-                .addProperty("name", this.name)
-                .addProperty("altId", this.altId.toString())
-                .addProperty("altName", this.altName);
-    }
-
-    @Override
-    public String getName() {
-        return "AltUpdatePacket";
+         */
+        Player player = Bukkit.getPlayer(uuid);
+        if (player != null) {
+            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
+            if (playerData != null) {
+                if (playerData.getAlt(altId) == null) {
+                    PlayerData targetData = PlayerManager.getInstance().getData(altId);
+                    if (targetData != null) {
+                        playerData.getAlts().add(new Alt(altId, altName, targetData.getPunishData()).updateDisplayName());
+                    } else {
+                        playerData.getAlts().add(new Alt(altId, altName, new PlayerData(altId, altName).getPunishData()).updateDisplayName());
+                    }
+                }
+            }
+        }
     }
 }

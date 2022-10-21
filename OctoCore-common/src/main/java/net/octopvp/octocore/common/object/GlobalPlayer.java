@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.punish.Alt;
-import net.octopvp.octocore.paper.OctoCore;
-import net.octopvp.octocore.paper.database.redis.packets.player.PlayerMessagePacket;
+import net.octopvp.octocore.common.redis.packets.PlayerMessagePacket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +20,9 @@ public class GlobalPlayer {
     private UUID uuid;
     private String name;
 
-    private String server, firstJoined, lastServer, address, rankName, coloredName, prefix, color;
+    private String server, lastServer, address, rankName, coloredName;
     private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving, op, staff;
-    private long lastSeen, lastActivity = -1L;
+    private long lastSeen, lastActivity = -1L, firstJoined = System.currentTimeMillis();
     private List<UUID> allTags = new ArrayList<>();
     private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
     private Map<String, ServerContext> negatedPermissions = new ConcurrentHashMap<>();
@@ -62,7 +61,7 @@ public class GlobalPlayer {
     }
 
     public boolean hasPermission(String permission, String server) {
-        if (server.equalsIgnoreCase(OctoCore.getServerName()) || server.equalsIgnoreCase("$$this server$$"))
+        if (server.equalsIgnoreCase(OctoCoreCommon.getInstance().getServerImplementation().getServerName()) || server.equalsIgnoreCase("$$this server$$"))
             if (isOp())
                 return true;
         if (negatedPermissions.containsKey(permission))

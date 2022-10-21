@@ -1,24 +1,21 @@
 package net.octopvp.octocore.paper.command.impl.cosmetic;
 
-import com.google.gson.JsonObject;
-import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.Cooldown;
-import net.octopvp.commander.annotation.Permission;
-import net.octopvp.commander.annotation.Required;
+import net.octopvp.commander.annotation.*;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.json.JsonBuilder;
 import net.octopvp.octocore.paper.OctoCore;
 import net.octopvp.octocore.paper.command.CommandResult;
-import net.octopvp.octocore.paper.database.redis.packets.player.PlayerDataUpdatePacket;
+import net.octopvp.octocore.paper.database.redis.packets.player.TagUpdatePacket;
 import net.octopvp.octocore.paper.manager.impl.PlayerManager;
 import net.octopvp.octocore.paper.manager.impl.TagManager;
 import net.octopvp.octocore.paper.objects.PlayerData;
 import net.octopvp.octocore.paper.objects.PlayerTag;
-import net.octopvp.octocore.paper.objects.enums.DataUpdateReason;
 import net.octopvp.octocore.paper.utils.Sender;
 import net.octopvp.octocore.paper.utils.msg.Lang;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+
+import java.util.UUID;
 
 public class RemoveTagCommand {
     @Command(name = "removetag", usage = "<player> [tag]")
@@ -35,9 +32,14 @@ public class RemoveTagCommand {
                 sender.sendMessage(Lang.TAG_REMOVE_SUCCESS.getMsg(tag1.getName(), profile.getName()));
                 return CommandResult.SUCCESS;
             } else {
+                PlayerTag tag1 = TagManager.getTagByName(tag);
+                if (tag1 == null) {
+                    sender.sendMessage(Lang.TAG_NOT_FOUND.getMsg(tag));
+                    return CommandResult.SUCCESS;
+                }
                 //on some other network server
-                JsonObject jsonObject = new JsonBuilder().addProperty("reason", DataUpdateReason.TAGS_UPDATE_REMOVE.name()).addProperty("target", target).addProperty("remove", tag).get();
-                new PlayerDataUpdatePacket(jsonObject).send();
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(target);
+                new TagUpdatePacket(TagUpdatePacket.TagUpdateReason.REMOVE_TAG, offlinePlayer.getUniqueId(), tag1.getId()).send();
                 sender.sendMessage(CC.GREEN + "Requested pdata update for " + target + " reason: update owned tags");
             }
         } else {

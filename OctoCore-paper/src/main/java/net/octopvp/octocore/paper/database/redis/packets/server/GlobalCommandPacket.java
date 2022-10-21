@@ -14,17 +14,6 @@ public class GlobalCommandPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String command = data.get("command").getAsString();
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder().addProperty("command", command);
-    }
-
-    @Override
-    public String getName() {
-        return "GlobalCommandPacket";
     }
 }

@@ -32,10 +32,7 @@ public class StaffChatPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String name = data.get("name").getAsString();
-        String server = data.get("server").getAsString();
-        String message = data.get("message").getAsString();
-        String msg = Lang.STAFF_CHAT_FORMAT.getMsg(name, server, message);
+       String msg = Lang.STAFF_CHAT_FORMAT.getMsg(name, server, message);
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission(Permissions.STAFFCHAT)) {
                 player.sendMessage(msg);
@@ -44,22 +41,5 @@ public class StaffChatPacket extends RedisPacket {
         if (OctoCore.isMaster()) {
             JDAManager.sendDiscordSC(name, server, message);
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        JsonBuilder builder = new JsonBuilder()
-                .addProperty("name", name)
-                .addProperty("server", server)
-                .addProperty("message", message);
-        if (uuid != null) {
-            builder.addProperty("uuid", uuid.toString());
-        }
-        return builder;
-    }
-
-    @Override
-    public String getName() {
-        return "StaffChatPacket";
     }
 }

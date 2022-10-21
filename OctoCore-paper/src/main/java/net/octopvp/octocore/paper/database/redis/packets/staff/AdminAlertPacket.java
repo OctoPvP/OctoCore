@@ -17,23 +17,11 @@ public class AdminAlertPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String m = data.get("message").getAsString();
-        String msg = Lang.ADMIN_ALERTS.getMsg(m);
+        String msg = Lang.ADMIN_ALERTS.getMsg(message);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission(Permissions.ADMIN_ALERT)) {
                 onlinePlayer.sendMessage(msg);
             }
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder()
-                .addProperty("message", message);
-    }
-
-    @Override
-    public String getName() {
-        return "AdminAlertPacket";
     }
 }

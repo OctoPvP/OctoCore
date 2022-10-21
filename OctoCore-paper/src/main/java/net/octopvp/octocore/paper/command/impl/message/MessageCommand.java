@@ -27,7 +27,7 @@ public class MessageCommand {
     @Command(name = "message", aliases = {"msg", "w", "m", "tell", "t"})
     @PlayerOnly
     public CommandResult execute(Sender sender, @Name("player") GlobalPlayer target, @JoinStrings String message) {
-        GlobalPlayer senderPlayer = ServerManager.getInstance().getGlobalPlayer(sender.getUUID());
+        GlobalPlayer senderPlayer = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(sender.getUUID());
 
         if (target == null) {
             return CommandResult.PLAYER_NOT_FOUND;
@@ -75,11 +75,11 @@ public class MessageCommand {
             return CommandResult.SUCCESS;
         }
         UUID targetId = data.getLastMessaged();
-        GlobalPlayer target = ServerManager.getInstance().getGlobalPlayer(targetId);
+        GlobalPlayer target = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(targetId);
         if (target == null) {
             return CommandResult.PLAYER_NOT_FOUND;
         }
-        GlobalPlayer senderPlayer = ServerManager.getInstance().getGlobalPlayer(sender.getUUID());
+        GlobalPlayer senderPlayer = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(sender.getUUID());
         boolean ignoreBypass = sender.hasPermission(Permissions.IGNORE_BYPASS);
         if (senderPlayer.getUuid().equals(target.getUuid())) {
             sender.sendMessage(Lang.CANNOT_MESSAGE_SELF);

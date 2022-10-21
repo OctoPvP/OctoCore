@@ -15,18 +15,7 @@ public class GlobalBroadcastPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String message = CC.translate(data.get("message").getAsString());
+        String message = CC.translate(this.message);
         Bukkit.broadcastMessage(message);
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder()
-                .add("message", message);
-    }
-
-    @Override
-    public String getName() {
-        return "GlobalBroadcastPacket";
     }
 }

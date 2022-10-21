@@ -16,9 +16,6 @@ public class ServerCommandPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String server = data.get("server").getAsString();
-        String command = data.get("command").getAsString();
-
         if (command.startsWith("/")) {
             command = command.substring(1);
         }
@@ -26,17 +23,5 @@ public class ServerCommandPacket extends RedisPacket {
             Bukkit.getConsoleSender().sendMessage(Lang.EXECUTING_REQUESTED_COMMAND.getMsg(command, data.get("sender").getAsString()));
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
-    }
-
-    @Override
-    public JsonBuilder getData() {
-        return new JsonBuilder()
-                .addProperty("server", server)
-                .addProperty("command", command);
-    }
-
-    @Override
-    public String getName() {
-        return "ServerCommandPacket";
     }
 }
