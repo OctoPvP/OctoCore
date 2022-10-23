@@ -18,7 +18,7 @@ public class ServerContext {
     }
 
     public boolean isThisServer() {
-        return server.equalsIgnoreCase(OctoCoreCommon.getServerName()) || server.equalsIgnoreCase("global");
+        return server.equalsIgnoreCase(OctoCoreCommon.getInstance().getServerName()) || server.equalsIgnoreCase("global");
     }
 
     public boolean isBungee() {

@@ -22,7 +22,7 @@ public class SentryManager {
             options.setTracesSampleRate(1.0);
             // When first trying Sentry it's good to see what the SDK is doing:
             //options.setDebug(true);
-            options.setServerName(OctoCoreCommon.getServerName());
+            options.setServerName(OctoCoreCommon.getInstance().getServerName());
             options.setRelease(GitInfo.getCommit() + "/" + GitInfo.getBranch());
         });
         if (Sentry.isEnabled()) {

@@ -48,6 +48,7 @@ import org.checkerframework.checker.units.qual.C;
 import java.util.Objects;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public final class OctoCore extends JavaPlugin {
     @Getter
     private static final Settings settings = new Settings();

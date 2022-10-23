@@ -48,9 +48,9 @@ public class OnlinePlayerData {
         cachedPermResults.clear();
         nodes.clear();
 
-        if (!OctoCoreWaterfall.getInstance().getRedisHandler().isConnected()) return;
+        if (!OctoCoreWaterfall.getInstance().getRedisManager().isConnected()) return;
 
-        try (Jedis jedis = OctoCoreWaterfall.getInstance().getRedisHandler().getJedis()) {
+        try (Jedis jedis = OctoCoreWaterfall.getInstance().getRedisManager().getJedis()) {
             String json = jedis.hget("player-data", uuid.toString());
             //Logger.debug(json);
             if (json == null) return;

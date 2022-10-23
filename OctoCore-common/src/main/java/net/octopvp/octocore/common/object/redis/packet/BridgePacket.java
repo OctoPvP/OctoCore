@@ -1,6 +1,6 @@
 package net.octopvp.octocore.common.object.redis.packet;
 
-import net.octopvp.aetheriacore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.OctoCoreCommon;
 
 public abstract class BridgePacket extends RedisPacket {
     @Override

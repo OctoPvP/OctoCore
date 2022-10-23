@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.IPlayerData;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.punish.IPunishData;
@@ -107,7 +108,7 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
             }
         }
 
-        OctoCoreCommon.getInstance().getServerManager().getGlobalPlayers().values().forEach(globalPlayer -> {
+        OctoCoreCommon.getInstance().getServerManager().getGlobalPlayers().forEach(globalPlayer -> {
             if (!globalPlayer.getUniqueId().toString().equals(this.uniqueId.toString()) && globalPlayer.getAddress().equalsIgnoreCase(address) && this.getAlt(globalPlayer.getUniqueId()) == null) {
                 new AltUpdatePacket(this.uniqueId, this.name, globalPlayer.getUniqueId(), globalPlayer.getName());
             }
