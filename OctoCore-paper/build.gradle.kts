@@ -14,12 +14,16 @@ dependencies {
     implementation("com.warrenstrange:googleauth:1.5.0")
     implementation("dev.samstevens.totp:totp:1.7.1")
     implementation("org.slf4j:slf4j-api:2.0.0-alpha1")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
+        exclude(group = "org.yaml")
+        exclude(group = "junit")
+    }
     compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0")
-    compileOnly("com.lunarclient:bukkitapi:1.0-20210307.203619-3")
+    compileOnly("com.lunarclient:bukkitapi:1.0-SNAPSHOT")
+    //compileOnly(files("../lib/bukkitapi.jar"))
     compileOnly("net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT")
     compileOnly("net.octopvp:OctoSpigot-api:1.8.8-R0.1-SNAPSHOT")
-    compileOnly("com.viaversion:viaversion-api:LATEST")
+    compileOnly("com.viaversion:viaversion-api:4.4.2")
     compileOnly("net.octopvp:OctoSpigot:1.8.8-R0.1-SNAPSHOT")
 
     //system("net.octopvp:OctoSpigot:1.8.8-R0.1-SNAPSHOT")
