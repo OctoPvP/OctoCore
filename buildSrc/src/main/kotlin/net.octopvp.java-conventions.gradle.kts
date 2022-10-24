@@ -32,11 +32,6 @@ repositories {
     maven {
         url = uri("https://repo.dmulloy2.net/repository/public/")
     }
-
-    maven {
-        url = uri("https://maven.moonsworth.com/repository/lunarclient-public/")
-    }
-
     maven {
         url = uri("https://repo.citizensnpcs.co/")
     }
