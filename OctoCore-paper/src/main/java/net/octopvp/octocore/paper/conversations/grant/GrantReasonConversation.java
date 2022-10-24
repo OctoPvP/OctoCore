@@ -19,7 +19,6 @@ public class GrantReasonConversation extends StringPrompt {
 
     @Override
     public String getPromptText(ConversationContext conversationContext) {
-        Logger.debug("1");
         player.closeInventory();
         return Lang.GRANT_ENTER_REASON.toString();
     }

@@ -62,7 +62,11 @@ dependencies {
     implementation("org.javatuples:javatuples:1.2")
     implementation("io.sentry:sentry:5.6.0")
     implementation("com.google.guava:guava:31.1-jre")
-    compileOnly("org.projectlombok:lombok:1.18.22")
+
+    compileOnly("org.projectlombok:lombok:1.18.24")
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
+    testCompileOnly("org.projectlombok:lombok:1.18.24")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
 }
 
 group = "net.octopvp"

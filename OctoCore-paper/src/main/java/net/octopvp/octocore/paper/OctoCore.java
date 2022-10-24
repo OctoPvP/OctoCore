@@ -216,7 +216,8 @@ public final class OctoCore extends JavaPlugin {
         setupVault();
         Logger.info("Setting up commands.");
         commander
-                .registerPackage("net.octopvp.octocore.paper.command")
+                //.registerPackage("net.octopvp.octocore.paper.command")
+                .registerPackage(CommandResult.class.getPackage().getName())
                 .registerDependency(OctoCore.class, this)
                 .registerDependency(PlayerManager.class, playerManager)
                 .registerDependency(ServerManager.class, serverManager)

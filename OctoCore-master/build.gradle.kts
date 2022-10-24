@@ -10,6 +10,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.14.RELEASE"
     id("java")
     id("com.vaadin") version "23.2.2"
+    id("net.octopvp.java-conventions")
 }
 
 defaultTasks("clean", "build")
@@ -36,11 +37,6 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
-    compileOnly("org.projectlombok:lombok:1.18.24")
-    annotationProcessor("org.projectlombok:lombok:1.18.24")
-    testCompileOnly("org.projectlombok:lombok:1.18.24")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
 
     implementation("com.github.NuVotifier.NuVotifier:nuvotifier-api:2.7.2")
     implementation("com.github.NuVotifier.NuVotifier:nuvotifier-common:2.7.2")
