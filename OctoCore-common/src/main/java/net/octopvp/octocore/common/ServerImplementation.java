@@ -18,14 +18,11 @@ public interface ServerImplementation {
 
     void logWarn(String message, Object... placeholders);
 
-    boolean isOnline(UUID uuid);
-
-    boolean isOnline(String name);
-
     IServerManager getServerManager();
 
     ClassLoader getClassLoader();
 
     String getServerName();
 
+    String getCommit();
 }

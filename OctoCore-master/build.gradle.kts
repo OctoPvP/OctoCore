@@ -10,7 +10,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.14.RELEASE"
     id("java")
     id("com.vaadin") version "23.2.2"
-    id("net.octopvp.java-conventions")
+    //id("net.octopvp.java-conventions") // Our default library config conflicts with spring boot
     id("io.freefair.lombok") version "6.5.1"
 }
 
@@ -20,9 +20,14 @@ defaultTasks("clean", "build")
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven { url = uri("https://maven.vaadin.com/vaadin-prereleases") }
     maven { url = uri("https://maven.vaadin.com/vaadin-addons") }
     maven { url = uri("https://jitpack.io/") }
+    maven {
+        name = "vaadin-addons"
+        url = uri("https://maven.vaadin.com/vaadin-addons")
+    }
 }
 dependencies {
     implementation(project(":OctoCore-common"))
@@ -55,9 +60,7 @@ dependencies {
     implementation("com.vaadin:vaadin-spring-boot-starter")
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
     implementation("com.github.SparklingComet:java-mojang-api:-SNAPSHOT")
-    //testImplementation("org.springframework.boot:spring-boot-starter-test") {
-    //    exclude(group = "org.junit.vintage") module = "junit-vintage-engine"
-    //}
+    //implementation("com.github.appreciated:apexcharts:23.0.0-LOCAL")
 }
 
 dependencyManagement {

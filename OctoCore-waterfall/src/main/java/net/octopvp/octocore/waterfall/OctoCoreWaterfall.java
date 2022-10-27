@@ -92,17 +92,6 @@ public final class OctoCoreWaterfall extends Plugin {
             public void logWarn(String message, Object... placeholders) {
                 Logger.warn(message, placeholders);
             }
-
-            @Override
-            public boolean isOnline(UUID uuid) {
-                return ProxyServer.getInstance().getPlayer(uuid) != null;
-            }
-
-            @Override
-            public boolean isOnline(String name) {
-                return ProxyServer.getInstance().getPlayer(name) != null;
-            }
-
             @Override
             public IServerManager getServerManager() {
                 return serverManager;
@@ -116,6 +105,11 @@ public final class OctoCoreWaterfall extends Plugin {
             @Override
             public String getServerName() {
                 return "BungeeCord";
+            }
+
+            @Override
+            public String getCommit() {
+                return "N/A";
             }
         });
         File file = new File(getDataFolder(), "config.yml");

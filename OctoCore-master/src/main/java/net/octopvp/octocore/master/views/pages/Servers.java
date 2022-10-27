@@ -20,6 +20,7 @@ public class Servers extends VerticalLayout {
     @Autowired
     UserService authenticatedUser;
     private Button button;
+
     public Servers() {
         H1 h1 = new H1("Test");
         button = new Button("Test");
