@@ -115,9 +115,9 @@ public class OctoCoreMaster {
 
     @PostConstruct
     public void init() {
-        LOG.info("Starting Redis...");
+        LOG.info("Connecting to redis with hostname " + hostname + ":" + port);
         OctoCoreCommon.getInstance().setRedisManager(redisManager = new RedisManager(
-                hostname, port, password, "net.octopvp.aetheriacoremaster.master.redis.impl",
+                hostname, port, password, "net.octopvp.octocore.master.master.redis.impl",
                 new RedisPackets()
         ));
 

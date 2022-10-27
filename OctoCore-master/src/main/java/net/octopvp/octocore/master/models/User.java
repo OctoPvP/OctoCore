@@ -7,10 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Document(collection = "users")
@@ -30,7 +27,7 @@ public class User {
     @Id
     private String userID = UUID.randomUUID().toString();
 
-    private Set<String> ownedResources = ConcurrentHashMap.newKeySet();
+    private String timezoneId = "America/Toronto";
 
     private String profilePictureURL = "https://cdn.carbonhost.cloud/6201479d7b237373ab269385/assets/profile.png";
 
@@ -52,13 +49,7 @@ public class User {
         return Objects.equals(userID, user.userID);
     }
 
-    public Set<String> getOwnedResourceIds() {
-        return ownedResources;
-    }
-
-    public Set<String> getOwnedResourceIdsClone() {
-        Set<String> set = ConcurrentHashMap.newKeySet();
-        set.addAll(ownedResources);
-        return set;
+    public TimeZone getTimeZone() {
+        return TimeZone.getTimeZone(timezoneId);
     }
 }

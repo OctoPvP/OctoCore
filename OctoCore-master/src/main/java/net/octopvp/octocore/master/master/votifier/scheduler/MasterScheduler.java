@@ -2,7 +2,7 @@ package net.octopvp.octocore.master.master.votifier.scheduler;
 
 import com.vexsoftware.votifier.platform.scheduler.ScheduledVotifierTask;
 import com.vexsoftware.votifier.platform.scheduler.VotifierScheduler;
-import net.octopvp.aetheriacoremaster.master.votifier.NuVotifierMaster;
+import net.octopvp.octocore.master.master.votifier.NuVotifierMaster;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;

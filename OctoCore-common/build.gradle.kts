@@ -1,6 +1,7 @@
 plugins {
     id("net.octopvp.java-conventions")
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.freefair.lombok") version "6.5.1"
 }
 
 repositories {
@@ -14,6 +15,7 @@ repositories {
 dependencies {
     implementation("org.objenesis:objenesis:3.3")
     implementation("com.github.oshi:oshi-core:5.6.0")
+    //implementation("org.slf4j:slf4j-log4j12:1.7.5")
     compileOnly("io.github.waterfallmc:waterfall-chat:1.18-R0.1-SNAPSHOT")
     compileOnly("com.google.code.gson:gson:2.8.9")
 }

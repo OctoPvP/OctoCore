@@ -3,7 +3,7 @@ package net.octopvp.octocore.master.master.votifier.models;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.aetheriacore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.OctoCoreCommon;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +36,7 @@ public class VotifierConfig {
 
     @Getter
     private static boolean firstTime = false;
+
     public static VotifierConfig load() {
         if (CONFIG_FILE.exists()) {
             try {
@@ -46,7 +47,7 @@ public class VotifierConfig {
             }
         } else {
             firstTime = true;
-            VotifierConfig cfg =  new VotifierConfig();
+            VotifierConfig cfg = new VotifierConfig();
             cfg.save();
             return cfg;
         }

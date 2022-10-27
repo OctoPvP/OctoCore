@@ -1,6 +1,7 @@
 plugins {
     id("net.octopvp.java-conventions")
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.freefair.lombok") version "6.5.1"
 }
 repositories {
     mavenCentral()
@@ -11,7 +12,6 @@ repositories {
 }
 dependencies {
     implementation(project(":OctoCore-common"))
-    implementation("net.dv8tion:JDA:4.2.1_253")
     compileOnly("io.github.waterfallmc:waterfall-chat:1.18-R0.1-SNAPSHOT")
     //compileOnly("net.octopvp:OctoBungee-api:1.17-R0.1-SNAPSHOT")
     compileOnly("com.google.code.gson:gson:2.8.9")

@@ -12,10 +12,10 @@ import com.vexsoftware.votifier.platform.scheduler.VotifierScheduler;
 import com.vexsoftware.votifier.util.KeyCreator;
 import com.vexsoftware.votifier.util.TokenUtil;
 import lombok.Getter;
-import net.octopvp.aetheriacoremaster.components.LightningHolder;
-import net.octopvp.aetheriacoremaster.master.votifier.models.VotifierConfig;
-import net.octopvp.aetheriacoremaster.master.votifier.scheduler.MasterScheduler;
-import net.octopvp.aetheriacoremaster.repositories.SettingRepository;
+import net.octopvp.octocore.master.component.LightningHolder;
+import net.octopvp.octocore.master.master.votifier.models.VotifierConfig;
+import net.octopvp.octocore.master.master.votifier.scheduler.MasterScheduler;
+import net.octopvp.octocore.master.repository.SettingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +35,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class NuVotifierMaster implements VoteHandler, VotifierPlugin {
     @Getter
     private static NuVotifierMaster instance;
+
     public NuVotifierMaster() {
         instance = this;
     }
+
     /**
      * The server bootstrap.
      */

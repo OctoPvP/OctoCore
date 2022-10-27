@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,6 +23,8 @@ import java.util.stream.Stream;
 public class MasterApplication implements AppShellConfigurator {
     public static void main(String[] args) {
         System.out.println("Starting OctoCore Master with java v." + System.getProperty("java.version"));
+        boolean dev = Objects.equals(System.getProperty("spring.profiles.active"), "dev");
+        System.out.println("DEV: " + dev);
         SpringApplication.run(MasterApplication.class, args);
     }
 
