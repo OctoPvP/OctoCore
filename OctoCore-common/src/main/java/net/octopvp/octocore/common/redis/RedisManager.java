@@ -27,6 +27,7 @@ public class RedisManager {
     private final RedisListenerManager listenerManager;
     private RedisListenerManager devBridgeListenerManager;
     private long lastConnect = -1;
+
     public RedisManager(String hostname, int port, String password, String packetsPackage, Object packetsClass) {
         instance = this;
         listenerManager = new RedisListenerManager();

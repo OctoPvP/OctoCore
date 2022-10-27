@@ -48,6 +48,7 @@ import org.checkerframework.checker.units.qual.C;
 import java.util.Objects;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public final class OctoCore extends JavaPlugin {
     @Getter
     private static final Settings settings = new Settings();
@@ -215,7 +216,8 @@ public final class OctoCore extends JavaPlugin {
         setupVault();
         Logger.info("Setting up commands.");
         commander
-                .registerPackage("net.octopvp.octocore.paper.command")
+                //.registerPackage("net.octopvp.octocore.paper.command")
+                .registerPackage(CommandResult.class.getPackage().getName())
                 .registerDependency(OctoCore.class, this)
                 .registerDependency(PlayerManager.class, playerManager)
                 .registerDependency(ServerManager.class, serverManager)

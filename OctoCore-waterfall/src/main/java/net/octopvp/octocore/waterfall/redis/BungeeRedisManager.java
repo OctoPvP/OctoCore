@@ -25,7 +25,7 @@ public class BungeeRedisManager {
         if (config.getBoolean("redis.auth.enabled")) {
             settings.setPassword(config.getString("redis.auth.password"));
         }
-        OctoCoreWaterfall.getInstance().setRedisHandler(new RedisHandler("net.octopvp.octocore.waterfall.redis.packet.impl", settings, (runnable) -> {
+        OctoCoreWaterfall.getInstance().setRedisManager(new RedisHandler("net.octopvp.octocore.waterfall.redis.packet.impl", settings, (runnable) -> {
             ProxyServer.getInstance().getScheduler().runAsync(OctoCoreWaterfall.getInstance(), runnable);
             return null;
         }, (p) -> true,
@@ -33,8 +33,8 @@ public class BungeeRedisManager {
                     Reflections reflections = new Reflections(packageName);
                     return reflections.getSubTypesOf(Object.class);
                 }));
-        OctoCoreWaterfall.getInstance().getRedisHandler().connect();
-        OctoCoreCommon.setRedisHandler(OctoCoreWaterfall.getInstance().getRedisHandler());
+        OctoCoreWaterfall.getInstance().getRedisManager().connect();
+        OctoCoreCommon.setRedisHandler(OctoCoreWaterfall.getInstance().getRedisManager());
 
         new ServerOnlinePacket("Bungee #UNKNOWN").send();
     }

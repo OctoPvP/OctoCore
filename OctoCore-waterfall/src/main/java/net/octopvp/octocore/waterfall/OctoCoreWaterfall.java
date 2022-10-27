@@ -11,14 +11,16 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
-import net.octopvp.octocore.common.object.ServerInfo;
-import net.octopvp.octocore.common.redis.RedisHandler;
+import net.octopvp.octocore.common.ServerImplementation;
+import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
 import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
 import net.octopvp.octocore.waterfall.listeners.*;
 import net.octopvp.octocore.waterfall.manager.OnlinePlayersManager;
+import net.octopvp.octocore.common.manager.DefaultServerManagerImpl;
 import net.octopvp.octocore.waterfall.redis.BungeeRedisManager;
 
 import java.io.File;
@@ -36,11 +38,14 @@ public final class OctoCoreWaterfall extends Plugin {
             .enableComplexMapKeySerialization().create();
     @Getter
     private static OctoCoreWaterfall instance;
-    @Getter
     private static Configuration config;
     @Getter
     @Setter
-    private RedisHandler redisHandler;
+    private RedisManager redisManager;
+
+    @Getter
+    @Setter
+    private DefaultServerManagerImpl serverManager;
 
     @Override
     public void onEnable() {
@@ -53,27 +58,66 @@ public final class OctoCoreWaterfall extends Plugin {
         instance = this;
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
-        OctoCoreCommon.init(new ServerInfo() {
+        OctoCoreCommon.getInstance().init(gson, new ServerImplementation() {
             @Override
-            public String getServerName() {
-                return "BungeeCord";
+            public void sendMessage(UUID uuid, String message) {
+                if (ProxyServer.getInstance().getPlayer(uuid) != null) {
+                    ProxyServer.getInstance().getPlayer(uuid).sendMessage(message);
+                }
             }
 
             @Override
-            public String getCommitHash() {
-                return "UNKNOWN";
+            public void sendMessage(String name, String message) {
+                if (ProxyServer.getInstance().getPlayer(name) != null) {
+                    ProxyServer.getInstance().getPlayer(name).sendMessage(message);
+                }
             }
 
             @Override
-            public String getCommitBranch() {
-                return "UNKNOWN";
+            public void logError(String message, Object... placeholders) {
+                Logger.error(message, placeholders);
+            }
+
+            @Override
+            public void logInfo(String message, Object... placeholders) {
+                Logger.info(message, placeholders);
+            }
+
+            @Override
+            public void logDebug(String message, Object... placeholders) {
+                Logger.debug(message, placeholders);
+            }
+
+            @Override
+            public void logWarn(String message, Object... placeholders) {
+                Logger.warn(message, placeholders);
             }
 
             @Override
             public boolean isOnline(UUID uuid) {
-                return ProxyServer.getInstance().getPlayer(uuid) != null; //TODO
+                return ProxyServer.getInstance().getPlayer(uuid) != null;
             }
-        }, gson);
+
+            @Override
+            public boolean isOnline(String name) {
+                return ProxyServer.getInstance().getPlayer(name) != null;
+            }
+
+            @Override
+            public IServerManager getServerManager() {
+                return serverManager;
+            }
+
+            @Override
+            public ClassLoader getClassLoader() {
+                return OctoCoreWaterfall.super.getClass().getClassLoader();
+            }
+
+            @Override
+            public String getServerName() {
+                return "BungeeCord";
+            }
+        });
         File file = new File(getDataFolder(), "config.yml");
 
 
@@ -90,6 +134,7 @@ public final class OctoCoreWaterfall extends Plugin {
             e.printStackTrace();
         }
         new BungeeRedisManager();
+        serverManager = new DefaultServerManagerImpl();
         getProxy().registerChannel(PluginMsgChannels.PLUGIN_MSG);
         getProxy().registerChannel(PluginMsgChannels.PERMISSIONS);
         getProxy().getPluginManager().registerCommand(this, new LobbyCommand());
@@ -107,7 +152,7 @@ public final class OctoCoreWaterfall extends Plugin {
         getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1, TimeUnit.MINUTES);
 
         Logger.debug("OctoBungee Started! " + (System.currentTimeMillis() - start) + "ms");
-        Logger.debug("Redis connected: " + redisHandler.isConnected());
+        Logger.debug("Redis connected: " + redisManager.isConnected());
     }
 
     public Configuration getConfig() {

@@ -16,8 +16,6 @@ public interface IServerManager {
 
     List<GlobalPlayer> getGlobalPlayers();
 
-
-
     GlobalPlayer getGlobalPlayer(String name);
 
     GlobalPlayer getGlobalPlayer(UUID uuid);

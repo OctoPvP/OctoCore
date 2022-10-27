@@ -35,7 +35,7 @@ public class Alt implements IPunishData {
         if (punishData != null && punishData.isBlacklisted()) return ChatColor.DARK_RED;
         if (punishData != null && punishData.isBanned()) return ChatColor.DARK_RED;
 
-        if (OctoCoreCommon.getInstance().getServerManager().isPlayerOnline(uniqueId)) {
+        if (OctoCoreCommon.getInfo().isOnline(uniqueId)) {
             return ChatColor.RED;
         } else {
             return ChatColor.GREEN;

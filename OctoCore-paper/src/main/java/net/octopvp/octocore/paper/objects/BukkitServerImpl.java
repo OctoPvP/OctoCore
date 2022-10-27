@@ -2,6 +2,7 @@ package net.octopvp.octocore.paper.objects;
 
 import net.octopvp.octocore.common.ServerImplementation;
 import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.object.ServerInfo;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.paper.OctoCore;
 import org.bukkit.Bukkit;
@@ -59,5 +60,30 @@ public class BukkitServerImpl implements ServerImplementation {
     @Override
     public String getServerName() {
         return OctoCore.getServerName();
+    }
+
+    @Override
+    public ServerInfo getServerInfo() {
+        return new ServerInfo() {
+            @Override
+            public String getServerName() {
+                return OctoCore.getServerName();
+            }
+
+            @Override
+            public String getCommitHash() {
+                return "unknown";
+            }
+
+            @Override
+            public String getCommitBranch() {
+                return "unknown";
+            }
+
+            @Override
+            public boolean isOnline(UUID uuid) {
+                return Bukkit.getPlayer(uuid) != null;
+            }
+        };
     }
 }

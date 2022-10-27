@@ -10,6 +10,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.14.RELEASE"
     id("java")
     id("com.vaadin") version "23.2.2"
+    id("net.octopvp.java-conventions")
     id("io.freefair.lombok") version "6.5.1"
 }
 
@@ -73,15 +74,3 @@ vaadin {
 }
 //tasks.register("prepareKotlinBuildScriptModel"){}
 description = "OctoCore Master"
-/*
-configurations {
-    all*.exclude module : 'spring-boot-starter-logging'
-    all*.exclude module : 'logback-classic'
-}
- */
-configurations {
-    all {
-        //exclude(module = "spring-boot-starter-logging")
-        //exclude(module = "logback-classic")
-    }
-}

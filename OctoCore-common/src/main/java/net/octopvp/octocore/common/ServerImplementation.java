@@ -1,6 +1,7 @@
 package net.octopvp.octocore.common;
 
 import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.object.ServerInfo;
 
 import java.util.UUID;
 
@@ -17,9 +18,14 @@ public interface ServerImplementation {
 
     void logWarn(String message, Object... placeholders);
 
+    boolean isOnline(UUID uuid);
+
+    boolean isOnline(String name);
+
     IServerManager getServerManager();
 
     ClassLoader getClassLoader();
 
     String getServerName();
+
 }
