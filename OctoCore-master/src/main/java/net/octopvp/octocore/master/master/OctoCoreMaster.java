@@ -13,6 +13,7 @@ import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.redis.packets.VotePacket;
 import net.octopvp.octocore.master.component.LightningHolder;
 import net.octopvp.octocore.master.master.manager.ServerManager;
+import net.octopvp.octocore.master.master.object.ServerStatus;
 import net.octopvp.octocore.master.master.redis.RedisPackets;
 import net.octopvp.octocore.master.master.util.AccountUtil;
 import net.octopvp.octocore.master.master.votifier.NuVotifierMaster;
@@ -102,7 +103,12 @@ public class OctoCoreMaster {
 
             @Override
             public String getServerName() {
-                return null;
+                return "Master";
+            }
+
+            @Override
+            public String getCommit() {
+                return "N/A";
             }
         });
     }
@@ -141,5 +147,9 @@ public class OctoCoreMaster {
                 });
             }
         });
+    }
+
+    public ServerStatus getStatus() {
+        return ServerStatus.OK;
     }
 }

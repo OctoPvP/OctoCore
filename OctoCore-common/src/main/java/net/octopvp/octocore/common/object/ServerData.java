@@ -21,4 +21,29 @@ public class ServerData {
     private List<String> names = new ArrayList<>();
     private double[] recentTps = new double[]{20.0, 20.0, 20.0};
 
+    public String getFormattedTPS() {
+        double tps = recentTps[0];
+        if (tps > 20.00) {
+            return "20*";
+        }
+        return String.format("%.2f", tps);
+    }
+
+    public static ServerData createDummyData(String name) {
+        ServerData serverData = new ServerData(name);
+        serverData.setLastTick(System.currentTimeMillis());
+        serverData.setSafelyStopped(true);
+        serverData.setWhitelisted(false);
+        serverData.setMaintenance(false);
+        serverData.setMaxPlayers(100);
+        // random between 18-21
+        double tps = Math.random() * 3 + 18;
+        serverData.setRecentTps(new double[]{tps, 20.0, 20.0});
+        int playerCount = (int) (Math.random() * 100);
+        for (int i = 0; i < playerCount; i++) {
+            String randName = "Player" + (int) (Math.random() * 1000);
+            serverData.getOnlinePlayers().add(GlobalPlayer.createDummyPlayer(randName));
+        }
+        return serverData;
+    }
 }
