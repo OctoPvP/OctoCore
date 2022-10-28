@@ -108,4 +108,13 @@ public class ServerManager implements IServerManager {
         }
         return r;
     }
+
+    public Set<ServerData> getDummyServerData() {
+        Set<ServerData> serverData = ConcurrentHashMap.newKeySet();
+        int randomServerCount = (int) (Math.random() * 10);
+        for (int i = 0; i < randomServerCount; i++) {
+            serverData.add(ServerData.createDummyData("Server" + (int) (Math.random() * 1000)));
+        }
+        return serverData;
+    }
 }

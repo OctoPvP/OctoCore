@@ -1,9 +1,8 @@
 package net.octopvp.octocore.master.views.pages;
 
-import com.vaadin.flow.component.Html;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -32,17 +31,20 @@ public class HomeView extends VerticalLayout {
 
     public HomeView() {
     }
+
     @PostConstruct
     public void postConstruct() {
         if (authenticatedUser.get() != null)
             loggedIn();
     }
+
     public void loggedIn() {
         String s = "%greeting% %user%";
         TimeZone timeZone = authenticatedUser.get().getTimeZone();
         // Determine if it is either morning, afternoon, evening, or night
         int time = timeZone.getOffset(System.currentTimeMillis()) / 1000 / 60 / 60;
-        String greeting;
+        String greeting = "Hello, ";
+        /*
         if (time >= 0 && time < 12) {
             greeting = "Good morning";
         } else if (time >= 12 && time < 17) {
@@ -52,17 +54,27 @@ public class HomeView extends VerticalLayout {
         } else {
             greeting = "Good night";
         }
+         */
         H1 h1 = new H1(s.replace("%user%", authenticatedUser.get().getUsername()).replace("%greeting%", greeting));
         Text text = new Text("Servers: " + ServerManager.getInstance().getConnectedServers().size());
-        Text statusText;
+        Component statusText = null;
         switch (master.getStatus()) {
             case OK -> {
-                statusText = new Text("Status: OK");
-                statusText.getStyle().set("color", "green");
+                statusText = new H3("OK");
+                statusText.getElement().setAttribute("style", "color: green");
+            }
+            case DEGRADED -> {
+                statusText = new H3("Degraded");
+                statusText.getElement().setAttribute("style", "color: orange");
+            }
+            case DOWN -> {
+                statusText = new H3("Down");
+                statusText.getElement().setAttribute("style", "color: red");
             }
         }
+        H3 h3 = new H3(new H3("Status: "), statusText);
         Div div = new Div();
-        div.add(h1, text);
+        div.add(h1, text, h3);
         // center the div
         div.getStyle().set("margin", "auto");
         div.getStyle().set("text-align", "center");

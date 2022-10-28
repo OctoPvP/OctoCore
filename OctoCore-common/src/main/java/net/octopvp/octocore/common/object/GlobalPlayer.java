@@ -92,4 +92,9 @@ public class GlobalPlayer {
         if (name == null) return false;
         return messageSettings.getIgnoreList().stream().anyMatch(u -> u.equalsIgnoreCase(name));
     }
+
+    public static GlobalPlayer createDummyPlayer(String name) {
+        GlobalPlayer globalPlayer = new GlobalPlayer(UUID.randomUUID(), name);
+        return globalPlayer;
+    }
 }
