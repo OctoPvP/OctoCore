@@ -32,7 +32,7 @@ public class ThemeToggleButton extends Button {
             if (themeList.contains(Lumo.DARK)) {
                 ConfirmDialog dialog = new ConfirmDialog();
                 dialog.setHeader("Are you sure?");
-                dialog.setText("Are you sure you want to switch to light mode?");
+                dialog.setText("Are you sure you want to switch to light mode? <i>(flashbang mode)</i>");
                 // set confirm button danger
                 dialog.setConfirmButtonTheme("error primary");
                 dialog.setConfirmButton("Yes", confirm -> {
@@ -66,8 +66,6 @@ public class ThemeToggleButton extends Button {
             u.setDarkMode(true);
         }
         boolean dark = u.isDarkMode();
-        // change the logo id to the correct one
-        String url = MainLayout.getLogoURL(dark);
         mongoUserRepository.save(u);
     }
 
