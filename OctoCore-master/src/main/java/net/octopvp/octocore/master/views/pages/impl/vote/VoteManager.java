@@ -43,6 +43,6 @@ public class VoteManager extends Page {
             Vote vote = new Vote(voteService, username, "0.0.0.0", Long.toString(System.currentTimeMillis(), 10));
             LightningHolder.getInstance().getEventBus().callEvent(new VotifierEvent(vote));
         });
-        add(usernameField);
+        add(usernameField, voteServiceField, button);
     }
 }
