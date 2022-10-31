@@ -32,7 +32,7 @@ public class ThemeToggleButton extends Button {
             if (themeList.contains(Lumo.DARK)) {
                 ConfirmDialog dialog = new ConfirmDialog();
                 dialog.setHeader("Are you sure?");
-                dialog.setText("Are you sure you want to switch to light mode? <i>(flashbang mode)</i>");
+                dialog.setText("Are you sure you want to switch to light mode? (flashbang mode)");
                 // set confirm button danger
                 dialog.setConfirmButtonTheme("error primary");
                 dialog.setConfirmButton("Yes", confirm -> {
