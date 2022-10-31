@@ -1,6 +1,8 @@
 package net.octopvp.octocore.master.views.pages;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -44,7 +46,7 @@ public class Servers extends VerticalLayout {
         grid.addColumn(ServerData::getFormattedTPS).setHeader("TPS");
         grid.addComponentColumn((ValueProvider<ServerData, Component>) serverData -> {
             Button restart = new Button("Restart");
-            NotificationUtils.create("Restart command queued.", NotificationVariant.LUMO_SUCCESS);
+            restart.addClickListener((ComponentEventListener<ClickEvent<Button>>) event -> NotificationUtils.create("Restart command queued.", NotificationVariant.LUMO_SUCCESS).open());
             return restart;
         }).setHeader("Actions");
         GridListDataView<ServerData> dataView = grid.setItems(ServerManager.getInstance().getDummyServerData());

@@ -2,6 +2,8 @@ package net.octopvp.octocore.master.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -18,9 +20,9 @@ import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.components.ThemeToggleButton;
 import net.octopvp.octocore.master.views.pages.Servers;
 import net.octopvp.octocore.master.views.pages.HomeView;
+import net.octopvp.octocore.master.views.pages.vote.VoteManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @PageTitle("Main")
 public class MainLayout extends AppLayout {
@@ -176,20 +178,68 @@ public class MainLayout extends AppLayout {
         list.addClassNames("list-none", "m-0", "p-0");
         nav.add(list);
 
+        /*
         for (MenuItemInfo menuItem : createMenuItems()) {
             if (accessChecker.hasAccess(menuItem.getView())) {
                 list.add(menuItem);
             }
-
+        }
+         */
+        Map<String, MenuItemInfo[]> menuItems = createMenuItems();
+        // Category, menu item
+        Map<String, List<MenuItemInfo>> newMap = new HashMap<>();
+        for (Map.Entry<String, MenuItemInfo[]> entry : menuItems.entrySet()) {
+            String name = entry.getKey();
+            MenuItemInfo[] items = entry.getValue();
+            for (MenuItemInfo item : items) {
+                if (accessChecker.hasAccess(item.getView())) {
+                    if (newMap.containsKey(name)) {
+                        newMap.get(name).add(item);
+                    } else {
+                        List<MenuItemInfo> list1 = new ArrayList<>();
+                        list1.add(item);
+                        newMap.put(name, list1);
+                    }
+                }
+            }
+        }
+        for (Map.Entry<String, List<MenuItemInfo>> entry : newMap.entrySet()) {
+            String name = entry.getKey();
+            if (name == null || name.isEmpty()) {
+                entry.getValue().forEach(list::add);
+                continue;
+            }
+            List<MenuItemInfo> items = entry.getValue();
+            Accordion accordion = new Accordion();
+            accordion.addClassNames("border-b", "border-contrast-10", "flex-grow", "overflow-auto");
+            // Add 20px padding on the left
+            accordion.getElement().getStyle().set("padding-left", "15px");
+            Component itemsComponent = createItemsComponent(items);
+            accordion.add(name, itemsComponent);
+            list.add(accordion);
         }
         return nav;
     }
 
-    private MenuItemInfo[] createMenuItems() {
-        return new MenuItemInfo[]{ //
+    private Component createItemsComponent(List<MenuItemInfo> items) {
+        Div div = new Div();
+        div.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
+        for (MenuItemInfo item : items) {
+            div.add(item);
+        }
+        return div;
+    }
+
+    private Map<String, MenuItemInfo[]> createMenuItems() {
+        Map<String, MenuItemInfo[]> menuItems = new LinkedHashMap<>();
+        menuItems.put("", new MenuItemInfo[]{
                 new MenuItemInfo("Home", "la la-home", HomeView.class),
                 new MenuItemInfo("Servers", "la la-server", Servers.class),
-        };
+        });
+        menuItems.put("Misc", new MenuItemInfo[]{
+                new MenuItemInfo("Vote Manager", "la la-ticket", VoteManager.class)
+        });
+        return menuItems;
     }
 
     @Override
