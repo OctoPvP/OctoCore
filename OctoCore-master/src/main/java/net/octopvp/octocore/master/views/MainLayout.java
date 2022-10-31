@@ -145,6 +145,7 @@ public class MainLayout extends AppLayout {
         Div top = new Div();
         H2 appName = new H2("OctoCore");
         appName.addClassNames("flex", "items-center", "h-xl", "m-0", "px-m", "text-m");
+        appName.addClickListener(e -> UI.getCurrent().navigate(HomeView.class));
         top.add(appName);
 
         //appName.add(logo);
@@ -153,10 +154,12 @@ public class MainLayout extends AppLayout {
                 createNavigation(),
                 createFooter()
         );
+        /*
         section.addClickListener(click -> {
             // redirect to /
             UI.getCurrent().navigate("");
         });
+         */
         section.addClassNames("noselect", "pointer-hover");
         section.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
         return section;
