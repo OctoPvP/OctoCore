@@ -1,19 +1,14 @@
 package net.octopvp.octocore.master.views.pages.impl;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.renderer.LitRenderer;
-import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.PageTitle;
@@ -32,12 +27,19 @@ import javax.annotation.security.RolesAllowed;
 @Route(value = "servers", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
 public class Servers extends Page {
+    private FeederThread thread;
+
     @Autowired
     UserService authenticatedUser;
 
+    private Grid<ServerData> grid;
+    private GridListDataView<ServerData> dataView;
+
+    private TextField searchField = new TextField();
+
     @Override
     public void init() { // A table of servers
-        Grid<ServerData> grid = new Grid<>(ServerData.class, false);
+        grid = new Grid<>(ServerData.class, false);
         //grid.addColumn(createServerRenderer()).setHeader("Name").setFlexGrow(0)
         //        .setWidth("230px");
         // Name | Players | Whitelist | Maintenance | TPS | Actions
@@ -51,14 +53,18 @@ public class Servers extends Page {
             restart.addClickListener((ComponentEventListener<ClickEvent<Button>>) event -> NotificationUtils.create("Restart command queued.", NotificationVariant.LUMO_SUCCESS).open());
             return restart;
         }).setHeader("Actions");
-        GridListDataView<ServerData> dataView = grid.setItems(ServerManager.getInstance().getDummyServerData());
 
-        TextField searchField = new TextField();
         searchField.setWidth("50%");
         searchField.setPlaceholder("Search");
         searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
         searchField.setValueChangeMode(ValueChangeMode.EAGER);
         searchField.addValueChangeListener(e -> dataView.refreshAll());
+        update();
+        add(searchField, grid);
+    }
+
+    public void update() {
+        dataView = grid.setItems(ServerManager.getInstance().getDummyServerData());
 
         dataView.addFilter(serverData -> {
             String searchTerm = searchField.getValue().trim().toLowerCase();
@@ -68,23 +74,40 @@ public class Servers extends Page {
 
             return serverData.getServerName().toLowerCase().contains(searchTerm);
         });
-        add(searchField, grid);
-        UI.getCurrent().setPollInterval(1500);
     }
 
-    private static Renderer<ServerData> createServerRenderer() {
-        // For TPS use getFormattedTPS()
-        return LitRenderer.of(
-                "<div class='server'>"
-                        + "<div class='name'>[[item.serverName]]</div>"
-                        + "<div class='players'>[[item.onlinePlayers.length]]/[[item.maxPlayers]]</div>"
-                        + "<div class='whitelist'>[[item.whitelisted]]</div>"
-                        + "<div class='maintenance'>[[item.maintenance]]</div>"
-                        + "<div class='tps'>[[item.getFormattedTPS()]]</div>"
-                        + "<div class='actions'>"
-                        + "<vaadin-button theme='primary' on-click='[[item.serverName]]'>Connect</vaadin-button>"
-                        + "</div>"
-                        + "</div>"
-        );
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        thread = new FeederThread(attachEvent.getUI(), this);
+        thread.start();
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Cleanup
+        thread.interrupt();
+        thread = null;
+    }
+
+    private static class FeederThread extends Thread {
+        private final UI ui;
+        private final Servers view;
+
+        public FeederThread(UI ui, Servers view) {
+            this.ui = ui;
+            this.view = view;
+        }
+
+        @Override
+        public void run() {
+            while (!isInterrupted()) {
+                ui.access(view::update);
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        }
     }
 }

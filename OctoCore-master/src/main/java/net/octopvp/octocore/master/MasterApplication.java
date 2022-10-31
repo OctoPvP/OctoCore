@@ -1,6 +1,7 @@
 package net.octopvp.octocore.master;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import net.octopvp.octocore.master.models.User;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
 @SpringBootApplication
 @Theme("OctoCore")
 @PWA(name = "OctoCore Master", shortName = "Master", iconPath = "img/logo.png")
+@Push
 public class MasterApplication implements AppShellConfigurator {
     public static void main(String[] args) {
         System.out.println("Starting OctoCore Master with java v." + System.getProperty("java.version"));
