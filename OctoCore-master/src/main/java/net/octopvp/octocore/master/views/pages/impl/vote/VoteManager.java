@@ -1,8 +1,7 @@
-package net.octopvp.octocore.master.views.pages.vote;
+package net.octopvp.octocore.master.views.pages.impl.vote;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -10,6 +9,7 @@ import com.vexsoftware.votifier.model.Vote;
 import net.octopvp.octocore.master.component.LightningHolder;
 import net.octopvp.octocore.master.master.votifier.VotifierEvent;
 import net.octopvp.octocore.master.views.MainLayout;
+import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
 
 import javax.annotation.security.PermitAll;
@@ -17,8 +17,9 @@ import javax.annotation.security.PermitAll;
 @PageTitle("Vote Manager")
 @Route(value = "votemgr", layout = MainLayout.class)
 @PermitAll
-public class VoteManager extends VerticalLayout {
-    public VoteManager() {
+public class VoteManager extends Page {
+    @Override
+    public void init() {
         TextField usernameField = new TextField();
         usernameField.setLabel("Username");
         usernameField.setRequired(true);

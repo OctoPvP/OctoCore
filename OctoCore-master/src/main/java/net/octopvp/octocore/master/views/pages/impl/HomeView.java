@@ -1,4 +1,4 @@
-package net.octopvp.octocore.master.views.pages;
+package net.octopvp.octocore.master.views.pages.impl;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -11,6 +11,7 @@ import net.octopvp.octocore.master.master.OctoCoreMaster;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.MainLayout;
+import net.octopvp.octocore.master.views.pages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -21,7 +22,7 @@ import java.util.TimeZone;
 @Route(value = "home", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 @PermitAll
-public class HomeView extends VerticalLayout {
+public class HomeView extends Page {
 
     @Autowired
     private UserService authenticatedUser;
@@ -32,9 +33,9 @@ public class HomeView extends VerticalLayout {
     public HomeView() {
     }
 
-    @PostConstruct
-    public void postConstruct() {
-        if (authenticatedUser.get() != null)
+    @Override
+    public void init() {
+        if (authenticatedUser != null && authenticatedUser.get() != null)
             loggedIn();
     }
 

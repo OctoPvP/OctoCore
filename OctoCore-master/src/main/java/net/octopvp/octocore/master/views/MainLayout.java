@@ -3,7 +3,6 @@ package net.octopvp.octocore.master.views;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.Accordion;
-import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -18,9 +17,9 @@ import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
 import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.components.ThemeToggleButton;
-import net.octopvp.octocore.master.views.pages.Servers;
-import net.octopvp.octocore.master.views.pages.HomeView;
-import net.octopvp.octocore.master.views.pages.vote.VoteManager;
+import net.octopvp.octocore.master.views.pages.impl.HomeView;
+import net.octopvp.octocore.master.views.pages.impl.Servers;
+import net.octopvp.octocore.master.views.pages.impl.vote.VoteManager;
 
 import java.util.*;
 
@@ -237,7 +236,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Servers", "la la-server", Servers.class),
         });
         menuItems.put("Misc", new MenuItemInfo[]{
-                new MenuItemInfo("Vote Manager", "la la-ticket", VoteManager.class)
+                new MenuItemInfo("Vote Manager", "la la-ticket", VoteManager.class),
         });
         return menuItems;
     }

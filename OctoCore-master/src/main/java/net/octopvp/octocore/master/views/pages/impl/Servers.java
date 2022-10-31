@@ -1,4 +1,4 @@
-package net.octopvp.octocore.master.views.pages;
+package net.octopvp.octocore.master.views.pages.impl;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
@@ -22,6 +22,7 @@ import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.MainLayout;
+import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,11 +31,12 @@ import javax.annotation.security.RolesAllowed;
 @PageTitle("Servers")
 @Route(value = "servers", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
-public class Servers extends VerticalLayout {
+public class Servers extends Page {
     @Autowired
     UserService authenticatedUser;
 
-    public Servers() { // A table of servers
+    @Override
+    public void init() { // A table of servers
         Grid<ServerData> grid = new Grid<>(ServerData.class, false);
         //grid.addColumn(createServerRenderer()).setHeader("Name").setFlexGrow(0)
         //        .setWidth("230px");
