@@ -241,7 +241,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Servers", "la la-server", Servers.class),
         });
         menuItems.put("Misc", new MenuItemInfo[]{
-                new MenuItemInfo("Vote Manager", "la la-ticket", VoteManager.class),
+                new MenuItemInfo("Vote Manager", "la la-vote-yea", VoteManager.class),
         });
         return menuItems;
     }
