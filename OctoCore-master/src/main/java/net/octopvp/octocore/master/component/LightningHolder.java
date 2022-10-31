@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 @Component
 @Getter
 public class LightningHolder {
-    private EventBus eventBus =  new EventBus();
+    private final EventBus eventBus =  new EventBus();
 
     @Bean
     public EventBus lightning() {
