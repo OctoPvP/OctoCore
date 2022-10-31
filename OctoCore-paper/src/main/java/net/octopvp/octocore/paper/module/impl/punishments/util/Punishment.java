@@ -174,7 +174,7 @@ public class Punishment implements IPunishment {
         new ExecutePunishmentPacket(senderStr, coloredName, sender.getName(), name, getReason(), getDurationTime(), getNiceDuration(), getNiceExpire(),
                 isPermanent(), targetId, isSilent(), addedByName, OctoCoreCommon.getInstance().getServerImplementation().getServerName(), punishmentType,
                 IPRelative, OctoCore.getGson().toJson(this)
-                ).send();
+        ).send();
     }
 
     public PunishmentType getType() {

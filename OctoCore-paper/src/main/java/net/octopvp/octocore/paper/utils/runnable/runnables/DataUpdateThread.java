@@ -95,7 +95,7 @@ public class DataUpdateThread extends Thread {
                     playerData.getAllNegatedPermissions(), playerData.getAltsSafely(), playerData.getAddresses(),
                     playerData.getHighestRank().getWeight(), playerData.getMessageSettings(), playerData.getCachedFormattedNameNoNickNoTag(),
                     playerData.isOp()
-                    ).send();
+            ).send();
             new DataCache(playerData.getUuid()).update(playerData.save(true));
         }
     }

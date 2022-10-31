@@ -34,6 +34,7 @@ public class LoginController {
     JwtUtils jwtUtilsTop;
     @Autowired
     AuthenticationManager authenticationManagerTop;
+
     @PostMapping(value = "/loginform", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<?> authenticateUser(@Valid LoginRequest loginRequest) {
         System.out.println("Login request: " + loginRequest);

@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 @NoArgsConstructor
 public class AuditLogPacket extends RedisPacket {
     private AuditLogType logType;
+
     @Override
     public void onReceive(JsonObject data) {
         if (logType != AuditLogType.WORLDEDIT_ACTION && logType != AuditLogType.AUTH_FAIL)

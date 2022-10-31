@@ -15,7 +15,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class AccountUtil {
     @Getter
-    private Mojang mojangAPI = new Mojang().connect();;
+    private Mojang mojangAPI = new Mojang().connect();
+    ;
 
     @PostConstruct
     public void init() {
@@ -49,6 +50,7 @@ public class AccountUtil {
         }
         return null;
     }
+
     @Deprecated
     public UUID getUUIDFromMojang(String name) {
         String s;

@@ -18,6 +18,7 @@ public class ThemeToggleButton extends Button {
     private MongoUserRepository mongoUserRepository;
     private UserService userService;
     private String userID;
+
     public ThemeToggleButton(MongoUserRepository mongoUserRepository, UserService userService, String userID) {
         this.mongoUserRepository = mongoUserRepository;
         this.userID = userID;

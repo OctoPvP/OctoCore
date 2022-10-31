@@ -32,7 +32,7 @@ public class StaffChatPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-       String msg = Lang.STAFF_CHAT_FORMAT.getMsg(name, server, message);
+        String msg = Lang.STAFF_CHAT_FORMAT.getMsg(name, server, message);
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission(Permissions.STAFFCHAT)) {
                 player.sendMessage(msg);

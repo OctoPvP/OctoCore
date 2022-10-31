@@ -15,7 +15,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import java.security.Principal;
 
 @Component
-public class CurrentUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver{
+public class CurrentUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Autowired
     private MongoUserRepository mongoUserRepository;

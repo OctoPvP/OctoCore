@@ -15,6 +15,7 @@ import net.octopvp.octocore.paper.manager.impl.ServerManager;
 @NoArgsConstructor
 public class ServerUpdatePacket extends RedisPacket {
     private String name;
+
     @Override
     public void onReceive(JsonObject data) {
         try {

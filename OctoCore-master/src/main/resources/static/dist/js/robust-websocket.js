@@ -1,6 +1,6 @@
-(function(factory, global) {
+(function (factory, global) {
     if (typeof define === 'function' && define.amd) {
-        define(function() {
+        define(function () {
             return factory(global, navigator)
         })
     } else if (typeof exports === 'object' && typeof module === 'object') {
@@ -9,10 +9,13 @@
         // mock the navigator object when under test since `navigator.onLine` is read only
         global.RobustWebSocket = factory(global, typeof Mocha !== 'undefined' ? Mocha : navigator)
     }
-})(function(global, navigator) {
+})(function (global, navigator) {
 
-    var RobustWebSocket = function(url, protocols, userOptions) {
-        var realWs = { close: function() {} },
+    var RobustWebSocket = function (url, protocols, userOptions) {
+        var realWs = {
+                close: function () {
+                }
+            },
             connectTimeout,
             self = this,
             attempts = 0,
@@ -22,7 +25,7 @@
             pendingReconnect,
             opts = Object.assign({},
                 RobustWebSocket.defaultOptions,
-                typeof userOptions === 'function' ? { shouldReconnect: userOptions } : userOptions
+                typeof userOptions === 'function' ? {shouldReconnect: userOptions} : userOptions
             )
 
         if (typeof opts.timeout !== 'number') {
@@ -33,9 +36,11 @@
             throw new Error('shouldReconnect must be a function that returns the number of milliseconds to wait for a reconnect attempt, or null or undefined to not reconnect.')
         }
 
-        ['bufferedAmount', 'url', 'readyState', 'protocol', 'extensions'].forEach(function(readOnlyProp) {
+        ['bufferedAmount', 'url', 'readyState', 'protocol', 'extensions'].forEach(function (readOnlyProp) {
             Object.defineProperty(self, readOnlyProp, {
-                get: function() { return realWs[readOnlyProp] }
+                get: function () {
+                    return realWs[readOnlyProp]
+                }
             })
         })
 
@@ -46,13 +51,13 @@
             }
         }
 
-        var ononline = function(event) {
+        var ononline = function (event) {
                 if (reconnectWhenOnlineAgain) {
                     clearPendingReconnectIfNeeded()
                     reconnect(event)
                 }
             },
-            onoffline = function() {
+            onoffline = function () {
                 reconnectWhenOnlineAgain = true
                 realWs.close(1000)
             },
@@ -74,11 +79,11 @@
             }
         }
 
-        self.send = function() {
+        self.send = function () {
             return realWs.send.apply(realWs, arguments)
         }
 
-        self.close = function(code, reason) {
+        self.close = function (code, reason) {
             if (typeof code !== 'number') {
                 reason = code
                 code = 1000
@@ -92,7 +97,7 @@
             return realWs.close(code, reason)
         }
 
-        self.open = function() {
+        self.open = function () {
             if (realWs.readyState !== WebSocket.OPEN && realWs.readyState !== WebSocket.CONNECTING) {
                 clearPendingReconnectIfNeeded()
                 reconnectWhenOnlineAgain = false
@@ -120,7 +125,7 @@
 
         Object.defineProperty(self, 'listeners', {
             value: {
-                open: [function(event) {
+                open: [function (event) {
                     if (connectTimeout) {
                         clearTimeout(connectTimeout)
                         connectTimeout = null
@@ -135,12 +140,16 @@
         })
 
         Object.defineProperty(self, 'attempts', {
-            get: function() { return attempts },
+            get: function () {
+                return attempts
+            },
             enumerable: true
         })
 
         Object.defineProperty(self, 'reconnects', {
-            get: function() { return reconnects },
+            get: function () {
+                return reconnects
+            },
             enumerable: true
         })
 
@@ -156,7 +165,7 @@
                 reconnects: reconnects
             }))
 
-            connectTimeout = setTimeout(function() {
+            connectTimeout = setTimeout(function () {
                 connectTimeout = null
                 detachConnectivityEvents()
                 self.dispatchEvent(Object.assign(new CustomEvent('timeout'), {
@@ -165,8 +174,8 @@
                 }))
             }, opts.timeout)
 
-            ;['open', 'close', 'message', 'error'].forEach(function(stdEvent) {
-                realWs.addEventListener(stdEvent, function(event) {
+            ;['open', 'close', 'message', 'error'].forEach(function (stdEvent) {
+                realWs.addEventListener(stdEvent, function (event) {
                     self.dispatchEvent(event)
 
                     var cb = self['on' + stdEvent]
@@ -193,7 +202,7 @@
         // Given a CloseEvent or OnlineEvent and the RobustWebSocket state,
         // should a reconnect be attempted? Return the number of milliseconds to wait
         // to reconnect (or null or undefined to not), rather than true or false
-        shouldReconnect: function(event, ws) {
+        shouldReconnect: function (event, ws) {
             if (event.code === 1008 || event.code === 1011) return
             return [0, 3000, 10000][ws.attempts]
         },
@@ -210,14 +219,14 @@
     RobustWebSocket.prototype.binaryType = 'blob'
 
     // Taken from MDN https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
-    RobustWebSocket.prototype.addEventListener = function(type, callback) {
+    RobustWebSocket.prototype.addEventListener = function (type, callback) {
         if (!(type in this.listeners)) {
             this.listeners[type] = []
         }
         this.listeners[type].push(callback)
     }
 
-    RobustWebSocket.prototype.removeEventListener = function(type, callback) {
+    RobustWebSocket.prototype.removeEventListener = function (type, callback) {
         if (!(type in this.listeners)) {
             return
         }
@@ -230,7 +239,7 @@
         }
     }
 
-    RobustWebSocket.prototype.dispatchEvent = function(event) {
+    RobustWebSocket.prototype.dispatchEvent = function (event) {
         if (!(event.type in this.listeners)) {
             return
         }

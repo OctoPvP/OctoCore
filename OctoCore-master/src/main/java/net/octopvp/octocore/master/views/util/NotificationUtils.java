@@ -23,6 +23,7 @@ public class NotificationUtils { // https://vaadin.com/docs/latest/components/no
     public static Notification create(String text, NotificationVariant variant, Button... buttons) {
         return create(text, variant, Notification.Position.BOTTOM_END, Arrays.asList(buttons));
     }
+
     public static Notification create(String text, NotificationVariant variant, Notification.Position position, List<Button> buttons) {
         Notification notification = new Notification();
         notification.addThemeVariants(variant);
@@ -46,6 +47,7 @@ public class NotificationUtils { // https://vaadin.com/docs/latest/components/no
 
         return notification;
     }
+
     public static Button createCloseBtn(Notification notification) {
         Button closeBtn = new Button(
                 VaadinIcon.CLOSE_SMALL.create(),

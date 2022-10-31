@@ -6,9 +6,11 @@
 * {
     --disabled-color: #8c8c8c;
 }
+
 td.minute {
     color: black;
 }
+
 td.hour {
     color: black;
 }

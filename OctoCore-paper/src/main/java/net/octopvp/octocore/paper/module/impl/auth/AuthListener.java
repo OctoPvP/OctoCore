@@ -13,8 +13,7 @@ public class AuthListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (AuthModule.isAuthed(event.getPlayer())) {
-        }
-        else event.setCancelled(true);
+        } else event.setCancelled(true);
     }
 
     @EventHandler
@@ -36,8 +35,7 @@ public class AuthListener implements Listener {
     @EventHandler
     public void onMessage(AsyncPlayerChatEvent event) {
         if (AuthModule.isAuthed(event.getPlayer())) {
-        }
-        else {
+        } else {
             event.getPlayer().sendMessage(Lang.PLEASE_AUTH.getMsg());
             event.setCancelled(true);
         }

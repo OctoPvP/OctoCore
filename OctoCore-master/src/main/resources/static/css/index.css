@@ -83,6 +83,7 @@
 select option {
     color: black;
 }
+
 .pagination {
     display: inline-block;
 }
@@ -94,13 +95,17 @@ select option {
     padding: 8px 16px;
     text-decoration: none;
 }
+
 .pagination a.active {
     background-color: #0D6DFD;
     border-radius: 5px;
     color: white;
 }
 
-.pagination a:hover:not(.active) {background-color: #DDD;}
+.pagination a:hover:not(.active) {
+    background-color: #DDD;
+}
+
 /* Three image containers (use 25% for four, and 50% for two, etc) */
 .column {
     float: left;

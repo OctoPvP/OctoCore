@@ -92,6 +92,7 @@ public final class OctoCoreWaterfall extends Plugin {
             public void logWarn(String message, Object... placeholders) {
                 Logger.warn(message, placeholders);
             }
+
             @Override
             public IServerManager getServerManager() {
                 return serverManager;

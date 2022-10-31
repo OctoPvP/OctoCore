@@ -1,6 +1,6 @@
-function getJSessionId(){
+function getJSessionId() {
     let jsId = document.cookie.match(/JSESSIONID=[^;]+/);
-    if(jsId != null) {
+    if (jsId != null) {
         if (jsId instanceof Array)
             jsId = jsId[0].substring(11);
         else
@@ -8,6 +8,7 @@ function getJSessionId(){
     }
     return jsId;
 }
+
 /**
  * sends a request to the specified url from a form. this will change the window location.
  * @param {string} path the path to send the post request to
@@ -15,7 +16,7 @@ function getJSessionId(){
  * @param {string} [method=post] the method to use on the form
  */
 
-function post(path, params, method='post') {
+function post(path, params, method = 'post') {
 
     // The rest of this code assumes you are not using a library.
     // It can be made less verbose if you use one.

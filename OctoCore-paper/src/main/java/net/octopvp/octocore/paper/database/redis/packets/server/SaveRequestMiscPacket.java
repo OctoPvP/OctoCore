@@ -15,6 +15,7 @@ public class SaveRequestMiscPacket extends RedisPacket {
     public SaveRequestMiscPacket(UUID uuid) {
         this.uuid = uuid;
     }
+
     public SaveRequestMiscPacket(String name) {
         this.name = name;
     }

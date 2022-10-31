@@ -68,6 +68,7 @@ public class ModelInterceptor implements HandlerInterceptor {
     private void addToModelUserDetails(HttpSession session) {
         //UserDetailsImpl user = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
     private static final boolean dev = System.getProperty("dev", "false").equalsIgnoreCase("true");
 
     /**

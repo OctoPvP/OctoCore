@@ -233,8 +233,7 @@ public final class OctoCore extends JavaPlugin {
                     if (obj instanceof CommandResult) {
                         CommandResult result = (CommandResult) obj;
                         if (result == CommandResult.SUCCESS) {
-                        }
-                        else if (result == CommandResult.INVALID_ARGS) {
+                        } else if (result == CommandResult.INVALID_ARGS) {
                             throw new InvalidArgsException(ctx.getCommandInfo());
                         } else if (Objects.equals(result.getMsg(), "") || Objects.equals(result.getMsg(), " ")) {
                         } else if (result.getMsg() == null) {
