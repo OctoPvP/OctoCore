@@ -216,6 +216,8 @@ public class MainLayout extends AppLayout {
             accordion.addClassNames("border-b", "border-contrast-10", "flex-grow", "overflow-auto");
             // Add 20px padding on the left
             accordion.getElement().getStyle().set("padding-left", "15px");
+            // remove the default border
+            accordion.getElement().getStyle().set("border", "none");
             Component itemsComponent = createItemsComponent(items);
             accordion.add(name, itemsComponent);
             list.add(accordion);
