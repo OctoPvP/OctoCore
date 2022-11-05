@@ -3,7 +3,7 @@ package net.octopvp.octocore.master.config;
 import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;
 import net.octopvp.octocore.master.component.AuthEntryPointJwt;
 import net.octopvp.octocore.master.services.UserDetailsServiceImpl;
-import net.octopvp.octocore.master.views.login.LoginView;
+import net.octopvp.octocore.master.views.pages.impl.login.LoginView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

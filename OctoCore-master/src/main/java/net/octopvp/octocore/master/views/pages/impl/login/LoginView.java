@@ -1,4 +1,4 @@
-package net.octopvp.octocore.master.views.login;
+package net.octopvp.octocore.master.views.pages.impl.login;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;

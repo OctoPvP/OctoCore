@@ -29,6 +29,7 @@ public class VoteManager extends Page {
         voteServiceField.addClassNames("centered");
         Button button = new Button("Submit");
         button.addClassNames("centered");
+        button.getElement().setAttribute("type", "submit");
         button.addClickListener(event -> {
             String username = usernameField.getValue();
             String voteService = voteServiceField.getValue();
