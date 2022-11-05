@@ -19,7 +19,8 @@ import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.components.ThemeToggleButton;
 import net.octopvp.octocore.master.views.pages.impl.HomeView;
 import net.octopvp.octocore.master.views.pages.impl.Servers;
-import net.octopvp.octocore.master.views.pages.impl.vote.VoteManager;
+import net.octopvp.octocore.master.views.pages.impl.misc.RedisManagerPage;
+import net.octopvp.octocore.master.views.pages.impl.misc.vote.VoteManager;
 
 import java.util.*;
 
@@ -242,6 +243,7 @@ public class MainLayout extends AppLayout {
         });
         menuItems.put("Misc", new MenuItemInfo[]{
                 new MenuItemInfo("Vote Manager", "la la-vote-yea", VoteManager.class),
+                new MenuItemInfo("Redis Manager", "la la-exchange-alt", RedisManagerPage.class),
         });
         return menuItems;
     }

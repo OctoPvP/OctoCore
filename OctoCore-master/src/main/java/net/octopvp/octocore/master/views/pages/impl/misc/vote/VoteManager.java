@@ -1,4 +1,4 @@
-package net.octopvp.octocore.master.views.pages.impl.vote;
+package net.octopvp.octocore.master.views.pages.impl.misc.vote;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.NotificationVariant;
