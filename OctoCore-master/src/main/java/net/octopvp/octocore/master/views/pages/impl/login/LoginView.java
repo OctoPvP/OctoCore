@@ -16,7 +16,7 @@ public class LoginView extends LoginOverlay {
 
         LoginI18n i18n = LoginI18n.createDefault();
         i18n.setHeader(new LoginI18n.Header());
-        i18n.getHeader().setTitle("OctoCore Master Login");
+        i18n.getHeader().setTitle("Master Login");
         i18n.getHeader().setDescription("");
         i18n.setAdditionalInformation(null);
         setI18n(i18n);

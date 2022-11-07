@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.*;
@@ -21,6 +22,9 @@ public class User {
     @NotBlank
     @Size(max = 120)
     private String password;
+
+    @Email
+    private String email;
 
     private Set<String> roles = new HashSet<>();
 

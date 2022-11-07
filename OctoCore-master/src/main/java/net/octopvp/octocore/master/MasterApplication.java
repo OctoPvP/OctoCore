@@ -43,6 +43,7 @@ public class MasterApplication implements AppShellConfigurator {
 
             logger.info("... generating 2 User entities...");
             User admin = new User("Test", passwordEncoder.encode("123"));
+            admin.setEmail("test@octopvp.net");
             admin.setRoles(Stream.of("ROLE_ADMIN", "ROLE_USER").collect(Collectors.toSet()));
             userRepository.save(admin);
             User user = new User("User", passwordEncoder.encode("123"));

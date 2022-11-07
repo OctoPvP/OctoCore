@@ -16,7 +16,7 @@ public class DebugCommand {
     @Permission(Permissions.ADMIN)
     @PlayerOnly
     public CommandResult execute(Sender sender, String[] args) {
-        String expression = StringUtils.arraytoString(args);
+        String expression = StringUtils.arrayToString(args);
         new Debugger(sender.getCommandSender()).execute(expression);
         return CommandResult.SUCCESS;
     }

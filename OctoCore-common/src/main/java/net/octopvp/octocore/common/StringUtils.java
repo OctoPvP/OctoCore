@@ -1,7 +1,6 @@
 package net.octopvp.octocore.common;
 
 import net.md_5.bungee.api.ChatColor;
-import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -45,11 +44,15 @@ public class StringUtils {
         return org.apache.commons.lang3.StringUtils.repeat(" ", spaces) + text;
     }
 
-    public static String arraytoString(String[] args) {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < args.length; i++) {
-            sb.append(args[i] + " ");
-        }
+    public static String arrayToString(String[] args) {
+        StringBuilder sb = new StringBuilder();
+        for (String arg : args) sb.append(arg).append(" ");
+        return sb.toString().trim();
+    }
+
+    public static String arrayToString(List<String> args) {
+        StringBuilder sb = new StringBuilder();
+        for (String arg : args) sb.append(arg).append(" ");
         return sb.toString().trim();
     }
 
