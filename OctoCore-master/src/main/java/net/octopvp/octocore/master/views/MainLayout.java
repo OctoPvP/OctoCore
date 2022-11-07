@@ -19,6 +19,7 @@ import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.components.ThemeToggleButton;
 import net.octopvp.octocore.master.views.pages.impl.HomeView;
 import net.octopvp.octocore.master.views.pages.impl.Servers;
+import net.octopvp.octocore.master.views.pages.impl.admin.UsersPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.RedisManagerPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.vote.VoteManager;
 
@@ -235,7 +236,7 @@ public class MainLayout extends AppLayout {
         return div;
     }
 
-    private Map<String, MenuItemInfo[]> createMenuItems() {
+    private Map<String, MenuItemInfo[]> createMenuItems() { // https://icons8.com/line-awesome
         Map<String, MenuItemInfo[]> menuItems = new LinkedHashMap<>();
         menuItems.put("", new MenuItemInfo[]{
                 new MenuItemInfo("Home", "la la-home", HomeView.class),
@@ -244,6 +245,9 @@ public class MainLayout extends AppLayout {
         menuItems.put("Misc", new MenuItemInfo[]{
                 new MenuItemInfo("Vote Manager", "la la-vote-yea", VoteManager.class),
                 new MenuItemInfo("Redis Manager", "la la-exchange-alt", RedisManagerPage.class),
+        });
+        menuItems.put("Admin", new MenuItemInfo[]{
+                new MenuItemInfo("Users", "la la-users", UsersPage.class),
         });
         return menuItems;
     }

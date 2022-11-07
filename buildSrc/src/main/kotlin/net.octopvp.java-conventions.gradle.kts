@@ -35,16 +35,7 @@ repositories {
     }
 
     maven {
-        url = uri("https://maven.moonsworth.com/repository/lunarclient-public/")
-    }
-
-    maven {
         url = uri("https://repo.citizensnpcs.co/")
-    }
-
-    maven {
-        url = uri("http://ci.nametagedit.com/plugin/repository/everything/")
-        isAllowInsecureProtocol = true
     }
 
     maven {

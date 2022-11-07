@@ -23,9 +23,10 @@ dependencies {
     compileOnly("com.lunarclient:bukkitapi:1.0-SNAPSHOT")
     //compileOnly(files("../lib/bukkitapi.jar"))
     compileOnly("net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT")
-    compileOnly("net.octopvp:OctoSpigot-api:1.8.8-R0.1-SNAPSHOT")
     compileOnly("com.viaversion:viaversion-api:4.4.2")
-    compileOnly("net.octopvp:OctoSpigot:1.8.8-R0.1-SNAPSHOT")
+
+    compileOnly("net.octopvp:OctoSpigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("net.octopvp:OctoSpigot-Server:1.8.8-R0.1-SNAPSHOT")
 
     //system("net.octopvp:OctoSpigot:1.8.8-R0.1-SNAPSHOT")
 }

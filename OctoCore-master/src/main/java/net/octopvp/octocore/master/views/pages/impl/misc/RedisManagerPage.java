@@ -2,6 +2,7 @@ package net.octopvp.octocore.master.views.pages.impl.misc;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -19,7 +20,8 @@ import javax.annotation.security.PermitAll;
 public class RedisManagerPage extends Page {
     @Override
     public void init() {
-        TextField jsonField = new TextField();
+        TextArea jsonField = new TextArea();
+        jsonField.setWidthFull();
         jsonField.setLabel("JSON");
         jsonField.setRequired(true);
         jsonField.addClassNames("centered");
