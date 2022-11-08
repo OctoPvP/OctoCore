@@ -5,6 +5,7 @@ import net.md_5.bungee.api.ChatColor;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StringUtils {
@@ -433,5 +434,10 @@ public class StringUtils {
             s = s.substring(0, s.length() - 7);
         }
         return s;
+    }
+
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$");
+    public static boolean isEmailValid(String email) {
+        return email != null && EMAIL_PATTERN.matcher(email.toUpperCase()).matches();
     }
 }

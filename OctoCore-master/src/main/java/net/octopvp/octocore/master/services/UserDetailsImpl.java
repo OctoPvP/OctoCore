@@ -32,8 +32,8 @@ public class UserDetailsImpl implements UserDetails {
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> {
-                    if (!role.toUpperCase().startsWith("ROLE_")) return new SimpleGrantedAuthority("ROLE_" + role);
-                    return new SimpleGrantedAuthority(role);
+                    if (!role.getName().toUpperCase().startsWith("ROLE_")) return new SimpleGrantedAuthority("ROLE_" + role);
+                    return new SimpleGrantedAuthority(role.getName());
                 })
                 .collect(Collectors.toList());
 

@@ -1,10 +1,12 @@
 package net.octopvp.octocore.master.controller;
 
+import net.octopvp.octocore.master.models.Role;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.payload.request.SignupRequest;
 import net.octopvp.octocore.master.payload.response.MessageResponse;
 import net.octopvp.octocore.master.payload.response.UserInfoResponse;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
+import net.octopvp.octocore.master.repository.RoleRepository;
 import net.octopvp.octocore.master.services.JwtUtils;
 import net.octopvp.octocore.master.services.UserDetailsImpl;
 import lombok.Getter;
@@ -80,6 +82,9 @@ public class LoginController {
         MongoUserRepository userRepository;
 
         @Autowired
+        RoleRepository roleRepository;
+
+        @Autowired
         PasswordEncoder encoder;
 
         @Autowired
@@ -146,7 +151,9 @@ public class LoginController {
                 });
             }
 
-            user.setRoles(strRoles);
+            Set<Role> roles = strRoles.stream().map(role -> roleRepository.findByName(role)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."))).collect(Collectors.toSet());
+            user.setRoles(roles);
             userRepository.save(user);
 
             return ResponseEntity.ok(new MessageResponse(true, "User registered successfully!"));
