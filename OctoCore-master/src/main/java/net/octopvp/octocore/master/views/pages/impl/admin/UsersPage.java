@@ -6,17 +6,21 @@ import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.selection.SelectionListener;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -25,13 +29,17 @@ import net.octopvp.octocore.master.models.Role;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
 import net.octopvp.octocore.master.repository.RoleRepository;
+import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
+import net.octopvp.octocore.master.views.util.NotificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @PageTitle("Users")
@@ -48,10 +56,12 @@ public class UsersPage extends Page {
 
     private Grid<User> grid;
 
-    private TextField usernameField;
-    private EmailField emailField;
+    private TextField usernameField, editUsernameField;
+    private EmailField emailField, editEmailField;
 
-    private MultiSelectComboBox<Role> roles;
+    private MultiSelectComboBox<Role> roles, editRoles;
+    @Autowired
+    private UserService authenticatedUser;
 
     @Override
     public void init() {
@@ -60,9 +70,46 @@ public class UsersPage extends Page {
         dataView = grid.setItems(userRepository.findAll());
         grid.addColumn(userCardRenderer).setHeader("User");
         grid.addColumn(user -> user.getEmail() == null || user.getEmail().isEmpty() ? "No email" : user.getEmail()).setHeader("Email").setAutoWidth(true);
-        grid.addColumn(user -> user.getRoles().stream().map(role -> StringUtils.capatalizeFirst(role.getName().replace("ROLE_", ""))).collect(Collectors.joining(", ")))
-                .setHeader("Roles");
+        grid.addColumn(user -> user.getActualRoles().stream().map(role -> StringUtils.capatalizeFirst(role.getName().replace("ROLE_", ""))).collect(Collectors.joining(", "))) // getActualRoles() only returns roles that the user has, not the roles that the user inherits from other roles
+                .setHeader("Roles"); // TODO order roles by priority
         grid.addColumn(user -> user.getTimeZone().getDisplayName()).setHeader("Timezone").setAutoWidth(true);
+        grid.addColumn(new ComponentRenderer<>(Button::new, (button, user) -> {
+            button.setIcon(VaadinIcon.EDIT.create());
+            button.addClickListener((e) -> {
+                Dialog dialog = new Dialog();
+
+                dialog.setHeaderTitle("Edit User");
+
+                VerticalLayout dialogLayout = createEditDialogLayout(user);
+                dialog.add(dialogLayout);
+
+                Button cancelButton = new Button("Cancel", e1 -> dialog.close());
+                dialog.getFooter().add(cancelButton);
+
+                Button saveUserButton = new Button("Save", new Icon(VaadinIcon.PLUS));
+                saveUserButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                saveUserButton.addClickListener(e1 -> {
+                    // check if the username is taken
+                    if (userRepository.existsByUsernameIgnoreCase(editUsernameField.getValue())) {
+                        NotificationUtils.create("Username is already taken", NotificationVariant.LUMO_ERROR).open();
+                        return;
+                    }
+                    user.setUsername(editUsernameField.getValue());
+                    user.setEmail(editEmailField.getValue());
+                    user.setRoles(new HashSet<>(editRoles.getValue()));
+                    userRepository.save(user);
+                    dialog.close();
+                    ConfirmDialog okDialog = NotificationUtils.createConfirmDialog("User saved", "The user has been saved successfully.");
+                    okDialog.addDetachListener((ev)-> {
+                        dataView.refreshAll();
+                        okDialog.close();
+                    });
+                    okDialog.open();
+                });
+                dialog.getFooter().add(saveUserButton);
+                dialog.open();
+            });
+        })).setHeader("Actions").setAutoWidth(true);
 
         searchField.setWidth("50%");
         searchField.setPlaceholder("Search");
@@ -77,13 +124,39 @@ public class UsersPage extends Page {
         VerticalLayout dialogLayout = createDialogLayout();
         dialog.add(dialogLayout);
 
-        Button saveButton = createSaveButton(dialog);
+        Button saveButton = createSaveButton(dialog); //TODO perm checking
         Button cancelButton = new Button("Cancel", e -> dialog.close());
         dialog.getFooter().add(cancelButton);
         dialog.getFooter().add(saveButton);
 
         Button createButton = new Button("Create User", new Icon(VaadinIcon.PLUS));
+
         createButton.addClickListener(event -> dialog.open());
+
+        Button deleteButton = new Button(new Icon(VaadinIcon.TRASH));
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        deleteButton.setEnabled(false);
+        deleteButton.addClickListener(event -> {
+            Set<User> selected = grid.getSelectedItems();
+            if (selected.isEmpty()) {
+                NotificationUtils.createConfirmDialog("No users selected", "Please select at least one user to delete.").open();
+                return;
+            }
+            // Check roles/perms
+            User currentUser = authenticatedUser.get();
+            int highestRole = currentUser.getHighestRolePriority();
+            for (User user : selected) {
+                if (user.getHighestRolePriority() >= highestRole) {
+                    NotificationUtils.createConfirmDialog("Insufficient permissions", "You do not have permission to delete user \"" + user.getUsername() + "\"").open();
+                    return;
+                }
+            }
+
+            userRepository.deleteAll(selected);
+            ConfirmDialog d = NotificationUtils.createConfirmDialog("Users deleted", "The selected users have been deleted.");
+            d.addConfirmListener(e -> dataView.refreshAll());
+            d.open();
+        });
 
         dataView.addFilter(user -> {
             String searchTerm = searchField.getValue().trim().toLowerCase();
@@ -96,8 +169,10 @@ public class UsersPage extends Page {
                     user.getRoles().stream().anyMatch(role -> role.getName().toLowerCase().contains(searchTerm)) ||
                     user.getTimeZone().getDisplayName().toLowerCase().contains(searchTerm);
         });
-
-        HorizontalLayout actions = new HorizontalLayout(searchField, createButton); // TODO: delete button
+        grid.addSelectionListener((SelectionListener<Grid<User>, User>) event -> deleteButton.setEnabled(!event.getAllSelectedItems().isEmpty()));
+        HorizontalLayout actions = new HorizontalLayout(searchField, createButton, deleteButton); // TODO: delete button
+        actions.setMaxWidth("100%");
+        actions.setWidth("100%");
         add(actions, grid, dialog);
     }
 
@@ -123,7 +198,7 @@ public class UsersPage extends Page {
             if (error) return;
 
             String username = usernameField.getValue();
-            if (userRepository.existsByUsername(username)) {
+            if (userRepository.existsByUsernameIgnoreCase(username)) {
                 usernameField.setInvalid(true);
                 usernameField.setErrorMessage("Username already exists");
                 return;
@@ -154,6 +229,35 @@ public class UsersPage extends Page {
 
         VerticalLayout dialogLayout = new VerticalLayout(usernameField,
                 emailField, roles);
+        dialogLayout.setPadding(false);
+        dialogLayout.setSpacing(false);
+        dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
+        dialogLayout.getStyle().set("width", "18rem").set("max-width", "100%");
+
+        return dialogLayout;
+    }
+
+    private VerticalLayout createEditDialogLayout(User in) {
+        editUsernameField = new TextField("Username");
+        editUsernameField.setValue(in.getUsername());
+        editEmailField = new EmailField("Email");
+        if (in.getEmail() != null && !in.getEmail().isEmpty())
+            editEmailField.setValue(in.getEmail());
+        editRoles = new MultiSelectComboBox<>();
+        editRoles.setLabel("Roles");
+        List<Role> roleList = roleRepository.findAll(); //TODO disable roles that are higher than the current user
+        editRoles.setItems(roleList.toArray(new Role[0]));
+        editRoles.setPlaceholder("Select roles");
+        editRoles.setItemLabelGenerator(role -> StringUtils.capatalizeFirst(role.getName().replace("ROLE_", "")));
+        editRoles.setValue(in.getActualRoles().stream().map(role -> roleList.stream().filter(r -> r.getName().equals(role.getName())).findFirst().orElse(null)).collect(Collectors.toSet()));
+
+        Button resetPasswordButton = new Button("Reset Password", new Icon(VaadinIcon.PASSWORD));
+        resetPasswordButton.addClickListener((e) -> {
+
+        });
+
+        VerticalLayout dialogLayout = new VerticalLayout(editUsernameField,
+                editEmailField, editRoles, resetPasswordButton);
         dialogLayout.setPadding(false);
         dialogLayout.setSpacing(false);
         dialogLayout.setAlignItems(FlexComponent.Alignment.STRETCH);

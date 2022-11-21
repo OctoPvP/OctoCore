@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
@@ -55,5 +56,20 @@ public class NotificationUtils { // https://vaadin.com/docs/latest/components/no
         closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
 
         return closeBtn;
+    }
+
+    public static ConfirmDialog createConfirmDialog(String header, String text) {
+        return createConfirmDialog(header, text, null, null, null);
+    }
+
+    public static ConfirmDialog createConfirmDialog(String header, String text, String confirmText, String cancelText, Runnable confirmAction) {
+        ConfirmDialog dialog = new ConfirmDialog();
+        if (header != null) dialog.setHeader(header);
+        if (text != null) dialog.setText(text);
+        if (confirmText != null && confirmAction != null)
+            dialog.setConfirmButton(confirmText, confirm -> confirmAction.run());
+        if (cancelText != null)
+            dialog.setCancelButton(cancelText, cancel -> dialog.close());
+        return dialog;
     }
 }

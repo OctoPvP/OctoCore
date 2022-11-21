@@ -58,4 +58,27 @@ public class User {
     public TimeZone getTimeZone() {
         return TimeZone.getTimeZone(timezoneId);
     }
+
+    public int getHighestRolePriority() {
+        int highestPriority = 0;
+        for (Role role : roles) {
+            if (role.getPriority() > highestPriority) {
+                highestPriority = role.getPriority();
+            }
+        }
+        return highestPriority;
+    }
+
+    public Set<Role> getActualRoles() {
+        return roles;
+    }
+
+    public Set<Role> getRoles() {
+        Set<Role> roles = new HashSet<>();
+        for (Role role : getActualRoles()) {
+            roles.add(role);
+            roles.addAll(role.getChildren());
+        }
+        return roles;
+    }
 }

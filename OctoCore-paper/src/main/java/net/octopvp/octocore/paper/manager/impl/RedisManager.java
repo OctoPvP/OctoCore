@@ -31,7 +31,7 @@ public class RedisManager extends Manager {
             jedisSettings.setAuth(true);
             jedisSettings.setPassword(getConfig().getString("database.redis.auth.password"));
         }
-        OctoCore.getInstance().setRedisHandler(new RedisHandler("net.octopvp.octocore.paper.database.redis.packets", jedisSettings,
+        OctoCore.getInstance().setRedisHandler(new RedisManager("net.octopvp.octocore.paper.database.redis.packets", jedisSettings,
                 (runnable) -> {
                     Tasks.runAsync(runnable);
                     return null;

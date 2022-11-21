@@ -45,13 +45,23 @@ public class MasterApplication implements AppShellConfigurator {
                 logger.info("Generating dev data");
 
                 logger.info("... generating roles ...");
-                Role adminRole = new Role("ROLE_ADMIN");
-                Role userRole = new Role("ROLE_USER");
-                Role modRole = new Role("ROLE_MOD");
-                Role devRole = new Role("ROLE_DEV");
-                roleRepository.saveAll(Arrays.asList(adminRole, userRole, modRole, devRole));
+                Role userRole = new Role("ROLE_USER", 0);
+                Role superAdmin = new Role("ROLE_SUPER_ADMIN", 4);
+                Role adminRole = new Role("ROLE_ADMIN", 3);
+                Role devRole = new Role("ROLE_DEV", 2);
+                Role modRole = new Role("ROLE_MOD", 1);
 
-                logger.info("... generating 2 User entities...");
+                superAdmin.addChildren(adminRole, userRole);
+                adminRole.addChildren(userRole);
+                devRole.addChildren(userRole);
+                modRole.addChildren(userRole);
+
+                roleRepository.saveAll(Arrays.asList(adminRole, userRole, modRole, devRole, superAdmin));
+
+                logger.info("... generating 3 User entities...");
+                User superAdminUser = new User("superadmin", passwordEncoder.encode("123"));
+                superAdminUser.setRoles(Stream.of(superAdmin, adminRole, userRole).collect(Collectors.toSet()));
+                userRepository.save(superAdminUser);
                 User admin = new User("Test", passwordEncoder.encode("123"));
                 admin.setEmail("test@octopvp.net");
                 //admin.setRoles(Stream.of("ROLE_ADMIN", "ROLE_USER").collect(Collectors.toSet()));
