@@ -3,3 +3,19 @@ master:
     hostname: 127.0.0.1
     port: 6379
     password: ''
+saml2:
+  identity-provider:
+    base-path: http://localhost:8080/saml/idp
+    keys:
+      active:
+        name: active-idp-key
+        #private-key: /Development/random/saml/keys/privkey.pem
+        private-key: classpath:/dev/keys/privkey.pem
+        #certificate: /Development/random/saml/keys/cacert.pem
+        certificate: classpath:/dev/keys/cacert.pem
+        passphrase: password
+    providers:
+      - entity-id: hello-sp
+        metadata: http://localhost:8082/hello-sp/saml/sp/metadata
+        link-text: Hello Service Provider Application
+

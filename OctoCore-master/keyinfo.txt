@@ -1,0 +1,32 @@
+TODO - Seperate dev and prod environments
+generate keys with this: https://help.interfaceware.com/v6/how-to-create-self-certified-ssl-certificate-and-publicprivate-key-files
+
+tl;dr:
+Generate rsa key: ssh-keygen -t rsa -b 4096 -C "contact@badbird.dev" -m PEM
+
+Generate certificate: openssl req -new -x509 -key privkey.pem -out cacert.pem -days 1095
+Run in bash/wsl
+
+From: https://github.com/alokkusingh/saml
+
+IdP RSA Private Key and Cert Generation
+-- Generate Private Key and CSR Request
+openssl req -new -newkey rsa:4096 -nodes -keyout IdP_pkcs8.key -out IdP.csr
+    -- no pwd
+
+-- to pkcs1
+openssl rsa -in IdP_pkcs8.key -out IdP_pkcs1.key
+
+-- Sign Certificate
+openssl x509 -req -CA rootCA_Alok.crt -CAkey rootCA_Alok.key -in IdP.csr -out IdP.crt -days 365 -CAcreateserial
+
+SPS RSA Private Key and Cert Generation
+-- Generate Private Key and CSR Request
+openssl req -new -newkey rsa:4096 -nodes -keyout saml_spcs_pkcs8.key -out saml_spcs.csr
+    -- no pwd
+
+-- to pkcs1
+openssl rsa -in saml_spcs_pkcs8.key -out saml_spcs_pkcs1.key
+
+-- Sign certtificate
+openssl x509 -req -CA rootCA_Alok.crt -CAkey rootCA_Alok.key -in saml_spcs.csr -out saml_spcs.crt -days 365 -CAcreateserial
