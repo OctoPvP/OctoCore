@@ -20,6 +20,8 @@ auth:
   cookieName: 'auth'
 vaadin:
   pnpm-enabled: true
+server:
+  max-http-header-size: 100MB
 jetbrains:
   hub:
     url: https://hub.octopvp.net/hub
@@ -31,15 +33,15 @@ master:
     password: PVuS9YfX43
 saml2:
   identity-provider:
-    base-path: https://master.octopvp.net/
+    base-path: https://master.octopvp.net/saml/idp
     entity-id: octocore-idp
-    sign-metadata: true
+    #sign-metadata: true
     #sign-assertions: true # not working on java 17, only works on java 8 for some reason
     #encrypt-assertions: false
     #want-requests-signed: true
     #signing-algorithm: RSA_SHA256
     digest-method: SHA256
-    single-logout-enabled: true
+    #single-logout-enabled: true
     name-ids:
       - urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
       - urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress

@@ -106,7 +106,6 @@ specifiers:
   '@vaadin/virtual-list': 23.2.2
   async: 3.2.2
   construct-style-sheets-polyfill: 3.1.0
-  date-fns: 2.28.0
   glob: 7.2.3
   line-awesome: 1.3.0
   lit: 2.3.0
@@ -223,7 +222,6 @@ dependencies:
   '@vaadin/vertical-layout': 23.2.2
   '@vaadin/virtual-list': 23.2.2
   construct-style-sheets-polyfill: 3.1.0
-  date-fns: 2.28.0
   line-awesome: 1.3.0
   lit: 2.3.0
 
@@ -3112,11 +3110,6 @@ packages:
   /dash-ast/1.0.0:
     resolution: {integrity: sha512-Vy4dx7gquTeMcQR/hDkYLGUnwVil6vk4FOOct+djUnHOUWt+zJPJAaRIXaAFkPXtJjvlY7o3rfRu0/3hpnwoUA==}
     dev: true
-
-  /date-fns/2.28.0:
-    resolution: {integrity: sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==}
-    engines: {node: '>=0.11'}
-    dev: false
 
   /debug/4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
