@@ -34,7 +34,7 @@ saml2:
     base-path: https://master.octopvp.net/
     entity-id: octocore-idp
     sign-metadata: true
-    #sign-assertions: true # not working on java 17, only works on java 8 for some reason
+    #sign-assertions: true
     #encrypt-assertions: false
     #want-requests-signed: true
     #signing-algorithm: RSA_SHA256
