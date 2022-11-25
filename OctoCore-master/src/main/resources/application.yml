@@ -61,6 +61,9 @@ spring:
           - alias: spring-security-saml-sp
             metadata: http://localhost:8082/saml2/service-provider-metadata/samlexample
             linktext: Spring Security SAML SP
+          - alias: sp2
+            metadata: http://localhost:8083/this-is-sp/metadata
+            linktext: SP2
   gson:
     pretty-printing: true
   data:
