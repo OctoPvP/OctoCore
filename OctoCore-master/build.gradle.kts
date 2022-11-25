@@ -61,8 +61,6 @@ dependencies {
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
     implementation("com.github.SparklingComet:java-mojang-api:-SNAPSHOT")
     //implementation("com.github.appreciated:apexcharts:23.0.0-LOCAL")
-
-    implementation("org.springframework.security.extensions:spring-security-saml2-core:2.0.0.M31")
 }
 
 dependencyManagement {

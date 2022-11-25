@@ -2,12 +2,13 @@ package net.octopvp.octocore.master.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.octopvp.octocore.master.models.User;
-import org.springframework.security.saml.saml2.attribute.Attribute;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
@@ -19,6 +20,7 @@ public class UserDetailsImpl implements UserDetails {
     private String userID;
 
     private final Collection<? extends GrantedAuthority> authorities;
+
     public UserDetailsImpl(String username, String password,
                            Collection<? extends GrantedAuthority> authorities, String userID) {
         this.username = username;
@@ -93,12 +95,5 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getUserID() {
         return userID;
-    }
-    public List<Attribute> getSamlAttributesToSendToSP() {
-        List<Attribute> list = new ArrayList<>();
-        list.add(new Attribute().setName("userID").setValues(Collections.singletonList(userID)));
-        list.add(new Attribute().setName("username").setValues(Collections.singletonList(username)));
-        list.add(new Attribute().setName("roles").setValues(Arrays.asList(authorities.stream().map(GrantedAuthority::getAuthority).toArray(String[]::new))));
-        return list;
     }
 }

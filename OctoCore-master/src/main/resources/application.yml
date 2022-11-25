@@ -29,24 +29,3 @@ master:
     hostname: 140.238.153.142
     port: 6379
     password: PVuS9YfX43
-saml2:
-  identity-provider:
-    base-path: https://master.octopvp.net/
-    entity-id: octocore-idp
-    sign-metadata: true
-    #sign-assertions: true
-    #encrypt-assertions: false
-    #want-requests-signed: true
-    #signing-algorithm: RSA_SHA256
-    digest-method: SHA256
-    single-logout-enabled: true
-    name-ids:
-      - urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
-      - urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
-      - urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
-    keys:
-      active:
-        name: active-idp-key
-        private-key: ./keys/privkey.pem
-        certificate: ./keys/cacert.pem
-        passphrase: password
