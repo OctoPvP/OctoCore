@@ -60,17 +60,20 @@ public class HomeView extends Page {
         Text text = new Text("Servers: " + ServerManager.getInstance().getConnectedServers().size());
         Component statusText = null;
         switch (master.getStatus()) {
-            case OK -> {
+            case OK: {
                 statusText = new H3("OK");
                 statusText.getElement().setAttribute("style", "color: green");
+                break;
             }
-            case DEGRADED -> {
+            case DEGRADED: {
                 statusText = new H3("Degraded");
                 statusText.getElement().setAttribute("style", "color: orange");
+                break;
             }
-            case DOWN -> {
+            case DOWN: {
                 statusText = new H3("Down");
                 statusText.getElement().setAttribute("style", "color: red");
+                break;
             }
         }
         H3 h3 = new H3(new H3("Status: "), statusText);

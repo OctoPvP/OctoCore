@@ -9,6 +9,8 @@ import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
+import java.util.stream.Collectors;
+
 @Getter
 public class JedisSubscriber {
     private static final JsonParser JSON_PARSER = new JsonParser();
@@ -32,7 +34,7 @@ public class JedisSubscriber {
                     String type = object.get("type").getAsString();
                     JsonObject data = object.get("data").getAsJsonObject();
 
-                    for (RedisPacket redisPacket : listenerManager.getPackets().stream().filter(packet -> packet.getType().equalsIgnoreCase(type)).toList()) {
+                    for (RedisPacket redisPacket : listenerManager.getPackets().stream().filter(packet -> packet.getType().equalsIgnoreCase(type)).collect(Collectors.toList())) {
                         RedisPacket newPacket = OctoCoreCommon.getInstance().getGson().fromJson(data, redisPacket.getClass());
                         newPacket.onReceive(data);
                     }

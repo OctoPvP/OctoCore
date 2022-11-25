@@ -39,7 +39,8 @@ public class UserService {
     }
 
     public void logout() {
-        UI.getCurrent().getPage().setLocation(WebSecurityConfig.LOGOUT_URL);
+        //UI.getCurrent().getPage().setLocation(WebSecurityConfig.LOGOUT_URL); // FIXME
+        UI.getCurrent().getPage().setLocation("/");
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(VaadinServletRequest.getCurrent().getHttpServletRequest(), null, null);
     }

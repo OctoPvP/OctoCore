@@ -60,7 +60,7 @@ public class LoginController {
         //ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
 
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).toList();
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
         ResponseCookie jwt = jwtUtilsTop.generateJwtCookie(userDetails);
         System.out.println("JWT: " + jwt);
