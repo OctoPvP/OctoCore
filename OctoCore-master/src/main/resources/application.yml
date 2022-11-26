@@ -58,11 +58,8 @@ spring:
               3uuLc5Y9leWtF3cRAxyB41ry
               -----END CERTIFICATE-----
         providers:
-          - alias: spring-security-saml-sp
-            metadata: http://localhost:8082/saml2/service-provider-metadata/samlexample
-            linktext: Spring Security SAML SP
-          - alias: sp2
-            metadata: http://localhost:8083/this-is-sp/metadata
+          - alias: test-sp
+            metadata: http://localhost:8082/saml/sp/me
             linktext: SP2
   gson:
     pretty-printing: true
