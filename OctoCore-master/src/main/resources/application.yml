@@ -59,7 +59,7 @@ spring:
               -----END CERTIFICATE-----
         providers:
           - alias: test-sp
-            metadata: http://localhost:8082/saml/sp/me
+            metadata: http://localhost:8082/saml/sp/metadata
             linktext: SP2
   gson:
     pretty-printing: true
