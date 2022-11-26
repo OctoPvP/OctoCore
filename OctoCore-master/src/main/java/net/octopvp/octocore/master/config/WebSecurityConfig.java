@@ -78,10 +78,15 @@ public class WebSecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http.antMatcher("/**")
                     .authorizeRequests()
-                    .antMatchers("/saml/**").permitAll()
+                    .antMatchers("/saml/**", "/dist/**", "/css/**", "/img/**", "/js/**").permitAll()
                     .antMatchers("/**").authenticated()
                     .and()
-                    .userDetailsService(userDetailsService).formLogin();
+                    .userDetailsService(userDetailsService)
+
+                    .formLogin()
+                    .loginPage("/login")
+                    .permitAll()
+            ;
             super.configure(http);
             //setLoginView(http, LoginView.class);
             //setStatelessAuthentication(http, new SecretKeySpec(secretKey.getBytes(), JwsAlgorithms.HS256), "OctoCore");

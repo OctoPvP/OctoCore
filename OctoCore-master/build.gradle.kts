@@ -63,6 +63,7 @@ dependencies {
     //implementation("com.github.appreciated:apexcharts:23.0.0-LOCAL")
 
     implementation("org.springframework.security.extensions:spring-security-saml2-core:2.0.0.M31")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf") // login page for now, until we can get vaadin login to work with SAML
 }
 
 dependencyManagement {

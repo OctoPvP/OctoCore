@@ -37,6 +37,14 @@ public class LoginController {
     @Autowired
     AuthenticationManager authenticationManagerTop;
 
+    @GetMapping("/login")
+    public String login(Model model, @RequestParam(required = false) String error) {
+        if (error != null) {
+            model.addAttribute("error", "Error! Please check your username and password.");
+        }
+        return "login";
+    }
+
     @PostMapping(value = "/loginform", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<?> authenticateUser(@Valid LoginRequest loginRequest) {
         System.out.println("Login request: " + loginRequest);
