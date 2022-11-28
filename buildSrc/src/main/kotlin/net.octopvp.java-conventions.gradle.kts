@@ -53,6 +53,8 @@ dependencies {
     implementation("org.javatuples:javatuples:1.2")
     implementation("io.sentry:sentry:5.6.0")
     implementation("com.google.guava:guava:31.1-jre")
+    implementation("com.github.oshi:oshi-core:5.6.0")
+
 }
 
 group = "net.octopvp"

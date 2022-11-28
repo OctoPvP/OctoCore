@@ -14,7 +14,6 @@ repositories {
 
 dependencies {
     implementation("org.objenesis:objenesis:3.3")
-    implementation("com.github.oshi:oshi-core:5.6.0")
     //implementation("org.slf4j:slf4j-log4j12:1.7.5")
     compileOnly("io.github.waterfallmc:waterfall-chat:1.18-R0.1-SNAPSHOT")
     compileOnly("com.google.code.gson:gson:2.8.9")
