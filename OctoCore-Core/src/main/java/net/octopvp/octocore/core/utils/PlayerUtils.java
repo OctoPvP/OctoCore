@@ -6,7 +6,6 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutEntityStatus;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.protocol.InventoryAdapter;
-import net.octopvp.octocore.core.protocol.PingAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;

@@ -2,7 +2,6 @@ package net.octopvp.octocore.core.utils.runnable.runnables;
 
 import com.google.common.collect.ImmutableList;
 import net.octopvp.octocore.core.api.events.ServerLaggedOutEvent;
-import net.octopvp.octocore.core.protocol.PingAdapter;
 import net.octopvp.octocore.core.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
