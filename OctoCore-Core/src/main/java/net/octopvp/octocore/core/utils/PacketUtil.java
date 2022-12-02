@@ -3,11 +3,7 @@ package net.octopvp.octocore.core.utils;
 import com.comphenix.protocol.ProtocolManager;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.server.v1_8_R3.ChatMessage;
-import net.minecraft.server.v1_8_R3.EntityPlayer;
-import net.minecraft.server.v1_8_R3.PacketPlayOutOpenWindow;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class PacketUtil {
