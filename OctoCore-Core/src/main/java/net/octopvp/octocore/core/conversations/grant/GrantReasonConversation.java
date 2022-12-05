@@ -3,7 +3,7 @@ package net.octopvp.octocore.core.conversations.grant;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.core.menus.grant.GrantConfirmationMenu;
+import net.octopvp.octocore.core.menus.impl.grant.GrantConfirmationMenu;
 import net.octopvp.octocore.core.objects.GrantProcedureState;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;

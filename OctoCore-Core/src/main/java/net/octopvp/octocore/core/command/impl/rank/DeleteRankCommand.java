@@ -7,7 +7,7 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.manager.impl.RankManager;
-import net.octopvp.octocore.core.menus.rank.delete.ConfirmDeleteMenu;
+import net.octopvp.octocore.core.menus.impl.rank.delete.ConfirmDeleteMenu;
 import net.octopvp.octocore.core.objects.permissions.Rank;
 import net.octopvp.octocore.core.utils.Sender;
 import org.bukkit.entity.Player;
