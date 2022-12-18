@@ -8,7 +8,6 @@ import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.manager.impl.FilterManager;
 import net.octopvp.octocore.core.menus.impl.rank.ChooseServerScopeMenu;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;
 import net.octopvp.octocore.core.utils.menu.buttons.impl.BackButton;

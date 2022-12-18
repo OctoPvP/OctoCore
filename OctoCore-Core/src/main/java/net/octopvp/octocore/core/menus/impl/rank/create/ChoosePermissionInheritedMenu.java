@@ -3,7 +3,6 @@ package net.octopvp.octocore.core.menus.impl.rank.create;
 import com.google.common.collect.Lists;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.objects.builders.RankBuilder;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;
 import net.octopvp.octocore.core.utils.menu.buttons.PlaceholderButton;

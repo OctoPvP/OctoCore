@@ -8,7 +8,6 @@ import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.GrantProcedureState;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.Skulls;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;
 import net.octopvp.octocore.core.utils.menu.buttons.impl.BackButton;

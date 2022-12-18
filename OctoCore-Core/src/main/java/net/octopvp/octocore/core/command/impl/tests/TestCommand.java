@@ -1,6 +1,5 @@
 package net.octopvp.octocore.core.command.impl.tests;
 
-import lombok.RequiredArgsConstructor;
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Optional;
 import net.octopvp.commander.annotation.Permission;
@@ -14,19 +13,8 @@ import net.octopvp.octocore.core.manager.impl.RankManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.objects.builders.GrantBuilder;
 import net.octopvp.octocore.core.objects.permissions.Grant;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.Sender;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.menu.PaginatedMenu;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestCommand {
     private static final String perm = Permissions.COMMAND_NICK;
@@ -65,67 +53,4 @@ public class TestCommand {
         return CommandResult.SUCCESS;
     }
 
-    @Command(name = "testmenu")
-    @PlayerOnly
-    @Permission(Permissions.ADMIN)
-    public CommandResult exec(Sender sender) {
-        new TestMenu().open(sender);
-        return CommandResult.SUCCESS;
-    }
-
-    @RequiredArgsConstructor
-    private class TestMenu extends PaginatedMenu {
-        @Override
-        public List<Button> getToolbarButtons() {
-            List<Button> buttons = new ArrayList<>();
-            buttons.add(new Button() {
-                @Override
-                public ItemStack getItem(Player player) {
-                    return new ItemBuilder(Material.DIAMOND_SWORD).name("ez").build();
-                }
-
-                @Override
-                public int getSlot() {
-                    return 0;
-                }
-
-                @Override
-                public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-                    player.sendMessage("ez");
-                }
-            });
-            return null;
-        }
-
-        @Override
-        public String getPagesTitle(Player player) {
-            return "test";
-        }
-
-        @Override
-        public List<Button> getPaginatedButtons(Player player) {
-            List<Button> buttons = new ArrayList<>();
-            for (int i = 0; i < 100; i++) {
-                int finalI = i;
-                buttons.add(new Button() {
-                    @Override
-                    public ItemStack getItem(Player player) {
-                        return new ItemBuilder(Material.DIAMOND_SWORD).setName(finalI + "").build();
-                    }
-
-                    @Override
-                    public int getSlot() {
-                        return 0;
-                    }
-
-                    @Override
-                    public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-                        player.sendMessage(finalI + "");
-                    }
-                });
-            }
-            return buttons;
-        }
-
-    }
 }

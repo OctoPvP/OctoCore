@@ -6,7 +6,6 @@ import net.octopvp.octocore.common.util.callback.ReturnableTypeCallback;
 import net.octopvp.octocore.core.manager.impl.RankManager;
 import net.octopvp.octocore.core.objects.builders.RankBuilder;
 import net.octopvp.octocore.core.objects.permissions.Rank;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.item.WoolUtils;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;

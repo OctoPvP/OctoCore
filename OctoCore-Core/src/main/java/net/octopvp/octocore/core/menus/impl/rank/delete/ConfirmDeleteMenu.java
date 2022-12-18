@@ -3,7 +3,6 @@ package net.octopvp.octocore.core.menus.impl.rank.delete;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.RankManager;
 import net.octopvp.octocore.core.objects.permissions.Rank;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.item.WoolUtils;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;
 import net.octopvp.octocore.core.utils.menu.buttons.PlaceholderButton;

@@ -12,7 +12,6 @@ import net.octopvp.octocore.core.menus.impl.rank.create.ChoosePermissionInherite
 import net.octopvp.octocore.core.objects.builders.RankBuilder;
 import net.octopvp.octocore.core.objects.enums.RankType;
 import net.octopvp.octocore.core.objects.permissions.Rank;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;
 import net.octopvp.octocore.core.utils.menu.buttons.PlaceholderButton;

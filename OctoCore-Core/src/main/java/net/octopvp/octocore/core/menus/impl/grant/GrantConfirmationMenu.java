@@ -15,7 +15,6 @@ import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.objects.builders.GrantBuilder;
 import net.octopvp.octocore.core.objects.permissions.Grant;
 import net.octopvp.octocore.core.objects.permissions.Rank;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;
 import net.octopvp.octocore.core.utils.menu.menu.Menu;
 import net.octopvp.octocore.core.utils.msg.Lang;

@@ -6,7 +6,6 @@ import net.octopvp.octocore.core.manager.impl.TagManager;
 import net.octopvp.octocore.core.objects.PlayerTag;
 import net.octopvp.octocore.core.objects.PlayerTagBuilder;
 import net.octopvp.octocore.core.other.ManageTagProcess;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;
 import net.octopvp.octocore.core.utils.menu.buttons.impl.BackButton;
 import net.octopvp.octocore.core.utils.menu.menu.Menu;

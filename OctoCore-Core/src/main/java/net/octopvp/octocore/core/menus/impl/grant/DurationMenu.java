@@ -9,7 +9,6 @@ import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.GrantProcedure;
 import net.octopvp.octocore.core.objects.GrantProcedureState;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;
 import net.octopvp.octocore.core.utils.menu.menu.Menu;

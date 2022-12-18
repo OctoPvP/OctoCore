@@ -9,7 +9,6 @@ import net.octopvp.octocore.core.database.redis.packets.other.GrantsUpdatePacket
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.objects.permissions.Grant;
 import net.octopvp.octocore.core.objects.permissions.Rank;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.menu.buttons.Button;
 import net.octopvp.octocore.core.utils.menu.buttons.PlaceholderButton;

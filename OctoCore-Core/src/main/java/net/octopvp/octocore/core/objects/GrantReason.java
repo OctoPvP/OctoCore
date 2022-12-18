@@ -1,7 +1,6 @@
 package net.octopvp.octocore.core.objects;
 
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.core.utils.ItemBuilder;
 import net.octopvp.octocore.core.utils.Skulls;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

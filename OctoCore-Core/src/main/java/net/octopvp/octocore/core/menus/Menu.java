@@ -1,15 +1,15 @@
 package net.octopvp.octocore.core.menus;
 
-import net.octopvp.gui.guis.BaseGui;
+import net.octopvp.agile.guis.BaseGui;
 import org.bukkit.entity.Player;
 
-public abstract class Menu {
-    public abstract BaseGui getBaseGui(Player player);
+public abstract class Menu<T extends BaseGui> {
+    public abstract T createGui(Player player);
 
-    public abstract void populateGui(BaseGui gui);
+    public abstract void populateGui(T gui);
 
     public void open(Player player) {
-        BaseGui gui = getBaseGui(player);
+        T gui = createGui(player);
         populateGui(gui);
         gui.open(player);
     }
