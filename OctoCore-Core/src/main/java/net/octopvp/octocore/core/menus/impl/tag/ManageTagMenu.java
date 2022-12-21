@@ -2,11 +2,9 @@ package net.octopvp.octocore.core.menus.impl.tag;
 
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.TagManager;
+import net.octopvp.octocore.core.menus.Menu;
 import net.octopvp.octocore.core.objects.PlayerTagBuilder;
 import net.octopvp.octocore.core.other.ManageTagProcess;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.buttons.PlaceholderButton;
-import net.octopvp.octocore.core.utils.menu.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;

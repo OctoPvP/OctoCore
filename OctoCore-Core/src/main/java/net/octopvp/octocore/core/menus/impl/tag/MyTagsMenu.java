@@ -1,22 +1,17 @@
 package net.octopvp.octocore.core.menus.impl.tag;
 
-import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.objects.PlayerTag;
-import net.octopvp.octocore.core.utils.SoundUtil;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.buttons.impl.BackButton;
-import net.octopvp.octocore.core.utils.menu.menu.PaginatedMenu;
+import net.octopvp.agile.guis.Gui;
+import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.agile.guis.PaginatedGui;
+import net.octopvp.octocore.core.menus.PaginatedMenu;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MyTagsMenu extends PaginatedMenu { //TODO back button
+public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
+
+    /*
+    { //TODO back button
     private static int i = 0;
     private final List<PlayerTag> currentTags;
     private final Player player;
@@ -104,4 +99,21 @@ public class MyTagsMenu extends PaginatedMenu { //TODO back button
             update(player);
         }
     }
+}
+     */
+
+    @Override
+    public PaginatedGui createGui(Player player) {
+        return Gui.paginated()
+                .title("Your Tags")
+                .rows(6)
+                .create();
+    }
+
+    @Override
+    public List<GuiItem> getItems(Player player) {
+        return null;
+    }
+
+
 }

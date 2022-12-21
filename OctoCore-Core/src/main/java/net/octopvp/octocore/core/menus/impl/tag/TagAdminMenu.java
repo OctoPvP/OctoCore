@@ -1,124 +1,71 @@
 package net.octopvp.octocore.core.menus.impl.tag;
 
+import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.guis.Gui;
+import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import net.octopvp.octocore.core.menus.Menu;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.buttons.PlaceholderButton;
-import net.octopvp.octocore.core.utils.menu.menu.Menu;
+import net.octopvp.octocore.core.utils.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
+public class TagAdminMenu extends Menu<Gui> {
+    @Override
+    public Gui createGui(Player player) {
+        return Gui.gui().title("Tags Admin").rows(3).create();
+    }
 
-public class TagAdminMenu extends Menu {
+    public GuiItem manageTagsButton() {
+        return ItemBuilder.from(Material.CHEST).name(CC.AQUA + "Manage Tags").lore(CC.YELLOW + "Click to manage tags").asGuiItem()
+                .setAction(event -> {
+                    new ManageTagsMenu(this).open((Player) event.getWhoClicked());
+                });
+    }
+
+    public GuiItem createTagButton() {
+        return ItemBuilder.from(Material.ANVIL).name(CC.GOLD + "Create Tag").lore(CC.YELLOW + "Click to create a tag.").asGuiItem()
+                .setAction(event -> {
+                    new ManageTagMenu((Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
+                });
+    }
+
+    public GuiItem managePlayerTagsButton() {
+        return ItemBuilder.from(Material.CHEST).name(CC.GREEN + "Manage Player Tags").lore(CC.YELLOW + "Click to manage a player's tags!").asGuiItem()
+                .setAction(event -> {
+                    event.getWhoClicked().closeInventory();
+                    new QuestionConversation(CC.GREEN + "Please enter the username of the player.", (answer) -> {
+                        try {
+                            OfflinePlayer op = Bukkit.getOfflinePlayer(answer);
+                            PlayerData data = PlayerManager.getInstance().getOfflineData(op.getUniqueId());
+                            if (data == null) {
+                                ((Player) event.getWhoClicked()).sendMessage(CC.RED + "That player does not exist!");
+                                return Prompt.END_OF_CONVERSATION;
+                            }
+                            data.load();
+
+                            new ManagePlayerTagsMenu(data).open((Player) event.getWhoClicked());
+                            return Prompt.END_OF_CONVERSATION;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            ((Player) event.getWhoClicked()).sendMessage(CC.RED + "An error occurred!");
+                            return Prompt.END_OF_CONVERSATION;
+                        }
+                    }).start((Player) event.getWhoClicked());
+                });
+    }
 
     @Override
-    public List<Button> getButtons(Player player) {
-        List<Button> buttons = new ArrayList<>();
-        buttons.add(new PlaceHolderButton());
-        buttons.add(new ManageTagsButton());
-        buttons.add(new CreateTagButton());
-        buttons.add(new ManagePlayerTagsButton());
-        return buttons;
+    public void populateGui(Gui gui, Player player) {
+        gui.setItem(11, manageTagsButton());
+        gui.setItem(13, createTagButton());
+        gui.setItem(15, managePlayerTagsButton());
+        gui.getFiller().fill(ItemBuilder.from(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem()).name(" ").asGuiItem());
     }
 
-    @Override
-    public String getName(Player player) {
-        return "Tags Admin";
-    }
-
-    public class ManageTagsButton extends Button {
-
-        @Override
-        public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.CHEST).name(CC.AQUA + "Manage Tags").lore(CC.YELLOW + "Click to manage tags").build();
-        }
-
-        @Override
-        public int getSlot() {
-            return 11;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            new ManageTagsMenu(TagAdminMenu.this).open(player);
-        }
-    }
-
-    public class CreateTagButton extends Button {
-
-        @Override
-        public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.ANVIL).name(CC.GOLD + "Create Tag").lore(CC.YELLOW + "Click to create a tag.").build();
-        }
-
-        @Override
-        public int getSlot() {
-            return 13;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            new ManageTagMenu(player).open(player);
-        }
-    }
-
-    public class ManagePlayerTagsButton extends Button {
-
-        @Override
-        public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.CHEST).name(CC.GREEN + "Manage Player Tags").lore(CC.YELLOW + "Click to manage a player's tags!").build();
-        }
-
-        @Override
-        public int getSlot() {
-            return 15;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            player.closeInventory();
-            new QuestionConversation(CC.GREEN + "Please enter the username of the player.", (answer) -> {
-                try {
-                    OfflinePlayer op = Bukkit.getOfflinePlayer(answer);
-                    PlayerData data = PlayerManager.getInstance().getOfflineData(op.getUniqueId());
-                    if (data == null) {
-                        player.sendMessage(CC.RED + "That player does not exist!");
-                        return Prompt.END_OF_CONVERSATION;
-                    }
-                    data.load();
-
-                    new ManagePlayerTagsMenu(data).open(player);
-                    return Prompt.END_OF_CONVERSATION;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    player.sendMessage(CC.RED + "An error occurred!");
-                    return Prompt.END_OF_CONVERSATION;
-                }
-            }).start(player);
-        }
-    }
-
-    private class PlaceHolderButton extends PlaceholderButton {
-
-        @Override
-        public int[] getSlots() {
-            List<Integer> a = new ArrayList<>();
-            IntStream.range(0, 27).forEach((i) -> {
-                if (!(i == 11 || i == 13 || i == 15))
-                    a.add(i);
-            });
-            return a.stream().mapToInt(i -> i).toArray();
-        }
-    }
 }

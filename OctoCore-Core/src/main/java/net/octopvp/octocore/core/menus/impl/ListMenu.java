@@ -7,13 +7,15 @@ import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.menus.Menu;
+import net.octopvp.octocore.core.menus.PaginatedMenu;
 import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
+import java.util.List;
 
-public class ListMenu extends Menu<PaginatedGui> {
+public class ListMenu extends PaginatedMenu<PaginatedGui> {
 
     @Override
     public PaginatedGui createGui(Player player) {
@@ -24,10 +26,8 @@ public class ListMenu extends Menu<PaginatedGui> {
     }
 
     @Override
-    public void populateGui(PaginatedGui gui, Player player) {
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            gui.addItem(item(onlinePlayer));
-        }
+    public List<GuiItem> getItems(Player player) {
+        return Bukkit.getOnlinePlayers().stream().map(this::item).collect(java.util.stream.Collectors.toList());
     }
 
     public GuiItem item(Player player) {
