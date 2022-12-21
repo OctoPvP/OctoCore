@@ -6,11 +6,11 @@ import org.bukkit.entity.Player;
 public abstract class Menu<T extends BaseGui> {
     public abstract T createGui(Player player);
 
-    public abstract void populateGui(T gui);
+    public abstract void populateGui(T gui, Player player);
 
     public void open(Player player) {
         T gui = createGui(player);
-        populateGui(gui);
+        populateGui(gui, player);
         gui.open(player);
     }
 }
