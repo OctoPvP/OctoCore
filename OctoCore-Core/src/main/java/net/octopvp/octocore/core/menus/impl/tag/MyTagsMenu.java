@@ -1,15 +1,24 @@
 package net.octopvp.octocore.core.menus.impl.tag;
 
+import lombok.RequiredArgsConstructor;
+import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.octocore.core.menus.PaginatedMenu;
+import net.octopvp.agile.menu.PaginatedMenu;
+import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.core.objects.PlayerTag;
+import net.octopvp.octocore.core.utils.SoundUtil;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
-
+    private final List<PlayerTag> currentTags;
+    private final Player player;
     /*
     { //TODO back button
     private static int i = 0;
@@ -115,5 +124,27 @@ public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
         return null;
     }
 
-
+    public GuiItem tagsButton(Player player, PlayerData data, PlayerTag tag) {
+        final boolean[] a = {data.getTag() != null && data.getTag().getId().toString().equalsIgnoreCase(tag.getId().toString())};
+        return ItemBuilder.from(tag.getMaterial())
+                .name(CC.AQUA + tag.getName())
+                .lore(
+                        CC.SEPARATOR,
+                        CC.AQUA + "Tag: " + CC.WHITE + tag.getTag(),
+                        CC.AQUA + "Description: " + CC.WHITE + tag.getDescription(),
+                        CC.SEPARATOR,
+                        (a[0] ? CC.RED + "Click to remove!" : CC.YELLOW + "Click to use!")
+                ).asGuiItem(event -> {
+                    SoundUtil.playPing(player);
+                    if (a[0]) {
+                        a[0] = false;
+                        player.sendMessage(CC.GREEN + "Unequipped your tag!");
+                        PlayerManager.getInstance().getData(player.getUniqueId()).setTag(null);
+                    } else {
+                        player.sendMessage(CC.GREEN + "Equipped your tag!");
+                        PlayerManager.getInstance().getData(player.getUniqueId()).setTag(tag);
+                    }
+                    update(player);
+                });
+    }
 }

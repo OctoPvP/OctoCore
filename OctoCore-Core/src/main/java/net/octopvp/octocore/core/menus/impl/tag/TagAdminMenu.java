@@ -3,12 +3,11 @@ package net.octopvp.octocore.core.menus.impl.tag;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.agile.menu.Menu;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.menus.Menu;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.utils.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -53,7 +52,7 @@ public class TagAdminMenu extends Menu<Gui> {
                             return Prompt.END_OF_CONVERSATION;
                         } catch (Exception e) {
                             e.printStackTrace();
-                            ((Player) event.getWhoClicked()).sendMessage(CC.RED + "An error occurred!");
+                            event.getWhoClicked().sendMessage(CC.RED + "An error occurred!");
                             return Prompt.END_OF_CONVERSATION;
                         }
                     }).start((Player) event.getWhoClicked());
@@ -65,7 +64,7 @@ public class TagAdminMenu extends Menu<Gui> {
         gui.setItem(11, manageTagsButton());
         gui.setItem(13, createTagButton());
         gui.setItem(15, managePlayerTagsButton());
-        gui.getFiller().fill(ItemBuilder.from(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem()).name(" ").asGuiItem());
+        gui.getFiller().fill(Menu.PLACEHOLDER_ITEM);
     }
 
 }

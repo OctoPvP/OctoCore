@@ -5,30 +5,25 @@ import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
+import net.octopvp.agile.menu.Menu;
+import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.database.redis.packets.player.TagUpdatePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.menus.Menu;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.objects.PlayerTag;
 import net.octopvp.octocore.core.utils.SoundUtil;
-import net.octopvp.octocore.core.utils.XMaterial;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.menu.PaginatedMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class ManagePlayerTagsMenu extends Menu<PaginatedGui> {
     private final PlayerData data;
+
     /*
 
     @Override
@@ -161,7 +156,7 @@ public class ManagePlayerTagsMenu extends Menu<PaginatedGui> {
 
     @Override
     public void populateGui(PaginatedGui gui, Player player) {
-        gui.getFiller().fillBorder(ItemBuilder.from(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem()).name(" ").asGuiItem());
+        gui.getFiller().fillBorder(ItemBuilder.from(Objects.requireNonNull(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem())).name(" ").asGuiItem());
         gui.setItem(0, 0, addTagButton());
 
 
