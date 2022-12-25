@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.menus.impl.rank.delete;
+package net.octopvp.octocore.core.menus.rank.delete;
 
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.RankManager;

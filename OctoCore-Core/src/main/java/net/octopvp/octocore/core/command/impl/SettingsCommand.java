@@ -2,7 +2,7 @@ package net.octopvp.octocore.core.command.impl;
 
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Sender;
-import net.octopvp.octocore.core.menus.impl.settings.SettingsMenu;
+import net.octopvp.octocore.core.menus.settings.SettingsMenu;
 import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.entity.Player;
 

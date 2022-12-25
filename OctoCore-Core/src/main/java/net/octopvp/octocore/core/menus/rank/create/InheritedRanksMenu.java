@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.menus.impl.rank.create;
+package net.octopvp.octocore.core.menus.rank.create;
 
 import lombok.SneakyThrows;
 import net.octopvp.octocore.common.util.CC;

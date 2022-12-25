@@ -6,7 +6,7 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.menus.impl.ListMenu;
+import net.octopvp.octocore.core.menus.ListMenu;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.msg.Lang;

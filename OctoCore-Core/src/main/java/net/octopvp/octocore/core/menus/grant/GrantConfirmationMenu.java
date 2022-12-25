@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.menus.impl.grant;
+package net.octopvp.octocore.core.menus.grant;
 
 import com.google.common.collect.Lists;
 import net.octopvp.octocore.common.object.GlobalPlayer;

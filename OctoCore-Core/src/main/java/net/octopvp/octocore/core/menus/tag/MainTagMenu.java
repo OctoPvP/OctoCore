@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.menus.impl.tag;
+package net.octopvp.octocore.core.menus.tag;
 
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
@@ -16,13 +16,9 @@ import net.octopvp.octocore.core.utils.menu.menu.Menu;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class MainTagMenu extends Menu<Gui> {
     private final Menu<?> instance = this;

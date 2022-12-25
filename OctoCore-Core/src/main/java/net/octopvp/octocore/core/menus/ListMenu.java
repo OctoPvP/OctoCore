@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.menus.impl;
+package net.octopvp.octocore.core.menus;
 
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;

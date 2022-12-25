@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.menus.impl.rank;
+package net.octopvp.octocore.core.menus.rank;
 
 import com.google.common.collect.Lists;
 import net.octopvp.octocore.common.StringUtils;
@@ -7,8 +7,8 @@ import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.manager.impl.FilterManager;
 import net.octopvp.octocore.core.manager.impl.RankManager;
-import net.octopvp.octocore.core.menus.impl.rank.create.ChooseColorMenu;
-import net.octopvp.octocore.core.menus.impl.rank.create.ChoosePermissionInheritedMenu;
+import net.octopvp.octocore.core.menus.rank.create.ChooseColorMenu;
+import net.octopvp.octocore.core.menus.rank.create.ChoosePermissionInheritedMenu;
 import net.octopvp.octocore.core.objects.builders.RankBuilder;
 import net.octopvp.octocore.core.objects.enums.RankType;
 import net.octopvp.octocore.core.objects.permissions.Rank;

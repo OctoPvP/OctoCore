@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.menus.impl.tag;
+package net.octopvp.octocore.core.menus.tag;
 
 import lombok.RequiredArgsConstructor;
 import net.octopvp.agile.builder.item.ItemBuilder;

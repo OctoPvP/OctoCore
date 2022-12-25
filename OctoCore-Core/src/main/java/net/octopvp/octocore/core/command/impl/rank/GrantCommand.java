@@ -5,7 +5,7 @@ import net.octopvp.commander.annotation.Permission;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
-import net.octopvp.octocore.core.menus.impl.grant.MainGrantMenu;
+import net.octopvp.octocore.core.menus.grant.MainGrantMenu;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.Sender;
 

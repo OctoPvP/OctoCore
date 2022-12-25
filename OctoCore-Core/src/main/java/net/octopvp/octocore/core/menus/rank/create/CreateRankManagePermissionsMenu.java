@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.menus.impl.rank.create;
+package net.octopvp.octocore.core.menus.rank.create;
 
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;

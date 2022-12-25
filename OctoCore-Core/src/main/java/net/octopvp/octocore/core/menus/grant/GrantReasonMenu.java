@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.menus.impl.grant;
+package net.octopvp.octocore.core.menus.grant;
 
 import lombok.RequiredArgsConstructor;
 import net.octopvp.octocore.common.util.CC;

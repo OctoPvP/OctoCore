@@ -6,7 +6,7 @@ import net.octopvp.commander.annotation.Sender;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.command.CommandResult;
-import net.octopvp.octocore.core.menus.impl.tag.ManageTagMenu;
+import net.octopvp.octocore.core.menus.tag.ManageTagMenu;
 import org.bukkit.entity.Player;
 
 public class CreateTagCommand {
