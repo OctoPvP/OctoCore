@@ -30,7 +30,6 @@ import net.octopvp.octocore.core.setup.*;
 import net.octopvp.octocore.core.utils.PacketUtil;
 import net.octopvp.octocore.core.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.core.utils.errorhandling.ErrorHandling;
-import net.octopvp.octocore.core.utils.nametag.NameTagChanger;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import net.octopvp.octocore.core.utils.runnable.runnables.DataUpdateThread;
 import org.bukkit.Bukkit;
@@ -86,8 +85,6 @@ public abstract class OctoCore extends JavaPlugin {
     private AuthManager authManager;
     @Getter
     private FilterManager filterManager;
-    @Getter
-    private NickManager nickManager;
     @Getter
     private RankManager rankManager;
     @Getter
@@ -205,7 +202,6 @@ public abstract class OctoCore extends JavaPlugin {
         new SetupListeners().setup(this);
         Logger.info("Setting up managers");
         setupManager.setup(this);
-        NameTagChanger.INSTANCE.init();
         Logger.info("Hooking into plugins.");
         new SetupHooks().setup(this);
         setupVault();
@@ -259,8 +255,6 @@ public abstract class OctoCore extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(dcReason));
         Bukkit.getScheduler().cancelTasks(this);
         setupManager.disable(this);
-        if (NameTagChanger.INSTANCE.isEnabled())
-            NameTagChanger.INSTANCE.disable();
         setupModules.disable(this);
 
     }
