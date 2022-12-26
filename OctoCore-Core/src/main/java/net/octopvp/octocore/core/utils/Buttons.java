@@ -1,0 +1,61 @@
+package net.octopvp.octocore.core.utils;
+
+import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.components.util.Legacy;
+import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import net.octopvp.octocore.core.objects.PlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class Buttons {
+    public static GuiItem playerInfo(PlayerData playerData) {
+        if (playerData == null) {
+            return ItemBuilder.skull()
+                    .name(CC.GRAY + "Loading...")
+                    .asGuiItem();
+        }
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerData.getUuid());
+        List<String> lore = new ArrayList<>(
+                Arrays.asList(
+                        CC.SEPARATOR,
+                        CC.AQUA + "Name" + CC.GRAY + ": " + CC.AQUA + playerData.getName(),
+                        CC.AQUA + "UUID" + CC.GRAY + ": " + CC.AQUA + playerData.getUuid(),
+                        CC.AQUA + "Rank" + CC.GRAY + ": " + CC.AQUA + playerData.getHighestRank().getDisplayColor() + playerData.getHighestRank().getName(),
+                        CC.AQUA + "Current Tag" + CC.GRAY + ": " + CC.AQUA + playerData.getTagString()
+                )
+        );
+        Player onlinePlayer = Bukkit.getPlayer(playerData.getName());
+        if (onlinePlayer != null) { // TODO: revamp last seen to work across servers
+            lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.AQUA + "Now (On this server)");
+        } else {
+            if (playerData.getLastSeen() > 0) {
+                lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.AQUA + new Date(playerData.getLastSeen()));
+            } else {
+                lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.AQUA + "Never played before!");
+            }
+        }
+        lore.add(CC.AQUA + "First Joined" + CC.GRAY + ": " + CC.AQUA + (offlinePlayer.getFirstPlayed() != 0 ? DateUtils.getDate(offlinePlayer.getFirstPlayed()) : "Never played before!"));
+        lore.add(CC.SEPARATOR);
+        return ItemBuilder.skull()
+                .name(CC.AQUA + playerData.getName())
+                .lore(lore.stream().map(Legacy.SERIALIZER::deserialize).collect(Collectors.toList()))
+                .owner(offlinePlayer)
+                .asGuiItem();
+    }
+
+    @Deprecated
+    public static GuiItem playerInfo(String name) {
+        return playerInfo(PlayerManager.getInstance().getOfflineData(name));
+    }
+
+    public static GuiItem playerInfo(UUID uniqueId) {
+        return playerInfo(PlayerManager.getInstance().getOfflineData(uniqueId));
+    }
+}

@@ -1,15 +1,15 @@
 package net.octopvp.octocore.core.objects;
 
+import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.utils.Skulls;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public enum GrantReason {
-    PROMOTION("Promotion", new ItemBuilder(Material.SKULL_ITEM).name(CC.GREEN + "Promotion").toSkullBuilder().base64Skin(Skulls.GREEN_ARROW_UP_BASE_64).buildSkull()), FAMOUS("Famous",
-            new ItemBuilder(Material.SKULL_ITEM).name(CC.PURPLE + "Famous").toSkullBuilder().base64Skin(Skulls.YOUTUBE_BASE_64).buildSkull()
-    ), STORE("Store Problem", new ItemBuilder(Material.SKULL_ITEM).name(CC.AQUA + "Store Problem").toSkullBuilder().base64Skin(Skulls.GREEN_DOLLAR_SKULL_BASE_64).buildSkull()),
-    DEMOTION("Demotion", new ItemBuilder(Material.SKULL_ITEM).name(CC.RED + "Demotion").toSkullBuilder().base64Skin(Skulls.RED_ARROW_DOWN_BASE_64).buildSkull());
+    PROMOTION("Promotion", ItemBuilder.skull().texture(Skulls.GREEN_ARROW_UP_BASE_64).name(CC.GREEN + "Promotion").build()),
+    FAMOUS("Famous", ItemBuilder.skull().texture(Skulls.YOUTUBE_BASE_64).name(CC.PURPLE + "Famous").build()),
+    STORE("Store Problem", ItemBuilder.skull().texture(Skulls.GREEN_DOLLAR_SKULL_BASE_64).name(CC.AQUA + "Store Problem").build()),
+    DEMOTION("Demotion", ItemBuilder.skull().texture(Skulls.RED_ARROW_DOWN_BASE_64).name(CC.RED + "Demotion").build());
     private final String reason;
     private final ItemStack material;
 

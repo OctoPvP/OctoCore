@@ -1,9 +1,6 @@
 package net.octopvp.octocore.core.command.impl.staff;
 
-import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.JoinStrings;
-import net.octopvp.commander.annotation.Optional;
-import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.*;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.OctoCore;
@@ -11,21 +8,21 @@ import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.database.redis.packets.staff.StaffChatPacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.msg.Lang;
+import org.bukkit.entity.Player;
 
 public class StaffChat {
     @Command(name = "staffchat", aliases = {"sc"})
     @Permission(Permissions.STAFFCHAT)
     @PlayerOnly
-    public CommandResult execute(Sender sender, @Optional @JoinStrings String message) {
+    public CommandResult execute(@Sender Player sender, @Optional @JoinStrings String message) {
         PlayerData playerData = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
         if (message == null) {
             playerData.setStaffChat(!playerData.isStaffChat());
-            sender.sendMessage((playerData.isStaffChat() ? Lang.STAFF_CHAT_ENABLED : Lang.STAFF_CHAT_DISABLED));
+            sender.sendMessage((playerData.isStaffChat() ? Lang.STAFF_CHAT_ENABLED : Lang.STAFF_CHAT_DISABLED) + "");
             if (playerData.isAdminChat()) {
                 playerData.setAdminChat(false);
-                sender.sendMessage(Lang.ADMIN_CHAT_DISABLED);
+                sender.sendMessage(Lang.ADMIN_CHAT_DISABLED.toString());
             }
         } else {
             new StaffChatPacket(sender.getPlayer().getName(), OctoCore.getServerName(), message, sender.getPlayer().getUniqueId()).send();

@@ -38,7 +38,7 @@ public class ListMenu extends PaginatedMenu<PaginatedGui> {
                         CC.GREEN + "Rank" + CC.GRAY + ": " + data.getHighestRank().getDisplayName(),
                         CC.GREEN + "Nicked" + CC.GRAY + ": " + (data.isNicked() ? CC.GREEN + "Yes" : CC.RED + "No"),
                         CC.GREEN + "First Join" + CC.GRAY + ": " + new Date(data.getFirstJoin())
-                        )
+                )
                 .asGuiItem();
     }
 }

@@ -1,6 +1,9 @@
 package net.octopvp.octocore.core.command.impl.cosmetic;
 
-import net.octopvp.commander.annotation.*;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Cooldown;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.Required;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
@@ -10,16 +13,16 @@ import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.TagManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.objects.PlayerTag;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 
 public class RemoveTagCommand {
     @Command(name = "removetag", usage = "<player> [tag]")
     @Permission(Permissions.ADMIN)
     @Cooldown(1)
-    public CommandResult execute(Sender sender, @Required String target, @Required String tag) {
+    public CommandResult execute(CommandSender sender, @Required String target, @Required String tag) {
         if (OctoCore.getInstance().getServerManager().isPlayerOnline(target)) {
             if (Bukkit.getPlayer(target) != null) {
                 //on this server

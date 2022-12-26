@@ -7,14 +7,14 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.conversations.ConfirmConversation;
-import net.octopvp.octocore.core.utils.Sender;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CallGcCommand {
     @Command(name = "callgc")
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender) {
-        if (sender.getCommandSender() instanceof Player)
+    public CommandResult execute(CommandSender sender) {
+        if (sender instanceof Player)
             OctoCore.getConversationFactory().withFirstPrompt(new ConfirmConversation("call System.gc()? This may cause players to be kicked!", (bool) -> {
                 if (bool) {
                     sender.sendMessage(CC.GREEN + "Calling System.gc(); This may cause players to be kicked.");
@@ -22,7 +22,7 @@ public class CallGcCommand {
                 } else {
                     sender.sendMessage(CC.RED + "Cancelled.");
                 }
-            })).withLocalEcho(false).buildConversation(sender.getPlayer()).begin();
+            })).withLocalEcho(false).buildConversation(((Player) sender)).begin();
         else System.gc();
         return CommandResult.SUCCESS;
     }

@@ -9,14 +9,17 @@ import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class MuteIPCommand {
     @Command(name = "muteip", aliases = {"tempipmute", "ipmute", "tempmuteip"}, usage = "<player> [duration] <reason> [-s]")
     @Permission(Permissions.PUNISHMENT_MUTE)
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(CommandSender sender, String[] args) {
         if (true) {
             sender.sendMessage(CC.RED + "This command is still being implemented.");
             return CommandResult.SUCCESS;
@@ -31,7 +34,7 @@ public class MuteIPCommand {
             data.load();
 
             if (data.isMuted()) {
-                sender.sendMessage(Lang.MUTE_ALREADY_MUTED);
+                sender.sendMessage(Lang.MUTE_ALREADY_MUTED.toString());
                 return;
             }
 
@@ -48,7 +51,7 @@ public class MuteIPCommand {
                 }
             }
             if (reasonStart == 2 && !durationCorrect) {
-                sender.sendMessage(Lang.WRONG_DATE_FORMAT);
+                sender.sendMessage(Lang.WRONG_DATE_FORMAT.toString());
                 return;
             }
 
@@ -78,7 +81,12 @@ public class MuteIPCommand {
             }
             punishment.setEnteredDuration(args[1]);
             punishment.setLast(true);
-            punishment.setAddedBy(sender.getUniqueId());
+            if (sender instanceof Player) {
+                UUID uuid = ((Player) sender).getUniqueId();
+                punishment.setAddedBy(uuid);
+            } else {
+                punishment.setAddedBy(new UUID(0, 0));
+            }
             punishment.setAddedByName(sender.getName());
             punishment.setIPRelative(true);
             punishment.setAddedAt(System.currentTimeMillis());

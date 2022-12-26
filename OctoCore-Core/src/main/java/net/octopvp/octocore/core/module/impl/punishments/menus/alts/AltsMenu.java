@@ -1,25 +1,27 @@
 package net.octopvp.octocore.core.module.impl.punishments.menus.alts;
 
 import lombok.AllArgsConstructor;
+import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.guis.Gui;
+import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.agile.guis.PaginatedGui;
+import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.buttons.impl.BackButton;
-import net.octopvp.octocore.core.utils.menu.menu.PaginatedMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class AltsMenu extends PaginatedMenu {
+public class AltsMenu extends PaginatedMenu<PaginatedGui> {
     private PlayerData playerData;
 
+    /*
     @Override
     public String getPagesTitle(Player player) {
         return CC.translate("&7" + playerData.getName() + "'s alts");
@@ -65,22 +67,36 @@ public class AltsMenu extends PaginatedMenu {
 
         return slots;
     }
+     */
+    public static GuiItem altButton(final Alt alt) {
+        return ItemBuilder.skull()
+                .owner(Bukkit.getOfflinePlayer(alt.getUniqueId()))
+                .name(CC.MAIN + alt.getName() + "&7(" + (alt.isBanned() ? "&cBanned" : Bukkit.getPlayer(alt.getName()) == null ? "&eOffline" : "&aOnline") + "&7)")
+                .asGuiItem();
+    }
 
-    @AllArgsConstructor
-    private class AltButton extends Button {
-        private Alt alt;
+    @Override
+    public List<GuiItem> getItems(Player player) {
+        List<GuiItem> items = new ArrayList<>();
+        playerData.getAlts().forEach(alt -> items.add(altButton(alt)));
+        return items;
+    }
 
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.SKULL_ITEM);
-            item.setDurability(3);
-            item.setName(CC.MAIN + alt.getName() + "&7(" + (alt.isBanned() ? "&cBanned" : Bukkit.getPlayer(alt.getName()) == null ? "&eOffline" : "&aOnline") + "&7)");
-            return item.toSkullBuilder().withOwner(alt.getUniqueId()).buildSkull();
-        }
+    @Override
+    public void populateGui(PaginatedGui gui, Player player) {
+        super.populateGui(gui, player);
+        gui.setItem(4, ItemBuilder.from(Material.PAPER)
+                .name(CC.MAIN + playerData.getName() + "'s possible alts")
+                .lore("", CC.VALUE + "Alts amount&7: " + CC.SECONDARY + playerData.getAlts().size(),
+                        CC.VALUE + "Banned alts&7: " + CC.SECONDARY + playerData.getAlts().stream().filter(Alt::isBanned).collect(Collectors.toList()).size(), " ")
+                .asGuiItem());
+    }
 
-        @Override
-        public int getSlot() {
-            return 0;
-        }
+    @Override
+    public PaginatedGui createGui(Player player) {
+        return Gui.paginated()
+                .title(playerData.getName() + "'s alts")
+                .rows(6)
+                .create();
     }
 }

@@ -8,11 +8,11 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,11 +28,11 @@ public class StaffRollBackCommand {
 
     @Command(name = "staffrollback")
     @Permission(Permissions.PUNISHMENT_STAFFROLLBACK)
-    public CommandResult execute(Sender sender, @Name("player") String targetStr, @Duration long time, @Required @Name("bans/mutes/blacklists/warns") String type) {
+    public CommandResult execute(CommandSender sender, @Name("player") String targetStr, @Duration long time, @Required @Name("bans/mutes/blacklists/warns") String type) {
         Tasks.runAsync(() -> {
             OfflinePlayer target = Bukkit.getOfflinePlayer(PlayerManager.getInstance().getFixedName(targetStr));
             if (!PlayerManager.getInstance().doesDocumentExistByUUID(target.getUniqueId()) && !targetStr.equalsIgnoreCase("console")) {
-                sender.sendMessage(Lang.COULD_NOT_FIND_DATA);
+                sender.sendMessage(Lang.COULD_NOT_FIND_DATA.toString());
                 return;
             }
             long check = System.currentTimeMillis() - time;

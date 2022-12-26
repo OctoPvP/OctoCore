@@ -8,10 +8,12 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class KickCommand {
 
@@ -24,7 +26,7 @@ public class KickCommand {
 
     @Command(name = "kick", aliases = {"kickplayer"}, usage = "<player> <reason> [-s]")
     @Permission(Permissions.PUNISHMENT_KICK)
-    public void execute(Sender sender, @Switch(value = "s", aliases = "silent") boolean silent, OfflinePunishData data, @JoinStrings String reason) {
+    public void execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent, OfflinePunishData data, @JoinStrings String reason) {
         Tasks.runAsync(() -> {
             data.load();
 
@@ -40,7 +42,12 @@ public class KickCommand {
             punishment.setIPRelative(false);
             punishment.setLast(true);
             punishment.setAddedByName(sender.getName());
-            punishment.setAddedBy(sender.getUniqueId());
+            if (sender instanceof Player) {
+                UUID uuid = ((Player) sender).getUniqueId();
+                punishment.setAddedBy(uuid);
+            } else {
+                punishment.setAddedBy(new UUID(0, 0));
+            }
             punishment.setAddedAt(System.currentTimeMillis());
             punishment.setReason(finalReason);
 

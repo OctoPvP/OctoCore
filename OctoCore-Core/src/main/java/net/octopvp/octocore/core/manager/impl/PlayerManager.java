@@ -218,4 +218,11 @@ public class PlayerManager extends Manager {
         data.setFullJoined(true);
         RankManager.getInstance().resetBungeePerms(player);
     }
+
+    public long getLastSeen(UUID uuid) {
+        Document document = getProfileDocument(uuid);
+        if (document == null)
+            return -1;
+        return document.getLong("lastLogin");
+    }
 }

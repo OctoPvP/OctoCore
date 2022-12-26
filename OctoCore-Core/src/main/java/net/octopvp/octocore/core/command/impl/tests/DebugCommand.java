@@ -2,29 +2,31 @@ package net.octopvp.octocore.core.command.impl.tests;
 
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.Sender;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.command.CommandResult;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.debug.Debugger;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class DebugCommand {
     @Command(name = "debugexp")
     @Permission(Permissions.ADMIN)
     @PlayerOnly
-    public CommandResult execute(Sender sender, String[] args) {
+    public CommandResult execute(CommandSender sender, String[] args) {
         String expression = StringUtils.arrayToString(args);
-        new Debugger(sender.getCommandSender()).execute(expression);
+        new Debugger(sender).execute(expression);
         return CommandResult.SUCCESS;
     }
 
     @Command(name = "debug")
     @Permission(Permissions.ADMIN)
     @PlayerOnly
-    public CommandResult executeDbg(Sender sender) {
+    public CommandResult executeDbg(@Sender Player sender) {
         if (Logger.getDebugPlayers().contains(sender.getUniqueId()))
             Logger.getDebugPlayers().remove(sender.getUniqueId());
         else

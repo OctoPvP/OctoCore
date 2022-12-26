@@ -20,39 +20,17 @@ public class SettingsMenu extends Menu<Gui> {
     private final PlayerData data;
     private boolean changed;
 
-    /*
-
-    @Override
-    public List<Button> getButtons(Player player) {
-        ArrayList<Button> buttons = new ArrayList<>();
-        buttons.add(new ToggleMessagesButton());
-        buttons.add(new ToggleGlobalChatButton());
-        buttons.add(new ChangeTimeButton());
-        buttons.add(new Placeholders());
-        return buttons;
-    }
-
-    @Override
-    public String getName(Player player) {
-        return "Settings";
-    }
-
-    @Override
-    public void onClose(Player player) {
-        super.onClose(player);
-        if (changed) {
-            data.save();
-        }
-    }
-     */
-
     @Override
     public Gui createGui(Player player) {
-        return Gui.gui()
+        return (Gui) Gui.gui()
                 .rows(3)
-                .create();
+                .create()
+                .setCloseGuiAction(event -> {
+                    if (changed) {
+                        data.save();
+                    }
+                });
     }
-
 
 
     public GuiItem changeTimeButton() {
@@ -105,6 +83,7 @@ public class SettingsMenu extends Menu<Gui> {
                     update(player);
                 });
     }
+
     public GuiItem toggleGlobalChat() {
         return ItemBuilder.skull().texture(Skulls.GLOBE_BASE_64)
                 .name(data.getMessageSettings().isGlobalChat() ? CC.GREEN + "Global chat: ON" : CC.GREEN + "Global chat: OFF")
@@ -117,6 +96,7 @@ public class SettingsMenu extends Menu<Gui> {
                     update(player);
                 });
     }
+
     public GuiItem toggleMessages() {
         return ItemBuilder.from(Material.DIODE)
                 .name(data.getMessageSettings().isMessagesOff() ? CC.GREEN + "Private messages: OFF" : CC.GREEN + "Private messages: ON")
@@ -129,6 +109,7 @@ public class SettingsMenu extends Menu<Gui> {
                     update(player);
                 });
     }
+
     @Override
     public void populateGui(Gui gui, Player player) {
         gui.setItem(10, changeTimeButton());

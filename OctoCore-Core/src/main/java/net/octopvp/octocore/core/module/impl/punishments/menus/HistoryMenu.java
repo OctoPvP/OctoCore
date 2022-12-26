@@ -1,259 +1,174 @@
 package net.octopvp.octocore.core.module.impl.punishments.menus;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.guis.Gui;
+import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.agile.menu.Menu;
+import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.object.punish.IPunishData;
 import net.octopvp.octocore.common.object.punish.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.module.impl.punishments.menus.alts.PotentialAltsMenu;
 import net.octopvp.octocore.core.module.impl.punishments.menus.punishments.*;
-import net.octopvp.octocore.core.utils.item.WoolUtils;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.buttons.PlaceholderButton;
-import net.octopvp.octocore.core.utils.menu.buttons.impl.PlayerInfoButton;
-import net.octopvp.octocore.core.utils.menu.menu.Menu;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import net.octopvp.octocore.core.utils.Buttons;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Getter
-public class HistoryMenu extends Menu {
-    private final IPunishData IPunishData;
+public class HistoryMenu extends Menu<Gui> {
+    private final IPunishData iPunishData;
+    @SuppressWarnings("deprecation")
+    public GuiItem altsButton(IPunishData playerData) { // slot 32
+        List<String> lore = new ArrayList<>(Arrays.asList(
+                CC.GRAY + "(" + CC.RED + "Banned" + CC.GRAY + ", " + CC.GREEN + "Online" + CC.GRAY + ", " + CC.YELLOW + "Offline" + CC.GRAY + ")",
+                " ",
+                CC.GRAY + "Potential Alts"
+        ));
+        if (playerData.getAlts().size() == 0) {
+            lore.add(CC.VALUE + "- " + CC.RED + "None found!");
+        } else {
+            playerData.getAlts().stream().limit(5).forEach(alt -> lore.add(CC.VALUE + "- " + alt.getNameColor() + alt.getName()));
+        }
+        lore.add(CC.GRAY + "Alts on last ip " + CC.GRAY + "(More secured)");
+        if (playerData.getAlts().size() == 0) {
+            lore.add(CC.VALUE + "- " + CC.RED + "None found!");
+        } else {
+            playerData.getAlts().stream().limit(5).forEach(alt -> lore.add(CC.VALUE + "- " + alt.getNameColor() + alt.getName()));
+        }
+        lore.add(" ");
+        lore.add(CC.YELLOW + "Click to see all potential alts.");
+        lore.add(" ");
+
+        return ItemBuilder.skull()
+                .name(CC.MAIN + "Alts " + CC.GRAY + "(" + CC.SECONDARY + playerData.getAlts().size() + CC.GRAY + ")")
+                .setLore(lore)
+                .owner(Bukkit.getOfflinePlayer(playerData.getUniqueId()))
+                .asGuiItem(event -> {
+                    new PotentialAltsMenu(playerData, this).open((Player) event.getWhoClicked());
+                });
+    }
+
+    @SuppressWarnings("deprecation")
+    public GuiItem warnsButton(IPunishData playerData) { // slot 31
+        List<IPunishment> warns = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
+        List<String> lore = Arrays.asList(
+                CC.GRAY + "Currently warned&7: " + (playerData.isWarned() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GRAY + "User was warned " + CC.YELLOW + warns.size() + CC.GRAY + " times.",
+                " ",
+                CC.YELLOW + "Click to view all warns."
+        );
+
+        return ItemBuilder.from(XMaterial.YELLOW_WOOL)
+                .name(CC.MAIN + "Warns " + CC.GRAY + "(" + CC.SECONDARY + warns.size() + CC.GRAY + ")")
+                .setLore(lore)
+                .asGuiItem(event -> {
+                    List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
+                    if (punishments.size() == 0) return;
+                    new WarnsMenu(playerData, HistoryMenu.this).open((Player) event.getWhoClicked());
+                });
+    }
+
+    @SuppressWarnings("deprecation")
+    public GuiItem kicksButton(IPunishData playerData) { // slot 30
+        List<IPunishment> kicks = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
+        List<String> lore = Arrays.asList(
+                CC.GRAY + "User was kicked " + CC.YELLOW + kicks.size() + CC.GRAY + " times.",
+                " ",
+                CC.YELLOW + "Click to view all kicks."
+        );
+        return ItemBuilder.from(XMaterial.LIME_WOOL)
+                .name(CC.MAIN + "Kicks " + CC.GRAY + "(" + CC.SECONDARY + kicks.size() + CC.GRAY + ")")
+                .setLore(lore)
+                .asGuiItem(event -> {
+                    List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
+                    if (punishments.size() == 0) return;
+                    new KicksMenu(playerData, HistoryMenu.this).open((Player) event.getWhoClicked());
+                });
+    }
+
+    @SuppressWarnings("deprecation")
+    public GuiItem mutesButton(IPunishData playerData) {
+        List<IPunishment> mutes = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
+        List<String> lore = Arrays.asList(
+                CC.GRAY + "Currently muted&7: " + (playerData.isMuted() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GRAY + "User was muted " + CC.YELLOW + mutes.size() + CC.GRAY + " times.",
+                " ",
+                CC.YELLOW + "Click to view all mutes."
+        );
+        return ItemBuilder.from(XMaterial.ORANGE_WOOL)
+                .name(CC.MAIN + "Mutes " + CC.GRAY + "(" + CC.SECONDARY + mutes.size() + CC.GRAY + ")")
+                .setLore(lore)
+                .asGuiItem(event -> {
+                    List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
+                    if (punishments.size() == 0) return;
+                    new MutesMenu(playerData, HistoryMenu.this).open((Player) event.getWhoClicked());
+                });
+    }
+
+    @SuppressWarnings("deprecation")
+    public GuiItem blacklistsButton(IPunishData playerData) {
+        List<IPunishment> blacklists = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
+        List<String> lore = Arrays.asList(
+                CC.GRAY + "Currently blacklisted&7: " + (playerData.isBlacklisted() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GRAY + "User was blacklisted " + CC.YELLOW + blacklists.size() + CC.GRAY + " times.",
+                " ",
+                CC.YELLOW + "Click to view all blacklists."
+        );
+        return ItemBuilder.from(XMaterial.RED_WOOL)
+                .name(CC.MAIN + "Blacklists " + CC.GRAY + "(" + CC.SECONDARY + blacklists.size() + CC.GRAY + ")")
+                .setLore(lore)
+                .asGuiItem(event -> {
+                    List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
+                    if (punishments.size() == 0) return;
+                    new BlacklistsMenu(playerData, HistoryMenu.this).open((Player) event.getWhoClicked());
+                });
+    }
+
+    @SuppressWarnings("deprecation")
+    public GuiItem bansButton(IPunishData playerData) {
+        List<IPunishment> bans = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
+        List<String> lore = Arrays.asList(
+                CC.GRAY + "Currently banned&7: " + (playerData.isBanned() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GRAY + "User was banned " + CC.YELLOW + bans.size() + CC.GRAY + " times.",
+                " ",
+                CC.YELLOW + "Click to view all bans."
+        );
+        return ItemBuilder.from(XMaterial.RED_WOOL)
+                .name(CC.MAIN + "Bans " + CC.GRAY + "(" + CC.SECONDARY + bans.size() + CC.GRAY + ")")
+                .setLore(lore)
+                .asGuiItem(event -> {
+                    List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
+                    if (punishments.size() == 0) return;
+                    new BansMenu(playerData, HistoryMenu.this).open((Player) event.getWhoClicked());
+                });
+    }
+    @Override
+    public Gui createGui(Player player) {
+        return Gui.gui()
+                .title(iPunishData.getName() + "'s punishments")
+                .rows(5)
+                .create();
+    }
 
     @Override
-    public String getName(Player player) {
-        return CC.translate(IPunishData.getName() + "'s punishments");
-    }
+    public void populateGui(Gui gui, Player player) {
+        gui.setItem(13, Buttons.playerInfo(iPunishData.getUniqueId()));
 
-    @Override
-    public List<Button> getButtons(Player player) {
-        List<Button> slots = new ArrayList<>();
+        gui.setItem(21, kicksButton(iPunishData));
+        gui.setItem(22, mutesButton(iPunishData));
+        gui.setItem(23, blacklistsButton(iPunishData));
+        gui.setItem(30, warnsButton(iPunishData));
+        gui.setItem(31, bansButton(iPunishData));
 
-        slots.add(new PlayerInfoButton(IPunishData.getUniqueId(), 13));
-
-        slots.add(new BansButton(IPunishData));
-        slots.add(new BlacklistsButton(IPunishData));
-        slots.add(new MutesButton(IPunishData));
-        slots.add(new WarnsButton(IPunishData));
-        slots.add(new KicksButton(IPunishData));
-
-        slots.add(new AltsButton(IPunishData));
-
-        slots.add(new PlaceholderBtn());
-
-        //slots.add(new PlaceholderBtn());
-        return slots;
-    }
-
-    private class PlaceholderBtn extends PlaceholderButton {
-        @Override
-        public int[] getSlots() {
-            return genPlaceholderSpots(IntStream.range(0, 44), 13, 22, 21, 23, 30, 31, 32);
-        }
-    }
-
-    @AllArgsConstructor
-    private class BansButton extends Button {
-        private IPunishData playerData;
-
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.WOOL);
-            item.setDurability(WoolUtils.convertChatColorToWoolData(ChatColor.RED));
-            item.setName("&cBans");
-            item.addLoreLine("");
-            List<IPunishment> bans = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
-            item.addLoreLine(CC.GREEN + "Currently banned&7: " + (playerData.isBanned() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.GREEN + "User was banned " + CC.YELLOW + bans.size() + CC.GREEN + " times.");
-            item.addLoreLine("");
-            item.addLoreLine(CC.YELLOW + "Click to view all bans.");
-            return item.toItemStack();
-        }
-
-        @Override
-        public int getSlot() {
-            return 22;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
-            if (punishments.size() == 0) return;
-            new BansMenu(playerData, HistoryMenu.this).open(player);
-        }
-    }
-
-    @AllArgsConstructor
-    private class BlacklistsButton extends Button {
-        private IPunishData playerData;
-
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.WOOL);
-            item.setDurability(14);
-            item.setName("&4Blacklists");
-            item.addLoreLine("");
-            List<IPunishment> blacklists = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
-            item.addLoreLine(CC.GREEN + "Currently blacklisted&7: " + (playerData.isBlacklisted() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.GREEN + "User was blacklisted " + CC.YELLOW + blacklists.size() + CC.GREEN + " times.");
-            item.addLoreLine("");
-            item.addLoreLine(CC.YELLOW + "Click to view all blacklists.");
-            return item.toItemStack();
-        }
-
-        @Override
-        public int getSlot() {
-            return 21;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
-            if (punishments.size() == 0) return;
-            new BlacklistsMenu(playerData, HistoryMenu.this).open(player);
-
-        }
-    }
-
-    @AllArgsConstructor
-    private class MutesButton extends Button {
-        private IPunishData playerData;
-
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.WOOL);
-            item.setDurability(WoolUtils.convertChatColorToWoolData(ChatColor.GOLD));
-            item.setName("&eMutes");
-            item.addLoreLine("");
-            List<IPunishment> mutes = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
-            item.addLoreLine(CC.GREEN + "Currently muted&7: " + (playerData.isMuted() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.GREEN + "User was muted " + CC.YELLOW + mutes.size() + CC.GREEN + " times.");
-            item.addLoreLine("");
-            item.addLoreLine(CC.YELLOW + "Click to view all mutes.");
-            return item.toItemStack();
-        }
-
-        @Override
-        public int getSlot() {
-            return 23;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
-            if (punishments.size() == 0) return;
-            new MutesMenu(playerData, HistoryMenu.this).open(player);
-        }
-    }
-
-    @AllArgsConstructor
-    private class KicksButton extends Button {
-        private IPunishData playerData;
-
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.WOOL);
-            item.setDurability(9);
-            item.setName("&3Kicks");
-            item.addLoreLine("");
-            List<IPunishment> kicks = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
-            item.addLoreLine(CC.GREEN + "User was kicked " + CC.YELLOW + kicks.size() + CC.GREEN + " times.");
-            item.addLoreLine("");
-            item.addLoreLine(CC.YELLOW + "Click to view all kicks.");
-            return item.toItemStack();
-        }
-
-        @Override
-        public int getSlot() {
-            return 30;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.KICK).collect(Collectors.toList());
-            if (punishments.size() == 0) return;
-            new KicksMenu(playerData, HistoryMenu.this).open(player);
-        }
-    }
-
-    @AllArgsConstructor
-    private class WarnsButton extends Button {
-        private IPunishData playerData;
-
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.WOOL);
-            item.setDurability(WoolUtils.convertChatColorToWoolData(ChatColor.YELLOW));
-            item.setName("&eWarns");
-            item.addLoreLine("");
-            List<IPunishment> warns = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
-            item.addLoreLine(CC.GREEN + "Currently warned&7: " + (playerData.isWarned() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.GREEN + "User was warned " + CC.YELLOW + warns.size() + CC.GREEN + " times.");
-            item.addLoreLine("");
-            item.addLoreLine(CC.YELLOW + "Click to view all warns.");
-            return item.toItemStack();
-        }
-
-        @Override
-        public int getSlot() {
-            return 31;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            List<IPunishment> punishments = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
-            if (punishments.size() == 0) return;
-            new WarnsMenu(playerData, HistoryMenu.this).open(player);
-        }
-    }
-
-    @AllArgsConstructor
-    private class AltsButton extends Button {
-        private IPunishData playerData;
-
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.SKULL);
-            item.setName(CC.MAIN + "Alts &7(" + CC.SECONDARY + playerData.getAlts().size() + " &7)");
-            item.addLoreLine("&7(&cBanned&7, &aOnline&7, &eOffline&7)");
-            item.addLoreLine(" ");
-            item.addLoreLine(CC.SECONDARY + "Potential Alts");
-            if (playerData.getAlts().size() == 0) {
-                item.addLoreLine(CC.VALUE + "- &cNone found!");
-            } else {
-                playerData.getAlts().stream().limit(5).forEach(alt -> item.addLoreLine(CC.VALUE + "- " + alt.getNameColor() + alt.getName()));
-            }
-            item.addLoreLine(CC.SECONDARY + "Alts on last ip &7(More secured)");
-            if (playerData.getAlts().size() == 0) {
-                item.addLoreLine(CC.VALUE + "- &cNone found!");
-            } else {
-                playerData.getAlts().stream().limit(5).forEach(alt -> item.addLoreLine(CC.VALUE + "- " + alt.getNameColor() + alt.getName()));
-            }
-            item.addLoreLine(" ");
-            item.addLoreLine(CC.YELLOW + "Click to see all potential alts.");
-            item.addLoreLine(" ");
-            return item.toSkullBuilder().withOwner(IPunishData.getUniqueId()).buildSkull();
-        }
-
-        @Override
-        public int getSlot() {
-            return 32;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            new PotentialAltsMenu(playerData).open(player);
-        }
+        gui.setItem(40, altsButton(iPunishData));
     }
 }

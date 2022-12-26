@@ -5,17 +5,17 @@ import net.octopvp.commander.annotation.Optional;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.command.CommandResult;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.trolls.DemoMenuTroll;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class DemoMenuCommand {
     @Command(name = "demomenu")
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender, @Optional String target) {
+    public CommandResult execute(CommandSender sender, @Optional String target) {
         if (target == null) {
-            DemoMenuTroll.getInstance().activate(sender.getPlayer());
+            DemoMenuTroll.getInstance().activate((Player) sender);
             return CommandResult.SUCCESS;
         }
         if (target.equalsIgnoreCase("all") || target.equals("*")) {

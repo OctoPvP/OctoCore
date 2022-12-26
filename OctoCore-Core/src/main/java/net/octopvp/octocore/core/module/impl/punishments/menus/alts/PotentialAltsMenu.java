@@ -1,94 +1,64 @@
 package net.octopvp.octocore.core.module.impl.punishments.menus.alts;
 
 import lombok.AllArgsConstructor;
+import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.guis.Gui;
+import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.agile.guis.PaginatedGui;
+import net.octopvp.agile.menu.Menu;
+import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.punish.IPunishData;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.buttons.impl.BackButton;
-import net.octopvp.octocore.core.utils.menu.menu.PaginatedMenu;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class PotentialAltsMenu extends PaginatedMenu {
+public class PotentialAltsMenu extends PaginatedMenu<PaginatedGui> {
     private IPunishData playerData;
+    private Menu<?> previousMenu;
 
     @Override
-    public String getPagesTitle(Player player) {
-        return CC.translate("&7" + playerData.getName() + "'s alts");
+    public void populateGui(PaginatedGui gui, Player player) {
+        super.populateGui(gui, player);
+        gui.setItem(4, ItemBuilder.from(Material.PAPER)
+                .name(CC.MAIN + "About")
+                .lore(
+                        " ",
+                        CC.GRAY + "This menu is showing all " + CC.SECONDARY + playerData.getName() + "'s " + CC.GRAY + "alts",
+                        CC.GRAY + "that are recorded on ip addresses",
+                        CC.GRAY + "that user were joining from.",
+                        " ",
+                        CC.GRAY + "- " + CC.RED + "This is not secure and doesn't mean",
+                        CC.GRAY + "- " + CC.RED + "that the user is actually alting!",
+                        " ",
+                        CC.VALUE + "Alts amount" + CC.GRAY + ": " + CC.SECONDARY + playerData.getAlts().size(),
+                        CC.VALUE + "Banned alts" + CC.GRAY + ": " + CC.SECONDARY + playerData.getAlts().stream().filter(Alt::isBanned).collect(Collectors.toList()).size(),
+                        " "
+                ).asGuiItem());
     }
 
     @Override
-    public List<Button> getEveryMenuSlots(Player player) {
-        List<Button> slots = new ArrayList<>();
-
-        slots.add(new Button() {
-
-            @Override
-            public ItemStack getItem(Player player) {
-                ItemBuilder item = new ItemBuilder(Material.PAPER);
-                item.setName(CC.MAIN + "About");
-                item.addLoreLine(" ");
-                item.addLoreLine("&7This menu is showing all &f" + playerData.getName() + "'s &7alts");
-                item.addLoreLine("&7that are recorded on ip addresses");
-                item.addLoreLine("&7that user were joining from.");
-                item.addLoreLine(" ");
-                item.addLoreLine("&7- &cThis is not secure and doesn't mean");
-                item.addLoreLine("&7- &cthat the user is actually alting!");
-                item.addLoreLine(" ");
-                item.addLoreLine(CC.VALUE + "Alts amount&7: " + CC.SECONDARY + playerData.getAlts().size());
-                item.addLoreLine(CC.VALUE + "Banned alts&7: " + CC.SECONDARY + playerData.getAlts().stream().filter(Alt::isBanned).collect(Collectors.toList()).size());
-                item.addLoreLine(" ");
-
-                return item.toItemStack();
-            }
-
-            @Override
-            public int getSlot() {
-                return 4;
-            }
-
-        });
-
-        return slots;
+    public PaginatedGui createGui(Player player) {
+        return Gui.paginated()
+                .title("Alts of " + playerData.getName())
+                .rows(6)
+                .create();
     }
 
     @Override
-    public Button getBackButton(Player player) {
-        return new BackButton.DefaultBackButton(this);
+    public List<GuiItem> getItems(Player player) {
+        List<GuiItem> items = new ArrayList<>();
+        playerData.getAlts().forEach(AltsMenu::altButton);
+        return items;
     }
 
     @Override
-    public List<Button> getPaginatedButtons(Player player) {
-        List<Button> slots = new ArrayList<>();
-
-        playerData.getAlts().forEach(alt -> slots.add(new AltButton(alt)));
-
-        return slots;
-    }
-
-    @AllArgsConstructor
-    private class AltButton extends Button {
-        private Alt alt;
-
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.SKULL_ITEM);
-            item.setDurability(3);
-            item.setName(CC.MAIN + alt.getName() + "&7(" + (alt.isBanned() ? "&cBanned" : Bukkit.getPlayer(alt.getName()) == null ? "&eOffline" : "&aOnline") + "&7)");
-            return item.toSkullBuilder().withOwner(alt.getUniqueId()).buildSkull();
-        }
-
-        @Override
-        public int getSlot() {
-            return 0;
-        }
+    public Menu<?> getBackMenu() {
+        return previousMenu;
     }
 }

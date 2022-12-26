@@ -1,35 +1,84 @@
 package net.octopvp.octocore.core.module.impl.punishments.menus.staffhistory;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.guis.Gui;
+import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.agile.guis.PaginatedGui;
+import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.core.utils.Buttons;
 import net.octopvp.octocore.core.utils.SoundUtil;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.buttons.impl.PlayerInfoButton;
-import net.octopvp.octocore.core.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RequiredArgsConstructor
-public class StaffHistoryPunishmentMenu extends PaginatedMenu {
+public class StaffHistoryPunishmentMenu extends PaginatedMenu<PaginatedGui> {
     private final PlayerData playerData;
     private final PunishmentType punishmentType;
     private boolean activeOnly = true;
 
+    @SuppressWarnings("deprecation")
+    public GuiItem activeOnlyButton() {
+        List<String> lore = new ArrayList<>();
+        lore.add(" ");
+        if (activeOnly) {
+            lore.add(CC.GRAY + "Currently showing");
+            lore.add(CC.GRAY + "active punishments only!");
+        } else {
+            lore.add(CC.GRAY + "Currently showing all");
+            lore.add(CC.GRAY + "active/expired punishments!");
+        }
+        lore.add(" ");
+        lore.add(CC.GREEN + "Click to change!");
+        return ItemBuilder.from(Material.PAPER)
+                .name(CC.GREEN + "Punishments to show")
+                .setLore(lore)
+                .asGuiItem(event -> {
+                    activeOnly = !activeOnly;
+                    update((Player) event.getWhoClicked());
+                    SoundUtil.playSound((Player) event.getWhoClicked(), Sound.ORB_PICKUP);
+                });
+    }
+
+    @SuppressWarnings("deprecation")
+    public GuiItem punishButton(Punishment punishment, int order) {
+        List<String> lore = new ArrayList<>();
+        lore.add(CC.SEPARATOR);
+        lore.add(CC.MAIN + "Target&7: " + CC.SECONDARY + punishment.getName());
+        if (punishment.getPunishmentType() != PunishmentType.KICK) {
+            lore.add(CC.MAIN + "Duration&7: " + CC.SECONDARY + punishment.getNiceDuration());
+            lore.add(CC.MAIN + "Expire&7: " + CC.SECONDARY + punishment.getNiceExpire());
+        }
+        lore.add(CC.MAIN + "Reason&7: " + CC.SECONDARY + punishment.getReason());
+        lore.add(CC.SEPARATOR);
+        lore.add(CC.MAIN + "Permanent&7: " + (punishment.isPermanent() ? "&aYes" : "&cNo"));
+        lore.add(CC.MAIN + "Active&7: " + (!punishment.hasExpired() ? "&aYes" : "&cNo"));
+        lore.add(CC.MAIN + "Silent&7: " + (punishment.isSilent() ? "&aYes" : "&cNo"));
+        lore.add(CC.SEPARATOR);
+        lore.add(CC.SECONDARY + "Click to check " + CC.MAIN + punishment.getName() + "'s " + CC.SECONDARY + "punishments");
+        lore.add(CC.SEPARATOR);
+        return ItemBuilder.from(punishment.hasExpired() ? Material.BOOK : Material.ENCHANTED_BOOK)
+                .name(CC.MAIN + "#" + order + " &7(" + CC.SECONDARY + DateUtils.getDate(punishment.getAddedAt()) + "&7)")
+                .setLore(lore)
+                .asGuiItem(event -> {
+                    event.getWhoClicked().closeInventory();
+                    Tasks.run(() -> ((Player) event.getWhoClicked()).performCommand("check " + punishment.getName()));
+                });
+    }
+
+
+        /*
     @Override
     public String getPagesTitle(Player player) {
         return "&7Checking: " + playerData.getName();
@@ -80,75 +129,41 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu {
         return slots;
     }
 
-    @AllArgsConstructor
-    private class PunishButton extends Button {
-        private Punishment punishment;
-        private int order;
 
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(punishment.hasExpired() ? Material.BOOK : Material.ENCHANTED_BOOK);
-            item.setName(CC.MAIN + "#" + order + " &7(" + CC.SECONDARY + DateUtils.getDate(punishment.getAddedAt()) + "&7)");
-            item.addLoreLine(CC.SEPARATOR);
-            item.addLoreLine(CC.MAIN + "Target&7: " + CC.SECONDARY + punishment.getName());
-            if (punishment.getPunishmentType() != PunishmentType.KICK) {
-                item.addLoreLine(CC.MAIN + "Duration&7: " + CC.SECONDARY + punishment.getNiceDuration());
-                item.addLoreLine(CC.MAIN + "Expire&7: " + CC.SECONDARY + punishment.getNiceExpire());
-            }
-            item.addLoreLine(CC.MAIN + "Reason&7: " + CC.SECONDARY + punishment.getReason());
-            item.addLoreLine(CC.SEPARATOR);
-            item.addLoreLine(CC.MAIN + "Permanent&7: " + (punishment.isPermanent() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.MAIN + "Active&7: " + (!punishment.hasExpired() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.MAIN + "Silent&7: " + (punishment.isSilent() ? "&aYes" : "&cNo"));
-            item.addLoreLine(CC.SEPARATOR);
-            item.addLoreLine(CC.SECONDARY + "Click to check " + CC.MAIN + punishment.getName() + "'s " + CC.SECONDARY + "punishments");
-            item.addLoreLine(CC.SEPARATOR);
-            return item.toItemStack();
-        }
+     */
 
-        @Override
-        public int getSlot() {
-            return 0;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            player.closeInventory();
-            Tasks.run(() -> player.performCommand("check " + punishment.getName()));
-        }
+    @Override
+    public void populateGui(PaginatedGui gui, Player player) {
+        super.populateGui(gui, player);
+        gui.setItem(4, Buttons.playerInfo(playerData));
+        gui.setItem(40, activeOnlyButton());
+        GuiItem item = backButton(new StaffHistoryMenu(playerData));
+        gui.setItem(41, item);
+        gui.setItem(39, item);
     }
 
-    @AllArgsConstructor
-    private class ActiveOnlyButton extends Button {
-        private int slot;
-
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.PAPER);
-            item.setName("&aPunishments to show");
-            item.addLoreLine(" ");
+    @Override
+    public List<GuiItem> getItems(Player player) {
+        List<GuiItem> slots = new ArrayList<>();
+        AtomicInteger order = new AtomicInteger(1);
+        playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == this.punishmentType).forEach(punishment -> {
             if (activeOnly) {
-                item.addLoreLine("&7Currently showing");
-                item.addLoreLine("&7active punishments only!");
+                if (!punishment.hasExpired()) {
+                    slots.add(punishButton(punishment, order.getAndIncrement()));
+                }
             } else {
-                item.addLoreLine("&7Currently showing all");
-                item.addLoreLine("&7active/expired punishments!");
+                slots.add(punishButton(punishment, order.getAndIncrement()));
             }
-            item.addLoreLine(" ");
-            item.addLoreLine("&aClick to change!");
-            return item.toItemStack();
-        }
-
-        @Override
-        public int getSlot() {
-            return slot;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            activeOnly = !activeOnly;
-            update(player);
-            SoundUtil.playSound(player, Sound.ORB_PICKUP);
-        }
+        });
+        return slots;
     }
+
+    @Override
+    public PaginatedGui createGui(Player player) {
+        return Gui.paginated()
+                .title("Checking: " + playerData.getName())
+                .rows(6)
+                .create();
+    }
+
 }

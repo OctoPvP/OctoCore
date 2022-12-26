@@ -1,85 +1,46 @@
 package net.octopvp.octocore.core.menus.grant;
 
-import com.google.common.collect.Lists;
+import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.guis.Gui;
+import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.agile.menu.Menu;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.buttons.PlaceholderButton;
-import net.octopvp.octocore.core.utils.menu.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.stream.IntStream;
-
-public class MainGrantMenu extends Menu {
+public class MainGrantMenu extends Menu<Gui> {
     private final PlayerData playerData;
 
     public MainGrantMenu(PlayerData playerData) {
         this.playerData = playerData;
     }
 
-    @Override
-    public List<Button> getButtons(Player player) {
-        return Lists.newArrayList(new ViewGrantsButton(), new AddGrantButton(), new PlaceHolderButton());
+    public GuiItem addGrant() {
+        return ItemBuilder.from(Material.BOOK_AND_QUILL)
+                .name(CC.GREEN + "Add a new grant")
+                .asGuiItem(event -> new AddGrantMenu(playerData).open((Player) event.getWhoClicked()));
+    }
+
+    public GuiItem viewGrants() {
+        return ItemBuilder.from(Material.PAPER)
+                .name(CC.AQUA + "View " + playerData.getName() + "'s grants")
+                .lore("", CC.SEPARATOR, CC.YELLOW + playerData.getActiveGrants().size() + CC.GREEN + " currently active grants.", CC.YELLOW + playerData.getGrants().size() + CC.GREEN + " total grants", CC.SEPARATOR)
+                .asGuiItem(event -> new GrantsMenu(playerData).open((Player) event.getWhoClicked()));
     }
 
     @Override
-    public String getName(Player player) {
-        return CC.GREEN + "Choose an action.";
+    public Gui createGui(Player player) {
+        return Gui.gui()
+                .title("Choose an action.")
+                .rows(3)
+                .create();
     }
 
-    public class ViewGrantsButton extends Button {
-
-        @Override
-        public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.PAPER).name(CC.AQUA + "View " + playerData.getName() + "'s grants").lore("", CC.SEPARATOR, CC.YELLOW + playerData.getActiveGrants().size() + CC.GREEN + " currently active grants.", CC.YELLOW + playerData.getGrants().size() + CC.GREEN + " total grants", CC.SEPARATOR).build();
-        }
-
-        @Override
-        public int getSlot() {
-            return 11;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            new GrantsMenu(playerData).open(player);
-        }
-    }
-
-    public class AddGrantButton extends Button {
-
-        @Override
-        public ItemStack getItem(Player player) {
-            return new ItemBuilder(Material.BOOK_AND_QUILL).name(CC.GREEN + "Add a new grant").build();
-        }
-
-        @Override
-        public int getSlot() {
-            return 15;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            new AddGrantMenu(playerData).open(player);
-        }
-    }
-
-    public class PlaceHolderButton extends PlaceholderButton {
-        @Override
-        public int[] getSlots() {
-            return genPlaceholderSpots(IntStream.range(0, 27), 11, 15);
-            /*
-            List<Integer> a = new ArrayList<>();
-            IntStream.range(0,27).forEach((i)->{
-                if (!(i == 11 || i == 15))
-                    a.add(i);
-            });
-            return a.stream().mapToInt(i ->i).toArray();
-             */
-        }
+    @Override
+    public void populateGui(Gui gui, Player player) {
+        gui.setItem(10, addGrant());
+        gui.setItem(12, viewGrants());
+        gui.getFiller().fill(PLACEHOLDER_ITEM);
     }
 }

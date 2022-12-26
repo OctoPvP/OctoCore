@@ -9,15 +9,16 @@ import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.database.redis.packets.player.UndoPunishmentPacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class UnMuteCommand {
     @Command(name = "unmute")
     @Permission(Permissions.PUNISHMENT_UNMUTE)
     @PlayerOnly
-    public CommandResult execute(Sender sender, String player, @JoinStrings @Optional @Name("reason") String r) {
+    public CommandResult execute(CommandSender sender, String player, @JoinStrings @Optional @Name("reason") String r) {
         Tasks.runAsync(() -> {
             OfflinePunishData data = new OfflinePunishData(player);
             data.load();
@@ -43,14 +44,17 @@ public class UnMuteCommand {
             punishment.setRemovedSilent(silent);
             punishment.setWhenRemoved(System.currentTimeMillis());
 
-            String coloredSenderName;
-            if (sender.isPlayer()) {
-                coloredSenderName = PlayerManager.getInstance().getFormattedName(sender.getPlayer().getName());
+            String coloredSenderName, displayName;
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
+                coloredSenderName = PlayerManager.getInstance().getFormattedName(p.getName());
+                displayName = p.getDisplayName();
             } else {
                 coloredSenderName = "&4&lConsole";
+                displayName = "Console";
             }
 
-            new UndoPunishmentPacket(PunishmentType.MUTE, sender.getDisplayName(), coloredSenderName, sender.getName(), data.getName(), reason.trim(), silent).send();
+            new UndoPunishmentPacket(PunishmentType.MUTE, displayName, coloredSenderName, sender.getName(), data.getName(), reason.trim(), silent).send();
 
             punishment.save(true);
         });

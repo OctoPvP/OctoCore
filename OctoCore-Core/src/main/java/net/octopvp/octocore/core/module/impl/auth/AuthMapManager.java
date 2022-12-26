@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.module.impl.auth;
 
+import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.octocore.common.util.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,13 +27,13 @@ public class AuthMapManager extends MapRenderer {
     }
 
     public void giveMap() {
-        ItemStack i = new ItemBuilder(Material.MAP).name(CC.GREEN + "2fa QR Code").build();
         MapView view = Bukkit.createMap(player.getWorld());
         for (MapRenderer renderer : view.getRenderers()) {
             view.removeRenderer(renderer);
         }
         view.addRenderer(this);
-        i.setDurability(view.getId());
+        ItemStack i = ItemBuilder.map().view(view).name(CC.GREEN + "2fa QR Code").build();
+        //i.setDurability(view.getId()); // TODO Make sure this works
         player.getInventory().addItem(i);
     }
 

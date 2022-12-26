@@ -8,14 +8,14 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.database.redis.packets.server.GlobalCommandPacket;
 import net.octopvp.octocore.core.database.redis.packets.staff.AdminAlertPacket;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.msg.Lang;
+import org.bukkit.command.CommandSender;
 
 public class ExecuteOnAllCommand {
     @Command(name = "executeonall", aliases = {"globalexecute"}, usage = "<command>")
     @Permission(Permissions.EXECUTE_ON_ALL_SERVERS)
     @Cooldown(3)
-    public CommandResult execute(Sender sender, @JoinStrings String command) {
+    public CommandResult execute(CommandSender sender, @JoinStrings String command) {
         new GlobalCommandPacket(command).send();
         new AdminAlertPacket(Lang.ADMIN_ALERT_GLOBAL_EXECUTE.getMsg(sender.getName(), command)).send();
         return CommandResult.SUCCESS;

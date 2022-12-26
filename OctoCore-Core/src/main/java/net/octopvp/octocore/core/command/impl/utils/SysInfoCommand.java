@@ -6,14 +6,14 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.core.command.CommandResult;
-import net.octopvp.octocore.core.utils.Sender;
+import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 
 public class SysInfoCommand {
     @Command(name = "sysinfo")
     @Permission(Permissions.SYS_INFO)
-    public CommandResult execute(Sender sender) {
+    public CommandResult execute(CommandSender sender) {
         String msg = CC.SEPARATOR + CC.NL + CC.GREEN + "OS: " + Utilities.getSystemInfo().getOperatingSystem().getFamily() + CC.NL +
                 CC.GREEN + "OS Family: " + Utilities.getSystemInfo().getOperatingSystem().getFamily() + CC.NL +
                 CC.GREEN + "Hardware Model: " + Utilities.getSystemInfo().getHardware().getComputerSystem().getModel() + CC.NL +

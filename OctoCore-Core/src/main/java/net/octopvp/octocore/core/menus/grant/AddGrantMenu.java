@@ -1,6 +1,10 @@
 package net.octopvp.octocore.core.menus.grant;
 
-import lombok.AllArgsConstructor;
+import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.guis.Gui;
+import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.agile.guis.PaginatedGui;
+import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
@@ -9,24 +13,17 @@ import net.octopvp.octocore.core.objects.GrantProcedure;
 import net.octopvp.octocore.core.objects.GrantProcedureState;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.objects.permissions.Rank;
+import net.octopvp.octocore.core.utils.Buttons;
 import net.octopvp.octocore.core.utils.item.WoolUtils;
-import net.octopvp.octocore.core.utils.menu.buttons.Button;
-import net.octopvp.octocore.core.utils.menu.buttons.impl.BackButton;
-import net.octopvp.octocore.core.utils.menu.buttons.impl.PlayerInfoButton;
-import net.octopvp.octocore.core.utils.menu.menu.PaginatedMenu;
 import net.octopvp.octocore.core.utils.msg.Lang;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-public class AddGrantMenu extends PaginatedMenu {
+public class AddGrantMenu extends PaginatedMenu<PaginatedGui> {
     private final PlayerData data;
 
     public AddGrantMenu(PlayerData data) {
@@ -34,97 +31,61 @@ public class AddGrantMenu extends PaginatedMenu {
     }
 
     @Override
-    public String getPagesTitle(Player player) {
-        return CC.AQUA + "Select a rank!";
+    public void populateGui(PaginatedGui gui, Player player) {
+        super.populateGui(gui, player);
+        gui.setItem(4, Buttons.playerInfo(data));
     }
 
     @Override
-    public List<Button> getPaginatedButtons(Player player) {
-        List<Button> buttons = new ArrayList<>();
-        RankManager.getRanks().stream().sorted(Comparator.comparingInt(Rank::getWeight).reversed()).forEach(rank -> buttons.add(new RankButton(rank, data)));
-        return buttons;
+    public List<GuiItem> getItems(Player player) {
+        List<GuiItem> items = new ArrayList<>();
+        RankManager.getRanks().stream().sorted((o1, o2) -> Integer.compare(o2.getWeight(), o1.getWeight())).forEach(rank -> items.add(rankButton(rank, data)));
+        return items;
+    }
+
+    public GuiItem rankButton(Rank rankData, PlayerData playerData) {
+        return ItemBuilder.from(Material.WOOL)
+                .durability((rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())))
+                .name(rankData.getDisplayName())
+                .lore(CC.SEPARATOR, CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(), CC.AQUA + "Inherited: " + CC.YELLOW + StringUtils.join(rankData.getInheritedRanksName(), ", "), CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
+                        CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(), CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(), CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
+                        CC.SEPARATOR
+                )
+                .asGuiItem(event -> {
+                    if (rankData.isDefaultRank()) {
+                        event.getWhoClicked().sendMessage(Lang.GRANT_CANT_GRANT_DEFAULT.getMsg());
+                        return;
+                    }
+                    if (playerData.hasRank(rankData)) {
+                        event.getWhoClicked().sendMessage(Lang.GRANT_ALREADY_HAS_RANK.getMsg(playerData.getName(), rankData.getName()));
+                        return;
+                    }
+                    PlayerData pData = PlayerManager.getInstance().getData(event.getWhoClicked().getUniqueId());
+                    if (!RankManager.getInstance().canGrant(pData, rankData) && !event.getWhoClicked().hasPermission(Permissions.GRANT_ALL)) {
+                        event.getWhoClicked().sendMessage(Lang.GRANT_CANNOT_GRANT_HIGHER_RANK.getMsg());
+                        return;
+                    }
+
+                    pData.setGrantProcedure(new GrantProcedure(playerData));
+                    pData.getGrantProcedure().setRankName(rankData.getName());
+                    pData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.SERVER_CHOOSE);
+
+                    new GrantServerMenu(data, this).open((Player) event.getWhoClicked());
+                });
     }
 
     @Override
-    public List<Button> getEveryMenuSlots(Player player) {
-        List<Button> slots = new ArrayList<>();
-
-        slots.add(new PlayerInfoButton(data, 4));
-
-        return slots;
-    }
-
-    @Override
-    public void onOpen(Player player) {
-    }
-
-    @Override
-    public void onClose(Player player) {
-        PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-        if (playerData.getGrantProcedure() != null && playerData.getGrantProcedure().getGrantProcedureState() == GrantProcedureState.START) {
-            playerData.setGrantProcedure(null);
-        }
-        PlayerManager.getInstance().getPlayerProfiles().remove(data.getUuid());
-    }
-
-    @Override
-    public Button getBackButton(Player player) {
-        return new BackButton() {
-            @Override
-            public void clicked(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-                previous.open(player);
-            }
-        };
-    }
-
-    @AllArgsConstructor
-    private class RankButton extends Button {
-        private Rank rankData;
-        private PlayerData playerData;
-
-        @Override
-        public ItemStack getItem(Player player) {
-            ItemBuilder item = new ItemBuilder(Material.WOOL);
-            item.setName(rankData.getDisplayName());
-            item.durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())));
-            item.lore(CC.SEPARATOR, CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(), CC.AQUA + "Inherited: " + CC.YELLOW + StringUtils.join(rankData.getInheritedRanksName(), ", "), CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
-                    CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(), CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(), CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
-                    CC.SEPARATOR
-            );
-            return item.build();
-        }
-
-        @Override
-        public int getSlot() {
-            return 0;
-        }
-
-        @Override
-        public void onClick(Player player, int slot, ClickType clickType, InventoryClickEvent event) {
-            if (rankData.isDefaultRank()) {
-                player.sendMessage(Lang.GRANT_CANT_GRANT_DEFAULT.getMsg());
-                return;
-            }
-            if (playerData.hasRank(rankData)) {
-                player.sendMessage(Lang.GRANT_ALREADY_HAS_RANK.getMsg(playerData.getName(), rankData.getName()));
-                return;
-            }
-            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-            if (!RankManager.getInstance().canGrant(playerData, rankData) && !player.hasPermission(Permissions.GRANT_ALL)) {
-                player.sendMessage(Lang.GRANT_CANNOT_GRANT_HIGHER_RANK.getMsg());
-                return;
-            }
-            /*
-            if (player.hasPermission("octocore.grant.disallow." + rankData.getName().toLowerCase())) {
-                player.sendMessage(Lang.GRANT_NO_PERMISSION_TO_GRANT_RANK.getMsg());
-                return;
-            }
-             */
-            playerData.setGrantProcedure(new GrantProcedure(this.playerData));
-            playerData.getGrantProcedure().setRankName(rankData.getName());
-            playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.SERVER_CHOOSE);
-
-            new GrantServerMenu(data).open(player);
-        }
+    public PaginatedGui createGui(Player player) {
+        return (PaginatedGui) Gui.paginated()
+                .title(CC.AQUA + "Select a rank!")
+                .rows(6)
+                .create()
+                .setCloseGuiAction(event -> {
+                    PlayerData playerData = PlayerManager.getInstance().getData(event.getPlayer().getUniqueId());
+                    if (playerData.getGrantProcedure() != null && playerData.getGrantProcedure().getGrantProcedureState() == GrantProcedureState.START) {
+                        playerData.setGrantProcedure(null);
+                    }
+                    PlayerManager.getInstance().getPlayerProfiles().remove(data.getUuid());
+                });
     }
 }

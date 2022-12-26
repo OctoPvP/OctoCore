@@ -28,26 +28,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ExecutePunishmentPacket extends RedisPacket {
 
-    public static void altKick(List<Alt> alts, String name, String type, boolean permanent, String niceDuration, String reason, String sender, String expire) {
-        alts.forEach(alt -> {
-            /*
-            new ExecuteAltKickPacket(new JsonBuilder()
-                    .addProperty("alt", name)
-                    .addProperty("type", type)
-                    .addProperty("permanent", permanent)
-                    .addProperty("duration", niceDuration)
-                    .addProperty("expire", expire)
-                    .addProperty("reason", reason)
-                    .addProperty("sender", sender)
-                    .addProperty("name", alt.getName())).send();
-             */
-            new ExecuteAltKickPacket(
-                    alt.getName(), sender, reason, niceDuration, type, name, expire, permanent
-            ).send();
-        });
-    }
-    //private JsonBuilder data;
-
     /*
 
     @Override
@@ -225,6 +205,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
     }
      */
     private String sender;
+    //private JsonBuilder data;
     private String coloredName;
     private String senderName;
     private String name;
@@ -240,6 +221,25 @@ public class ExecutePunishmentPacket extends RedisPacket {
     private PunishmentType type;
     private boolean IPRelative;
     private String punishment;
+
+    public static void altKick(List<Alt> alts, String name, String type, boolean permanent, String niceDuration, String reason, String sender, String expire) {
+        alts.forEach(alt -> {
+            /*
+            new ExecuteAltKickPacket(new JsonBuilder()
+                    .addProperty("alt", name)
+                    .addProperty("type", type)
+                    .addProperty("permanent", permanent)
+                    .addProperty("duration", niceDuration)
+                    .addProperty("expire", expire)
+                    .addProperty("reason", reason)
+                    .addProperty("sender", sender)
+                    .addProperty("name", alt.getName())).send();
+             */
+            new ExecuteAltKickPacket(
+                    alt.getName(), sender, reason, niceDuration, type, name, expire, permanent
+            ).send();
+        });
+    }
 
     @Override
     public void onReceive(JsonObject data) {

@@ -6,13 +6,13 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.errorhandling.Hastebin;
+import org.bukkit.command.CommandSender;
 
 public class DumpPlayerDataCommand {
     @Command(name = "dumpplayerdata")
     @Permission(Permissions.ADMIN)
-    public CommandResult execute(Sender sender, PlayerData target) {
+    public CommandResult execute(CommandSender sender, PlayerData target) {
         if (target == null) {
             return CommandResult.INVALID_PLAYER;
         }

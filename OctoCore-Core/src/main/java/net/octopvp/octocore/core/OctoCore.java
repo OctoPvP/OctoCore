@@ -28,7 +28,6 @@ import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.objects.permissions.Rank;
 import net.octopvp.octocore.core.setup.*;
 import net.octopvp.octocore.core.utils.PacketUtil;
-import net.octopvp.octocore.core.utils.Sender;
 import net.octopvp.octocore.core.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.core.utils.errorhandling.ErrorHandling;
 import net.octopvp.octocore.core.utils.nametag.NameTagChanger;
@@ -169,7 +168,6 @@ public abstract class OctoCore extends JavaPlugin {
             SentryManager.init(getConfig().getString("sentry.sentry-dsn", ""));
         commander = BukkitCommander.getCommander(this);
 
-
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.SubChannels.PERMISSIONS);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.PLUGIN_MSG);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.BUNGEE);
@@ -220,7 +218,6 @@ public abstract class OctoCore extends JavaPlugin {
                 .registerDependency(ServerManager.class, serverManager)
 
                 .registerProvider(PlayerData.class, new PlayerDataProvider())
-                .registerProvider(Sender.class, new SenderProvider())
                 .registerProvider(GameMode.class, new GameModeProvider())
                 .registerProvider(Rank.class, new RankProvider())
                 .registerProvider(OfflinePunishData.class, new OfflinePunishDataProvider())
