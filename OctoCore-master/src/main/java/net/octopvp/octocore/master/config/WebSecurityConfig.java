@@ -78,7 +78,7 @@ public class WebSecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http.antMatcher("/**")
                     .authorizeRequests()
-                    .antMatchers("/saml/**", "/dist/**", "/css/**", "/img/**", "/js/**").permitAll()
+                    .antMatchers("/saml/**", "/dist/**", "/css/**", "/img/**", "/js/**", "/VAADIN/**").permitAll()
                     .antMatchers("/**").authenticated()
                     .and()
                     .userDetailsService(userDetailsService)

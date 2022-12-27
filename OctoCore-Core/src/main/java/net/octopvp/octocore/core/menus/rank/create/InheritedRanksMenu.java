@@ -1,0 +1,101 @@
+package net.octopvp.octocore.core.menus.rank.create;
+
+import lombok.SneakyThrows;
+import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.guis.Gui;
+import net.octopvp.agile.guis.GuiItem;
+import net.octopvp.agile.guis.PaginatedGui;
+import net.octopvp.agile.menu.Menu;
+import net.octopvp.agile.menu.PaginatedMenu;
+import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.callback.ReturnableTypeCallback;
+import net.octopvp.octocore.core.manager.impl.RankManager;
+import net.octopvp.octocore.core.objects.builders.RankBuilder;
+import net.octopvp.octocore.core.objects.permissions.Rank;
+import net.octopvp.octocore.core.utils.SoundUtil;
+import net.octopvp.octocore.core.utils.item.WoolUtils;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class InheritedRanksMenu extends PaginatedMenu<PaginatedGui> {
+    private final Menu<?> previousMenu;
+    private final RankBuilder builder;
+    private final ReturnableTypeCallback<RankBuilder> callback;
+    private final RankBuilder startBuilder;
+    private final Menu<?> prev = this;
+    private boolean showOnlyInherited = false;
+    private boolean changed = false;
+
+    @SneakyThrows
+    public InheritedRanksMenu(Menu<?> previousMenu, RankBuilder builder, ReturnableTypeCallback<RankBuilder> callback) {
+        this.previousMenu = previousMenu;
+        this.builder = builder;
+        this.callback = callback;
+        this.startBuilder = builder.clone();
+    }
+
+    public GuiItem filterButton() {
+        return ItemBuilder.from(Material.HOPPER)
+                .name(CC.GREEN + "Filter")
+                .lore(CC.GRAY + "Click to show " + (showOnlyInherited ? "all ranks" : "only inherited ranks"))
+                .asGuiItem(event -> {
+                    showOnlyInherited = !showOnlyInherited;
+                    update((Player) event.getWhoClicked());
+                });
+    }
+
+    public GuiItem rankButton(Rank rankData) {
+        return ItemBuilder.from(Material.WOOL)
+                .name(rankData.getDisplayName())
+                .durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())))
+                .lore(CC.SEPARATOR, CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(), CC.AQUA + "Inherited: " + CC.YELLOW + Arrays.toString(rankData.getInheritedRanksName()), CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
+                        CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(), CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(), CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
+                        CC.SEPARATOR,
+                        CC.YELLOW + (builder.getRank().getInheritedRanks().contains(rankData.getRankId()) ? CC.RED + "Click to remove inherited rank" : "Click to add inherited rank"))
+                .asGuiItem(event -> {
+                    if (builder.getRank().getInheritedRanks().contains(rankData.getRankId())) {
+                        builder.removeInheritedRank(rankData.getRankId());
+                    } else {
+                        builder.addInheritedRank(rankData.getRankId());
+                    }
+                    changed = true;
+                    SoundUtil.playPing((Player) event.getWhoClicked());
+                    update((Player) event.getWhoClicked());
+                });
+    }
+
+    @Override
+    public List<GuiItem> getItems(Player player) {
+        List<GuiItem> items = new ArrayList<>();
+        for (Rank rank : RankManager.getRanks()) {
+            if (showOnlyInherited) {
+                if (builder.getRank().getInheritedRanks().contains(rank.getRankId()))
+                    items.add(rankButton(rank));
+            } else items.add(rankButton(rank));
+        }
+        return items;
+    }
+
+    @Override
+    public void populateGui(PaginatedGui gui, Player player) {
+        super.populateGui(gui, player);
+        gui.setItem(37, filterButton());
+    }
+
+    @Override
+    public PaginatedGui createGui(Player player) {
+        return Gui.paginated()
+                .title(CC.GREEN + "Choose inherited ranks!")
+                .rows(6)
+                .create();
+    }
+
+    @Override
+    public Menu<?> getBackMenu() {
+        return previousMenu;
+    }
+}

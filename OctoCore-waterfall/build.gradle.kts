@@ -24,9 +24,14 @@ tasks {
         relocate("net.badbird5907.blib", relocateBase + "blib")
         archiveFileName.set("OctoCore-waterfall.jar")
     }
-
+    compileJava {
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
+    }
     jar {
-        archiveBaseName.set("OctoCore-waterfall-no-deps")
+        archiveClassifier.set("no_deps")
+        archiveVersion.set("")
     }
 }
+tasks.getByName("build").dependsOn("shadowJar")
 description = "OctoCore Waterfall"
