@@ -1,8 +1,8 @@
 package net.octopvp.octocore.core.module.impl.auth;
 
-import net.badbird5907.jdacommand.CommandResult;
 import net.octopvp.commander.annotation.Sender;
 import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.entity.Player;
 

@@ -13,6 +13,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.reflections.scanners.Scanners.SubTypes;
+
 public class RedisListenerManager {
     private static final Objenesis objenesis = new ObjenesisStd();
 
@@ -45,10 +47,10 @@ public class RedisListenerManager {
         }
         if (packageName != null) {
             Reflections reflections = new Reflections(packageName);
-            Set<Class<? extends RedisPacket>> classes = reflections.getSubTypesOf(RedisPacket.class);
-            for (Class<? extends RedisPacket> aClass : classes) {
+            Set<Class<?>> classes = reflections.get(SubTypes.of(RedisPacket.class).asClass());//reflections.getSubTypesOf(RedisPacket.class);
+            for (Class<?> aClass : classes) {
                 try {
-                    packets.add(aClass.getDeclaredConstructor().newInstance());
+                    packets.add((RedisPacket) aClass.getDeclaredConstructor().newInstance());
                 } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
                     throw new RuntimeException(e);
                 } catch (NoSuchMethodException e) {

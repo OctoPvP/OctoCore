@@ -10,11 +10,16 @@ repositories {
 var targetJavaVersion = "1.8" // We're using 1.8 to support 1.8.9 for the core, and so does the 1_8 module, but the 1_19 module uses java 17
 dependencies {
     implementation(project(":OctoCore-common"))
-    implementation("net.octopvp:Commander-Bukkit:0.0.1-DEV")
+    implementation("net.octopvp:Commander-Bukkit:0.0.2-REL") {
+        exclude(group = "org.reflections")
+    }
     implementation("com.warrenstrange:googleauth:1.5.0")
     implementation("dev.samstevens.totp:totp:1.7.1")
     implementation("org.slf4j:slf4j-api:2.0.0-alpha1")
     implementation("net.octopvp:agile-gui:1.0.0") // TODO: shadowjar
+    implementation("org.reflections:reflections:0.10.2")
+
+    implementation("net.dv8tion:JDA:5.0.0-beta.2")
 
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         exclude(group = "org.yaml")

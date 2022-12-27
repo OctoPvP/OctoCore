@@ -8,6 +8,8 @@ import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.JDAManager;
 
+import java.util.Objects;
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiscordMessagePacket extends RedisPacket {
@@ -21,7 +23,7 @@ public class DiscordMessagePacket extends RedisPacket {
             String json = data.get("messagejson").getAsString();
             String channel = data.get("channel").getAsString();
             EmbedBuilder embedBuilder = OctoCore.getGson().fromJson(json, EmbedBuilder.class);
-            JDAManager.getJda().getTextChannelById(channel).sendMessage(embedBuilder.build()).queue();
+            Objects.requireNonNull(JDAManager.getJda().getTextChannelById(channel)).sendMessageEmbeds(embedBuilder.build()).queue();
         }
     }
 }

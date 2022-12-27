@@ -30,7 +30,10 @@ tasks {
             )
         }
     }
-
+    compileJava {
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+    }
     jar {
         archiveBaseName.set("OctoCore-common-no-deps")
     }

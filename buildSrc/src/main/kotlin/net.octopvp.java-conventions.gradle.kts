@@ -44,11 +44,11 @@ repositories {
 }
 
 dependencies {
+    implementation("org.reflections:reflections:0.10.2")
     implementation("org.mongodb:mongodb-driver-sync:4.2.2")
     implementation("redis.clients:jedis:2.9.0")
     implementation("org.apache.commons:commons-compress:1.21")
     implementation("org.apache.commons:commons-lang3:3.12.0")
-    implementation("net.badbird5907:JDACommand:2.0.0-REL")
     implementation("club.minnced:discord-webhooks:0.5.7")
     implementation("org.javatuples:javatuples:1.2")
     implementation("io.sentry:sentry:5.6.0")

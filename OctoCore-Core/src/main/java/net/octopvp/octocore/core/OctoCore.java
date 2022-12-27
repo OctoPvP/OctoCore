@@ -100,7 +100,7 @@ public abstract class OctoCore extends JavaPlugin {
     @Getter
     private JDAManager jdaManager;
     @Getter
-    private RedisManager redisManager;
+    private RedisManager redisManager; // TODO managers not registered
     @Getter
     private ScoreBoardManager scoreBoardManager;
     @Getter

@@ -1,8 +1,10 @@
 package net.octopvp.octocore.core.manager.impl;
 
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
+import net.octopvp.octocore.core.database.DatabaseManager;
 import net.octopvp.octocore.core.database.redis.packets.server.ServerOfflinePacket;
 import net.octopvp.octocore.core.manager.Manager;
 import redis.clients.jedis.Jedis;
@@ -25,9 +27,12 @@ public class RedisManager extends Manager {
         }
         net.octopvp.octocore.common.redis.RedisManager redisManager;
         OctoCore.getInstance().setActualRedisManager(redisManager = new net.octopvp.octocore.common.redis.RedisManager(
-                jedisSettings.getAddress(), jedisSettings.getPort(), jedisSettings.getPassword(), "net.octopvp.octocore.paper.database.redis.packets", null
+                jedisSettings.getAddress(), jedisSettings.getPort(), jedisSettings.getPassword(), /*"net.octopvp.octocore.paper.database.redis.packets"*/
+                DatabaseManager.class.getPackage().getName() + ".redis.packets"
+                , null
         ));
-        //OctoCoreCommon.setRedisHandler(OctoCore.getInstance().getRedisHandler());
+        OctoCoreCommon.getInstance().setRedisManager(redisManager);
+        Logger.debug("Connected to Redis");
         /*
         try {
             OctoCore.getInstance().getRedisHandler().setupPackets();

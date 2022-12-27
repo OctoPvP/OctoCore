@@ -18,8 +18,6 @@ tasks {
     shadowJar {
         archiveClassifier.set("")
         archiveVersion.set("")
-
-        relocate("org.reflections", "net.octopvp.reflections")
     }
     withType<ProcessResources> {
         filesMatching("plugin.yml") {
@@ -35,4 +33,4 @@ tasks {
         archiveVersion.set("")
     }
 }
-tasks.getByName("build").dependsOn("shadowJar") // maybe jar dependsOn shadowJar?
+tasks.getByName("build").dependsOn("shadowJar")

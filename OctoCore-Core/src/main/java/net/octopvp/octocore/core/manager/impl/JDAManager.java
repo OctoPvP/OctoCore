@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.StringUtils;
@@ -77,13 +77,9 @@ public class JDAManager extends Manager {
                 return;
             instance = this;
             Logger.debug("Setting up JDA");
-            try {
-                jda = JDABuilder.createDefault(/*OctoCore.getInstance().getConfig().getString("master.discord.token")*/ "ODM0ODE0MTEzMjg4NjgzNjAy.YIGXOg.wBPa4fZ9d2U_rD-34ddmZNM3THg")
-                        .addEventListeners(new ReadyListener(), new MessageListener())
-                        .build();
-            } catch (LoginException e) {
-                e.printStackTrace();
-            }
+            jda = JDABuilder.createDefault(/*OctoCore.getInstance().getConfig().getString("master.discord.token")*/ "ODM0ODE0MTEzMjg4NjgzNjAy.YIGXOg.wBPa4fZ9d2U_rD-34ddmZNM3THg")
+                    .addEventListeners(new ReadyListener(), new MessageListener())
+                    .build();
         }
     }
 
@@ -93,7 +89,7 @@ public class JDAManager extends Manager {
             if (!isEnabled())
                 return;
             Logger.info("Sending message \"Master control - Stopped\" to discord master server logs id:" + OctoCore.getInstance().getConfig().getString("master.discord.channels.master-ctrl-status"));
-            jda.getTextChannelById(OctoCore.getInstance().getConfig().getString("master.discord.channels.master-ctrl-status")).sendMessage(Embed.setTimestamp(Embed.red().setTitle("Master Control - Stopped")).build()).queue();
+            jda.getTextChannelById(OctoCore.getInstance().getConfig().getString("master.discord.channels.master-ctrl-status")).sendMessageEmbeds(Embed.setTimestamp(Embed.red().setTitle("Master Control - Stopped")).build()).queue();
             jda.shutdown();
         }
     }
@@ -103,7 +99,7 @@ public class JDAManager extends Manager {
             return;
         EmbedBuilder builder = Embed.setTimestamp(Embed.warn().setTitle(entry.getType()));
         entry.getEntries().keySet().forEach(key -> builder.addField(key, entry.getEntries().get(key), false));
-        jda.getTextChannelById(OctoCore.getInstance().getConfig().getString("master.discord.channels.audit")).sendMessage(builder.build()).queue();
+        jda.getTextChannelById(OctoCore.getInstance().getConfig().getString("master.discord.channels.audit")).sendMessageEmbeds(builder.build()).queue();
     }
 
     public class ReadyListener extends ListenerAdapter {
@@ -112,7 +108,7 @@ public class JDAManager extends Manager {
             super.onReady(event);
             jdaReady = true;
             Logger.info("Sending message \"Master control - Started\" to discord master server logs id:" + OctoCore.getInstance().getConfig().getString("master.discord.channels.master-ctrl-status"));
-            jda.getTextChannelById(OctoCore.getInstance().getConfig().getString("master.discord.channels.master-ctrl-status")).sendMessage(Embed.setTimestamp(Embed.green().setTitle("Master Control - Started")).build()).queue();
+            jda.getTextChannelById(OctoCore.getInstance().getConfig().getString("master.discord.channels.master-ctrl-status")).sendMessageEmbeds(Embed.setTimestamp(Embed.green().setTitle("Master Control - Started")).build()).queue();
         }
     }
 
