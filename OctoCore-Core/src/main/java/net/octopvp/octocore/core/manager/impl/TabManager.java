@@ -9,7 +9,6 @@ import net.octopvp.octocore.core.utils.tab.DefaultTabProvider;
 import net.octopvp.octocore.core.utils.tab.TabHandler;
 import net.octopvp.octocore.core.utils.tab.TabProvider;
 import net.octopvp.octocore.core.utils.tab.entry.TabElement;
-import net.octopvp.octocore.core.utils.tab.implementation.v1_8_R3TabAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -50,7 +49,7 @@ public class TabManager extends Manager {
     }
 
     public void setHeaderFooter(Player player, String header, String footer) {
-        v1_8_R3TabAdapter.INSTANCE.sendHeaderFooter(player, header, footer);
+        OctoCore.getInstance().getServerImplementation().getTabAdapter().sendHeaderFooter(player, header, footer);
     }
 
     @Override

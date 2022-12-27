@@ -5,7 +5,7 @@ import net.octopvp.octocore.core.hooks.CitizensHook;
 import net.octopvp.octocore.core.hooks.Hook;
 
 public class SetupHooks implements Setup {
-    private final Hook[] hooks = new Hook[]{new CitizensHook(), new ProtocolLibHook()};
+    private final Hook[] hooks = new Hook[]{new CitizensHook()};
 
     @Override
     public void setup(OctoCore plugin) {

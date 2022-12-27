@@ -2,9 +2,9 @@ package net.octopvp.octocore.core.utils.tab;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.utils.tab.entry.TabElement;
 import net.octopvp.octocore.core.utils.tab.entry.TabElementHandler;
-import net.octopvp.octocore.core.utils.tab.implementation.v1_8_R3TabAdapter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -64,7 +64,7 @@ public class TabHandler {
 
         return (TabAdapter) Class.forName(disguisePackage + "TabAdapter").newInstance();
          */
-        return v1_8_R3TabAdapter.INSTANCE;
+        return OctoCore.getInstance().getServerImplementation().getTabAdapter();
     }
 
     /**

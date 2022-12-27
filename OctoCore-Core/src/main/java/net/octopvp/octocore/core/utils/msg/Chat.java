@@ -19,19 +19,11 @@ public class Chat {
         player.sendMessage(PlaceholderManager.replacePlaceholders(message));
     }
 
-    public static void sendMessage(Sender player, String message) {
-        player.sendMessage(PlaceholderManager.replacePlaceholders(message));
-    }
-
     public static void sendMessage(Player player, Lang message) {
         player.sendMessage(PlaceholderManager.replacePlaceholders(message));
     }
 
     public static void sendMessage(CommandSender player, Lang message) {
-        player.sendMessage(PlaceholderManager.replacePlaceholders(message));
-    }
-
-    public static void sendMessage(Sender player, Lang message) {
         player.sendMessage(PlaceholderManager.replacePlaceholders(message));
     }
 

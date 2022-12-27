@@ -192,6 +192,7 @@ public abstract class OctoCore extends JavaPlugin {
         Utilities.init();
         Logger.info("Starting OctoCore");
         if (!getDataFolder().exists())
+            //noinspection ResultOfMethodCallIgnored
             getDataFolder().mkdirs();
         new SetupConfig().setup(this);
 
@@ -222,11 +223,14 @@ public abstract class OctoCore extends JavaPlugin {
                 .registerCommandPostProcessor((ctx, obj) -> {
                     if (obj instanceof CommandResult) {
                         CommandResult result = (CommandResult) obj;
+                        //noinspection StatementWithEmptyBody
                         if (result == CommandResult.SUCCESS) {
                         } else if (result == CommandResult.INVALID_ARGS) {
                             throw new InvalidArgsException(ctx.getCommandInfo());
-                        } else if (Objects.equals(result.getMsg(), "") || Objects.equals(result.getMsg(), " ")) {
-                        } else if (result.getMsg() == null) {
+                        } else //noinspection StatementWithEmptyBody
+                            if (Objects.equals(result.getMsg(), "") || Objects.equals(result.getMsg(), " ")) {
+                        } else //noinspection StatementWithEmptyBody
+                                if (result.getMsg() == null) {
                         } else {
                             ctx.getCommandSender().sendMessage(result.getMsg());
                         }

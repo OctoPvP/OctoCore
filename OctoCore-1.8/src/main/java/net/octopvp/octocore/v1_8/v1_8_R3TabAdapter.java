@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.utils.tab.implementation;
+package net.octopvp.octocore.v1_8;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -6,9 +6,7 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.ChannelPromise;
-import net.minecraft.server.v1_8_R3.EntityPlayer;
-import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
+import net.minecraft.server.v1_8_R3.*;
 import net.octopvp.octocore.core.utils.tab.TabAdapter;
 import net.octopvp.octocore.core.utils.tab.client.ClientVersionUtil;
 import net.octopvp.octocore.core.utils.tab.skin.SkinType;
