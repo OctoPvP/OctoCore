@@ -1,7 +1,7 @@
 plugins {
     id("net.octopvp.java-conventions")
+    id("net.octopvp.server-conventions")
     id("io.freefair.lombok") version "6.5.1"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 repositories {
@@ -16,10 +16,7 @@ dependencies {
 }
 tasks {
     shadowJar {
-        archiveClassifier.set("")
-        archiveVersion.set("")
 
-        relocate("org.reflections", "net.octopvp.reflections")
     }
     withType<ProcessResources> {
         filesMatching("plugin.yml") {
