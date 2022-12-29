@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
-public class TabHandler {
+public class TabHandler { // https://github.com/NoSequel/TabAPI
 
     private final TabAdapter adapter;
     private final TabElementHandler handler;

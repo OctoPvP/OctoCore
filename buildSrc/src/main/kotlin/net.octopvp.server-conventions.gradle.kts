@@ -7,5 +7,5 @@ tasks.withType<ShadowJar>() {
     archiveClassifier.set("")
     archiveVersion.set("")
 
-    relocate("org.reflections", "net.octopvp.reflections")
+    relocate("org.reflections", "net.octopvp.octocore.shadow.reflections")
 }
