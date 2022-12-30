@@ -28,8 +28,7 @@ public class ChooseServerScopeMenu extends PaginatedMenu<PaginatedGui> {
     private final Menu<?> previousMenu;
 
     @Override
-    public void populateGui(PaginatedGui gui, Player player) {
-        super.populateGui(gui, player);
+    public void addStaticButtons() {
         gui.setItem(0, globalButton());
         gui.setItem(1, customButton());
     }

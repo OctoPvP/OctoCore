@@ -6,15 +6,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class OctoPermissible extends PermissibleBase {
     private final UUID uuid;
     private final PermissibleBase oldPermissibleBase;
 
-    public OctoPermissible(Player player, PermissibleBase old) {
+    public OctoPermissible(Player player, UUID uuid, PermissibleBase old) {
         super(player);
-        uuid = player.getUniqueId();
+        this.uuid = uuid;
         this.oldPermissibleBase = old;
     }
 
@@ -26,7 +28,8 @@ public class OctoPermissible extends PermissibleBase {
         }
         PlayerData data = PlayerManager.getInstance().getData(this.uuid);
         if (data == null) {
-            Logger.error("PlayerData is null!");
+            Logger.error("PlayerData is null! - " + PlayerManager.getInstance().getPlayerProfiles().size() + " | " + Arrays.stream(PlayerManager.getInstance()
+                    .getPlayerProfiles().keySet().toArray(new UUID[0])).map(UUID::toString).collect(Collectors.joining(", ")));
             Thread.dumpStack();
             return false;
         }

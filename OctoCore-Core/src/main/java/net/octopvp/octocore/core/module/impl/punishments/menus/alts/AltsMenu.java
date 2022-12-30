@@ -83,8 +83,7 @@ public class AltsMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     @Override
-    public void populateGui(PaginatedGui gui, Player player) {
-        super.populateGui(gui, player);
+    public void addStaticButtons() {
         gui.setItem(4, ItemBuilder.from(Material.PAPER)
                 .name(CC.MAIN + playerData.getName() + "'s possible alts")
                 .lore("", CC.VALUE + "Alts amount&7: " + CC.SECONDARY + playerData.getAlts().size(),

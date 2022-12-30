@@ -78,19 +78,24 @@ public class GrantConfirmationMenu extends Menu<Gui> {
                             return;
                         }
 
-                        GlobalPlayer globalPlayer = OctoCore.getInstance().getServerManager().getGlobalPlayer(targetData.get().getName());
+                        GlobalPlayer globalPlayer = OctoCore.getInstance().getServerManager().getGlobalPlayer(targetData.get().getUniqueId()); // FIXME globalplayer is null for some reason
+                        String name = globalPlayer != null ? globalPlayer.getName() : targetData.get().getName();
                         if (grant.isPermanent()) {
                             player.sendMessage(Lang.GRANT_PERM_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getEnteredReason()));
                             if (globalPlayer != null)
                                 globalPlayer.sendMessage(Lang.GRANT_PERM_GRANTED_TO.getMsg(targetRank.getDisplayName()));
-
-                            new AdminAlertPacket(Lang.GRANT_ADMIN_ALERT_PERM.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getEnteredReason())).send();
+                            new AdminAlertPacket(Lang.GRANT_ADMIN_ALERT_PERM.getMsg(
+                                    player.getName(),
+                                    name,
+                                    targetRank.getDisplayName(),
+                                    grantProcedure.getEnteredReason())
+                            ).send();
                         } else {
                             player.sendMessage(Lang.GRANT_TEMP_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getNiceDuration()));
                             if (globalPlayer != null) {
                                 globalPlayer.sendMessage(Lang.GRANT_TEMP_GRANTED_TO.getMsg(targetRank.getDisplayName(), grantProcedure.getNiceDuration()));
                             }
-                            new AdminAlertPacket(Lang.GRANT_ADMIN_ALERT_TEMP.getMsg(player.getName(), globalPlayer.getName(), targetRank.getDisplayName(), grantProcedure.getNiceDuration(), grantProcedure.getEnteredReason())).send();
+                            new AdminAlertPacket(Lang.GRANT_ADMIN_ALERT_TEMP.getMsg(player.getName(), name, targetRank.getDisplayName(), grantProcedure.getNiceDuration(), grantProcedure.getEnteredReason())).send();
                         }
                         grant.setActive(true);
                         if (Bukkit.getPlayer(targetData.get().getUuid()) != null) {

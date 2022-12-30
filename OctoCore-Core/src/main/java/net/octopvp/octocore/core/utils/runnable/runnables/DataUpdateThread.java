@@ -1,6 +1,6 @@
 package net.octopvp.octocore.core.utils.runnable.runnables;
 
-import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.packets.PlayerDataPacket;
 import net.octopvp.octocore.common.util.DataCache;
@@ -11,8 +11,11 @@ import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-@RequiredArgsConstructor
 public class DataUpdateThread extends Thread {
+    public DataUpdateThread(OctoCore plugin) {
+        super("OctoCore Data Update Thread");
+        this.plugin = plugin;
+    }
     private final OctoCore plugin;
 
     @Override
@@ -39,9 +42,14 @@ public class DataUpdateThread extends Thread {
         //jsonChain.addProperty("name", OctoCore.getServerName()).addProperty("tps1", Bukkit.getServer().spigot().getTPS()[0]).addProperty("tps2", Bukkit.getServer().spigot().getTPS()[1]);
         //jsonChain.addProperty("tps3", Bukkit.getServer().spigot().getTPS()[2]).addProperty("lastTick", System.currentTimeMillis()).addProperty("players", StringUtils.getStringFromList(Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList())));
 
+        if (OctoCoreCommon.getInstance().getRedisManager() == null) return;
+
         new ServerUpdatePacket(OctoCore.getServerName()).send();
+        System.out.println("Sent server update packet");
         for (PlayerData playerData : PlayerManager.getInstance().getPlayerProfiles().values()) {
+            System.out.println("Sending player data packet for " + playerData);
             if (playerData == null) continue;
+            System.out.println("Sending player data packet for " + playerData + " (2)");
             playerData.setLastDataSave(playerData.getLastDataSave() + 1);
             if (playerData.getLastDataSave() >= 120) //save every 2 mins
                 playerData.save();
@@ -95,5 +103,4 @@ public class DataUpdateThread extends Thread {
             new DataCache(playerData.getUuid()).update(playerData.save(true));
         }
     }
-
 }

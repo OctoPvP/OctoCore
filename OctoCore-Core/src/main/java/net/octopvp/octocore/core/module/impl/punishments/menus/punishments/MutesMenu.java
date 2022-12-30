@@ -36,8 +36,7 @@ public class MutesMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     @Override
-    public void populateGui(PaginatedGui gui, Player player) {
-        super.populateGui(gui, player);
+    public void addStaticButtons() {
         gui.setItem(4, Buttons.playerInfo(punishData.getUniqueId()));
     }
 

@@ -19,6 +19,7 @@ import net.octopvp.octocore.core.utils.SoundUtil;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -88,19 +89,29 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
     }
      */
     public GuiItem grantEntryButton(final Grant grant) {
+        List<String> lore = new ArrayList<>(Arrays.asList(
+                CC.SEPARATOR,
+                CC.AQUA + "Rank" + CC.GRAY + ": " + grant.getRank().getDisplayName(),
+                CC.AQUA + "Added By" + CC.GRAY + ": " + CC.YELLOW + grant.getAddedBy(),
+                CC.AQUA + "Added Date" + CC.GRAY + ": " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
+                CC.AQUA + "Duration" + CC.GRAY + ": " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
+                CC.AQUA + "Reason" + CC.GRAY + ": " + CC.YELLOW + grant.getReason(),
+                CC.AQUA + "Server" + CC.GRAY + ": " + CC.YELLOW + grant.getServer().getServer(),
+                "",
+                CC.AQUA + "Active" + CC.GRAY + ": " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
+                CC.AQUA + "Expires" + CC.GRAY + ": " + CC.YELLOW + grant.getNiceExpire(),
+                CC.SEPARATOR
+        ));
+        if (grant.hasExpired()) {
+            lore.add("");
+            lore.add(CC.RED + "This grant has expired!");
+        } else {
+            lore.add("");
+            lore.add(CC.YELLOW + "Click to revoke this grant!");
+        }
         return ItemBuilder.from(grant.isActive() ? XMaterial.GREEN_WOOL : XMaterial.RED_WOOL)
                 .name(grant.isActive() ? CC.GREEN + grant.getRankName() : CC.RED + grant.getRankName())
-                .lore(CC.SEPARATOR,
-                        CC.AQUA + "Rank&7: " + grant.getRank().getDisplayName(),
-                        CC.AQUA + "Added By&7: " + CC.YELLOW + grant.getAddedBy(),
-                        CC.AQUA + "Added Date&7: " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
-                        CC.AQUA + "Duration&7: " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
-                        CC.AQUA + "Reason&7: " + CC.YELLOW + grant.getReason(),
-                        CC.AQUA + "Server&7: " + CC.YELLOW + grant.getServer().getServer(),
-                        "",
-                        CC.AQUA + "Active&7: " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
-                        CC.AQUA + "Expires&7: " + CC.YELLOW + grant.getNiceExpire()
-                )
+                .setLore(lore)
                 .asGuiItem(event -> {
                     Rank rank = grant.getRank();
                     if (rank != null && rank.isDefaultRank()) return;
@@ -112,7 +123,9 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
                         targetData.save();
                     }
                     new GrantsUpdatePacket(targetData.getName(), OctoCore.getGson().toJson(grant), false).send();
-                    update((Player) event.getWhoClicked());
+                    event.getWhoClicked().sendMessage(CC.GREEN + "You have revoked " + CC.YELLOW + grant.getRankName() + CC.GREEN + " from " + CC.YELLOW + targetData.getName() + CC.GREEN + "!");
+                    event.getWhoClicked().closeInventory();
+                    open((Player) event.getWhoClicked());
                 });
     }
 
@@ -152,14 +165,13 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
     @Override
     public PaginatedGui createGui(Player player) {
         return Gui.paginated()
-                .title(CC.GREEN + targetData.getName() + "'s grants")
+                .title(targetData.getName() + "'s grants")
                 .rows(6)
                 .create();
     }
 
     @Override
-    public void populateGui(PaginatedGui gui, Player player) {
-        super.populateGui(gui, player);
+    public void addStaticButtons() {
         gui.setItem(4, Buttons.playerInfo(targetData));
     }
 }

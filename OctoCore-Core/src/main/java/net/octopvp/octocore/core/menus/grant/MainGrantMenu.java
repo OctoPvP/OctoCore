@@ -39,8 +39,8 @@ public class MainGrantMenu extends Menu<Gui> {
 
     @Override
     public void populateGui(Gui gui, Player player) {
-        gui.setItem(10, addGrant());
-        gui.setItem(12, viewGrants());
+        gui.setItem(11, addGrant());
+        gui.setItem(15, viewGrants());
         gui.getFiller().fill(PLACEHOLDER_ITEM);
     }
 }

@@ -17,7 +17,7 @@ public class PermissionManager extends Manager {
     public static void injectPermissible(Player player, PlayerData data) {
         UUID uuid = player.getUniqueId();
         PermissibleBase old = player.getPermissibleBase();
-        PermissibleBase newBase = new OctoPermissible(player, old);
+        PermissibleBase newBase = new OctoPermissible(player, uuid, old);
         player.setPermissibleBase(newBase);
         if (player.getPermissibleBase() instanceof OctoPermissible) {
             Logger.debug("Successfully injected permissible!");

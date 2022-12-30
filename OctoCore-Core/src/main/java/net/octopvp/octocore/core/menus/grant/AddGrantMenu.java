@@ -31,8 +31,7 @@ public class AddGrantMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     @Override
-    public void populateGui(PaginatedGui gui, Player player) {
-        super.populateGui(gui, player);
+    public void addStaticButtons() {
         gui.setItem(4, Buttons.playerInfo(data));
     }
 
@@ -77,7 +76,7 @@ public class AddGrantMenu extends PaginatedMenu<PaginatedGui> {
     @Override
     public PaginatedGui createGui(Player player) {
         return (PaginatedGui) Gui.paginated()
-                .title(CC.AQUA + "Select a rank!")
+                .title("Select a rank!")
                 .rows(6)
                 .create()
                 .setCloseGuiAction(event -> {
@@ -85,7 +84,6 @@ public class AddGrantMenu extends PaginatedMenu<PaginatedGui> {
                     if (playerData.getGrantProcedure() != null && playerData.getGrantProcedure().getGrantProcedureState() == GrantProcedureState.START) {
                         playerData.setGrantProcedure(null);
                     }
-                    PlayerManager.getInstance().getPlayerProfiles().remove(data.getUuid());
                 });
     }
 }

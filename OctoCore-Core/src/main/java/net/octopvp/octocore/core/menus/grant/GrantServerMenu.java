@@ -73,8 +73,7 @@ public class GrantServerMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     @Override
-    public void populateGui(PaginatedGui gui, Player player) {
-        super.populateGui(gui, player);
+    public void addStaticButtons() {
         gui.setItem(0, globalButton());
     }
 

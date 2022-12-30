@@ -23,8 +23,7 @@ public class PotentialAltsMenu extends PaginatedMenu<PaginatedGui> {
     private Menu<?> previousMenu;
 
     @Override
-    public void populateGui(PaginatedGui gui, Player player) {
-        super.populateGui(gui, player);
+    public void addStaticButtons() {
         gui.setItem(4, ItemBuilder.from(Material.PAPER)
                 .name(CC.MAIN + "About")
                 .lore(
