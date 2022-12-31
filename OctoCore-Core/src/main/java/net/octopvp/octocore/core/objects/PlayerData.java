@@ -18,6 +18,7 @@ import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
@@ -56,7 +57,6 @@ public class PlayerData implements IPlayerData, IPunishData {
     //TODO set defaults for this so theres no errors when using/loading old data from older updates (idk if this makes sense lol)
     private UUID uuid;
     private double dataVersion = 0.0;
-
     private long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
     private String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName;
     private String lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default";
@@ -220,7 +220,6 @@ public class PlayerData implements IPlayerData, IPunishData {
 
     public Document save(boolean getDoc) {
         this.lastDataSave = 0;
-
         Document document = new Document();
         document.put("uuid", uuid.toString());
         document.put("name", name);
@@ -810,11 +809,6 @@ public class PlayerData implements IPlayerData, IPunishData {
 
     public PlayerTag getNickTag() {
         return TagManager.getTag(nickTagID);
-    }
-
-    @Override
-    public String toString() {
-        return OctoCore.getGson().toJson(this);
     }
 
     @Override

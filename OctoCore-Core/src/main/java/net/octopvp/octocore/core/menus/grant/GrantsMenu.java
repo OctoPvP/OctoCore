@@ -136,7 +136,7 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
                 .lore("", CC.YELLOW + "Click to change to " + (all ? "active only" : "all") + "!")
                 .asGuiItem(event -> {
                     all = !all;
-                    update((Player) event.getWhoClicked());
+                    open((Player) event.getWhoClicked());
                     SoundUtil.playPing((Player) event.getWhoClicked());
                 });
     }
@@ -173,5 +173,6 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
     @Override
     public void addStaticButtons() {
         gui.setItem(4, Buttons.playerInfo(targetData));
+        gui.setItem(6,6, filterButton());
     }
 }

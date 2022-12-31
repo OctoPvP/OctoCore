@@ -57,8 +57,8 @@ public class ChooseColorMenu extends PaginatedMenu<PaginatedGui> {
     @Override
     public PaginatedGui createGui(Player player) {
         return Gui.paginated()
-                .title(CC.GREEN + "Choose color")
-                .rows(3)
+                .title("Choose color")
+                .rows(7)
                 .create();
     }
 }

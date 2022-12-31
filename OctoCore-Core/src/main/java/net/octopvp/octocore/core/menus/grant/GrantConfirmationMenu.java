@@ -122,7 +122,7 @@ public class GrantConfirmationMenu extends Menu<Gui> {
     @Override
     public Gui createGui(Player player) {
         return Gui.gui()
-                .title(CC.AQUA + "Are you sure you want to grant this rank?")
+                .title(CC.AQUA + "Are you sure?")
                 .rows(3)
                 .create();
     }

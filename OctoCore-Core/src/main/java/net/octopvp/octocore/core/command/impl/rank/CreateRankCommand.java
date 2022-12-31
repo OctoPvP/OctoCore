@@ -1,6 +1,7 @@
 package net.octopvp.octocore.core.command.impl.rank;
 
 import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Name;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.commander.annotation.Sender;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
@@ -15,7 +16,7 @@ public class CreateRankCommand {
     @Command(name = "createrank")
     @Permission(Permissions.CREATE_RANK)
     @PlayerOnly
-    public CommandResult execute(@Sender Player sender, String name) {
+    public CommandResult execute(@Sender Player sender, @Name("name") String name) {
         if (RankManager.getInstance().getRankByName(name) != null) {
             sender.sendMessage(CC.RED + "That rank already exists!");
             return CommandResult.SUCCESS;
