@@ -113,4 +113,9 @@ public class Grant {
                 ", server=" + server +
                 '}';
     }
+
+    public long getExpireTime() {
+        if (isPermanent()) return -1;
+        return addedAt + duration;
+    }
 }
