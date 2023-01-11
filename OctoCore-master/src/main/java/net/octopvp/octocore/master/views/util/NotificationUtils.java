@@ -29,12 +29,22 @@ public class NotificationUtils { // https://vaadin.com/docs/latest/components/no
         Notification notification = new Notification();
         notification.addThemeVariants(variant);
         notification.setPosition(position);
-
-        Icon icon = VaadinIcon.CHECK_CIRCLE.create();
         Div info = new Div(new Text(text));
 
         List<Component> components = new ArrayList<>();
-        components.add(icon);
+        switch (variant) {
+            case LUMO_SUCCESS -> {
+                components.add(VaadinIcon.CHECK_CIRCLE.create());
+                break;
+            }
+            case LUMO_ERROR -> {
+                components.add(VaadinIcon.WARNING.create());
+                break;
+            }
+            default -> {
+                components.add(VaadinIcon.INFO_CIRCLE.create());
+            }
+        }
         components.add(info);
         for (Button button : buttons) {
             button.getStyle().set("margin", "0 0 0 var(--lumo-space-l)");

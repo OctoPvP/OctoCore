@@ -22,6 +22,7 @@ import net.octopvp.octocore.master.views.pages.impl.Servers;
 import net.octopvp.octocore.master.views.pages.impl.admin.UsersPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.RedisManagerPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.vote.VoteManager;
+import net.octopvp.octocore.master.views.pages.impl.player.MainPlayerInfoPage;
 
 import java.util.*;
 
@@ -245,6 +246,9 @@ public class MainLayout extends AppLayout {
         menuItems.put("Misc", new MenuItemInfo[]{
                 new MenuItemInfo("Vote Manager", "la la-vote-yea", VoteManager.class),
                 new MenuItemInfo("Redis Manager", "la la-exchange-alt", RedisManagerPage.class),
+        });
+        menuItems.put("Player", new MenuItemInfo[]{
+                new MenuItemInfo("Player Info", "la la-user", MainPlayerInfoPage.class),
         });
         menuItems.put("Admin", new MenuItemInfo[]{
                 new MenuItemInfo("Users", "la la-users", UsersPage.class),

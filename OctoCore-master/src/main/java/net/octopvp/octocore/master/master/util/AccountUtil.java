@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 public class AccountUtil {
     @Getter
     private Mojang mojangAPI = new Mojang().connect();
-    ;
 
     @PostConstruct
     public void init() {
@@ -37,6 +36,16 @@ public class AccountUtil {
     private LoadingCache<String, UUID> uuidCache = CacheBuilder.newBuilder()
             .expireAfterAccess(1, TimeUnit.HOURS)
             .build(uuidCacheLoader);
+    private CacheLoader<UUID, String> nameCacheLoader = new CacheLoader<>() {
+        @Override
+        public String load(UUID key) throws Exception {
+            return getNameFromMojang(key);
+        }
+    };
+
+    private LoadingCache<UUID, String> nameCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(1, TimeUnit.HOURS)
+            .build(nameCacheLoader);
 
     public UUID getUUID(String name) {
         try {
@@ -62,5 +71,22 @@ public class AccountUtil {
         return UUID.fromString(s.replaceFirst(
                 "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"
         ));
+    }
+
+    public String getNameFromMojang(UUID uuid) {
+        try {
+            return mojangAPI.getPlayerProfile(uuid.toString()).getUsername();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getName(UUID uuid) {
+        try {
+            return nameCache.get(uuid);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
