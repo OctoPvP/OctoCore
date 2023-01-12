@@ -3,10 +3,10 @@ package net.octopvp.octocore.core.command.impl.tests;
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.object.builders.RankBuilder;
+import net.octopvp.octocore.common.object.enums.RankType;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.manager.impl.RankManager;
-import net.octopvp.octocore.core.objects.builders.RankBuilder;
-import net.octopvp.octocore.core.objects.enums.RankType;
 import org.bukkit.ChatColor;
 
 public class CreateOwnerRankCommand {

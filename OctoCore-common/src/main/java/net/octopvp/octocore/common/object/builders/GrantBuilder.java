@@ -1,9 +1,9 @@
-package net.octopvp.octocore.core.objects.builders;
+package net.octopvp.octocore.common.object.builders;
 
 
 import net.octopvp.octocore.common.object.ServerContext;
-import net.octopvp.octocore.core.objects.permissions.Grant;
-import net.octopvp.octocore.core.objects.permissions.Rank;
+import net.octopvp.octocore.common.object.permissions.Grant;
+import net.octopvp.octocore.common.object.permissions.Rank;
 
 import java.util.UUID;
 

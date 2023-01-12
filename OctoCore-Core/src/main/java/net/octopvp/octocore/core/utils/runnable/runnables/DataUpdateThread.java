@@ -15,11 +15,12 @@ import java.util.Map;
 import java.util.UUID;
 
 public class DataUpdateThread extends Thread {
+    private final OctoCore plugin;
+
     public DataUpdateThread(OctoCore plugin) {
         super("OctoCore Data Update Thread");
         this.plugin = plugin;
     }
-    private final OctoCore plugin;
 
     @Override
     public void run() {
@@ -66,8 +67,8 @@ public class DataUpdateThread extends Thread {
                         playerData.hasPermission(Permissions.STAFF), playerData.getAllowedTagsID(), playerData.getAllEffectivePermissions(),
                         playerData.getAllNegatedPermissions(), playerData.getAltsSafely(), playerData.getAddresses(),
                         playerData.getHighestRank().getWeight(), playerData.getMessageSettings(), playerData.getCachedFormattedNameNoNickNoTag(),
-                            playerData.isOp()
-                    ).send();
+                        playerData.isOp()
+                ).send();
                 new DataCache(playerData.getUuid()).update(playerData.save(true));
             }
         } catch (Exception e) {

@@ -8,6 +8,8 @@ import net.badbird5907.lightning.annotation.EventHandler;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.ServerImplementation;
 import net.octopvp.octocore.common.StringUtils;
+import net.octopvp.octocore.common.manager.IPunishModule;
+import net.octopvp.octocore.common.manager.IRankManager;
 import net.octopvp.octocore.common.manager.IServerManager;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.redis.packets.VotePacket;
@@ -57,6 +59,8 @@ public class OctoCoreMaster {
 
     @Autowired
     private SettingRepository settingRepository;
+    @Autowired
+    private AccountUtil accountUtil;
 
     public OctoCoreMaster() {
         LOG.info("Starting Master...");
@@ -109,6 +113,21 @@ public class OctoCoreMaster {
             @Override
             public String getCommit() {
                 return "N/A";
+            }
+
+            @Override
+            public String getName(UUID uuid) {
+                return accountUtil.getName(uuid);
+            }
+
+            @Override
+            public IRankManager getRankManager() {
+                throw new RuntimeException("Not implemented");
+            }
+
+            @Override
+            public IPunishModule getPunishModule() {
+                throw new RuntimeException("Not implemented");
             }
         });
     }

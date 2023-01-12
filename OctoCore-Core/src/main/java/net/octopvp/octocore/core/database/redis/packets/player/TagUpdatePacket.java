@@ -40,7 +40,7 @@ public class TagUpdatePacket extends RedisPacket {
         }
     }
 
-    public static enum TagUpdateReason {
+    public enum TagUpdateReason {
         GIVE_TAG, REMOVE_TAG
     }
 }

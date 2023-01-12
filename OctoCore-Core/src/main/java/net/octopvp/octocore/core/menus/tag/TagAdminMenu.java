@@ -43,7 +43,7 @@ public class TagAdminMenu extends Menu<Gui> {
                             OfflinePlayer op = Bukkit.getOfflinePlayer(answer);
                             PlayerData data = PlayerManager.getInstance().getOfflineData(op.getUniqueId());
                             if (data == null) {
-                                ((Player) event.getWhoClicked()).sendMessage(CC.RED + "That player does not exist!");
+                                event.getWhoClicked().sendMessage(CC.RED + "That player does not exist!");
                                 return Prompt.END_OF_CONVERSATION;
                             }
                             data.load();

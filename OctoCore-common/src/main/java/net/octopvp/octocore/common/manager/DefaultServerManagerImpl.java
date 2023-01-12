@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class DefaultServerManagerImpl implements IServerManager {
     @Getter
-    private Set<ServerData> connectedServers = ConcurrentHashMap.newKeySet();
+    private final Set<ServerData> connectedServers = ConcurrentHashMap.newKeySet();
 
     @Override
     public boolean isOnline(GlobalPlayer player) {

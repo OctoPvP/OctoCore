@@ -3,8 +3,7 @@ package net.octopvp.octocore.common.util.permissions;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class PermissionCalculator { //TODO Add weight calculation
-
+public class PermissionCalculator {
     public static final String ROOT_WILDCARD = "*", SUB_WILDCARD = ".*";
 
     public static PermissionResult hasPermissionResult(String perm, Collection<Node> permissions) {

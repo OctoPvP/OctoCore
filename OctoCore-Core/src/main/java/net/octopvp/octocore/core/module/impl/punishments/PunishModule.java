@@ -3,6 +3,7 @@ package net.octopvp.octocore.core.module.impl.punishments;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
+import net.octopvp.octocore.common.manager.IPunishModule;
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.punish.IPunishment;
@@ -10,6 +11,7 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.database.redis.packets.staff.PunishedJoinPacket;
 import net.octopvp.octocore.core.module.Module;
+import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bson.Document;
@@ -18,7 +20,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import java.util.UUID;
 
 @Getter
-public class PunishModule implements Module {
+public class PunishModule implements Module, IPunishModule {
 
     @Getter
     private static PunishModule instance;
@@ -147,5 +149,15 @@ public class PunishModule implements Module {
     @Override
     public void onDisable(OctoCore plugin) {
 
+    }
+
+    @Override
+    public MongoCollection<Document> getPunishmentsCollection() {
+        return punishments;
+    }
+
+    @Override
+    public IPunishment createPunishment(Document doc) {
+        return new Punishment(doc);
     }
 }

@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 @AllArgsConstructor
 public class StaffHistoryMenu extends Menu<Gui> {
     private PlayerData playerData;
+
     @Override
     public Gui createGui(Player player) {
         return Gui.gui()
@@ -61,6 +62,7 @@ public class StaffHistoryMenu extends Menu<Gui> {
                     new StaffHistoryPunishmentMenu(playerData, PunishmentType.MUTE).open((Player) event.getWhoClicked());
                 });
     }
+
     public GuiItem blacklistsButton() { // Slot 20
         int active = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).count();
         int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.BLACKLIST).count();
@@ -73,6 +75,7 @@ public class StaffHistoryMenu extends Menu<Gui> {
                     new StaffHistoryPunishmentMenu(playerData, PunishmentType.BLACKLIST).open((Player) event.getWhoClicked());
                 });
     }
+
     public GuiItem bansButton() { // Slot 18
         int active = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).count();
         int all = (int) playerData.getPunishmentsExecuted().stream().filter(punishment -> punishment.getType() == PunishmentType.BAN).count();
@@ -85,7 +88,6 @@ public class StaffHistoryMenu extends Menu<Gui> {
                     new StaffHistoryPunishmentMenu(playerData, PunishmentType.BAN).open((Player) event.getWhoClicked());
                 });
     }
-
 
 
     @Override

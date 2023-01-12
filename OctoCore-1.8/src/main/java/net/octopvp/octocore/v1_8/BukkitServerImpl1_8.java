@@ -1,9 +1,9 @@
 package net.octopvp.octocore.v1_8;
 
-import net.octopvp.octocore.core.ServerImplementation;
+import net.octopvp.octocore.core.BukkitServerImplementation;
 import net.octopvp.octocore.core.utils.tab.TabAdapter;
 
-public class ServerImpl1_8 implements ServerImplementation {
+public class BukkitServerImpl1_8 implements BukkitServerImplementation {
 
     @Override
     public TabAdapter getTabAdapter() {

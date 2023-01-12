@@ -8,11 +8,11 @@ import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.agile.util.XMaterial;
+import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.callback.ReturnableTypeCallback;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.NodeBuilder;
-import net.octopvp.octocore.core.objects.builders.RankBuilder;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
     private final ReturnableTypeCallback<RankBuilder> callback;
     private final RankBuilder startBuilder;
     private final Menu<?> prev = this;
-    private int i = 0;
+    private final int i = 0;
 
     @SneakyThrows
     public CreateRankManagePermissionsMenu(Menu previousMenu, RankBuilder builder, ReturnableTypeCallback<RankBuilder> callback) {

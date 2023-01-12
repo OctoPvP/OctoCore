@@ -1,11 +1,11 @@
-package net.octopvp.octocore.core.utils;
+package net.octopvp.octocore.common.util;
 
 import com.google.gson.reflect.TypeToken;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.punish.Alt;
+import net.octopvp.octocore.common.object.punish.BasePunishment;
 import net.octopvp.octocore.common.util.permissions.Node;
-import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.core.objects.permissions.Grant;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -19,7 +19,7 @@ public class GsonType {
     }.getType();
     public static final Type ALT = new TypeToken<List<Alt>>() {
     }.getType();
-    public static final Type PUNISHMENT = new TypeToken<Punishment>() {
+    public static final Type PUNISHMENT = new TypeToken<BasePunishment>() { // FIXME make sure it works
     }.getType();
     public static final Type STRING_LIST = new TypeToken<List<String>>() {
     }.getType();

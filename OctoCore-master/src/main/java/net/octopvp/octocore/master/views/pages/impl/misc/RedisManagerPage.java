@@ -3,7 +3,6 @@ package net.octopvp.octocore.master.views.pages.impl.misc;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import net.octopvp.octocore.common.OctoCoreCommon;

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class StringUtils {
     private static final Map<Object, ColorSet<Integer, Integer, Integer>> colorMap = new HashMap<>();
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$");
 
     static {
         boolean bungeeColors = false;
@@ -190,6 +191,33 @@ public class StringUtils {
             }
         }
     }
+    /*
+    public static StringBuilder appendRandomChatColors(StringBuilder sb, int howmanyper,int howmanytimes){
+        List<ChatColor> colors = Arrays.asList(ChatColor.ALL_CHATCOLORS);
+        for (int i = 0; i < howmanytimes; i++) {
+            sb.append("\n");
+            for (int i1 = 0; i1 < howmanyper; i1++) {
+                sb.append(colors.indexOf(RNG.getRandomInt(0,ChatColor.ALL_CHATCOLORS.length)));
+            }
+        }
+        return sb;
+    }
+    public static List<String> getRandomChatColorsAsList(int howmanyper,int howmanytimes){
+        List<ChatColor> colors = Arrays.asList(ChatColor.ALL_CHATCOLORS);
+        ArrayList<String> ret = new ArrayList<>();
+        for (int i = 0; i < howmanytimes; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int i1 = 0; i1 < howmanyper; i1++) {
+                sb.append(colors.indexOf(RNG.getRandomInt(0,ChatColor.ALL_CHATCOLORS.length)) + "");
+            }
+            ret.add(sb.toString());
+        }
+        return ret;
+    }
+    public static String[] getRandomChatColors(int howmanyper,int howmanytimes){
+        return getRandomChatColorsAsList(howmanyper, howmanytimes).toArray(new String[0]);
+    }
+     */
 
     public static String getEnchantment(String name) {
         String enchant = name;
@@ -272,33 +300,6 @@ public class StringUtils {
 
         return enchant.toUpperCase();
     }
-    /*
-    public static StringBuilder appendRandomChatColors(StringBuilder sb, int howmanyper,int howmanytimes){
-        List<ChatColor> colors = Arrays.asList(ChatColor.ALL_CHATCOLORS);
-        for (int i = 0; i < howmanytimes; i++) {
-            sb.append("\n");
-            for (int i1 = 0; i1 < howmanyper; i1++) {
-                sb.append(colors.indexOf(RNG.getRandomInt(0,ChatColor.ALL_CHATCOLORS.length)));
-            }
-        }
-        return sb;
-    }
-    public static List<String> getRandomChatColorsAsList(int howmanyper,int howmanytimes){
-        List<ChatColor> colors = Arrays.asList(ChatColor.ALL_CHATCOLORS);
-        ArrayList<String> ret = new ArrayList<>();
-        for (int i = 0; i < howmanytimes; i++) {
-            StringBuilder sb = new StringBuilder();
-            for (int i1 = 0; i1 < howmanyper; i1++) {
-                sb.append(colors.indexOf(RNG.getRandomInt(0,ChatColor.ALL_CHATCOLORS.length)) + "");
-            }
-            ret.add(sb.toString());
-        }
-        return ret;
-    }
-    public static String[] getRandomChatColors(int howmanyper,int howmanytimes){
-        return getRandomChatColorsAsList(howmanyper, howmanytimes).toArray(new String[0]);
-    }
-     */
 
     public static String buildString(String[] args, int start) {
         if (start >= args.length) return "";
@@ -311,7 +312,7 @@ public class StringUtils {
         }
         int i = 0;
         String finalReturn = str;
-        if (replace == null || replace.length == 0) {
+        if (replace == null) {
             return finalReturn;
         }
         for (Object s : replace) {
@@ -378,7 +379,6 @@ public class StringUtils {
         return month + "";
     }
 
-
     public static String capatalizeFirst(String in) {
         return in.substring(0, 1).toUpperCase() + in.substring(1).toLowerCase();
     }
@@ -389,6 +389,31 @@ public class StringUtils {
             sb.append(capatalizeFirst(s)).append(" ");
         }
         return sb.toString().trim();
+    }
+
+    public static String classNameToPacketName(String name) {
+        // Classes are structured like ThisThatPacket, we want to convert it to THIS_THAT
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < name.length(); i++) {
+            char c = name.charAt(i);
+            if (Character.isUpperCase(c)) {
+                if (i != 0) {
+                    sb.append("_");
+                }
+                sb.append(Character.toString(c).toUpperCase());
+            } else {
+                sb.append(Character.toString(c).toUpperCase());
+            }
+        }
+        String s = sb.toString();
+        if (s.endsWith("_PACKET")) {
+            s = s.substring(0, s.length() - 7);
+        }
+        return s;
+    }
+
+    public static boolean isEmailValid(String email) {
+        return email != null && EMAIL_PATTERN.matcher(email.toUpperCase()).matches();
     }
 
     private static class ColorSet<R, G, B> {
@@ -413,31 +438,5 @@ public class StringUtils {
         public B getBlue() {
             return blue;
         }
-    }
-
-    public static String classNameToPacketName(String name) {
-        // Classes are structured like ThisThatPacket, we want to convert it to THIS_THAT
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < name.length(); i++) {
-            char c = name.charAt(i);
-            if (Character.isUpperCase(c)) {
-                if (i != 0) {
-                    sb.append("_");
-                }
-                sb.append(Character.toString(c).toUpperCase());
-            } else {
-                sb.append(Character.toString(c).toUpperCase());
-            }
-        }
-        String s = sb.toString();
-        if (s.endsWith("_PACKET")) {
-            s = s.substring(0, s.length() - 7);
-        }
-        return s;
-    }
-
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$");
-    public static boolean isEmailValid(String email) {
-        return email != null && EMAIL_PATTERN.matcher(email.toUpperCase()).matches();
     }
 }

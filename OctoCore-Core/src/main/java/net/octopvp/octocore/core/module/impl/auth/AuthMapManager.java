@@ -3,7 +3,6 @@ package net.octopvp.octocore.core.module.impl.auth;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.octocore.common.util.CC;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCanvas;

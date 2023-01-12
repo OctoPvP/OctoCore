@@ -1,10 +1,10 @@
 package net.octopvp.octocore.core.utils.debug;
 
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.listeners.JoinLeaveListener;
 import net.octopvp.octocore.core.objects.OctoPermissible;
-import net.octopvp.octocore.core.objects.builders.RankBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

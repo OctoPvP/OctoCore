@@ -3,8 +3,8 @@ package net.octopvp.octocore.core.database.redis.packets.staff;
 import com.google.gson.JsonObject;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.object.enums.AuditLogType;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
-import net.octopvp.octocore.core.objects.enums.AuditLogType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

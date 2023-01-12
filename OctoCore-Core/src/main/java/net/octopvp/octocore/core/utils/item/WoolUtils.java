@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.utils.item;
 
+import net.octopvp.octocore.core.utils.chat.ChatUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -21,6 +22,10 @@ public class WoolUtils {
         if (color == ChatColor.RESET) color = ChatColor.WHITE;
 
         return WoolUtils.woolColors.indexOf(color);
+    }
+
+    public static int convertChatColorToWoolData(net.octopvp.octocore.common.util.ChatColor color) {
+        return convertChatColorToWoolData(ChatUtil.convertChatColor(color));
     }
 
     public static int convertStringCCToWoolData(String cc) {

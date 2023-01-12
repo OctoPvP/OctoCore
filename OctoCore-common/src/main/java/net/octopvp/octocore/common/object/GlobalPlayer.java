@@ -39,6 +39,11 @@ public class GlobalPlayer {
         this.name = name;
     }
 
+    public static GlobalPlayer createDummyPlayer(String name) {
+        GlobalPlayer globalPlayer = new GlobalPlayer(UUID.randomUUID(), name);
+        return globalPlayer;
+    }
+
     public boolean isOnline() {
         return OctoCoreCommon.getInstance().getServerManager().getConnectedServers().stream().filter(serverData ->
                 serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
@@ -91,10 +96,5 @@ public class GlobalPlayer {
     public boolean isIgnoring(String name) {
         if (name == null) return false;
         return messageSettings.getIgnoreList().stream().anyMatch(u -> u.equalsIgnoreCase(name));
-    }
-
-    public static GlobalPlayer createDummyPlayer(String name) {
-        GlobalPlayer globalPlayer = new GlobalPlayer(UUID.randomUUID(), name);
-        return globalPlayer;
     }
 }

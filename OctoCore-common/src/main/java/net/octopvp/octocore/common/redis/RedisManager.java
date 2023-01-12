@@ -19,12 +19,11 @@ public class RedisManager {
     @Setter
     private static RedisManager instance;
     private final JedisSettings settings;
+    private final RedisListenerManager listenerManager;
     private JedisSettings devBridgeSettings;
     private JedisPool pool, devBridgePool;
     private boolean connected = true, devBridgeConnected = true;
     private JedisSubscriber subscriber, devBridgeSubscriber;
-
-    private final RedisListenerManager listenerManager;
     private RedisListenerManager devBridgeListenerManager;
     private long lastConnect = -1;
 

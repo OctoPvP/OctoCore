@@ -3,11 +3,11 @@ package net.octopvp.octocore.core.database.redis.packets.other;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.objects.permissions.Grant;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

@@ -21,14 +21,6 @@ public class ServerData {
     private List<String> names = new ArrayList<>();
     private double[] recentTps = new double[]{20.0, 20.0, 20.0};
 
-    public String getFormattedTPS() {
-        double tps = recentTps[0];
-        if (tps > 20.00) {
-            return "20*";
-        }
-        return String.format("%.2f", tps);
-    }
-
     public static ServerData createDummyData(String name) {
         ServerData serverData = new ServerData(name);
         serverData.setLastTick(System.currentTimeMillis());
@@ -45,5 +37,13 @@ public class ServerData {
             serverData.getOnlinePlayers().add(GlobalPlayer.createDummyPlayer(randName));
         }
         return serverData;
+    }
+
+    public String getFormattedTPS() {
+        double tps = recentTps[0];
+        if (tps > 20.00) {
+            return "20*";
+        }
+        return String.format("%.2f", tps);
     }
 }

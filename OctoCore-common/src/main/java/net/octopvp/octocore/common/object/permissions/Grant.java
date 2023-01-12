@@ -1,14 +1,13 @@
-package net.octopvp.octocore.core.objects.permissions;
+package net.octopvp.octocore.common.object.permissions;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.manager.impl.RankManager;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -38,8 +37,8 @@ public class Grant {
     public boolean hasExpired() {
         if (server.isThisServer()) {
             if (!this.isActive()) return true;
-            if (RankManager.getInstance().getRankById(rankId) == null) {
-                if (RankManager.isLoadingRanks()) {
+            if (OctoCoreCommon.getInstance().getRankManager().getRankById(rankId) == null) {
+                if (OctoCoreCommon.getInstance().getRankManager().isLoadingRanks()) {
                     return false;
                 } else {
                     setActive(false);
@@ -58,11 +57,11 @@ public class Grant {
 
     public boolean isActiveSomewhere() {
         if (!this.isActive()) return false;
-        if (RankManager.getInstance().getRankById(rankId) == null) return false;
+        if (OctoCoreCommon.getInstance().getRankManager().getRankById(rankId) == null) return false;
 
         if (!this.server.isGlobal()) {
-            ServerData serverData = OctoCore.getInstance().getServerManager().getServerData(this.server.getServer());
-            if (serverData != null && !serverData.getServerName().equalsIgnoreCase(OctoCore.getServerName())) {
+            ServerData serverData = OctoCoreCommon.getInstance().getServerManager().getServerData(this.server.getServer());
+            if (serverData != null && !serverData.getServerName().equalsIgnoreCase(OctoCoreCommon.getInstance().getServerName())) {
                 if (isPermanent()) return true;
 
                 return System.currentTimeMillis() < this.addedAt + this.duration;
@@ -92,7 +91,7 @@ public class Grant {
     }
 
     public Rank getRank() {
-        return RankManager.getInstance().getRankById(rankId);
+        return OctoCoreCommon.getInstance().getRankManager().getRankById(rankId);
     }
 
     @Override

@@ -4,12 +4,12 @@ import net.octopvp.commander.annotation.*;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.object.builders.GrantBuilder;
+import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.RankManager;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.objects.builders.GrantBuilder;
-import net.octopvp.octocore.core.objects.permissions.Grant;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

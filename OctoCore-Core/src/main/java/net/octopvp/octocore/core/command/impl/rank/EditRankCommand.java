@@ -3,10 +3,10 @@ package net.octopvp.octocore.core.command.impl.rank;
 import net.octopvp.commander.annotation.*;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.menus.rank.EditRankMenu;
-import net.octopvp.octocore.core.objects.permissions.Rank;
 import org.bukkit.entity.Player;
 
 public class EditRankCommand {

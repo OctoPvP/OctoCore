@@ -1,9 +1,12 @@
 package net.octopvp.octocore.core.objects;
 
 import net.octopvp.octocore.common.ServerImplementation;
+import net.octopvp.octocore.common.manager.IPunishModule;
+import net.octopvp.octocore.common.manager.IRankManager;
 import net.octopvp.octocore.common.manager.IServerManager;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
+import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -66,6 +69,21 @@ public class BukkitServerImpl implements ServerImplementation {
         //return OctoCore.getCommit();
         // TODO
         return "unknown";
+    }
+
+    @Override
+    public String getName(UUID uuid) {
+        return Bukkit.getOfflinePlayer(uuid).getName();
+    }
+
+    @Override
+    public IRankManager getRankManager() {
+        return OctoCore.getInstance().getRankManager();
+    }
+
+    @Override
+    public IPunishModule getPunishModule() {
+        return PunishModule.getInstance();
     }
 
     /*

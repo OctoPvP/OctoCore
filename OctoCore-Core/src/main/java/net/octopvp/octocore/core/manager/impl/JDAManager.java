@@ -25,7 +25,6 @@ import net.octopvp.octocore.core.utils.jda.Embed;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.jetbrains.annotations.NotNull;
 
-import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.util.List;
 import java.util.Objects;

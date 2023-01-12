@@ -2,8 +2,8 @@ package net.octopvp.octocore.core.api.events;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.objects.permissions.Grant;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

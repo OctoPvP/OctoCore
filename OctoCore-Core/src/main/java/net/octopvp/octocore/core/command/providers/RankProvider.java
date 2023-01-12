@@ -6,8 +6,8 @@ import net.octopvp.commander.command.ParameterInfo;
 import net.octopvp.commander.exception.CommandException;
 import net.octopvp.commander.provider.Provider;
 import net.octopvp.commander.sender.CoreCommandSender;
+import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.core.manager.impl.RankManager;
-import net.octopvp.octocore.core.objects.permissions.Rank;
 
 import java.util.Deque;
 import java.util.List;

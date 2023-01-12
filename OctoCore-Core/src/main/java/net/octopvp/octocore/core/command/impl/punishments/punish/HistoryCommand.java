@@ -10,7 +10,6 @@ import net.octopvp.octocore.core.module.impl.punishments.menus.HistoryMenu;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bson.Document;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class HistoryCommand {

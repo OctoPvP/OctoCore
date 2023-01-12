@@ -5,15 +5,16 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import net.octopvp.octocore.common.PluginMsgChannels;
+import net.octopvp.octocore.common.manager.IRankManager;
+import net.octopvp.octocore.common.object.builders.RankBuilder;
+import net.octopvp.octocore.common.object.enums.RankType;
+import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.database.DatabaseManager;
 import net.octopvp.octocore.core.database.redis.packets.other.ReloadRanksPacket;
 import net.octopvp.octocore.core.manager.Manager;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.objects.builders.RankBuilder;
-import net.octopvp.octocore.core.objects.enums.RankType;
-import net.octopvp.octocore.core.objects.permissions.Rank;
 import org.bson.Document;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,14 +26,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class RankManager extends Manager {
+public class RankManager extends Manager implements IRankManager {
     @Getter
     private static final MongoCollection<Document> ranksCollection = DatabaseManager.getMongoDatabase().getCollection("ranks");
     @Getter
     private static final Set<Rank> ranks = new HashSet<>();
     @Getter
     private static RankManager instance;
-    @Getter
     private static boolean loadingRanks = false;
 
     public void loadRanks() {
@@ -55,18 +55,22 @@ public class RankManager extends Manager {
         loadRanks();
     }
 
+    @Override
     public Rank getRankById(UUID uuid) {
         return ranks.stream().filter(rank -> rank.getRankId().equals(uuid)).findFirst().orElse(null);
     }
 
+    @Override
     public Rank getRankByName(String name) {
         return ranks.stream().filter(rank -> rank.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
+    @Override
     public Rank getDefaultRank() {
         return ranks.stream().filter(Rank::isDefaultRank).findFirst().orElse(null);
     }
 
+    @Override
     public void save(Rank rank) {
         if (ranksCollection.find(Filters.eq("rankId", rank.getRankId().toString())).first() != null)
             ranksCollection.replaceOne(Filters.eq("rankId", rank.getRankId().toString()), Document.parse(OctoCore.getGson().toJson(rank)), new ReplaceOptions().upsert(true));
@@ -142,4 +146,8 @@ public class RankManager extends Manager {
         return defaultRank;
     }
 
+    @Override
+    public boolean isLoadingRanks() {
+        return loadingRanks;
+    }
 }

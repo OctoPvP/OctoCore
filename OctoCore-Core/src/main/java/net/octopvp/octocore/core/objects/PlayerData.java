@@ -1,7 +1,6 @@
 package net.octopvp.octocore.core.objects;
 
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
@@ -11,14 +10,14 @@ import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.*;
+import net.octopvp.octocore.common.object.permissions.Grant;
+import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.object.punish.Alt;
-import net.octopvp.octocore.common.object.punish.IPunishData;
-import net.octopvp.octocore.common.object.punish.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.DateUtils;
-import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
@@ -30,17 +29,11 @@ import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.RankManager;
 import net.octopvp.octocore.core.manager.impl.TagManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.core.module.impl.punishments.player.PunishData;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.core.objects.enums.RankType;
-import net.octopvp.octocore.core.objects.permissions.Grant;
-import net.octopvp.octocore.core.objects.permissions.Rank;
-import net.octopvp.octocore.core.utils.GsonType;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -52,32 +45,10 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class PlayerData implements IPlayerData, IPunishData {
+public class PlayerData extends SimplePlayerData {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
     //TODO set defaults for this so theres no errors when using/loading old data from older updates (idk if this makes sense lol)
-    private UUID uuid;
-    private double dataVersion = 0.0;
-    private long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
-    private String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName;
-    private String lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default";
-    private String lastAuthedIp = "", lastSeenIp = "", address, lastServerOn = "Unknown";
-    private List<String> metaDataList = new ArrayList<>();
-    private Map<String, String> metaData = new ConcurrentHashMap<>();
-    private WorldTime worldTime = WorldTime.DAY;
-    private UUID tagID = null, nickTagID = null, nickUUID;
-    private int /*playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/
-            playTime = 0, coins;
-    private HashSet<UUID> allowedTagsID = new HashSet<>();
-    private ChatColor nameColor = ChatColor.GREEN;
-    private boolean nameColorBold = false, nameColorItalic = false, staffChatAlerts = true, adminChatAlerts = true;
-    private boolean reportAlerts = true, staffChat = false, adminChat = false, build = false;
-    private boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false;
-    private boolean customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false;
-    private boolean joinAlert = false, socialSpy = false;
-
-    private ArrayList<Grant> grants = new ArrayList<>();
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
-    private List<Node> nodes = new ArrayList<>();
     private List<Node> bungeePerms = new ArrayList<>();
 
     private transient boolean fullyJoined = false, op = false;
@@ -91,13 +62,7 @@ public class PlayerData implements IPlayerData, IPunishData {
 
     private UUID lastMessaged = null;
 
-    private PunishData punishData = new PunishData(this);
-    private Collection<Alt> alts = new ArrayList<>();
-    private List<String> addresses = new ArrayList<>();
 
-    private List<UUID> ignoredPlayers = new ArrayList<>();
-
-    private MessageSettings messageSettings = new MessageSettings();
     private transient String cachedFormattedNameNoNickNoTag = null;
 
     public PlayerData(UUID uuid, String name) {
@@ -114,104 +79,17 @@ public class PlayerData implements IPlayerData, IPunishData {
         load(null);
     }
 
-    public void load(@Nullable Document document) {
+    public void load(Document document) {
         if (document == null) {
             document = PlayerManager.getInstance().getProfileDocument(uuid);
         }
         if (document == null) {
             return;
         }
-        Gson gson = OctoCore.getGson();
-        this.name = requestName();
-
-        this.lowerName = name.toLowerCase();
-        this.lastLoaded = System.currentTimeMillis();
-        this.grants = gson.fromJson(document.getString("grants"), GsonType.GRANT);
-        this.grants.removeIf(Objects::isNull);
-        this.dataVersion = getDouble(document, "dataVersion");
-        this.frozen = document.getBoolean("frozen");
-        this.nicked = document.getBoolean("nicked");
-        this.authEnabled = document.getBoolean("authEnabled");
-        this.vanished = document.getBoolean("vanished");
-        this.joinVanished = document.getBoolean("joinVanished");
-        this.customColorEnabled = document.getBoolean("customColorEnabled");
-        this.customColor = document.getString("customColor");
-        this.coins = getInt(document, "coins");
-        this.lastLoaded = getLong(document, "lastLoaded");
-        this.lastLogin = getLong(document, "lastLogin");
-        this.xp = getLong(document, "xp");
-        this.firstJoin = getLong(document, "firstJoin");
-        this.lastSave = getLong(document, "lastSave");
-        this.nick = document.getString("nick");
-        this.lastKnownName = document.getString("lastKnownName");
-        this.nickPrefix = document.getString("nickPrefix");
-        this.nickColor = document.getString("nickColor");
-        this.server = document.getString("server");
-        this.authSecret = document.getString("authSecret");
-        this.lastSeenServer = document.getString("lastSeenServer");
-        this.rankName = document.getString("rankName");
-        this.lastSeen = getLong(document, "lastSeen");
-        this.lastAuthedIp = document.getString("lastAuthedIp");
-        this.lastSeenIp = document.getString("lastSeenIp");
-        this.metaDataList = gson.fromJson(document.getString("metaDataList"), GsonType.STRING_LIST);
-        this.metaDataList.removeIf(Objects::isNull);
-        this.metaData = gson.fromJson(document.getString("metaData"), GsonType.STRING_STRING_MAP);
-        this.worldTime = WorldTime.valueOf(document.getString("worldTime"));
-        if (document.containsKey("nickTagID")) this.nickTagID = UUID.fromString(document.getString("nickTagID"));
-        if (document.containsKey("nickUUID")) this.nickUUID = UUID.fromString(document.getString("nickUUID"));
-        if (document.containsKey("tagID")) this.tagID = UUID.fromString(document.getString("tagID"));
-        this.playTime = getInt(document, "playTime");
-        this.allowedTagsID = gson.fromJson(document.getString("allowedTagsID"), GsonType.UUID_SET);
-        if (document.containsKey("nameColor")) this.nameColor = ChatColor.valueOf(document.getString("nameColor"));
-        this.nameColorBold = document.getBoolean("nameColorBold");
-        this.nameColorItalic = document.getBoolean("nameColorItalic");
-        this.staffChatAlerts = document.getBoolean("staffChatAlerts");
-        this.adminChatAlerts = document.getBoolean("adminChatAlerts");
-        this.reportAlerts = document.getBoolean("reportAlerts");
-        this.staffChat = document.getBoolean("staffChat");
-        this.adminChat = document.getBoolean("adminChat");
-        this.build = document.getBoolean("build");
-        this.nodes = gson.fromJson(document.getString("nodes"), GsonType.NODE_LIST);
-        this.nodes.removeIf(Objects::isNull);
-        this.address = document.getString("address");
-        this.socialSpy = document.getBoolean("socialSpy");
-
-        this.messageSettings.setMessagesOff(document.getBoolean("messagesOff"));
-        this.messageSettings.getIgnoreList().clear();
-        this.messageSettings.setSoundsEnabled(document.getBoolean("sounds"));
-        this.messageSettings.setGlobalChat(document.getBoolean("globalChat"));
-        this.messageSettings.setIgnoreList(gson.fromJson(document.getString("ignoreList"), GsonType.STRING_LIST));
-
-        this.messageSettings.getIgnoreList().removeIf(u -> u == null || u.isEmpty() || u.equalsIgnoreCase(this.name));
-
+        super.load(document);
         if (cachedPermissions == null) cachedPermissions = new ConcurrentHashMap<>();
         if (loadNotes == null) loadNotes = new ArrayList<>();
-
         loaded = true;
-    }
-
-    private long getLong(Document doc, String key, long... def) {
-        Number number = getNumber(doc, key);
-        if (number == null) return def.length > 0 ? def[0] : -1L;
-        return number.longValue();
-    }
-
-    private int getInt(Document doc, String key, int... def) {
-        Number number = getNumber(doc, key);
-        if (number == null) return def.length > 0 ? def[0] : -1;
-        return number.intValue();
-    }
-
-    private double getDouble(Document doc, String key, double... def) {
-        Number n = getNumber(doc, key).doubleValue();
-        if (n == null) return def.length > 0 ? def[0] : -1;
-        return n.doubleValue();
-    }
-
-    private Number getNumber(Document doc, String key) {
-        Object obj = doc.get(key);
-        if (obj != null && obj instanceof Number) return (Number) obj;
-        else return null;
     }
 
     public void save() {
@@ -325,19 +203,6 @@ public class PlayerData implements IPlayerData, IPunishData {
         return this.getAltsSafely().stream().filter(alt -> alt.getUniqueId() == uuid).findFirst().orElse(null);
     }
 
-    public List<Alt> getAltsSafely() {
-        List<Alt> alts = new ArrayList<>();
-        Iterator<Alt> iterator = this.alts.iterator();
-
-        if (iterator.hasNext()) {
-            do {
-                alts.add(iterator.next());
-            } while (iterator.hasNext());
-        }
-
-        return alts;
-    }
-
     public void loadAlts(String address) {
         this.alts.clear();
 
@@ -449,10 +314,6 @@ public class PlayerData implements IPlayerData, IPunishData {
                         .toString());
     }
 
-    public String getPrefixColorOrNull() {
-        return (customColor != null && isCustomColorEnabled() ? customColor : null);
-    }
-
     public boolean isOnline(String name) { // FIXME inverted this because its returning false even if they are online
         if (Bukkit.getPlayer(uuid) != null) return true;
         return OctoCore.getInstance().getServerManager().getConnectedServers().stream().filter(serverData -> serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList()).contains(name.toLowerCase())).findFirst().orElse(null) != null;
@@ -489,77 +350,7 @@ public class PlayerData implements IPlayerData, IPunishData {
         return (isNicked() ? nickUUID : uuid);
     }
 
-    public boolean isCustomColorEnabled() {
-        if (customColorEnabled) {
-            return this.hasPermission(Permissions.CUSTOM_COLOR);
-        }
-        return false;
-    }
-
-    public String getNameColor() {
-        if (this.nameColor == null) {
-            return this.getHighestRank().getDisplayColor();
-        }
-        if (this.isNameColorBold() && this.isNameColorItalic()) {
-            return this.nameColor.toString() + org.bukkit.ChatColor.BOLD + org.bukkit.ChatColor.ITALIC;
-        }
-        if (this.isNameColorBold()) {
-            return this.nameColor.toString() + org.bukkit.ChatColor.BOLD;
-        }
-        if (this.isNameColorItalic()) {
-            return this.nameColor.toString() + org.bukkit.ChatColor.ITALIC;
-        }
-        return this.nameColor.toString();
-    }
-
-    public List<Grant> getActiveGrants() {
-        return this.grants.stream().filter(grant -> !grant.hasExpired() && RankManager.getInstance().getRankById(grant.getRankId()) != null).collect(Collectors.toList());
-    }
-
-    public boolean hasRank(Rank rankData) {
-        for (Grant grant : this.getActiveGrants()) {
-            if (grant.getRankName().equalsIgnoreCase(rankData.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isNon() {
-        return this.getHighestRank().isDefaultRank(); //F
-    }
-
-    public Rank getHighestRank() {
-        Grant grant = getHighestGrant();
-        if (grant == null) {
-            return RankManager.getInstance().getDefaultRank();
-        }
-        Rank r = grant.getRank();
-        if (r == null) {
-            return RankManager.getInstance().getDefaultRank();
-        }
-        return r;
-        //return this.getActiveGrants().stream().map(Grant::getRank).max(Comparator.comparingInt(Rank::getWeight)).orElse(RankManager.getInstance().getDefaultRank());
-    }
-
-    public Grant getHighestGrant() {
-        return this.getActiveGrants().stream().filter(grant -> grant.getRank() != null && grant.getRank().getRankType() != RankType.HIDDEN).max(Comparator.comparingInt(grant -> grant.getRank().getWeight())).orElse(null);
-    }
-
-    public Set<Node> getFinalNodes() {
-        Set<Node> nodes1 = new HashSet<>(nodes);
-        for (Node finalNode : getHighestRank().getFinalNodes()) {
-            if (nodes1.stream().filter(node -> node.getPermission().equals(finalNode.getPermission())).findFirst().orElse(null) == null) { //node is not manually set
-                nodes1.add(finalNode);
-            }
-        }
-        return nodes1;
-    }
-
-    public boolean hasPermission(Node node) {
-        return hasPermission(node.getPermission());
-    }
-
+    @Override
     public boolean hasPermission(String perm) { //haha this is a laggy mess
         if (op) return true;
         PermissionResult cachedResult = cachedPermissions.get(perm);
@@ -572,14 +363,6 @@ public class PlayerData implements IPlayerData, IPunishData {
         cachedPermissions.put(perm, result);
         if (result.getReason() == PermissionReason.NOT_SET) return getHighestRank().hasPermission(perm);
         else return result.allowed();
-    }
-
-    public PermissionResult getPermissionResult(String permission, String server) {
-        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes(), server);
-    }
-
-    public PermissionResult getPermissionResult(String permission) {
-        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes());
     }
 
     public void applyGrant(Grant grant) {
@@ -625,10 +408,6 @@ public class PlayerData implements IPlayerData, IPunishData {
 
         RankManager.getInstance().resetBungeePerms(player);
         postPermissionLoad(player);
-    }
-
-    public String getPrefix() {
-        return CC.translate(getHighestRank().getPrefix(this.getPrefixColorOrNull()));
     }
 
     public Map<String, ServerContext> getAllEffectivePermissions() {
@@ -812,63 +591,8 @@ public class PlayerData implements IPlayerData, IPunishData {
     }
 
     @Override
-    public Collection<IPunishment> getPunishments() {
-        return punishData.getPunishments();
-    }
-
-    @Override
     public UUID getUniqueId() {
         return this.uuid;
-    }
-
-    @Override
-    public boolean isBanned() {
-        return punishData.isBanned();
-    }
-
-    @Override
-    public boolean isIPBanned() {
-        return punishData.isIPBanned();
-    }
-
-    @Override
-    public boolean isMuted() {
-        return punishData.isMuted();
-    }
-
-    @Override
-    public boolean isIPMuted() {
-        return punishData.isIPMuted();
-    }
-
-    @Override
-    public boolean isBlacklisted() {
-        return punishData.isBlacklisted();
-    }
-
-    @Override
-    public boolean isWarned() {
-        return punishData.isWarned();
-    }
-
-    @Override
-    public IPunishment getActiveBan() {
-        return punishData.getActiveBan();
-    }
-
-    @Override
-    public IPunishment getActiveMute() {
-        return punishData.getActiveMute();
-    }
-
-    @Override
-    public IPunishment getActiveBlacklist() {
-        return punishData.getActiveBlacklist();
-    }
-
-    @Override
-    public List<IPunishment> getPunishments(PunishmentType type) {
-        return punishData.getPunishments(type);
     }
 
     public enum SaveState {

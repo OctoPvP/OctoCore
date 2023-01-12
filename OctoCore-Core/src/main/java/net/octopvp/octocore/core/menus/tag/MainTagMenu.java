@@ -40,7 +40,7 @@ public class MainTagMenu extends Menu<Gui> {
 
     public GuiItem viewYour() {
         return ItemBuilder.from(Material.CHEST).name(CC.GREEN + "My Tags").lore(CC.SEPARATOR, CC.AQUA + "Click here to view all tags you own!", CC.SEPARATOR).asGuiItem(event -> {
-            PlayerData data = PlayerManager.getInstance().getData(((Player) event.getWhoClicked()).getUniqueId());
+            PlayerData data = PlayerManager.getInstance().getData(event.getWhoClicked().getUniqueId());
             List<PlayerTag> tags = new ArrayList<>();
             data.getAllowedTags().forEach(tag -> {
                 if (tag != null) tags.add(tag);

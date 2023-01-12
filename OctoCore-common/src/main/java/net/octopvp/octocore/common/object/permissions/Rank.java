@@ -1,21 +1,21 @@
-package net.octopvp.octocore.core.objects.permissions;
+package net.octopvp.octocore.common.object.permissions;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.object.SimplePlayerData;
+import net.octopvp.octocore.common.object.builders.RankBuilder;
+import net.octopvp.octocore.common.object.enums.RankType;
 import net.octopvp.octocore.common.object.maps.pair.HashPairMap;
 import net.octopvp.octocore.common.object.maps.pair.PairMap;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.ChatColor;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
-import net.octopvp.octocore.core.manager.impl.RankManager;
-import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.objects.builders.RankBuilder;
-import net.octopvp.octocore.core.objects.enums.RankType;
-import org.bukkit.ChatColor;
 import org.javatuples.Pair;
 
 import java.util.*;
@@ -41,7 +41,7 @@ public class Rank implements Cloneable {
     private ServerContext scope = ServerContext.global();
 
     public void save() {
-        RankManager.getInstance().save(this);
+        OctoCoreCommon.getInstance().getServerImplementation().getRankManager().save(this);
     }
 
     @Override
@@ -52,9 +52,9 @@ public class Rank implements Cloneable {
     public String[] getInheritedRanksName() {
         List<String> a = new ArrayList<>();
         inheritedRanks.forEach(inh -> {
-            if (RankManager.getInstance().getRankById(inh) == null)
+            if (OctoCoreCommon.getInstance().getRankManager().getRankById(inh) == null)
                 return;
-            a.add(RankManager.getInstance().getRankById(inh).getName());
+            a.add(OctoCoreCommon.getInstance().getRankManager().getRankById(inh).getName());
         });
         return a.toArray(new String[0]);
     }
@@ -100,7 +100,7 @@ public class Rank implements Cloneable {
     public Set<Rank> getInheritedRanksConverted() {
         Set<Rank> ranks = new HashSet<>();
         for (UUID inheritedRank : inheritedRanks) {
-            Rank rank = RankManager.getInstance().getRankById(inheritedRank);
+            Rank rank = OctoCoreCommon.getInstance().getRankManager().getRankById(inheritedRank);
             if (rank == null) continue;
             ranks.add(rank);
         }
@@ -170,7 +170,7 @@ public class Rank implements Cloneable {
         return CC.translate(StringUtils.replacePlaceholders(prefix, this.color.toString()));
     }
 
-    public String getActivePrefix(PlayerData data) {
+    public String getActivePrefix(SimplePlayerData data) {
         return data.getPrefix();
     }
 

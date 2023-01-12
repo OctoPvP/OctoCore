@@ -1,12 +1,12 @@
-package net.octopvp.octocore.core.objects.builders;
+package net.octopvp.octocore.common.object.builders;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.object.enums.RankType;
+import net.octopvp.octocore.common.object.permissions.Rank;
+import net.octopvp.octocore.common.util.ChatColor;
 import net.octopvp.octocore.common.util.permissions.Node;
-import net.octopvp.octocore.core.objects.enums.RankType;
-import net.octopvp.octocore.core.objects.permissions.Rank;
-import org.bukkit.ChatColor;
 
 import java.util.UUID;
 
@@ -50,6 +50,10 @@ public class RankBuilder implements Cloneable {
         return this;
     }
 
+    public RankBuilder setColor(Enum<?> c) {
+        return setColor(ChatColor.from(c));
+    }
+
     public RankBuilder setColor(String color) {
         rank.setColor(ChatColor.getByChar(color.replace("\u00a7", "").replace("&", "")));
         return this;
@@ -58,6 +62,10 @@ public class RankBuilder implements Cloneable {
     public RankBuilder setChatColor(ChatColor color) {
         rank.setChatColor(color);
         return this;
+    }
+
+    public RankBuilder setChatColor(Enum<?> c) {
+        return setChatColor(ChatColor.from(c));
     }
 
     public RankBuilder setChatColor(String color) {

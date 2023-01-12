@@ -5,9 +5,9 @@ import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.util.XMaterial;
+import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.RankManager;
-import net.octopvp.octocore.core.objects.permissions.Rank;
 import net.octopvp.octocore.core.utils.runnable.Countdown;
 import org.bukkit.entity.Player;
 

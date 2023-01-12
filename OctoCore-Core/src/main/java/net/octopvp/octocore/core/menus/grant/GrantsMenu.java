@@ -7,13 +7,13 @@ import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.agile.util.XMaterial;
+import net.octopvp.octocore.common.object.permissions.Grant;
+import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.database.redis.packets.other.GrantsUpdatePacket;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.objects.permissions.Grant;
-import net.octopvp.octocore.core.objects.permissions.Rank;
 import net.octopvp.octocore.core.utils.Buttons;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
-    private static int i = 0;
+    private static final int i = 0;
     private final PlayerData targetData;
     private final Comparator<Grant> GRANT_COMPARATOR = Comparator.comparingLong(Grant::getAddedAt).reversed();
     private boolean all = true;
@@ -173,6 +173,6 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
     @Override
     public void addStaticButtons() {
         gui.setItem(4, Buttons.playerInfo(targetData));
-        gui.setItem(6,6, filterButton());
+        gui.setItem(6, 6, filterButton());
     }
 }

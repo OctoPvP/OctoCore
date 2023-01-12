@@ -19,7 +19,7 @@ public class RedisListenerManager {
     private static final Objenesis objenesis = new ObjenesisStd();
 
     @Getter
-    private Set<RedisPacket> packets = new HashSet<>();
+    private final Set<RedisPacket> packets = new HashSet<>();
 
     public RedisListenerManager() {
 

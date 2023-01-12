@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @Getter
 public class HistoryMenu extends Menu<Gui> {
     private final IPunishData iPunishData;
+
     @SuppressWarnings("deprecation")
     public GuiItem altsButton(IPunishData playerData) { // slot 32
         List<String> lore = new ArrayList<>(Arrays.asList(
@@ -151,6 +152,7 @@ public class HistoryMenu extends Menu<Gui> {
                     new BansMenu(playerData, HistoryMenu.this).open((Player) event.getWhoClicked());
                 });
     }
+
     @Override
     public Gui createGui(Player player) {
         return Gui.gui()

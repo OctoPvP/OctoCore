@@ -1,9 +1,9 @@
 package net.octopvp.octocore.core.listeners;
 
 import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.object.enums.AuditLogType;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.objects.AuditLogEntry;
-import net.octopvp.octocore.core.objects.enums.AuditLogType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;

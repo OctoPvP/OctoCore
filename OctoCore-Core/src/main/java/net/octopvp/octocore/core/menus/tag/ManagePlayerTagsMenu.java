@@ -140,7 +140,7 @@ public class ManagePlayerTagsMenu extends Menu<PaginatedGui> {
                         SoundUtil.playPing((Player) event.getWhoClicked());
                         //data.load();
                         //update(player);
-                        ((Player) event.getWhoClicked()).closeInventory();
+                        event.getWhoClicked().closeInventory();
                     }
                 });
     }

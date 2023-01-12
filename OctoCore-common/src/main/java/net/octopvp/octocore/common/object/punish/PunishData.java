@@ -1,16 +1,11 @@
-package net.octopvp.octocore.core.module.impl.punishments.player;
+package net.octopvp.octocore.common.object.punish;
 
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.octopvp.octocore.common.object.punish.Alt;
-import net.octopvp.octocore.common.object.punish.IPunishData;
-import net.octopvp.octocore.common.object.punish.IPunishment;
-import net.octopvp.octocore.common.object.punish.PunishmentType;
-import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
-import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
-import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.object.SimplePlayerData;
 import org.bson.Document;
 
 import java.util.*;
@@ -20,7 +15,7 @@ import java.util.stream.Collectors;
 @Setter
 @RequiredArgsConstructor
 public class PunishData implements IPunishData {
-    private final PlayerData playerData;
+    private final SimplePlayerData playerData;
 
     private Collection<IPunishment> punishments = new HashSet<>();
 
@@ -77,10 +72,10 @@ public class PunishData implements IPunishData {
     public void load() {
         this.punishments.clear();
 
-        List<Document> punishments = PunishModule.getPunishments().find().filter(
+        List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find().filter(
                 Filters.eq("uuid", this.playerData.getUuid().toString())).into(new ArrayList<>());
         punishments.forEach(document -> {
-            Punishment punishment = new Punishment(document);
+            IPunishment punishment = OctoCoreCommon.getInstance().getPunishModule().createPunishment(document);
 
             this.punishments.add(punishment);
         });
@@ -89,13 +84,12 @@ public class PunishData implements IPunishData {
     public void forceLoadActiveBansAndBlacklists() {
         this.punishments.removeIf(punishment -> punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST);
 
-        List<Document> punishments = PunishModule.getPunishments().find(Filters.and(
+        List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find(Filters.and(
                 Filters.eq("uuid", this.playerData.getUuid().toString()),
                 Filters.eq("active", true))).into(new ArrayList<>());
 
         punishments.forEach(document -> {
-            Punishment punishment = new Punishment(document);
-
+            IPunishment punishment = OctoCoreCommon.getInstance().getPunishModule().createPunishment(document);
             this.punishments.add(punishment);
         });
     }

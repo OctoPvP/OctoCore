@@ -59,7 +59,7 @@ public enum Lang {
     }
 
     public String getMsg(final String... placeholders) {
-        return CC.translate(StringUtils.replacePlaceholders(msg, placeholders).replace("$m", CC.MAIN).replace("$s", CC.SECONDARY).replace("$v", CC.VALUE));
+        return CC.translate(StringUtils.replacePlaceholders(msg, (Object[]) placeholders).replace("$m", CC.MAIN).replace("$s", CC.SECONDARY).replace("$v", CC.VALUE));
     }
 
     public String getMsg(final Object... placeholders) {
@@ -67,7 +67,7 @@ public enum Lang {
         for (Object placeholder : placeholders) {
             a.add(placeholder + "");
         }
-        return CC.translate(StringUtils.replacePlaceholders(msg, a.toArray(new String[0])).replace("%main%", CC.MAIN).replace("$m", CC.MAIN).replace("$s", CC.SECONDARY).replace("$v", CC.VALUE));
+        return CC.translate(StringUtils.replacePlaceholders(msg, (Object[]) a.toArray(new String[0])).replace("%main%", CC.MAIN).replace("$m", CC.MAIN).replace("$s", CC.SECONDARY).replace("$v", CC.VALUE));
     }
 
     @Override

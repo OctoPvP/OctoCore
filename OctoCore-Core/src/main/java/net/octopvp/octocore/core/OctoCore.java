@@ -14,7 +14,9 @@ import net.octopvp.commander.exception.InvalidArgsException;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
+import net.octopvp.octocore.common.ServerImplementation;
 import net.octopvp.octocore.common.object.*;
+import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.Utilities;
@@ -25,7 +27,6 @@ import net.octopvp.octocore.core.manager.impl.*;
 import net.octopvp.octocore.core.objects.BukkitServerImpl;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.objects.permissions.Rank;
 import net.octopvp.octocore.core.setup.*;
 import net.octopvp.octocore.core.utils.PacketUtil;
 import net.octopvp.octocore.core.utils.errorhandling.ErrorData;
@@ -228,11 +229,11 @@ public abstract class OctoCore extends JavaPlugin {
                             throw new InvalidArgsException(ctx.getCommandInfo());
                         } else //noinspection StatementWithEmptyBody
                             if (Objects.equals(result.getMsg(), "") || Objects.equals(result.getMsg(), " ")) {
-                        } else //noinspection StatementWithEmptyBody
+                            } else //noinspection StatementWithEmptyBody
                                 if (result.getMsg() == null) {
-                        } else {
-                            ctx.getCommandSender().sendMessage(result.getMsg());
-                        }
+                                } else {
+                                    ctx.getCommandSender().sendMessage(result.getMsg());
+                                }
                     }
                 })
                 .registerCommandPreProcessor(ctx -> {
@@ -285,5 +286,5 @@ public abstract class OctoCore extends JavaPlugin {
         return getClassLoader();
     }
 
-    public abstract ServerImplementation getServerImplementation();
+    public abstract BukkitServerImplementation getServerImplementation();
 }

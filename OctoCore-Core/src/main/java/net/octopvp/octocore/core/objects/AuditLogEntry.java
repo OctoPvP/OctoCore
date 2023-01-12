@@ -2,7 +2,7 @@ package net.octopvp.octocore.core.objects;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.core.objects.enums.AuditLogType;
+import net.octopvp.octocore.common.object.enums.AuditLogType;
 
 import java.util.HashMap;
 

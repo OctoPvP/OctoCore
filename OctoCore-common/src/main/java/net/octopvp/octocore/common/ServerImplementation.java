@@ -1,7 +1,8 @@
 package net.octopvp.octocore.common;
 
+import net.octopvp.octocore.common.manager.IPunishModule;
+import net.octopvp.octocore.common.manager.IRankManager;
 import net.octopvp.octocore.common.manager.IServerManager;
-import net.octopvp.octocore.common.object.ServerInfo;
 
 import java.util.UUID;
 
@@ -25,4 +26,10 @@ public interface ServerImplementation {
     String getServerName();
 
     String getCommit();
+
+    String getName(UUID uuid);
+
+    IRankManager getRankManager();
+
+    IPunishModule getPunishModule();
 }

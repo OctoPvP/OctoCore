@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.objects.enums;
+package net.octopvp.octocore.common.object.enums;
 
 import net.octopvp.octocore.common.StringUtils;
 
