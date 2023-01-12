@@ -33,20 +33,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         UUID uuid = UUID.fromString(parameter);
         String name = accountUtil.getName(uuid);
         HorizontalLayout title = new HorizontalLayout();
-        title.add(new PlayerName(name));
-        boolean online = ServerManager.getInstance().isPlayerOnline(uuid);
-        Icon icon = VaadinIcon.DOT_CIRCLE.create();
-        if (online) {
-            icon.setColor("green");
-            Span span = new Span(" Online");
-            span.getStyle().set("color", "green");
-            title.add(icon, span);
-        } else {
-            icon.setColor("gray");
-            Span span = new Span(" Offline");
-            span.getStyle().set("color", "gray");
-            title.add(icon, span);
-        }
+        title.add(new PlayerName(name, true));
         add(title);
     }
 
