@@ -68,7 +68,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom("com.vaadin:vaadin-bom:23.2.2")
+        mavenBom("com.vaadin:vaadin-bom:23.3.3")
     }
 }
 
