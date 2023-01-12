@@ -12,6 +12,8 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.ServerImplementation;
+import net.octopvp.octocore.common.manager.IPunishModule;
+import net.octopvp.octocore.common.manager.IRankManager;
 import net.octopvp.octocore.common.manager.IServerManager;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.Logger;
@@ -111,6 +113,21 @@ public final class OctoCoreWaterfall extends Plugin {
             @Override
             public String getCommit() {
                 return "N/A";
+            }
+
+            @Override
+            public String getName(UUID uuid) {
+                throw new UnsupportedOperationException("Not implemented");
+            }
+
+            @Override
+            public IRankManager getRankManager() {
+                throw new UnsupportedOperationException("Not implemented");
+            }
+
+            @Override
+            public IPunishModule getPunishModule() {
+                throw new UnsupportedOperationException("Not implemented");
             }
         });
         File file = new File(getDataFolder(), "config.yml");
