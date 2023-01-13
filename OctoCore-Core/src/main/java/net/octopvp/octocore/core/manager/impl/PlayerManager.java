@@ -5,6 +5,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.manager.IPlayerManager;
 import net.octopvp.octocore.common.object.GlobalPlayer;
 import net.octopvp.octocore.common.object.ObjectConsumer;
 import net.octopvp.octocore.common.object.Permissions;
@@ -29,7 +30,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class PlayerManager extends Manager {
+public class PlayerManager extends Manager implements IPlayerManager {
     @Getter
     private static PlayerManager instance;
     @Getter
@@ -39,15 +40,16 @@ public class PlayerManager extends Manager {
     @Getter
     private MongoCollection<Document> pdataCollection = null;
 
+    @Override
     public PlayerData getData(UUID uuid) {
         return playerProfiles.get(uuid);
     }
-
 
     public PlayerData getData(Player player) {
         return getData(player.getUniqueId());
     }
 
+    @Override
     public PlayerData getData(String name) {
         return playerProfiles.entrySet().stream().filter(entry -> entry.getValue().getName().equalsIgnoreCase(name)).findFirst().orElse(null).getValue();
     }
@@ -121,16 +123,19 @@ public class PlayerManager extends Manager {
     public void disable() {
     }
 
+    @Override
     public Document getProfileDocument(UUID uuid) {
         if (pdataCollection == null || uuid == null) return null;
         return pdataCollection.find(Filters.eq("uuid", uuid.toString())).first();
     }
 
+    @Override
     public boolean doesDocumentExistByUUID(UUID uuid) {
         Document document = pdataCollection.find(Filters.eq("uuid", uuid.toString())).first();
         return document != null;
     }
 
+    @Override
     public boolean doesDocumentExistByName(String name) {
         return pdataCollection.find(Filters.eq("name", name)).first() != null;
     }

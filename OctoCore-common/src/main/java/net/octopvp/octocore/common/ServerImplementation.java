@@ -1,5 +1,6 @@
 package net.octopvp.octocore.common;
 
+import net.octopvp.octocore.common.manager.IPlayerManager;
 import net.octopvp.octocore.common.manager.IPunishModule;
 import net.octopvp.octocore.common.manager.IRankManager;
 import net.octopvp.octocore.common.manager.IServerManager;
@@ -32,4 +33,6 @@ public interface ServerImplementation {
     IRankManager getRankManager();
 
     IPunishModule getPunishModule();
+
+    IPlayerManager getPlayerManager();
 }
