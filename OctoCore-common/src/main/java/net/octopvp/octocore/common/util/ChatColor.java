@@ -2,120 +2,97 @@ package net.octopvp.octocore.common.util;
 
 import com.google.common.collect.Maps;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 public enum ChatColor {
     BLACK('0', 0) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.BLACK;
+        Color getColor() {
+            return Color.BLACK;
         }
     },
     DARK_BLUE('1', 1) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.DARK_BLUE;
+        Color getColor() {
+            return new Color(0, 0, 170);
         }
     },
     DARK_GREEN('2', 2) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.DARK_GREEN;
+        Color getColor() {
+            return new Color(0, 170, 0);
         }
     },
     DARK_AQUA('3', 3) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.DARK_AQUA;
+        Color getColor() {
+            return new Color(0, 170, 170);
         }
     },
     DARK_RED('4', 4) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.DARK_RED;
+        Color getColor() {
+            return new Color(170, 0, 0);
         }
     },
     DARK_PURPLE('5', 5) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.DARK_PURPLE;
+        Color getColor() {
+            return new Color(170, 0, 170);
         }
     },
     GOLD('6', 6) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.GOLD;
+        Color getColor() {
+            return new Color(255, 170, 0);
         }
     },
     GRAY('7', 7) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.GRAY;
+        Color getColor() {
+            return new Color(170, 170, 170);
         }
     },
     DARK_GRAY('8', 8) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.DARK_GRAY;
+        Color getColor() {
+            return new Color(85, 85, 85);
         }
     },
     BLUE('9', 9) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.BLUE;
+        Color getColor() {
+            return new Color(85, 85, 255);
         }
     },
     GREEN('a', 10) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.GREEN;
+        Color getColor() {
+            return Color.GREEN;
         }
     },
     AQUA('b', 11) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.AQUA;
+        Color getColor() {
+            return new Color(85, 255, 255);
         }
     },
     RED('c', 12) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.RED;
+        Color getColor() {
+            return Color.RED;
         }
     },
     LIGHT_PURPLE('d', 13) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.LIGHT_PURPLE;
+        Color getColor() {
+            return new Color(255, 85, 255);
         }
     },
     YELLOW('e', 14) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.YELLOW;
+        Color getColor() {
+            return Color.YELLOW;
         }
     },
     WHITE('f', 15) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.WHITE;
+        Color getColor() {
+            return Color.WHITE;
         }
     },
-    MAGIC('k', 16, true) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.MAGIC;
-        }
-    },
-    BOLD('l', 17, true) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.BOLD;
-        }
-    },
-    STRIKETHROUGH('m', 18, true) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.STRIKETHROUGH;
-        }
-    },
-    UNDERLINE('n', 19, true) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.UNDERLINE;
-        }
-    },
-    ITALIC('o', 20, true) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.ITALIC;
-        }
-    },
-    RESET('r', 21) {
-        public net.md_5.bungee.api.ChatColor asBungee() {
-            return net.md_5.bungee.api.ChatColor.RESET;
-        }
-    };
+    MAGIC('k', 16, true),
+    BOLD('l', 17, true),
+    STRIKETHROUGH('m', 18, true),
+    UNDERLINE('n', 19, true),
+    ITALIC('o', 20, true),
+    RESET('r', 21);
 
     public static final char COLOR_CHAR = '§';
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + '§' + "[0-9A-FK-OR]");
@@ -203,10 +180,6 @@ public enum ChatColor {
 
     public static ChatColor from(Enum<?> e) {
         return valueOf(e.name());
-    }
-
-    public net.md_5.bungee.api.ChatColor asBungee() {
-        return net.md_5.bungee.api.ChatColor.RESET;
     }
 
     public char getChar() {

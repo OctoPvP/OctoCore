@@ -32,7 +32,6 @@ import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import org.bson.Document;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.io.ByteArrayOutputStream;
@@ -66,6 +65,7 @@ public class PlayerData extends SimplePlayerData {
     private transient String cachedFormattedNameNoNickNoTag = null;
 
     public PlayerData(UUID uuid, String name) {
+        super(uuid);
         this.uuid = uuid;
         this.lastLoaded = System.currentTimeMillis();
         this.lastKnownName = name;
@@ -79,17 +79,18 @@ public class PlayerData extends SimplePlayerData {
         load(null);
     }
 
-    public void load(Document document) {
+    public SimplePlayerData load(Document document) {
         if (document == null) {
             document = PlayerManager.getInstance().getProfileDocument(uuid);
         }
         if (document == null) {
-            return;
+            return null;
         }
         super.load(document);
         if (cachedPermissions == null) cachedPermissions = new ConcurrentHashMap<>();
         if (loadNotes == null) loadNotes = new ArrayList<>();
         loaded = true;
+        return this;
     }
 
     public void save() {

@@ -51,7 +51,11 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected WorldTime worldTime = WorldTime.DAY;
     protected ChatColor nameColor = ChatColor.GREEN;
 
-    public void load(Document document) {
+    public SimplePlayerData(UUID uuid) { // not sure if we need name too, have a look at PlayerData in OctoCore-Core
+        this.uuid = uuid;
+    }
+
+    public SimplePlayerData load(Document document) {
         Gson gson = OctoCoreCommon.getInstance().getGson();
         this.name = OctoCoreCommon.getInstance().getServerImplementation().getName(uuid);
 
@@ -114,7 +118,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         this.messageSettings.setIgnoreList(gson.fromJson(document.getString("ignoreList"), GsonType.STRING_LIST));
 
         this.messageSettings.getIgnoreList().removeIf(u -> u == null || u.isEmpty() || u.equalsIgnoreCase(this.name));
-
+        return this;
     }
 
     @Override
@@ -281,4 +285,5 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     public Collection<IPunishment> getPunishments() {
         return punishData.getPunishments();
     }
+
 }

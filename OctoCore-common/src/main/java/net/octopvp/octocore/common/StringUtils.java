@@ -385,7 +385,7 @@ public class StringUtils {
 
     public static String capatalizeFirstDeep(String in) {
         StringBuilder sb = new StringBuilder();
-        for (String s : in.split("\\s+")) {
+        for (String s : in.split(" ")) {
             sb.append(capatalizeFirst(s)).append(" ");
         }
         return sb.toString().trim();

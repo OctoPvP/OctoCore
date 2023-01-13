@@ -3,6 +3,7 @@ package net.octopvp.octocore.waterfall;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ProxyServer;
@@ -56,6 +57,7 @@ public final class OctoCoreWaterfall extends Plugin {
             }
         });
         instance = this;
+
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
         OctoCoreCommon.getInstance().init(gson, new ServerImplementation() {
@@ -144,6 +146,11 @@ public final class OctoCoreWaterfall extends Plugin {
                     @Override
                     public RedisManager getRedisManager() {
                         return redisManager;
+                    }
+
+                    @Override
+                    public MongoDatabase getDatabase() {
+                        throw new UnsupportedOperationException("Not implemented");
                     }
                 };
             }

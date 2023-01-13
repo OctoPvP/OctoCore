@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -58,6 +59,18 @@ public class User {
     public TimeZone getTimeZone() {
         return TimeZone.getTimeZone(timezoneId);
     }
+
+    // 2022-11-10 3:11 PM
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd h:mm a");
+    public String formatDate(long timestamp) {
+        return formatDate(new Date(timestamp));
+    }
+
+    public String formatDate(Date date) {
+        dateFormat.setTimeZone(getTimeZone());
+        return dateFormat.format(date);
+    }
+
 
     public int getHighestRolePriority() {
         int highestPriority = 0;

@@ -5,6 +5,7 @@ import com.mongodb.client.model.Filters;
 import lombok.Getter;
 import net.octopvp.octocore.common.manager.IPlayerManager;
 import net.octopvp.octocore.common.object.SimplePlayerData;
+import net.octopvp.octocore.master.master.util.AccountUtil;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,9 @@ public class PlayerManager implements IPlayerManager {
 
     @Autowired
     private DatabaseManager databaseManager;
+
+    @Autowired
+    private AccountUtil accountUtil;
 
     @PostConstruct
     public void init() {
@@ -33,23 +37,25 @@ public class PlayerManager implements IPlayerManager {
 
     @Override
     public SimplePlayerData getData(UUID uuid) {
-        return null;
+        Document document = getProfileDocument(uuid);
+        if (document == null) {
+            return null;
+        }
+        return new SimplePlayerData(uuid).load(document);
     }
 
     @Override
     public SimplePlayerData getData(String name) {
-        return null;
+        return getData(accountUtil.getUUID(name));
     }
-
-
 
     @Override
     public boolean doesDocumentExistByUUID(UUID uuid) {
-        return false;
+        return getProfileDocument(uuid) != null;
     }
 
     @Override
     public boolean doesDocumentExistByName(String name) {
-        return false;
+        return doesDocumentExistByUUID(accountUtil.getUUID(name));
     }
 }

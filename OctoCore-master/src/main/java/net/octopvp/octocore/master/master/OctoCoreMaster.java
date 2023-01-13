@@ -14,6 +14,7 @@ import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.redis.packets.VotePacket;
 import net.octopvp.octocore.master.component.LightningHolder;
 import net.octopvp.octocore.master.master.manager.DatabaseManager;
+import net.octopvp.octocore.master.master.manager.PunishModule;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 import net.octopvp.octocore.master.master.object.ServerStatus;
 import net.octopvp.octocore.master.master.redis.RedisPackets;
@@ -64,6 +65,9 @@ public class OctoCoreMaster {
     private SettingRepository settingRepository;
     @Autowired
     private AccountUtil accountUtil;
+
+    @Autowired
+    private PunishModule punishModule;
 
     public OctoCoreMaster() {
         LOG.info("Starting Master...");
@@ -130,7 +134,7 @@ public class OctoCoreMaster {
 
             @Override
             public IPunishModule getPunishModule() {
-                throw new RuntimeException("Not implemented");
+                return punishModule;
             }
 
             @Override

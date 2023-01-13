@@ -70,7 +70,6 @@ public class DatabaseManager implements IDatabaseManager {
         PunishModule.postDbInit(mongoDatabase);
          */
         MongoCredential credential;
-        Logger.info("Connecting to mongo");
         if (mongoAuth) {
             credential = MongoCredential.createCredential(mongoUsername, mongoAuthDB, mongoPassword.toCharArray());
             mongoClient = MongoClients.create(
@@ -87,7 +86,6 @@ public class DatabaseManager implements IDatabaseManager {
                             .build());
         }
         mongoDatabase = mongoClient.getDatabase(mongoDatabaseName);
-        Logger.info(mongoDatabase == null ? "Could not connect to mongo!" : "Connected to mongo!");
     }
 
     @Override

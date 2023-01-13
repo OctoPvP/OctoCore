@@ -6,9 +6,13 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
 import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.SimplePlayerData;
+import net.octopvp.octocore.master.master.manager.PlayerManager;
 import net.octopvp.octocore.master.master.manager.ServerManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PlayerName extends HorizontalLayout {
+
     private String playerName;
     private static final String HEAD_URL = "https://mc-heads.net/avatar/%id%";
 
@@ -49,7 +53,7 @@ public class PlayerName extends HorizontalLayout {
                     .withText("Online - " + player.getServer());
         } else {
             Tooltip.forComponent(statusCircle)
-                    .withText("Offline - Last Seen <DATE>");
+                    .withText("Offline");
         }
 
         div.add(image, statusCircle);

@@ -69,7 +69,7 @@ public class PunishData implements IPunishData {
         return this.punishments.stream().filter(punishment -> punishment.getType() == type).collect(Collectors.toList());
     }
 
-    public void load() {
+    public void load() { // TODO: Wasn't this supposed to be called on playerdata load?
         this.punishments.clear();
 
         List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find().filter(

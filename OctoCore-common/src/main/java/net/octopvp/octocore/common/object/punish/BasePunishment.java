@@ -50,7 +50,7 @@ public class BasePunishment implements IPunishment {
         this.silent = document.getBoolean("silent");
         this.removedBy = document.getString("removedBy");
         this.removedFor = document.getString("removedFor");
-        this.removedSilent = document.getBoolean("removedSilent");
+        this.removedSilent = document.getBoolean("removedSilent", false);
         this.whenRemoved = document.getLong("whenRemoved");
         this.enteredDuration = document.getString("enteredDuration");
         this.last = document.getBoolean("last");

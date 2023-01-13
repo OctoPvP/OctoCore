@@ -82,6 +82,7 @@ public class AccountUtil {
     }
 
     public String getName(UUID uuid) {
+        if (uuid == null) throw new NullPointerException("UUID cannot be null");
         try {
             return nameCache.get(uuid);
         } catch (ExecutionException e) {
