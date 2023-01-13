@@ -1,9 +1,7 @@
 package net.octopvp.octocore.common;
 
-import net.octopvp.octocore.common.manager.IPlayerManager;
-import net.octopvp.octocore.common.manager.IPunishModule;
-import net.octopvp.octocore.common.manager.IRankManager;
-import net.octopvp.octocore.common.manager.IServerManager;
+import com.mongodb.client.MongoClient;
+import net.octopvp.octocore.common.manager.*;
 
 import java.util.UUID;
 
@@ -35,4 +33,6 @@ public interface ServerImplementation {
     IPunishModule getPunishModule();
 
     IPlayerManager getPlayerManager();
+
+    IDatabaseManager getDatabaseManager();
 }

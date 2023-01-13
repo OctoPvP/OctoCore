@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.database;
+package net.octopvp.octocore.master.master.manager;
 
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
@@ -6,37 +6,42 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import lombok.Data;
 import lombok.Getter;
 import net.octopvp.octocore.common.manager.IDatabaseManager;
+import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.manager.Manager;
-import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.manager.impl.RedisManager;
-import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
-import org.bson.json.JsonWriterSettings;
-import redis.clients.jedis.Jedis;
+import net.octopvp.octocore.master.master.OctoCoreMaster;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Collections;
 
-public class DatabaseManager extends Manager implements IDatabaseManager {
-    @Getter
-    private static final JsonWriterSettings jsonWriterSettings = JsonWriterSettings.builder()
-            .int64Converter((value, writer) -> writer.writeNumber(value.toString()))
-            .build();
+@Component
+@Getter
+public class DatabaseManager implements IDatabaseManager {
     private static MongoDatabase mongoDatabase = null;
     private static MongoClient mongoClient;
 
-    public static MongoDatabase getMongoDatabase() {
-        return DatabaseManager.mongoDatabase;
-    }
+    @Value("${master.mongo.host}")
+    private String mongoHost;
+    @Value("${master.mongo.port}")
+    private int mongoPort;
+    @Value("${master.mongo.database}")
+    private String mongoDatabaseName;
+    @Value("${master.mongo.auth.user}")
+    private String mongoUsername;
+    @Value("${master.mongo.auth.password}")
+    private String mongoPassword;
+    @Value("${master.mongo.auth.db}")
+    private String mongoAuthDB;
+    @Value("${master.mongo.auth.enabled}")
+    private boolean mongoAuth;
 
-    public static Jedis getJedis() {
-        return RedisManager.getJedis();
-    }
-
-    @Override
-    public void init(OctoCore plugin) {
+    @PostConstruct
+    public void init() {
+        /*
         MongoCredential credentials;
         Logger.info("Connecting to mongo");
         String base = "database.mongo.auth.";
@@ -63,11 +68,26 @@ public class DatabaseManager extends Manager implements IDatabaseManager {
         }
         PlayerManager.getInstance().postDBInit(mongoDatabase);
         PunishModule.postDbInit(mongoDatabase);
-    }
-
-    @Override
-    public void disable() {
-        //redisManager.disable();
+         */
+        MongoCredential credential;
+        Logger.info("Connecting to mongo");
+        if (mongoAuth) {
+            credential = MongoCredential.createCredential(mongoUsername, mongoAuthDB, mongoPassword.toCharArray());
+            mongoClient = MongoClients.create(
+                    MongoClientSettings.builder()
+                            .applyToClusterSettings(builder ->
+                                    builder.hosts(Collections.singletonList(new ServerAddress(mongoHost, mongoPort))))
+                            .credential(credential)
+                            .build());
+        } else {
+            mongoClient = MongoClients.create(
+                    MongoClientSettings.builder()
+                            .applyToClusterSettings(builder ->
+                                    builder.hosts(Collections.singletonList(new ServerAddress(mongoHost, mongoPort))))
+                            .build());
+        }
+        mongoDatabase = mongoClient.getDatabase(mongoDatabaseName);
+        Logger.info(mongoDatabase == null ? "Could not connect to mongo!" : "Connected to mongo!");
     }
 
     @Override
@@ -76,8 +96,8 @@ public class DatabaseManager extends Manager implements IDatabaseManager {
     }
 
     @Override
-    public net.octopvp.octocore.common.redis.RedisManager getRedisManager() {
-        return OctoCore.getInstance().getActualRedisManager();
+    public RedisManager getRedisManager() {
+        return OctoCoreMaster.getRedisManager();
     }
 
     @Override

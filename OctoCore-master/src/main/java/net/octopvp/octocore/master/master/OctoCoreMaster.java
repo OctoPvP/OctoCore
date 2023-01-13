@@ -2,18 +2,18 @@ package net.octopvp.octocore.master.master;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.MongoClient;
 import com.vexsoftware.votifier.model.Vote;
 import lombok.Getter;
 import net.badbird5907.lightning.annotation.EventHandler;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.ServerImplementation;
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.common.manager.IPunishModule;
-import net.octopvp.octocore.common.manager.IRankManager;
-import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.manager.*;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.redis.packets.VotePacket;
 import net.octopvp.octocore.master.component.LightningHolder;
+import net.octopvp.octocore.master.master.manager.DatabaseManager;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 import net.octopvp.octocore.master.master.object.ServerStatus;
 import net.octopvp.octocore.master.master.redis.RedisPackets;
@@ -45,14 +45,17 @@ public class OctoCoreMaster {
     @Getter
     private static RedisManager redisManager;
     @Value("${master.redis.hostname}")
-    private String hostname;
+    private String redisHostname;
     @Value("${master.redis.port}")
-    private int port;
+    private int redisPort;
     @Value("${master.redis.password}")
-    private String password;
+    private String redisPassword;
 
     @Autowired
     private ServerManager serverManager;
+
+    @Autowired
+    private DatabaseManager databaseManager;
 
     @Autowired
     private LightningHolder lightningHolder;
@@ -129,6 +132,16 @@ public class OctoCoreMaster {
             public IPunishModule getPunishModule() {
                 throw new RuntimeException("Not implemented");
             }
+
+            @Override
+            public IPlayerManager getPlayerManager() {
+                throw new RuntimeException("Not implemented");
+            }
+
+            @Override
+            public IDatabaseManager getDatabaseManager() {
+                return databaseManager;
+            }
         });
     }
 
@@ -140,11 +153,11 @@ public class OctoCoreMaster {
 
     @PostConstruct
     public void init() {
-        LOG.info("Connecting to redis with hostname " + hostname + ":" + port);
-        OctoCoreCommon.getInstance().setRedisManager(redisManager = new RedisManager(
-                hostname, port, password, "net.octopvp.octocore.master.master.redis.impl",
+        LOG.info("Connecting to redis with hostname " + redisHostname + ":" + redisPort);
+        redisManager = new RedisManager(
+                redisHostname, redisPort, redisPassword, "net.octopvp.octocore.master.master.redis.impl",
                 new RedisPackets()
-        ));
+        );
 
         lightningHolder.getEventBus().register(new Object() {
             @EventHandler

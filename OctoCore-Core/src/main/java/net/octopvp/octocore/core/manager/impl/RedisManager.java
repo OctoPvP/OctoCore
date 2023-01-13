@@ -31,7 +31,6 @@ public class RedisManager extends Manager {
                 DatabaseManager.class.getPackage().getName() + ".redis.packets"
                 , null
         ));
-        OctoCoreCommon.getInstance().setRedisManager(redisManager);
         Logger.debug("Connected to Redis");
         /*
         try {

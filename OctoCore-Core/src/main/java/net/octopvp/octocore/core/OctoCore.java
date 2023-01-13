@@ -14,7 +14,6 @@ import net.octopvp.commander.exception.InvalidArgsException;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
-import net.octopvp.octocore.common.ServerImplementation;
 import net.octopvp.octocore.common.object.*;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;

@@ -90,3 +90,12 @@ master:
     hostname: 140.238.153.142
     port: 6379
     password: PVuS9YfX43
+  mongo:
+    database: 'OctoCore'
+    host: 'localhost'
+    port: 27017
+    auth:
+      enabled: false
+      user: ''
+      password: ''
+      db: 'admin'

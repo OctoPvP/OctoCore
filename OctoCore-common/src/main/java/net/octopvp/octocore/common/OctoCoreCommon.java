@@ -1,6 +1,7 @@
 package net.octopvp.octocore.common;
 
 import com.google.gson.Gson;
+import com.mongodb.client.MongoClient;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.manager.IPunishModule;
@@ -13,7 +14,7 @@ import net.octopvp.octocore.common.redis.RedisManager;
 public class OctoCoreCommon {
     @Getter
     private static final OctoCoreCommon instance = new OctoCoreCommon();
-    private RedisManager redisManager;
+    private MongoClient mongoClient;
     private ServerImplementation serverImplementation;
     private Gson gson;
     private boolean bungee = false;
@@ -37,5 +38,9 @@ public class OctoCoreCommon {
 
     public IPunishModule getPunishModule() {
         return serverImplementation.getPunishModule();
+    }
+
+    public RedisManager getRedisManager() {
+        return serverImplementation.getDatabaseManager().getRedisManager();
     }
 }

@@ -36,7 +36,6 @@ public class BungeeRedisManager {
         OctoCoreWaterfall.getInstance().setRedisManager(new RedisManager(settings.getAddress(), settings.getPort(), settings.getPassword(),
                 "net.octopvp.octocore.waterfall.redis.packet.impl", null
         ));
-        OctoCoreCommon.getInstance().setRedisManager(OctoCoreWaterfall.getInstance().getRedisManager());
         //OctoCoreWaterfall.getInstance().getRedisManager().connect();
         //OctoCoreCommon.setRedisHandler(OctoCoreWaterfall.getInstance().getRedisManager());
 

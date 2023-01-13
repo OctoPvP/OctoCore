@@ -2,6 +2,7 @@ package net.octopvp.octocore.waterfall;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.MongoClient;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ProxyServer;
@@ -12,9 +13,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.ServerImplementation;
-import net.octopvp.octocore.common.manager.IPunishModule;
-import net.octopvp.octocore.common.manager.IRankManager;
-import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.manager.*;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
@@ -22,7 +21,6 @@ import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
 import net.octopvp.octocore.waterfall.listeners.*;
 import net.octopvp.octocore.waterfall.manager.OnlinePlayersManager;
-import net.octopvp.octocore.common.manager.DefaultServerManagerImpl;
 import net.octopvp.octocore.waterfall.redis.BungeeRedisManager;
 
 import java.io.File;
@@ -128,6 +126,26 @@ public final class OctoCoreWaterfall extends Plugin {
             @Override
             public IPunishModule getPunishModule() {
                 throw new UnsupportedOperationException("Not implemented");
+            }
+
+            @Override
+            public IPlayerManager getPlayerManager() {
+                throw new UnsupportedOperationException("Not implemented");
+            }
+
+            @Override
+            public IDatabaseManager getDatabaseManager() {
+                return new IDatabaseManager() {
+                    @Override
+                    public MongoClient getMongoClient() {
+                        throw new UnsupportedOperationException("Not implemented");
+                    }
+
+                    @Override
+                    public RedisManager getRedisManager() {
+                        return redisManager;
+                    }
+                };
             }
         });
         File file = new File(getDataFolder(), "config.yml");
