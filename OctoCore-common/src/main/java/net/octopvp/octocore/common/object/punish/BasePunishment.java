@@ -6,6 +6,7 @@ import com.mongodb.client.model.ReplaceOptions;
 import lombok.Data;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.IPlayerData;
+import net.octopvp.octocore.common.util.DocumentUtils;
 import net.octopvp.octocore.common.util.Logger;
 import org.bson.Document;
 
@@ -51,7 +52,7 @@ public class BasePunishment implements IPunishment {
         this.removedBy = document.getString("removedBy");
         this.removedFor = document.getString("removedFor");
         this.removedSilent = document.getBoolean("removedSilent", false);
-        this.whenRemoved = document.getLong("whenRemoved");
+        this.whenRemoved = DocumentUtils.getLong(document, "whenRemoved", -1L);
         this.enteredDuration = document.getString("enteredDuration");
         this.last = document.getBoolean("last");
         this.IPRelative = document.getBoolean("IPRelative");
@@ -119,14 +120,7 @@ public class BasePunishment implements IPunishment {
     }
 
 
-    @Override
-    public boolean hasExpired() {
-        if (!isActive()) return true;
-        if (isPermanent()) return false;
-        if (!isLast()) return true;
 
-        return System.currentTimeMillis() >= durationTime;
-    }
     public PunishmentType getType() {
         return punishmentType;
     }
@@ -136,4 +130,22 @@ public class BasePunishment implements IPunishment {
         this.punishmentType = type;
     }
 
+    public boolean isActive() {
+        return !hasExpired() || !active;
+    }
+    @Override
+    public boolean hasExpired() {
+        //if (!isActive()) return true;
+        if (isPermanent()) return false;
+        if (!isLast()) return true;
+
+        return System.currentTimeMillis() >= durationTime;
+    }
+    @Override
+    public long getRemoveTimestamp() {
+        if (isPermanent()) return -1;
+        // return the date (unix timestamp) when the punishment will be removed
+        //return addedAt + durationTime;
+        return durationTime;
+    }
 }

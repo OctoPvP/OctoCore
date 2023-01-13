@@ -16,7 +16,7 @@ public class DocumentUtils {
     }
 
     public static double getDouble(Document doc, String key, double... def) {
-        Number n = getNumber(doc, key).doubleValue();
+        Number n = getNumber(doc, key);
         if (n == null) return def.length > 0 ? def[0] : -1;
         return n.doubleValue();
     }

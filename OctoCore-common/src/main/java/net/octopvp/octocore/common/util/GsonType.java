@@ -19,8 +19,8 @@ public class GsonType {
     }.getType();
     public static final Type ALT = new TypeToken<List<Alt>>() {
     }.getType();
-    public static final Type PUNISHMENT = new TypeToken<BasePunishment>() { // FIXME make sure it works
-    }.getType();
+    //public static final Type PUNISHMENT = new TypeToken<BasePunishment>() { // FIXME make sure it works
+    //}.getType();
     public static final Type STRING_LIST = new TypeToken<List<String>>() {
     }.getType();
     public static final Type UUID_SET = new TypeToken<HashSet<UUID>>() {

@@ -113,4 +113,5 @@ public interface IPunishment {
         return DateUtils.formatDateDiff(this.getDurationTime());
     }
 
+    long getRemoveTimestamp();
 }

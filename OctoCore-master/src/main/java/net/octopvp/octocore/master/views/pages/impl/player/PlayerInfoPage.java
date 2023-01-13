@@ -2,10 +2,12 @@ package net.octopvp.octocore.master.views.pages.impl.player;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
@@ -31,6 +33,7 @@ import net.octopvp.octocore.master.views.pages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.Comparator;
 import java.util.UUID;
 
 @PageTitle("Player Info")
@@ -52,6 +55,12 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         String name = accountUtil.getName(uuid);
         HorizontalLayout title = new HorizontalLayout();
         title.add(new PlayerName(name, true));
+        Button refresh = new Button(VaadinIcon.REFRESH.create());
+        refresh.addClickListener(clickEvent -> {
+        });
+        title.add(refresh);
+        // put the button on the right side of the page
+        //refresh.getStyle().set("float", "right");
         if (!playerManager.doesDocumentExistByUUID(uuid)) {
             add(title, new Span("This player has never joined the network."));
             return;
@@ -84,19 +93,26 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
     }
 
     public Component createPunishments(SimplePlayerData playerData) {
+        System.out.println("Creating punishments");
         VerticalLayout layout = new VerticalLayout();
         PunishData data = playerData.getPunishData();
         data.load();
 
         Grid<IPunishment> grid = new Grid<>(IPunishment.class, false);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        GridListDataView<IPunishment> dataView = grid.setItems(data.getPunishments());
+        GridListDataView<IPunishment> dataView = grid.setItems(data.getPunishments().stream().sorted(Comparator.comparingLong(IPunishment::getAddedAt).reversed()).toList());
 
         grid.addColumn(punish -> StringUtils.capatalizeFirstDeep(punish.getType().name())).setHeader("Type");
         grid.addColumn(IPunishment::getReason).setHeader("Reason");
-        grid.addColumn(IPunishment::getAddedByName).setHeader("Issuer");
+        grid.addColumn(nameRenderer()).setHeader("Issuer");
         grid.addColumn(punish -> user.formatDate(punish.getAddedAt())).setHeader("Issued");
-        grid.addColumn(punish -> user.formatDate(punish.getWhenRemoved())).setHeader("Expires");
+        grid.addColumn(punish -> {
+            long removeTimestamp = punish.getRemoveTimestamp();
+            if (removeTimestamp < 0) {
+                return "Never";
+            }
+            return user.formatDate(removeTimestamp);
+        }).setHeader("Expires");
         grid.addColumn(createStatusComponentRenderer()).setHeader("Status");
 
         layout.add(grid);
@@ -113,5 +129,14 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
     };
     private static ComponentRenderer<Span, IPunishment> createStatusComponentRenderer() {
         return new ComponentRenderer<>(Span::new, statusComponentUpdater);
+    }
+
+    private ComponentRenderer<Component, IPunishment> nameRenderer() {
+        return new ComponentRenderer<>(punishment -> {
+            HorizontalLayout layout = new HorizontalLayout();
+            PlayerName pName = new PlayerName(punishment.getAddedByName(), false, true);
+            layout.add(pName);
+            return layout;
+        });
     }
 }

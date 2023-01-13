@@ -244,7 +244,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
     @Override
     public void onReceive(JsonObject data) {
         try {
-            Punishment punishment = OctoCore.getGson().fromJson(this.punishment, GsonType.PUNISHMENT);
+            Punishment punishment = OctoCore.getGson().fromJson(this.punishment, Punishment.class);
             boolean temp = !permanent;
             PlayerData playerData = PlayerManager.getInstance().getData(uuid);
 
