@@ -93,7 +93,6 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
     }
 
     public Component createPunishments(SimplePlayerData playerData) {
-        System.out.println("Creating punishments");
         VerticalLayout layout = new VerticalLayout();
         PunishData data = playerData.getPunishData();
         data.load();

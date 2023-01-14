@@ -1,24 +1,27 @@
 package net.octopvp.octocore.master.views;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
+import com.vaadin.flow.theme.lumo.Lumo;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
 import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.components.ThemeToggleButton;
 import net.octopvp.octocore.master.views.pages.impl.HomeView;
 import net.octopvp.octocore.master.views.pages.impl.Servers;
+import net.octopvp.octocore.master.views.pages.impl.SettingsPage;
 import net.octopvp.octocore.master.views.pages.impl.admin.UsersPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.RedisManagerPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.vote.VoteManager;
@@ -135,10 +138,15 @@ public class MainLayout extends AppLayout {
             Anchor loginLink = new Anchor("login", "Sign in");
             layout.add(loginLink);
         }
-        ThemeToggleButton toggleButton = new ThemeToggleButton(mongoUserRepository, authenticatedUser, user.getUserID());
+        //ThemeToggleButton toggleButton = new ThemeToggleButton(mongoUserRepository, authenticatedUser, user.getUserID());
         // align to the right side
-        toggleButton.getElement().getStyle().set("margin-left", "auto");
-        layout.add(toggleButton);
+        //toggleButton.getElement().getStyle().set("margin-left", "auto");
+        //layout.add(toggleButton);
+        Button button = new Button(VaadinIcon.COG.create());
+        button.getElement().getStyle().set("margin-left", "auto");
+        button.setTooltipText("Settings");
+        button.addClickListener((ComponentEventListener<ClickEvent<Button>>) event -> UI.getCurrent().navigate(SettingsPage.class));
+        layout.add(button);
         return layout;
     }
 
@@ -263,5 +271,22 @@ public class MainLayout extends AppLayout {
     private String getCurrentPageTitle() {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        if (mongoUserRepository == null) {
+            UI.getCurrent().getElement().getThemeList().add(Lumo.DARK);
+            return;
+        }
+        User user = authenticatedUser.get();
+        if (user != null) {
+            if (user.isDarkMode()) {
+                UI.getCurrent().getElement().getThemeList().add(Lumo.DARK);
+            } else {
+                UI.getCurrent().getElement().getThemeList().remove(Lumo.DARK);
+            }
+        }
     }
 }

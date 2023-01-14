@@ -72,6 +72,7 @@ public class ThemeToggleButton extends Button {
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
+        /*
         if (mongoUserRepository == null) {
             UI.getCurrent().getElement().getThemeList().add(Lumo.DARK);
             updateIcon();
@@ -85,7 +86,7 @@ public class ThemeToggleButton extends Button {
                 UI.getCurrent().getElement().getThemeList().remove(Lumo.DARK);
             }
         }
-
+         */
         updateIcon();
     }
 

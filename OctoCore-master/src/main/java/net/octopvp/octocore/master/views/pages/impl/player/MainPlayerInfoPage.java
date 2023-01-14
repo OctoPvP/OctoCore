@@ -1,9 +1,11 @@
 package net.octopvp.octocore.master.views.pages.impl.player;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.*;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.master.master.util.AccountUtil;
 import net.octopvp.octocore.master.views.MainLayout;
@@ -21,30 +23,40 @@ public class MainPlayerInfoPage extends Page {
     @Autowired
     private AccountUtil accountUtil;
 
+    TextField nameField;
+
     @Override
     public void init() {
-        TextField nameField = new TextField();
+        nameField = new TextField();
         nameField.setWidthFull();
         nameField.setLabel("Name/UUID");
         nameField.setRequired(true);
         nameField.addClassNames("centered");
+        nameField.addKeyUpListener(event -> {
+            if (event.getKey() == Key.ENTER || event.getKey() == Key.NUMPAD_ENTER) {
+                submit();
+            }
+        });
         Button button = new Button("Submit");
         button.addClassNames("centered");
         button.getElement().setAttribute("type", "submit");
         button.addClickListener(event -> {
-            String name = nameField.getValue();
-            boolean isUUID = Utilities.isUUID(name);
-            if (!isUUID) {
-                NotificationUtils.create("Searching for player, this may take a second...", NotificationVariant.LUMO_PRIMARY).open();
-            }
-            UUID uuid = isUUID ? UUID.fromString(name) : accountUtil.getUUID(name);
-            //redirect to /player/info/<uuid>
-            if (uuid != null) {
-                getUI().ifPresent(ui -> ui.navigate("/player/view/" + uuid));
-            } else {
-                NotificationUtils.create("Player not found!", NotificationVariant.LUMO_ERROR).open();
-            }
+            submit();
         });
         add(nameField, button);
+    }
+    public void submit() {
+        String name = nameField.getValue();
+        boolean isUUID = Utilities.isUUID(name);
+        if (!isUUID) {
+            NotificationUtils.create("Searching for player, this may take a second...", NotificationVariant.LUMO_PRIMARY).open();
+        }
+        UUID uuid = isUUID ? UUID.fromString(name) : accountUtil.getUUID(name);
+        //redirect to /player/info/<uuid>
+        if (uuid != null) {
+            getUI().ifPresent(ui -> ui.navigate("/player/view/" + uuid));
+        } else {
+            NotificationUtils.create("Player not found!", NotificationVariant.LUMO_ERROR).open();
+        }
     }
 }
