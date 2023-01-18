@@ -46,17 +46,25 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
     private PlayerManager playerManager;
     @Autowired
     private UserService userService;
-    User user;
+    private User user;
+    private UUID uuid;
+    private String name;
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
         user = userService.get();
-        UUID uuid = UUID.fromString(parameter);
-        String name = accountUtil.getName(uuid);
+        uuid = UUID.fromString(parameter);
+        name = accountUtil.getName(uuid);
+        populate();
+    }
+
+    public void populate() {
         HorizontalLayout title = new HorizontalLayout();
         title.add(new PlayerName(name, true));
         Button refresh = new Button(VaadinIcon.REFRESH.create());
         refresh.addClickListener(clickEvent -> {
+            removeAll();
+            populate();
         });
         title.add(refresh);
         // put the button on the right side of the page
