@@ -2,6 +2,7 @@ package net.octopvp.octocore.master.views.pages.impl.player;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
@@ -14,13 +15,10 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableBiConsumer;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
+import lombok.extern.java.Log;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.SimplePlayerData;
-import net.octopvp.octocore.common.object.punish.BasePunishment;
 import net.octopvp.octocore.common.object.punish.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.master.master.manager.PlayerManager;
@@ -33,12 +31,12 @@ import net.octopvp.octocore.master.views.pages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Comparator;
-import java.util.UUID;
+import java.util.*;
 
 @PageTitle("Player Info")
 @Route(value = "player/view", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
+@Log
 public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
     @Autowired
     private AccountUtil accountUtil;
@@ -49,26 +47,27 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
     private User user;
     private UUID uuid;
     private String name;
+    private Location location;
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
         user = userService.get();
         uuid = UUID.fromString(parameter);
         name = accountUtil.getName(uuid);
-        populate();
+        location = event.getLocation();
+        populate(location);
     }
 
-    public void populate() {
+    public void populate(Location location) {
         HorizontalLayout title = new HorizontalLayout();
         title.add(new PlayerName(name, true));
         Button refresh = new Button(VaadinIcon.REFRESH.create());
         refresh.addClickListener(clickEvent -> {
             removeAll();
-            populate();
+            populate(location);
         });
+        refresh.getStyle().set("float", "right");
         title.add(refresh);
-        // put the button on the right side of the page
-        //refresh.getStyle().set("float", "right");
         if (!playerManager.doesDocumentExistByUUID(uuid)) {
             add(title, new Span("This player has never joined the network."));
             return;
@@ -83,6 +82,28 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         tabSheet.add("Punishments", createPunishments(playerData));
         tabSheet.add("Notes", new Div(new Text(("Data here"))));
         tabSheet.add("Reports", new Div(new Text(("Data here"))));
+
+
+        tabs:
+        {
+            Map<String, List<String>> param = location.getQueryParameters().getParameters();
+            if (param.containsKey("tab") && param.get("tab").size() > 0) {
+                String tab = param.get("tab").get(0);
+                try {
+                    int tabIndex = Integer.parseInt(tab) - 1;
+                    tabSheet.setSelectedIndex(tabIndex);
+                } catch (NumberFormatException ignored) {
+                    // ignored
+                }
+            }
+        }
+        tabSheet.addSelectedChangeListener(event -> {
+            // set the query parameter
+            Map<String, List<String>> currentParameters = new HashMap<>(location.getQueryParameters().getParameters());
+            currentParameters.put("tab", List.of(String.valueOf(tabSheet.getIndexOf(event.getSelectedTab()) + 1)));
+            String query = new QueryParameters(currentParameters).getQueryString();
+            UI.getCurrent().getPage().executeJs("window.history.replaceState({}, '', $0)", location.getPath() + (query.isEmpty() ? "" : "?" + query));
+        });
 
         add(title, tabSheet);
     }
@@ -126,6 +147,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
 
         return layout;
     }
+
     private static final SerializableBiConsumer<Span, IPunishment> statusComponentUpdater = (
             span, punishment) -> {
         boolean isActive = punishment.isActive();
@@ -134,6 +156,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         span.getElement().setAttribute("theme", theme);
         span.setText(isActive ? "Active" : (punishment.getRemovedBy() != null && !punishment.getRemovedBy().isEmpty() ? "Removed" : "Expired"));
     };
+
     private static ComponentRenderer<Span, IPunishment> createStatusComponentRenderer() {
         return new ComponentRenderer<>(Span::new, statusComponentUpdater);
     }
