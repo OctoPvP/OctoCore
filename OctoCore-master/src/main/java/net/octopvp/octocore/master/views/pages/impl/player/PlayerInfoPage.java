@@ -25,6 +25,7 @@ import net.octopvp.octocore.master.master.manager.PlayerManager;
 import net.octopvp.octocore.master.master.util.AccountUtil;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.services.UserService;
+import net.octopvp.octocore.master.util.TabUtils;
 import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.components.PlayerName;
 import net.octopvp.octocore.master.views.pages.Page;
@@ -83,27 +84,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         tabSheet.add("Notes", new Div(new Text(("Data here"))));
         tabSheet.add("Reports", new Div(new Text(("Data here"))));
 
-
-        tabs:
-        {
-            Map<String, List<String>> param = location.getQueryParameters().getParameters();
-            if (param.containsKey("tab") && param.get("tab").size() > 0) {
-                String tab = param.get("tab").get(0);
-                try {
-                    int tabIndex = Integer.parseInt(tab) - 1;
-                    tabSheet.setSelectedIndex(tabIndex);
-                } catch (NumberFormatException ignored) {
-                    // ignored
-                }
-            }
-        }
-        tabSheet.addSelectedChangeListener(event -> {
-            // set the query parameter
-            Map<String, List<String>> currentParameters = new HashMap<>(location.getQueryParameters().getParameters());
-            currentParameters.put("tab", List.of(String.valueOf(tabSheet.getIndexOf(event.getSelectedTab()) + 1)));
-            String query = new QueryParameters(currentParameters).getQueryString();
-            UI.getCurrent().getPage().executeJs("window.history.replaceState({}, '', $0)", location.getPath() + (query.isEmpty() ? "" : "?" + query));
-        });
+        TabUtils.persistSelection(tabSheet, location);
 
         add(title, tabSheet);
     }
