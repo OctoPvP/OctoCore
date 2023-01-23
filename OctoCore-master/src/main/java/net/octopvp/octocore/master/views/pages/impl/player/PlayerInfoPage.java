@@ -14,6 +14,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.vaadin.flow.component.textfield.TextField;
@@ -42,7 +43,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 @PageTitle("Player Info")
@@ -120,7 +124,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         VerticalLayout layout = new VerticalLayout();
 
         Grid<IPunishment> grid = new Grid<>(IPunishment.class, false);
-        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        //grid.setSelectionMode(Grid.SelectionMode.MULTI);
         GridListDataView<IPunishment> dataView = grid.setItems(data.getPunishments().stream().sorted(Comparator.comparingLong(IPunishment::getAddedAt).reversed()).toList());
         PunishmentFilter filter = new PunishmentFilter(dataView);
 
@@ -129,18 +133,19 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         }));
         grid.addColumn(IPunishment::getReason).setHeader(createFilterType("Reason", filter::setReason));
         grid.addColumn(nameRenderer()).setHeader(createFilterType("Punisher", filter::setIssuer));
-        grid.addColumn(punish -> user.formatDate(punish.getAddedAt())).setHeader("Issued");
+        grid.addColumn(punish -> user.formatDate(punish.getAddedAt())).setHeader(createDateRangePicker("Issued", filter::setIssuedEnd, filter::setIssuedStart));
         grid.addColumn(punish -> {
             long removeTimestamp = punish.getRemoveTimestamp();
             if (removeTimestamp < 0) {
                 return "Never";
             }
             return user.formatDate(removeTimestamp);
-        }).setHeader("Expires");
+        }).setHeader(createDateRangePicker("Expires", filter::setExpiresEnd, filter::setExpiresStart));
         grid.addColumn(createStatusComponentRenderer()).setHeader(createDropdownFilter("Status", Arrays.asList("All", "Active", "Inactive", "Expired", "Removed"), filter::setStatus, (select)-> {
             select.addComponents("Inactive", new Hr());
-            select.addComponents("Active", new Hr());
+            select.addComponents("All", new Hr());
         }));
+
 
         layout.add(grid);
 
@@ -153,8 +158,9 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         private String type = ""; // TODO: use enum
         private String reason = "";
         private String issuer = "";
-        private String issued = "";
         private String status = ""; // TODO: boolean
+
+        private LocalDate issuedStart, issuedEnd, expiresStart, expiresEnd;
 
         public PunishmentFilter(GridListDataView<IPunishment> dataView) {
             this.dataView = dataView;
@@ -169,6 +175,36 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
             if (status.equalsIgnoreCase("inactive")) {
                 matchesStatus = !punishment.isActive();
             }
+
+            if (issuedStart != null) {
+                long addedAtLong = punishment.getAddedAt();
+                LocalDate addedAt = LocalDate.ofEpochDay(addedAtLong / 86400000);
+                if (addedAt.isBefore(issuedStart)) {
+                    return false;
+                }
+            }
+            if (issuedEnd != null) {
+                long removeTimestamp = punishment.getRemoveTimestamp();
+                LocalDate removeDate = removeTimestamp <= 0 ? null : LocalDate.ofEpochDay(removeTimestamp / 86400000);
+                if (removeDate == null || removeDate.isAfter(issuedEnd)) {
+                    return false;
+                }
+            }
+            if (expiresStart != null) {
+                long removeTimestamp = punishment.getRemoveTimestamp();
+                LocalDate removeDate = removeTimestamp <= 0 ? null : LocalDate.ofEpochDay(removeTimestamp / 86400000);
+                if (removeDate == null || removeDate.isBefore(expiresStart)) {
+                    return false;
+                }
+            }
+            if (expiresEnd != null) {
+                long removeTimestamp = punishment.getRemoveTimestamp();
+                LocalDate removeDate = removeTimestamp <= 0 ? null : LocalDate.ofEpochDay(removeTimestamp / 86400000);
+                if (removeDate == null || removeDate.isAfter(expiresEnd)) {
+                    return false;
+                }
+            }
+
             return matchesType && matchesReason && matchesIssuer && matchesStatus;
         }
 
@@ -195,14 +231,28 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
             this.issuer = issuer;
             dataView.refreshAll();
         }
-
-        public void setIssued(String issued) {
-            this.issued = issued;
+        public void setStatus(String status) {
+            this.status = status;
             dataView.refreshAll();
         }
 
-        public void setStatus(String status) {
-            this.status = status;
+        public void setIssuedStart(LocalDate issuedStart) {
+            this.issuedStart = issuedStart;
+            dataView.refreshAll();
+        }
+
+        public void setIssuedEnd(LocalDate issuedEnd) {
+            this.issuedEnd = issuedEnd;
+            dataView.refreshAll();
+        }
+
+        public void setExpiresStart(LocalDate expiresStart) {
+            this.expiresStart = expiresStart;
+            dataView.refreshAll();
+        }
+
+        public void setExpiresEnd(LocalDate expiresEnd) {
+            this.expiresEnd = expiresEnd;
             dataView.refreshAll();
         }
     }
@@ -248,15 +298,30 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
 
         return layout;
     }
-    public static Component createDatePicker(String labelText, Consumer<String> filterChangeConsumer) {
+    public Component createDateRangePicker(String labelText, Consumer<LocalDate> endDateConsumer, Consumer<LocalDate> startDateConsumer) {
         Label label = new Label(labelText);
         label.getStyle().set("padding-top", "var(--lumo-space-m)")
                 .set("font-size", "var(--lumo-font-size-xs)");
-        DatePicker datePicker = new DatePicker();
-        //datePicker.setValue(LocalDate.now());
-        datePicker.addValueChangeListener(
-                e -> filterChangeConsumer.accept(e.getValue().toString()));
-        VerticalLayout layout = new VerticalLayout(label, datePicker);
+        Tooltip.forComponent(label).setText("Select a date range.\nMay be off by a day...");
+        DatePicker startDate = new DatePicker();
+        startDate.setTooltipText("Start date");
+        startDate.getStyle().set("width", "30%");
+        DatePicker endDate = new DatePicker();
+        endDate.getStyle().set("width", "30%");
+        endDate.setTooltipText("End date");
+        endDate.setMax(LocalDate.now());
+        endDate.setInitialPosition(LocalDate.now());
+        startDate.addValueChangeListener(e -> {
+            endDate.setMin(e.getValue());
+            startDate.setTooltipText("Start date: " + user.formatDate(e.getValue()));
+            startDateConsumer.accept(e.getValue());
+        });
+        endDate.addValueChangeListener(e -> {
+            startDate.setMax(e.getValue());
+            endDate.setTooltipText("End date: " + user.formatDate(e.getValue()));
+            endDateConsumer.accept(e.getValue());
+        });
+        VerticalLayout layout = new VerticalLayout(label, new HorizontalLayout(startDate, endDate));
         layout.getThemeList().clear();
         layout.getThemeList().add("spacing-xs");
 

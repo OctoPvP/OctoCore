@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -71,6 +72,9 @@ public class User {
         return dateFormat.format(date);
     }
 
+    public String formatDate(LocalDate date) {
+        return formatDate(date.atStartOfDay(getTimeZone().toZoneId()).toInstant().toEpochMilli());
+    }
 
     public int getHighestRolePriority() {
         int highestPriority = 0;
