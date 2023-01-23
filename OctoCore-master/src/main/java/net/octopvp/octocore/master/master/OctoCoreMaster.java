@@ -6,7 +6,7 @@ import com.vexsoftware.votifier.model.Vote;
 import lombok.Getter;
 import net.badbird5907.lightning.annotation.EventHandler;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.ServerImplementation;
+import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.redis.RedisManager;

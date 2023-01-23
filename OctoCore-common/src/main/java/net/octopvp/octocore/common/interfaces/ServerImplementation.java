@@ -1,4 +1,4 @@
-package net.octopvp.octocore.common;
+package net.octopvp.octocore.common.interfaces;
 
 import net.octopvp.octocore.common.interfaces.manager.*;
 

@@ -13,7 +13,7 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
-import net.octopvp.octocore.common.ServerImplementation;
+import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.manager.*;
 import net.octopvp.octocore.common.redis.RedisManager;
