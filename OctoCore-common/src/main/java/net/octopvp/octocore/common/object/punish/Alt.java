@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.interfaces.IPunishData;
+import net.octopvp.octocore.common.interfaces.IPunishment;
 
 import java.util.ArrayList;
 import java.util.Collection;

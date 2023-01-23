@@ -1,5 +1,6 @@
-package net.octopvp.octocore.common.object.punish;
+package net.octopvp.octocore.common.interfaces;
 
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.DateUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 

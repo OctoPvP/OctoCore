@@ -5,7 +5,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import net.octopvp.octocore.common.PluginMsgChannels;
-import net.octopvp.octocore.common.manager.IRankManager;
+import net.octopvp.octocore.common.interfaces.manager.IRankManager;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.object.enums.RankType;
 import net.octopvp.octocore.common.object.permissions.Rank;

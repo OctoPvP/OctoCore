@@ -27,7 +27,7 @@ import lombok.Getter;
 import lombok.extern.java.Log;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.SimplePlayerData;
-import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.Utilities;

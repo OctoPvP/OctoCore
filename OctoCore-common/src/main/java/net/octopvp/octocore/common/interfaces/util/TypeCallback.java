@@ -1,4 +1,4 @@
-package net.octopvp.octocore.common.object;
+package net.octopvp.octocore.common.interfaces.util;
 
 /**
  * {@link Callback} but with a return type

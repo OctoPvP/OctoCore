@@ -2,7 +2,7 @@ package net.octopvp.octocore.core.manager.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.interfaces.manager.IServerManager;
 import net.octopvp.octocore.common.object.GlobalPlayer;
 import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.core.OctoCore;

@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoClient;
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.common.manager.IPunishModule;
-import net.octopvp.octocore.common.manager.IRankManager;
-import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.interfaces.manager.IPunishModule;
+import net.octopvp.octocore.common.interfaces.manager.IRankManager;
+import net.octopvp.octocore.common.interfaces.manager.IServerManager;
 import net.octopvp.octocore.common.redis.RedisManager;
 
 @Getter

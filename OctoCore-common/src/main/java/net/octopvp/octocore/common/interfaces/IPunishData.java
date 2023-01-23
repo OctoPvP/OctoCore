@@ -1,4 +1,7 @@
-package net.octopvp.octocore.common.object.punish;
+package net.octopvp.octocore.common.interfaces;
+
+import net.octopvp.octocore.common.object.punish.Alt;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 
 import java.util.Collection;
 import java.util.List;

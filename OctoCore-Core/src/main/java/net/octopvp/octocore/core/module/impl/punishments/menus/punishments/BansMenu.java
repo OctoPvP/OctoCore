@@ -9,12 +9,11 @@ import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.agile.util.XMaterial;
-import net.octopvp.octocore.common.object.punish.IPunishData;
-import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.interfaces.IPunishData;
+import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.utils.Buttons;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

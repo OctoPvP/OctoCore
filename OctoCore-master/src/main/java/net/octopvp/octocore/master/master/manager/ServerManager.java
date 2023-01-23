@@ -1,7 +1,7 @@
 package net.octopvp.octocore.master.master.manager;
 
 import lombok.Getter;
-import net.octopvp.octocore.common.manager.IServerManager;
+import net.octopvp.octocore.common.interfaces.manager.IServerManager;
 import net.octopvp.octocore.common.object.GlobalPlayer;
 import net.octopvp.octocore.common.object.ServerData;
 import org.slf4j.Logger;

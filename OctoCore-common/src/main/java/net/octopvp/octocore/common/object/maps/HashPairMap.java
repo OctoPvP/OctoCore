@@ -1,5 +1,6 @@
-package net.octopvp.octocore.common.object.maps.pair;
+package net.octopvp.octocore.common.object.maps;
 
+import net.octopvp.octocore.common.interfaces.util.PairMap;
 import net.octopvp.octocore.common.object.tuple.Pair;
 
 import java.util.HashMap;

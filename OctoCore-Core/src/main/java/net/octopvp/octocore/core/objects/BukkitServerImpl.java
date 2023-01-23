@@ -1,7 +1,7 @@
 package net.octopvp.octocore.core.objects;
 
 import net.octopvp.octocore.common.ServerImplementation;
-import net.octopvp.octocore.common.manager.*;
+import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;

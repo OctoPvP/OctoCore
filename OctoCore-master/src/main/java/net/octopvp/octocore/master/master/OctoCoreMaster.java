@@ -2,14 +2,13 @@ package net.octopvp.octocore.master.master;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mongodb.client.MongoClient;
 import com.vexsoftware.votifier.model.Vote;
 import lombok.Getter;
 import net.badbird5907.lightning.annotation.EventHandler;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.ServerImplementation;
 import net.octopvp.octocore.common.StringUtils;
-import net.octopvp.octocore.common.manager.*;
+import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.redis.packets.VotePacket;
 import net.octopvp.octocore.master.component.LightningHolder;

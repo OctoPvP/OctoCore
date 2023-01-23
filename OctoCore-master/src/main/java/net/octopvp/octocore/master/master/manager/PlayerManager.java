@@ -2,8 +2,7 @@ package net.octopvp.octocore.master.master.manager;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import lombok.Getter;
-import net.octopvp.octocore.common.manager.IPlayerManager;
+import net.octopvp.octocore.common.interfaces.manager.IPlayerManager;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.master.master.util.AccountUtil;
 import org.bson.Document;

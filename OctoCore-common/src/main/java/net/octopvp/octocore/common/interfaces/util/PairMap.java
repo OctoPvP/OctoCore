@@ -1,6 +1,5 @@
-package net.octopvp.octocore.common.object.maps.pair;
+package net.octopvp.octocore.common.interfaces.util;
 
-import net.octopvp.octocore.common.object.TriConsumer;
 import net.octopvp.octocore.common.object.tuple.Pair;
 
 import java.util.ConcurrentModificationException;

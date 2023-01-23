@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.interfaces.IPunishData;
+import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import org.bson.Document;
 

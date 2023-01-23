@@ -1,4 +1,4 @@
-package net.octopvp.octocore.common.manager;
+package net.octopvp.octocore.common.interfaces.manager;
 
 import net.octopvp.octocore.common.object.GlobalPlayer;
 import net.octopvp.octocore.common.object.ServerData;

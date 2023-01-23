@@ -4,7 +4,7 @@ package net.octopvp.octocore.core.module.impl.punishments.util;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.object.IPlayerData;
+import net.octopvp.octocore.common.interfaces.IPlayerData;
 import net.octopvp.octocore.common.object.punish.BasePunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.core.OctoCore;

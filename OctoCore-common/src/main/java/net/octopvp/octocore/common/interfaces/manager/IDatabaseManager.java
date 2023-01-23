@@ -1,4 +1,4 @@
-package net.octopvp.octocore.common.manager;
+package net.octopvp.octocore.common.interfaces.manager;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;

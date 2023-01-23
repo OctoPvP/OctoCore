@@ -8,7 +8,7 @@ import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.object.punish.Alt;
-import net.octopvp.octocore.common.object.punish.IPunishData;
+import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.util.CC;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

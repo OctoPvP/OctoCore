@@ -7,7 +7,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
-import net.octopvp.octocore.common.manager.IDatabaseManager;
+import net.octopvp.octocore.common.interfaces.manager.IDatabaseManager;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.Manager;

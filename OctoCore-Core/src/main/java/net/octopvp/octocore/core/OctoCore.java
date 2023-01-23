@@ -40,6 +40,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 

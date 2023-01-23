@@ -1,6 +1,6 @@
 package net.octopvp.octocore.core.listeners;
 
-import net.octopvp.octocore.common.object.punish.IPunishment;
+import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;

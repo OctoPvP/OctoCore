@@ -1,4 +1,4 @@
-package net.octopvp.octocore.common.manager;
+package net.octopvp.octocore.common.interfaces.manager;
 
 import net.octopvp.octocore.common.object.permissions.Rank;
 

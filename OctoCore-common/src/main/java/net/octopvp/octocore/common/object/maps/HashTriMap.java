@@ -1,5 +1,6 @@
-package net.octopvp.octocore.common.object.maps.tri;
+package net.octopvp.octocore.common.object.maps;
 
+import net.octopvp.octocore.common.interfaces.util.TriMap;
 import net.octopvp.octocore.common.object.tuple.Triplet;
 
 import java.util.HashMap;

@@ -1,7 +1,6 @@
 package net.octopvp.octocore.common;
 
-import com.mongodb.client.MongoClient;
-import net.octopvp.octocore.common.manager.*;
+import net.octopvp.octocore.common.interfaces.manager.*;
 
 import java.util.UUID;
 
