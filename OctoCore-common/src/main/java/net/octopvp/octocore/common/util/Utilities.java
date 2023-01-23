@@ -7,10 +7,7 @@ import oshi.SystemInfo;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Utilities {
@@ -127,5 +124,15 @@ public class Utilities {
             json1.add(entry, jsonElement);
         }
         return json1;
+    }
+    public static <T> List<T> addAll(List<T> list, T... objects) {
+        list.addAll(Arrays.asList(objects));
+        return list;
+    }
+
+    public static <T> List<T> addAllNewList(List<T> list, T... objects) {
+        List<T> newList = new ArrayList<>(list);
+        newList.addAll(Arrays.asList(objects));
+        return newList;
     }
 }

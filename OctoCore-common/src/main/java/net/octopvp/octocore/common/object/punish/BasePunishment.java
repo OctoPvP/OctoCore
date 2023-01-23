@@ -148,4 +148,9 @@ public class BasePunishment implements IPunishment {
         //return addedAt + durationTime;
         return durationTime;
     }
+
+    @Override
+    public String getStatusText() {
+        return isActive() ? "Active" : (getRemovedBy() != null && !getRemovedBy().isEmpty() ? "Removed" : "Expired");
+    }
 }

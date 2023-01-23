@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class PunishData implements IPunishData {
     private final SimplePlayerData playerData;
 
-    private Collection<IPunishment> punishments = new HashSet<>(); //TODO ordered punishments
+    private Collection<IPunishment> punishments = new HashSet<>(); //TODO ordered punishments'
 
     @Override
     public boolean isBanned() {

@@ -114,4 +114,6 @@ public interface IPunishment {
     }
 
     long getRemoveTimestamp();
+
+    String getStatusText();
 }

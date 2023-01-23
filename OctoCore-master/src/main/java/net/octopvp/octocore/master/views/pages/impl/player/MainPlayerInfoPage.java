@@ -2,6 +2,7 @@ package net.octopvp.octocore.master.views.pages.impl.player;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
@@ -45,11 +46,14 @@ public class MainPlayerInfoPage extends Page {
         });
         add(nameField, button);
     }
+
     public void submit() {
         String name = nameField.getValue();
         boolean isUUID = Utilities.isUUID(name);
         if (!isUUID) {
-            NotificationUtils.create("Searching for player, this may take a second...", NotificationVariant.LUMO_PRIMARY).open();
+            Notification notification = NotificationUtils.create("Searching for player, this may take a second...", NotificationVariant.LUMO_PRIMARY);
+            notification.setDuration(10 * 1000);
+            notification.open();
         }
         UUID uuid = isUUID ? UUID.fromString(name) : accountUtil.getUUID(name);
         //redirect to /player/info/<uuid>
