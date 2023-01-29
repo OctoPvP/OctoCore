@@ -37,11 +37,25 @@ public interface IPunishment {
 
     boolean isIPRelative();
 
-    void setIPRelative(boolean IPRelative);
+    void setIPRelative(boolean ipRelative);
 
     boolean isTemporary();
 
     boolean hasExpired();
+
+    void setAddedOnWebPanel(boolean addedOnWebPanel);
+    boolean isAddedOnWebPanel();
+    void setWebPanelId(String webPanelId);
+    String getWebPanelId();
+    void setWebPanelName(String webPanelName);
+    String getWebPanelName();
+    void setRemovedOnWebPanel(boolean removedOnWebPanel);
+    boolean isRemovedOnWebPanel();
+    void setRemovedOnWebPanelId(String removedOnWebPanelId);
+    String getRemovedOnWebPanelId();
+    void setRemovedOnWebPanelName(String removedOnWebPanelId);
+    String getRemovedOnWebPanelName();
+
 
     long getAddedAt();
 
@@ -100,10 +114,10 @@ public interface IPunishment {
     void save();
 
     default String getNiceDuration() {
-        if (isPermanent()) return "Permanent";
-        if (getDurationTime() == -5L) return "";
+        if (isPermanent() || getDurationTime() <= 0L) return "Permanent";
 
-        return DurationFormatUtils.formatDurationWords(DateUtils.handleParseTime(getEnteredDuration()), true, true);
+        //return DurationFormatUtils.formatDurationWords(DateUtils.handleParseTime(getEnteredDuration()), true, true);
+        return DurationFormatUtils.formatDurationWords(getDurationTime(), true, true);
     }
 
     default String getNiceExpire() {

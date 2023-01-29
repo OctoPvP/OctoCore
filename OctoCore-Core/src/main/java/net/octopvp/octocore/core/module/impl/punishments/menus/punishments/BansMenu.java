@@ -38,9 +38,9 @@ public class BansMenu extends PaginatedMenu<PaginatedGui> {
                 CC.GREEN + "Expire" + CC.GRAY + ": " + CC.YELLOW + punishment.getNiceExpire(),
                 CC.GREEN + "Reason" + CC.GRAY + ": " + CC.YELLOW + punishment.getReason(),
                 "",
-                CC.GREEN + "Permanent" + CC.GRAY + ": " + (punishment.isPermanent() ? "&aYes" : "&cNo"),
-                CC.GREEN + "Active" + CC.GRAY + ": " + (!punishment.hasExpired() ? "&aYes" : "&cNo"),
-                CC.GREEN + "Silent" + CC.GRAY + ": " + (punishment.isSilent() ? "&aYes" : "&cNo")
+                CC.GREEN + "Permanent" + CC.GRAY + ": " + (punishment.isPermanent() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GREEN + "Active" + CC.GRAY + ": " + (!punishment.hasExpired() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GREEN + "Silent" + CC.GRAY + ": " + (punishment.isSilent() ? CC.GREEN + "Yes" : CC.RED + "No")
         ));
         if (!punishment.getRemovedBy().equals("")) {
             lore.addAll(Arrays.asList(

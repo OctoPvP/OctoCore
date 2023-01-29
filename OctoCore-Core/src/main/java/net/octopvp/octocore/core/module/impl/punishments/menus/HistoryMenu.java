@@ -138,7 +138,7 @@ public class HistoryMenu extends Menu<Gui> {
     public GuiItem bansButton(IPunishData playerData) {
         List<IPunishment> bans = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BAN).collect(Collectors.toList());
         List<String> lore = Arrays.asList(
-                CC.GRAY + "Currently banned&7: " + (playerData.isBanned() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GRAY + "Currently banned" + CC.GRAY + ": " + (playerData.isBanned() ? CC.GREEN + "Yes" : CC.RED + "No"),
                 CC.GRAY + "User was banned " + CC.YELLOW + bans.size() + CC.GRAY + " times.",
                 " ",
                 CC.YELLOW + "Click to view all bans."

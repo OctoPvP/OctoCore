@@ -7,10 +7,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
 import lombok.Getter;
 import net.octopvp.octocore.common.object.GlobalPlayer;
-import net.octopvp.octocore.common.object.SimplePlayerData;
-import net.octopvp.octocore.master.master.manager.PlayerManager;
 import net.octopvp.octocore.master.master.manager.ServerManager;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 public class PlayerName extends HorizontalLayout {
@@ -22,13 +19,16 @@ public class PlayerName extends HorizontalLayout {
 
     private Image image;
     private Div statusCircle;
+
     public PlayerName(String name) {
         this(name, false, -1);
     }
+
     public PlayerName(String name, boolean showOnlineIcon) {
         this(name, showOnlineIcon, -1);
     }
- public PlayerName(String name, boolean showOnlineIcon, boolean grid) {
+
+    public PlayerName(String name, boolean showOnlineIcon, boolean grid) {
         this(name, showOnlineIcon, grid ? 0.35 : -1);
     }
 
@@ -49,7 +49,7 @@ public class PlayerName extends HorizontalLayout {
                     //.set("border", "2px solid #999")
                     .set("background-clip", "padding-box")
                     .set("border-radius", "50%")
-                    .set("bottom","0.7em")
+                    .set("bottom", "0.7em")
                     .set("right", "0")
                     .set("position", "absolute");
             updateStatusCircle();

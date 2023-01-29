@@ -40,8 +40,7 @@ public class OctoCoreMaster {
     private static final Logger LOG = LoggerFactory
             .getLogger(OctoCoreMaster.class);
 
-    @Getter
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create(); public static Gson getGson() { return GSON; }
     @Getter
     private static RedisManager redisManager;
     @Value("${master.redis.hostname}")

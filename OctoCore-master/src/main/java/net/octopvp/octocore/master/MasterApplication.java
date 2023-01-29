@@ -1,5 +1,7 @@
 package net.octopvp.octocore.master;
 
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.PWA;
@@ -24,6 +26,7 @@ import java.util.stream.Stream;
 @SpringBootApplication
 @Theme("OctoCore")
 @PWA(name = "OctoCore Master", shortName = "Master", iconPath = "img/logo.png")
+@CssImport("./styles/index.css")
 @Push
 public class MasterApplication implements AppShellConfigurator {
     public static void main(String[] args) {

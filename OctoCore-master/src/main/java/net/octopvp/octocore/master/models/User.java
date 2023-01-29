@@ -40,6 +40,8 @@ public class User {
     private String profilePictureURL = "https://cdn.carbonhost.cloud/6201479d7b237373ab269385/assets/profile.png";
 
     private boolean darkMode = true;
+    private UUID minecraftUUID;
+    private String minecraftName = getUsername();
 
     public User() {
     }
@@ -97,5 +99,12 @@ public class User {
             roles.addAll(role.getChildren());
         }
         return roles;
+    }
+
+    public String getMinecraftName() {
+        if (minecraftName == null) {
+            return minecraftName = getUsername();
+        }
+        return minecraftName;
     }
 }
