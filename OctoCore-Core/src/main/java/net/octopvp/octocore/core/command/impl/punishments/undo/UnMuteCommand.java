@@ -54,8 +54,7 @@ public class UnMuteCommand {
                 displayName = "Console";
             }
 
-            new UndoPunishmentPacket(PunishmentType.MUTE, displayName, coloredSenderName, sender.getName(), data.getName(), reason.trim(), silent).send();
-
+            new UndoPunishmentPacket(PunishmentType.MUTE/*, displayName*/, coloredSenderName, /*sender.getName(),*/ data.getName(), reason.trim(), silent).send();
             punishment.save(true);
         });
         return CommandResult.SUCCESS;

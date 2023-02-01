@@ -20,7 +20,7 @@ public class BasePunishment implements IPunishment {
     protected boolean active = true, permanent = true, silent = false, removedSilent = false, last = false, IPRelative = false, addedOnWebPanel = false, removedOnWebPanel = false;
     protected long addedAt = -5L, durationTime = -5L, whenRemoved;
     protected String reason = "", removedBy = "", enteredDuration = "", removedFor = "", addedByName = "", name = "", targetAddress;
-    protected UUID addedBy, id, targetId;
+    protected UUID addedBy, id, targetId, removedById;
     protected String webPanelId, removedOnWebPanelId, webPanelName, removedOnWebPanelName;
 
     public BasePunishment(Document document) {

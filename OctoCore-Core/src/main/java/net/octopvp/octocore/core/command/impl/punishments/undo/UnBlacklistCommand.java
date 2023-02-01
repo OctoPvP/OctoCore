@@ -54,7 +54,7 @@ public class UnBlacklistCommand {
                 displayName = "Console";
             }
 
-            new UndoPunishmentPacket(PunishmentType.BLACKLIST, displayName, coloredSenderName, sender.getName(), data.getName(), reason.trim(), silent).send();
+            new UndoPunishmentPacket(PunishmentType.BLACKLIST/*, displayName*/, coloredSenderName, /*sender.getName(),*/data.getName(), reason.trim(), silent).send();
 
             punishment.save(true);
         });

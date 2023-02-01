@@ -21,7 +21,10 @@ import java.util.stream.Collectors;
 public class UndoPunishmentPacket extends RedisPacket {
 
     private PunishmentType type;
-    private String senderDisplay, coloredName, sender, target, reason;
+    //private String senderDisplay;
+    private String coloredName;
+    //private String sender;
+    private String target, reason;
     private boolean silent;
 
     @Override

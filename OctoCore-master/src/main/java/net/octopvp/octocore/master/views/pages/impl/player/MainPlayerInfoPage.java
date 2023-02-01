@@ -60,7 +60,9 @@ public class MainPlayerInfoPage extends Page {
         if (uuid != null) {
             getUI().ifPresent(ui -> ui.navigate("/player/view/" + uuid));
         } else {
-            NotificationUtils.create("Player not found!", NotificationVariant.LUMO_ERROR).open();
+            Notification notification = NotificationUtils.create("Player not found!", NotificationVariant.LUMO_ERROR);
+            notification.setDuration(10 * 1000);
+            notification.open();
         }
     }
 }

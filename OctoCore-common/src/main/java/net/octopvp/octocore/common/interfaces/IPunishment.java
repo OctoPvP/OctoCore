@@ -76,6 +76,8 @@ public interface IPunishment {
     String getRemovedBy();
 
     void setRemovedBy(String removedBy);
+    void setRemovedById(UUID removedBy);
+    UUID getRemovedById();
 
     String getEnteredDuration();
 

@@ -41,6 +41,7 @@ import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.master.master.manager.PlayerManager;
 import net.octopvp.octocore.master.master.object.MasterPunishment;
+import net.octopvp.octocore.master.master.redis.impl.UndoPunishmentPacket;
 import net.octopvp.octocore.master.master.util.AccountUtil;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
@@ -186,8 +187,45 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 NotificationUtils.create("This punishment is already inactive.", NotificationVariant.LUMO_ERROR).open();
                 return;
             }
-            // TODO finish
+            Dialog dialog = new Dialog();
 
+            Button saveButton = new Button("Revoke");
+            saveButton.setEnabled(false);
+            saveButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            Button cancelButton = new Button("Cancel", e -> dialog.close());
+            dialog.getFooter().add(cancelButton);
+            dialog.getFooter().add(saveButton);
+
+            TextField reason = new TextField("Reason");
+            dialog.add(reason);
+
+            Checkbox silent = new Checkbox("Silent");
+            dialog.add(silent);
+
+            saveButton.addClickListener(e -> {
+                String reasonText = reason.getValue();
+                if (reasonText == null || reasonText.isEmpty()) {
+                    reasonText = "No reason provided";
+                }
+                boolean silentBool = silent.getValue();
+                if (!punishment.isActive()) {
+                    NotificationUtils.create("This punishment is already inactive.", NotificationVariant.LUMO_ERROR).open();
+                    return;
+                }
+                punishment.setActive(false);
+                punishment.setLast(false);
+                punishment.setRemovedOnWebPanel(true);
+                punishment.setRemovedOnWebPanelId(user.getUserID());
+                punishment.setRemovedOnWebPanelName(user.getUsername());
+                UUID addedByID = user.getMinecraftUUID();
+                if (addedByID == null) addedByID = new UUID(0, 0);
+                punishment.setRemovedById(addedByID);
+                punishment.setRemovedFor(reasonText);
+                punishment.setWhenRemoved(System.currentTimeMillis());
+                punishment.setRemovedSilent(silentBool);
+                punishment.save(true);
+                new UndoPunishmentPacket(punishment.getType(), user.getMinecraftName() + " (WEB)", data.getName(), reasonText.trim(), silentBool).send();
+            });
         });
 
         layout.add(grid, footer);
@@ -498,7 +536,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                     Avatar avatar = new Avatar(user.getUsername(), user.getProfilePictureURL());
                     avatar.getStyle().set("margin-right", "var(--lumo-space-xs)");
                     webPanelLayout.add(avatar);
-                    webPanelLayout.add(new Text(user.getUsername() + " (WEB)"));
+                    webPanelLayout.add(new Text(user.getMinecraftName() + " (WEB)"));
                     webPanelLayout.setAlignItems(FlexComponent.Alignment.CENTER);
                     layout.add(webPanelLayout);
                     showMC = false;
@@ -528,7 +566,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                     Avatar avatar = new Avatar(user.getUsername(), user.getProfilePictureURL());
                     avatar.getStyle().set("margin-right", "var(--lumo-space-xs)");
                     webPanelLayout.add(avatar);
-                    webPanelLayout.add(new Text(user.getUsername() + " (WEB)"));
+                    webPanelLayout.add(new Text(user.getMinecraftName() + " (WEB)"));
                     webPanelLayout.setAlignItems(FlexComponent.Alignment.CENTER);
                     layout.add(webPanelLayout);
                     showMC = false;

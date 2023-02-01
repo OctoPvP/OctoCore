@@ -13,6 +13,8 @@ import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class UnBanCommand {
     @Command(name = "unban")
     @Permission(Permissions.PUNISHMENT_UNBAN)
@@ -38,6 +40,12 @@ public class UnBanCommand {
             punishment.setActive(false);
             punishment.setLast(false);
             punishment.setRemovedBy(sender.getName());
+            if (sender instanceof Player) {
+                UUID uuid = ((Player) sender).getUniqueId();
+                punishment.setRemovedById(uuid);
+            } else {
+                punishment.setRemovedById(new UUID(0, 0));
+            }
             punishment.setRemovedFor(reason);
             punishment.setRemovedSilent(silent);
             punishment.setWhenRemoved(System.currentTimeMillis());
@@ -52,7 +60,7 @@ public class UnBanCommand {
                 displayName = "Console";
             }
 
-            new UndoPunishmentPacket(PunishmentType.BAN, displayName, coloredSenderName, sender.getName(), data.getName(), reason.trim(), silent).send();
+            new UndoPunishmentPacket(PunishmentType.BAN/*, displayName*/, coloredSenderName, /*sender.getName(),*/ data.getName(), reason.trim(), silent).send();
 
             punishment.save(true);
         });
