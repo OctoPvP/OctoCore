@@ -170,7 +170,8 @@ public class HistoryMenu extends Menu<Gui> {
         gui.setItem(23, blacklistsButton(iPunishData));
         gui.setItem(30, warnsButton(iPunishData));
         gui.setItem(31, bansButton(iPunishData));
+        gui.setItem(32, altsButton(iPunishData));
 
-        gui.setItem(40, altsButton(iPunishData));
+        gui.getFiller().fill(PLACEHOLDER_ITEM);
     }
 }
