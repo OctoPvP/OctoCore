@@ -13,13 +13,14 @@ import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.Buttons;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -54,31 +55,13 @@ public class WarnsMenu extends PaginatedMenu<PaginatedGui> {
 
     @SuppressWarnings("deprecation")
     public GuiItem punishmentButton(IPunishment punishment, int order) {
-        List<String> lore = new ArrayList<>(Arrays.asList(
-                CC.SEPARATOR,
-                CC.GREEN + "Added by" + CC.GRAY + ": " + CC.YELLOW + punishment.getAddedByName(),
-                CC.GREEN + "Duration" + CC.GRAY + ": " + CC.YELLOW + punishment.getNiceDuration(),
-                CC.GREEN + "Expire" + CC.GRAY + ": " + CC.YELLOW + punishment.getNiceExpire(),
-                CC.GREEN + "Reason" + CC.GRAY + ": " + CC.YELLOW + punishment.getReason(),
-                "",
-                CC.GREEN + "Permanent" + CC.GRAY + ": " + (punishment.isPermanent() ? CC.GREEN + "Yes" : CC.RED + "No"),
-                CC.GREEN + "Active" + CC.GRAY + ": " + (!punishment.hasExpired() ? CC.GREEN + "Yes" : CC.RED + "No"),
-                CC.GREEN + "Silent" + CC.GRAY + ": " + (punishment.isSilent() ? CC.GREEN + "Yes" : CC.RED + "No")
-        ));
-        if (!punishment.getRemovedBy().equals("")) {
-            lore.addAll(Arrays.asList(
-                    "",
-                    CC.GREEN + "Removed by" + CC.GRAY + ": " + CC.YELLOW + punishment.getRemovedBy(),
-                    CC.GREEN + "Remove Reason" + CC.GRAY + ": " + CC.YELLOW + punishment.getRemovedFor(),
-                    CC.GREEN + "Date" + CC.GRAY + ": " + CC.YELLOW + punishment.getWhenRemoved()
-            ));
-        }
-        lore.add(CC.SEPARATOR);
+        List<String> lore = PunishmentMenuCommons.addPunishmentLore(punishment);
         return ItemBuilder.from(punishment.isActive() ? XMaterial.GREEN_WOOL : XMaterial.RED_WOOL)
-                .name(CC.GREEN + "#" + order + " " + CC.GRAY + "(" + CC.YELLOW + punishment.getAddedAt() + CC.GRAY + ")")
+                .name(CC.GREEN + "#" + order + " " + CC.GRAY + "(" + CC.YELLOW + PlayerData.DATE_FORMAT.format(new Date(punishment.getAddedAt())) + CC.GRAY + ")")
                 .setLore(lore)
                 .asGuiItem(event -> {
-                    if (!punishment.getRemovedBy().equals("")) {
+                    if (true) return;
+                    if (!punishment.isManuallyRemoved()) { // TODO: make sure this works as intended, original: !punishment.getRemovedBy().equals("")
                         return;
                     }
                     punishment.setActive(false);

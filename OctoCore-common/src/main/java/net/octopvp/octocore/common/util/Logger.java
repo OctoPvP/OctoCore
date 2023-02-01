@@ -1,6 +1,7 @@
 package net.octopvp.octocore.common.util;
 
 import lombok.Getter;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.StringUtils;
 
 import java.util.Collection;
@@ -24,15 +25,21 @@ public class Logger {
     }
 
     public static void info(Object str, Object... placeholders) {
-        instance.actualLogger.info(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
+        if (instance != null && instance.actualLogger != null)
+            instance.actualLogger.info(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
+        else OctoCoreCommon.getInstance().getServerImplementation().logInfo(prefix + " " + str, placeholders);
     }
 
     public static void warn(Object str, Object... placeholders) {
-        instance.actualLogger.warning(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
+        if (instance != null && instance.actualLogger != null)
+            instance.actualLogger.warning(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
+        else OctoCoreCommon.getInstance().getServerImplementation().logWarn(prefix + " " + str, placeholders);
     }
 
     public static void error(Object str, Object... placeholders) {
-        instance.actualLogger.severe(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
+        if (instance != null && instance.actualLogger != null)
+            instance.actualLogger.severe(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
+        else OctoCoreCommon.getInstance().getServerImplementation().logError(prefix + " " + str, placeholders);
     }
 
     public static void debug(Object str, Object... placeholders) {

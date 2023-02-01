@@ -3,6 +3,7 @@ package net.octopvp.octocore.common.interfaces;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.DurationFormatUtils;
+import net.octopvp.octocore.common.util.Logger;
 
 import java.util.UUID;
 
@@ -44,16 +45,27 @@ public interface IPunishment {
     boolean hasExpired();
 
     void setAddedOnWebPanel(boolean addedOnWebPanel);
+
     boolean isAddedOnWebPanel();
+
     void setWebPanelId(String webPanelId);
+
     String getWebPanelId();
+
     void setWebPanelName(String webPanelName);
+
     String getWebPanelName();
+
     void setRemovedOnWebPanel(boolean removedOnWebPanel);
+
     boolean isRemovedOnWebPanel();
+
     void setRemovedOnWebPanelId(String removedOnWebPanelId);
+
     String getRemovedOnWebPanelId();
+
     void setRemovedOnWebPanelName(String removedOnWebPanelId);
+
     String getRemovedOnWebPanelName();
 
 
@@ -76,7 +88,9 @@ public interface IPunishment {
     String getRemovedBy();
 
     void setRemovedBy(String removedBy);
+
     void setRemovedById(UUID removedBy);
+
     UUID getRemovedById();
 
     String getEnteredDuration();
@@ -124,7 +138,7 @@ public interface IPunishment {
         return DurationFormatUtils.formatDurationWords(duration, true, true);
     }
 
-    default String  getNiceExpire() {
+    default String getNiceExpire() {
         if (isPermanent()) return "Never";
         if (hasExpired()) return "Expired";
         if (getDurationTime() == -5L) return "";
@@ -135,4 +149,12 @@ public interface IPunishment {
     long getRemoveTimestamp();
 
     String getStatusText();
+
+    default boolean isManuallyRemoved() {
+        boolean a = (getRemovedBy() != null && !getRemovedBy().isEmpty());
+        boolean b = isRemovedOnWebPanel();
+        boolean c = getRemovedById() != null;
+        Logger.debug("a: " + a + ", b: " + b + ", c: " + c);
+        return a || b || c;
+    }
 }

@@ -64,6 +64,11 @@ public class BasePunishment implements IPunishment {
         this.punishmentType = PunishmentType.valueOf(document.getString("type"));
         this.addedOnWebPanel = document.getBoolean("addedOnWebPanel", false);
         this.webPanelId = document.getString("webPanelId");
+        if (document.containsKey("removedById")) this.removedById = UUID.fromString(document.getString("removedById"));
+        this.removedOnWebPanel = document.getBoolean("removedOnWebPanel", false);
+        this.removedOnWebPanelId = document.getString("removedOnWebPanelId");
+        this.webPanelName = document.getString("webPanelName");
+        this.removedOnWebPanelName = document.getString("removedOnWebPanelName");
     }
 
     private static MongoCollection<Document> getCollection() {
@@ -100,6 +105,12 @@ public class BasePunishment implements IPunishment {
             document.put("type", this.punishmentType.name());
             document.put("addedOnWebPanel", this.addedOnWebPanel);
             document.put("webPanelId", this.webPanelId);
+            document.put("removedOnWebPanel", this.removedOnWebPanel);
+            document.put("removedOnWebPanelId", this.removedOnWebPanelId);
+            document.put("webPanelName", this.webPanelName);
+            document.put("removedOnWebPanelName", this.removedOnWebPanelName);
+            if (this.removedById != null) document.put("removedById", this.removedById.toString());
+
             if (replace) {
                 getCollection().replaceOne(
                         Filters.and(
@@ -142,7 +153,7 @@ public class BasePunishment implements IPunishment {
 
     @Override
     public boolean hasExpired() {
-        //if (!isActive()) return true;
+        if (!isActive()) return true;
         if (isPermanent()) return false;
         if (!isLast()) return true; // TODO why is this here?
 
@@ -159,6 +170,6 @@ public class BasePunishment implements IPunishment {
 
     @Override
     public String getStatusText() {
-        return isActive() ? "Active" : (getRemovedBy() != null && !getRemovedBy().isEmpty() ? "Removed" : "Expired");
+        return isActive() ? "Active" : (isManuallyRemoved() ? "Removed" : "Expired");
     }
 }
