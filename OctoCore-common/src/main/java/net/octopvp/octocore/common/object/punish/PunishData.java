@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PunishData implements IPunishData {
     private final SimplePlayerData playerData;
+    private boolean loaded = false;
 
     private Collection<IPunishment> punishments = new HashSet<>(); //TODO ordered punishments'
 
@@ -72,7 +73,7 @@ public class PunishData implements IPunishData {
         return this.punishments.stream().filter(punishment -> punishment.getType() == type).collect(Collectors.toList());
     }
 
-    public void load() { // TODO: Wasn't this supposed to be called on playerdata load?
+    public PunishData load() { // TODO: Wasn't this supposed to be called on playerdata load?
         try {
             Logger.info("Loading punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
             this.punishments.clear();
@@ -84,11 +85,17 @@ public class PunishData implements IPunishData {
 
                 this.punishments.add(punishment);
             });
+            loaded = true;
             Logger.info("Loaded " + punishments.size() + " punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+        return this;
+    }
+    public PunishData loadIfNot() {
+        if (!loaded) load();
+        return this;
     }
 
     public void forceLoadActiveBansAndBlacklists() {

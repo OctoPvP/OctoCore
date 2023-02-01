@@ -17,6 +17,7 @@ import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -44,15 +45,17 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
     }
 
     public OfflinePunishData load(boolean activeOnly) {
+        Logger.debug("Loading punish data for " + this.name);
         this.punishments.clear();
 
         Player player = Bukkit.getPlayer(name);
 
         if (player == null) {
-
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
             List<Document> punishments = PunishModule.getPunishments().find().filter(Filters.and(
-                    Filters.eq("uuid", Bukkit.getOfflinePlayer(this.name).getUniqueId().toString()),
-                    activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", Bukkit.getOfflinePlayer(this.name).getUniqueId().toString()))).into(new ArrayList<>());
+                    Filters.eq("uuid", offlinePlayer.getUniqueId().toString()),
+                    activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", offlinePlayer.getUniqueId().toString())))
+                    .into(new ArrayList<>());
 
             for (Document document : punishments) {
                 Logger.debug(document.getString("name"));
@@ -63,7 +66,7 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
                 this.uniqueId = UUID.fromString(punishments.get(0).getString("uuid"));
                 this.address = punishments.get(0).getString("BannedIP");
             } else {
-                this.uniqueId = Bukkit.getOfflinePlayer(this.name).getUniqueId();
+                this.uniqueId = offlinePlayer.getUniqueId();
                 this.address = PlayerManager.getInstance().getAddress(this.uniqueId);
             }
             punishments.forEach(document -> {
@@ -78,7 +81,7 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
             PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
 
             this.address = playerData.getAddress();
-            this.punishments.addAll(playerData.getPunishData().getPunishments());
+            this.punishments.addAll(playerData.getPunishData().loadIfNot().getPunishments());
         }
         return this;
     }
