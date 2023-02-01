@@ -2,7 +2,7 @@ package net.octopvp.octocore.common.interfaces;
 
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.DateUtils;
-import org.apache.commons.lang3.time.DurationFormatUtils;
+import net.octopvp.octocore.common.util.DurationFormatUtils;
 
 import java.util.UUID;
 
@@ -119,10 +119,12 @@ public interface IPunishment {
         if (isPermanent() || getDurationTime() <= 0L) return "Permanent";
 
         //return DurationFormatUtils.formatDurationWords(DateUtils.handleParseTime(getEnteredDuration()), true, true);
-        return DurationFormatUtils.formatDurationWords(getDurationTime(), true, true);
+        long duration = getDurationTime() - getAddedAt();
+
+        return DurationFormatUtils.formatDurationWords(duration, true, true);
     }
 
-    default String getNiceExpire() {
+    default String  getNiceExpire() {
         if (isPermanent()) return "Never";
         if (hasExpired()) return "Expired";
         if (getDurationTime() == -5L) return "";

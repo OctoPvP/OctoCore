@@ -180,7 +180,10 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         });
 
         revoke.addClickListener(event -> {
-            if (grid.getSelectedItems().isEmpty()) return;
+            if (grid.getSelectedItems().isEmpty()) {
+                NotificationUtils.create("Please select a punishment to revoke.", NotificationVariant.LUMO_ERROR).open();
+                return;
+            }
             List<IPunishment> punishments = new ArrayList<>(grid.getSelectedItems());
             IPunishment punishment = punishments.get(0);
             if (!punishment.isActive()) {
@@ -188,19 +191,20 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 return;
             }
             Dialog dialog = new Dialog();
+            dialog.setHeaderTitle("Revoke Punishment");
 
             Button saveButton = new Button("Revoke");
-            saveButton.setEnabled(false);
             saveButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
             Button cancelButton = new Button("Cancel", e -> dialog.close());
             dialog.getFooter().add(cancelButton);
             dialog.getFooter().add(saveButton);
 
+            VerticalLayout dialogLayout = new VerticalLayout();
             TextField reason = new TextField("Reason");
-            dialog.add(reason);
-
+            dialogLayout.add(reason);
             Checkbox silent = new Checkbox("Silent");
-            dialog.add(silent);
+            dialogLayout.add(silent);
+            dialog.add(dialogLayout);
 
             saveButton.addClickListener(e -> {
                 String reasonText = reason.getValue();
@@ -225,7 +229,13 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 punishment.setRemovedSilent(silentBool);
                 punishment.save(true);
                 new UndoPunishmentPacket(punishment.getType(), user.getMinecraftName() + " (WEB)", data.getName(), reasonText.trim(), silentBool).send();
+                dialog.close();
+                NotificationUtils.create("Punishment revoked.", NotificationVariant.LUMO_SUCCESS).open();
+                //dataView.refreshAll();
+                removeAll();
+                populate(location);
             });
+            dialog.open();
         });
 
         layout.add(grid, footer);
@@ -493,7 +503,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 punishment.setLast(true);
                 punishment.setAddedAt(System.currentTimeMillis());
                 punishment.setIPRelative(ip.getValue());
-                long durationMillis = duration == null ? -1 : duration.atZone(user.getTimeZone().toZoneId()).toInstant().toEpochMilli();
+                long durationMillis = duration == null ? -1 : duration.atZone(user.getTimeZone().toZoneId()).toInstant().toEpochMilli() - System.currentTimeMillis();
                 if (durationMillis != -1L) {
                     punishment.setPermanent(false);
                     punishment.setDurationTime(durationMillis);
@@ -573,10 +583,6 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 }
             }
             if (showMC) {
-                if (punishment.getRemovedBy() == null) {
-                    layout.add(new Text("N/A"));
-                    return layout;
-                }
                 PlayerName pName = new PlayerName(punishment.getRemovedBy(), false, true);
                 layout.add(pName);
             }

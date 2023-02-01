@@ -8,6 +8,7 @@ import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.SimplePlayerData;
+import net.octopvp.octocore.common.util.Logger;
 import org.bson.Document;
 
 import java.util.*;
@@ -72,15 +73,22 @@ public class PunishData implements IPunishData {
     }
 
     public void load() { // TODO: Wasn't this supposed to be called on playerdata load?
-        this.punishments.clear();
+        try {
+            Logger.info("Loading punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
+            this.punishments.clear();
 
-        List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find().filter(
-                Filters.eq("uuid", this.playerData.getUuid().toString())).into(new ArrayList<>());
-        punishments.forEach(document -> {
-            IPunishment punishment = OctoCoreCommon.getInstance().getPunishModule().createPunishment(document);
+            List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find().filter(
+                    Filters.eq("uuid", this.playerData.getUuid().toString())).into(new ArrayList<>());
+            punishments.forEach(document -> {
+                IPunishment punishment = OctoCoreCommon.getInstance().getPunishModule().createPunishment(document);
 
-            this.punishments.add(punishment);
-        });
+                this.punishments.add(punishment);
+            });
+            Logger.info("Loaded " + punishments.size() + " punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public void forceLoadActiveBansAndBlacklists() {

@@ -29,7 +29,7 @@ public enum Lang {
     POSSIBLE_BAN_EVADING("&c%1 may be ban evading! Alts: &7%2"),
 
     PUNISHMENT_SILENT("&f[&7Silent&f] "), PUNISHMENT_UNDO("&c%1&c was un-%2 by %3&c for &7%4"), //PUNISHMENT_UNDO("$s%1$m was $sun%2 $mby $s%3 $mfor $v%4"),
-    PUNISHMENT_DO("&c%1&c was &4%2&c by %3 for &7%4"),
+    PUNISHMENT_DO("&c%1&c was &4%2&c by %3&r&c for &7%4"),
 
     MUTE_MESSAGE("&cYou have been &4%1&c muted for &e%2.%3"), TEMP_MUTE_ENTRY_MESSAGE("\n&cExpires: &e%1"),
 

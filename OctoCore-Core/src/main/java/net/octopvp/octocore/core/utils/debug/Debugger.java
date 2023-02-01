@@ -2,9 +2,12 @@ package net.octopvp.octocore.core.utils.debug;
 
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
+import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.listeners.JoinLeaveListener;
+import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.OctoPermissible;
+import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -121,6 +124,13 @@ public class Debugger {
             Player player = (Player) sender;
             boolean b = player.getPermissibleBase() instanceof OctoPermissible;
             print(b);
+        }
+    }
+    public void loadPunishments() {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            PlayerData playerData = PlayerManager.getInstance().getData(player);
+            playerData.getPunishData().load();
         }
     }
 }
