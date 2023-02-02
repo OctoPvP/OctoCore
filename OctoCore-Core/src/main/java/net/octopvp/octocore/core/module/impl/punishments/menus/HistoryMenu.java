@@ -3,6 +3,7 @@ package net.octopvp.octocore.core.module.impl.punishments.menus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.agile.builder.item.ItemBuilder;
+import net.octopvp.agile.components.GuiType;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
@@ -155,23 +156,23 @@ public class HistoryMenu extends Menu<Gui> {
 
     @Override
     public Gui createGui(Player player) {
-        return Gui.gui()
+        return Gui.gui(GuiType.DISPENSER)
                 .title(iPunishData.getName() + "'s punishments")
-                .rows(5)
+                //.rows(5)
                 .create();
     }
 
     @Override
     public void populateGui(Gui gui, Player player) {
-        gui.setItem(13, Buttons.playerInfo(iPunishData.getUniqueId()));
+        gui.setItem(0, Buttons.playerInfo(iPunishData.getUniqueId()));
+        gui.setItem(2, altsButton(iPunishData));
 
-        gui.setItem(21, kicksButton(iPunishData));
-        gui.setItem(22, mutesButton(iPunishData));
-        gui.setItem(23, blacklistsButton(iPunishData));
-        gui.setItem(30, warnsButton(iPunishData));
-        gui.setItem(31, bansButton(iPunishData));
-        gui.setItem(32, altsButton(iPunishData));
+        gui.setItem(3, kicksButton(iPunishData));
+        gui.setItem(4, mutesButton(iPunishData));
+        gui.setItem(5, blacklistsButton(iPunishData));
+        gui.setItem(6, warnsButton(iPunishData));
+        gui.setItem(8, bansButton(iPunishData));
 
-        gui.getFiller().fill(PLACEHOLDER_ITEM);
+        //gui.getFiller().fill(PLACEHOLDER_ITEM);
     }
 }
