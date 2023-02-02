@@ -3,9 +3,13 @@ package net.octopvp.octocore.master.views.pages.impl;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.AllArgsConstructor;
@@ -58,16 +62,31 @@ public class SettingsPage extends Page {
         @Override
         public List<Component> getComponents() {
             Select<String> timeZoneSelect = new Select<>();
-            timeZoneSelect.setLabel("Timezone");
+            TextField filterTimezone = new TextField();
+            filterTimezone.setValueChangeMode(ValueChangeMode.EAGER);
+            filterTimezone.setClearButtonVisible(true);
+            filterTimezone.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+            filterTimezone.getStyle().set("max-width", "100%");
+            filterTimezone.setPlaceholder("Filter timezones...");
+            filterTimezone.addValueChangeListener(event -> {
+                String filter = event.getValue();
+                timeZoneSelect.setItems(Arrays.stream(TimeZone.getAvailableIDs()).filter(id -> id.toLowerCase().contains(filter.toLowerCase())));
+            });
             timeZoneSelect.setItems(TimeZone.getAvailableIDs());
             timeZoneSelect.setValue(user.getTimezoneId());
             timeZoneSelect.addValueChangeListener(event -> {
+                if (event.getValue() == null) {
+                    return;
+                }
                 System.out.println("Timezone changed to " + event.getValue());
                 user.setTimezoneId(event.getValue());
                 mongoUserRepository.save(user);
             });
-
-            return Arrays.asList(new ThemeToggleButton(mongoUserRepository, authenticatedUser, user.getUserID()), timeZoneSelect);
+            Label timezoneLabel = new Label("Timezone");
+            timezoneLabel.getStyle().set("padding-top", "var(--lumo-space-m)")
+                    .set("font-size", "var(--lumo-font-size-xs)");
+            VerticalLayout timezoneLayout = new VerticalLayout(timezoneLabel, filterTimezone, timeZoneSelect);
+            return Arrays.asList(new ThemeToggleButton(mongoUserRepository, authenticatedUser, user.getUserID()), timezoneLayout);
         }
 
         @Override
