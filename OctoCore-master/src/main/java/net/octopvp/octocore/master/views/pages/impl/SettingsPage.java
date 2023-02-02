@@ -5,8 +5,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import lombok.AllArgsConstructor;
 import net.octopvp.octocore.master.models.Setting;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
@@ -20,6 +22,7 @@ import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
 @PageTitle("Settings")
 @Route(value = "settings", layout = MainLayout.class)
@@ -30,7 +33,6 @@ public class SettingsPage extends Page {
     private UserService authenticatedUser;
     @Autowired
     private MongoUserRepository mongoUserRepository;
-
     private User user;
 
     @Override
@@ -53,10 +55,19 @@ public class SettingsPage extends Page {
         public abstract String getName();
     }
     public class AppearanceSection extends SettingsSection {
-
         @Override
         public List<Component> getComponents() {
-            return Arrays.asList(new ThemeToggleButton(mongoUserRepository, authenticatedUser, user.getUserID()));
+            Select<String> timeZoneSelect = new Select<>();
+            timeZoneSelect.setLabel("Timezone");
+            timeZoneSelect.setItems(TimeZone.getAvailableIDs());
+            timeZoneSelect.setValue(user.getTimezoneId());
+            timeZoneSelect.addValueChangeListener(event -> {
+                System.out.println("Timezone changed to " + event.getValue());
+                user.setTimezoneId(event.getValue());
+                mongoUserRepository.save(user);
+            });
+
+            return Arrays.asList(new ThemeToggleButton(mongoUserRepository, authenticatedUser, user.getUserID()), timeZoneSelect);
         }
 
         @Override
