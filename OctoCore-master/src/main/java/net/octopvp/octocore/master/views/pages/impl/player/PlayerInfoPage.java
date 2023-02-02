@@ -16,7 +16,6 @@ import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -27,10 +26,10 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.function.SerializableBiConsumer;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.*;
 import lombok.Getter;
 import lombok.extern.java.Log;
@@ -109,9 +108,9 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         tabSheet.getStyle().set("width", "100%");
 
         PunishData punishData = playerData.getPunishData();
-        punishData.load();
+        //punishData.load();
 
-        tabSheet.add("Overview", createOverview(playerData, punishData));
+        tabSheet.add("Overview", createOverview(playerData));
         tabSheet.add("Punishments", createPunishments(playerData, punishData));
         tabSheet.add("Notes", new Div(new Text(("Data here"))));
         tabSheet.add("Reports", new Div(new Text(("Data here"))));
@@ -134,36 +133,47 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
 
     }
 
-    public Component createOverview(SimplePlayerData playerData, PunishData punishData) {
+    public Component createOverview(SimplePlayerData playerData) {
         VerticalLayout layout = new VerticalLayout();
         layout.add(new Span("UUID: " + playerData.getUuid()));
         layout.add(new Span("First Join: " + user.formatDate(playerData.getFirstJoin())));
         layout.add(new Span("Last Seen: " + user.formatDate(playerData.getLastSeen())));
         return layout;
     }
+
+    private Grid<IPunishment> punishmentGrid;
+    private GridListDataView<IPunishment> punishmentDataView;
+
     public Component createPunishments(SimplePlayerData playerData, PunishData data) {
         VerticalLayout layout = new VerticalLayout();
 
-        Grid<IPunishment> grid = new Grid<>(IPunishment.class, false);
+        punishmentGrid = new Grid<>(IPunishment.class, false);
         //grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        GridListDataView<IPunishment> dataView = grid.setItems(data.getPunishments().stream().sorted(Comparator.comparingLong(IPunishment::getAddedAt).reversed()).toList());
-        PunishmentFilter filter = new PunishmentFilter(dataView);
+        updatePunishments(data);
+        PunishmentFilter filter = new PunishmentFilter(punishmentDataView);
 
-        grid.addColumn(punish -> StringUtils.capatalizeFirstDeep(punish.getType().name())).setHeader(createDropdownFilter("Type", Utilities.addAllNewList(PunishmentType.getNames(), "All"), filter::setType, (select) -> {
+        punishmentGrid.addColumn(punish -> StringUtils.capatalizeFirstDeep(punish.getType().name())).setHeader(createDropdownFilter("Type", Utilities.addAllNewList(PunishmentType.getNames(), "All"), filter::setType, (select) -> {
             select.addComponents(PunishmentType.getNames().get(PunishmentType.getNames().size() - 1), new Hr());
         }));
-        grid.addColumn(IPunishment::getReason).setHeader(createFilterType("Reason", filter::setReason));
-        grid.addColumn(punisherRenderer()).setHeader(createFilterType("Punisher", filter::setIssuer));
-        grid.addColumn(punish -> user.formatDate(punish.getAddedAt())).setHeader(createDateRangePicker("Issued", filter::setIssuedEnd, filter::setIssuedStart));
-        grid.addColumn(punish -> {
+        punishmentGrid.addColumn(IPunishment::getReason).setHeader(createFilterType("Reason", filter::setReason));
+        punishmentGrid.addColumn(punisherRenderer()).setHeader(createFilterType("Punisher", filter::setIssuer));
+        punishmentGrid.addColumn(punish -> user.formatDate(punish.getAddedAt())).setHeader(createDateRangePicker("Issued", filter::setIssuedEnd, filter::setIssuedStart));
+        punishmentGrid.addColumn(punish -> {
             long removeTimestamp = punish.getRemoveTimestamp();
             if (removeTimestamp < 0) {
                 return "Never";
             }
             return user.formatDate(removeTimestamp);
         }).setHeader(createDateRangePicker("Expire", filter::setExpiresEnd, filter::setExpiresStart));
-        grid.addColumn(removedRenderer()).setHeader(createFilterType("Removed By", filter::setRemover));
-        grid.addColumn(createStatusComponentRenderer()).setHeader(createDropdownFilter("Status", Arrays.asList("All", "Active", "Inactive", "Expired", "Removed"), filter::setStatus, (select) -> {
+        punishmentGrid.addColumn(removedRenderer()).setHeader(createFilterType("Removed By", filter::setRemover));
+        punishmentGrid.addColumn((ValueProvider<IPunishment, Object>) iPunishment -> {
+            String s = iPunishment.getRemovedFor();
+            if (s == null || s.isEmpty()) {
+                return "N/A";
+            }
+            return s;
+        }).setHeader(createFilterType("Removed For", filter::setRemoveReason));
+        punishmentGrid.addColumn(createStatusComponentRenderer()).setHeader(createDropdownFilter("Status", Arrays.asList("All", "Active", "Inactive", "Expired", "Removed"), filter::setStatus, (select) -> {
             select.addComponents("Inactive", new Hr());
             select.addComponents("All", new Hr());
         }));
@@ -176,16 +186,16 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         HorizontalLayout footer = new HorizontalLayout(revoke);
         footer.getStyle().set("flex-wrap", "wrap");
 
-        grid.addSelectionListener(event -> {
+        punishmentGrid.addSelectionListener(event -> {
             revoke.setEnabled(event.getFirstSelectedItem().isPresent() && event.getFirstSelectedItem().get().isActive());
         });
 
         revoke.addClickListener(event -> {
-            if (grid.getSelectedItems().isEmpty()) {
+            if (punishmentGrid.getSelectedItems().isEmpty()) {
                 NotificationUtils.create("Please select a punishment to revoke.", NotificationVariant.LUMO_ERROR).open();
                 return;
             }
-            List<IPunishment> punishments = new ArrayList<>(grid.getSelectedItems());
+            List<IPunishment> punishments = new ArrayList<>(punishmentGrid.getSelectedItems());
             IPunishment punishment = punishments.get(0);
             if (!punishment.isActive()) {
                 NotificationUtils.create("This punishment is already inactive.", NotificationVariant.LUMO_ERROR).open();
@@ -233,15 +243,18 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 dialog.close();
                 NotificationUtils.create("Punishment revoked.", NotificationVariant.LUMO_SUCCESS).open();
                 //dataView.refreshAll();
-                removeAll();
-                populate(location);
+                updatePunishments(data);
             });
             dialog.open();
         });
 
-        layout.add(grid, footer);
+        layout.add(punishmentGrid, footer);
 
         return layout;
+    }
+    public void updatePunishments(PunishData data) {
+        data.load();
+        punishmentDataView = punishmentGrid.setItems(data.getPunishments().stream().sorted(Comparator.comparingLong(IPunishment::getAddedAt).reversed()).toList());
     }
 
     @Getter
@@ -253,6 +266,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         private String status = ""; // TODO: boolean
         private String remover = "";
         private LocalDate issuedStart, issuedEnd, expiresStart, expiresEnd;
+        private String removeReason = "";
 
         public PunishmentFilter(GridListDataView<IPunishment> dataView) {
             this.dataView = dataView;
@@ -269,6 +283,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                             matches(punishment.getWebPanelName(), issuer));
             boolean matchesStatus = status.isEmpty() || matches(punishment.getStatusText(), status) || status.equalsIgnoreCase("all") || (status.equalsIgnoreCase("inactive") && !punishment.isActive());
             boolean matchesRemover = remover.isEmpty() || matches(punishment.getRemovedBy(), remover) || (punishment.getRemovedOnWebPanelName() != null && matches(punishment.getRemovedOnWebPanelName(), remover));
+            boolean matchesRemoveReason = removeReason.isEmpty() || matches(punishment.getRemovedFor(), removeReason);
             if (status.equalsIgnoreCase("inactive")) {
                 matchesStatus = !punishment.isActive();
             }
@@ -302,7 +317,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 }
             }
 
-            return matchesType && matchesReason && matchesIssuer && matchesStatus && matchesRemover;
+            return matchesType && matchesReason && matchesIssuer && matchesStatus && matchesRemover && matchesRemoveReason;
         }
 
         private boolean matches(String value, String searchTerm) {
@@ -360,6 +375,11 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
 
         public void setRemover(String s) {
             this.remover = s;
+            dataView.refreshAll();
+        }
+
+        public void setRemoveReason(String s) {
+            this.removeReason = s;
             dataView.refreshAll();
         }
     }
@@ -515,8 +535,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 punishment.execute(user);
                 punishment.save();
                 dialog.close();
-                removeAll();
-                populate(location);
+                updatePunishments(punishData);
             });
             dialog.open();
         });

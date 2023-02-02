@@ -63,7 +63,7 @@ public class Servers extends Page {
     }
 
     public void update() {
-        dataView = grid.setItems(ServerManager.getInstance().getDummyServerData());
+        dataView = grid.setItems(ServerManager.getInstance().getConnectedServers());
 
         dataView.addFilter(serverData -> {
             String searchTerm = searchField.getValue().trim().toLowerCase();
