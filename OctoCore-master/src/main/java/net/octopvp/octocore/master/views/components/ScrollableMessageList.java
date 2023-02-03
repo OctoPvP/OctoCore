@@ -45,7 +45,11 @@ public class ScrollableMessageList extends Div {
         add(vl);
     }
     public void scrollToBottom() {
-        vl.getElement().executeJs("this.scrollTop = this.scrollHeight");
+        List<Component> components = vl.getChildren().toList();
+        if (components.size() > 0) {
+            Component last = components.get(components.size() - 1);
+            last.scrollIntoView();
+        }
     }
 
     public static class MessageItemComponent extends Div {
