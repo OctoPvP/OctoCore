@@ -75,7 +75,7 @@ public class PunishData implements IPunishData {
 
     public PunishData load() { // TODO: Wasn't this supposed to be called on playerdata load?
         try {
-            Logger.info("Loading punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
+            Logger.debug("Loading punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
             this.punishments.clear();
 
             List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find().filter(
@@ -86,7 +86,7 @@ public class PunishData implements IPunishData {
                 this.punishments.add(punishment);
             });
             loaded = true;
-            Logger.info("Loaded " + punishments.size() + " punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
+            Logger.debug("Loaded " + punishments.size() + " punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

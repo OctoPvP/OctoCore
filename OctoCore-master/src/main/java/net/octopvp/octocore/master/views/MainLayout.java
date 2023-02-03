@@ -22,6 +22,7 @@ import net.octopvp.octocore.master.views.components.ThemeToggleButton;
 import net.octopvp.octocore.master.views.pages.impl.HomeView;
 import net.octopvp.octocore.master.views.pages.impl.Servers;
 import net.octopvp.octocore.master.views.pages.impl.SettingsPage;
+import net.octopvp.octocore.master.views.pages.impl.StaffChat;
 import net.octopvp.octocore.master.views.pages.impl.admin.UsersPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.RedisManagerPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.vote.VoteManager;
@@ -248,6 +249,7 @@ public class MainLayout extends AppLayout {
         menuItems.put("", new MenuItemInfo[]{
                 new MenuItemInfo("Home", "la la-home", HomeView.class),
                 new MenuItemInfo("Servers", "la la-server", Servers.class),
+                new MenuItemInfo("Staff Chat", "la la-comments", StaffChat.class),
         });
         menuItems.put("Misc", new MenuItemInfo[]{
                 new MenuItemInfo("Vote Manager", "la la-vote-yea", VoteManager.class),

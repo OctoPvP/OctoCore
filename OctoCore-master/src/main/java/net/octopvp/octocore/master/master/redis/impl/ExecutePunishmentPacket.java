@@ -5,12 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.master.master.redis.LightningRedisPacket;
 
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExecutePunishmentPacket extends RedisPacket {
+public class ExecutePunishmentPacket extends LightningRedisPacket {
     private String sender;
     //private JsonBuilder data;
     private String coloredName;
@@ -30,7 +31,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
     private String punishment;
 
     @Override
-    public void onReceive(JsonObject data) {
-        System.out.println("Received ExecutePunishmentPacket");
+    public void receive(JsonObject data) {
+
     }
 }

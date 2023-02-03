@@ -72,12 +72,12 @@ public class OctoCoreMaster {
         OctoCoreCommon.getInstance().init(GSON, new ServerImplementation() {
             @Override
             public void sendMessage(UUID uuid, String message) {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("Not Implemented.");
             }
 
             @Override
             public void sendMessage(String name, String message) {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException("Not Implemented.");
             }
 
             @Override

@@ -2,7 +2,9 @@ package net.octopvp.octocore.common.redis;
 
 import lombok.Getter;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.object.Disable;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.common.util.Logger;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
@@ -10,6 +12,7 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,9 +52,18 @@ public class RedisListenerManager {
             Reflections reflections = new Reflections(packageName);
             Set<Class<?>> classes = reflections.get(SubTypes.of(RedisPacket.class).asClass());//reflections.getSubTypesOf(RedisPacket.class);
             for (Class<?> aClass : classes) {
+                if (aClass.isAnnotationPresent(Disable.class)) {
+                    Logger.debug("Skipping packet " + aClass.getName() + " due to @Disable");
+                    continue;
+                }
+                if (Modifier.isAbstract(aClass.getModifiers())) {
+                    Logger.debug("Skipping packet " + aClass.getName() + " due to being abstract");
+                    continue;
+                }
                 try {
                     packets.add((RedisPacket) aClass.getDeclaredConstructor().newInstance());
                 } catch (InvocationTargetException | IllegalAccessException | InstantiationException e) {
+                    Logger.error("Failed to register packet " + aClass.getName() + " due to an exception: " + e.getMessage());
                     throw new RuntimeException(e);
                 } catch (NoSuchMethodException e) {
                     OctoCoreCommon.getInstance().getServerImplementation().logDebug("No constructor found for " + aClass.getName() + " attempting to use experimental Objenesis");

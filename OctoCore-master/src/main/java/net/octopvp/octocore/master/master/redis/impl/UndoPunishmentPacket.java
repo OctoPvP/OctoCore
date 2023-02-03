@@ -5,10 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.master.master.redis.LightningRedisPacket;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class UndoPunishmentPacket extends RedisPacket {
+public class UndoPunishmentPacket extends LightningRedisPacket {
 
     private PunishmentType type;
     //private String senderDisplay;
@@ -18,7 +19,7 @@ public class UndoPunishmentPacket extends RedisPacket {
     private boolean silent;
 
     @Override
-    public void onReceive(JsonObject data) {
+    public void receive(JsonObject data) {
 
     }
 }
