@@ -16,6 +16,7 @@ public class StaffChatPacket extends RedisPacket implements Event {
     private UUID uuid;
     private long timestamp = System.currentTimeMillis();
     private boolean web = false;
+    private String webProfilePic = "";
 
     public StaffChatPacket(String name, String server, String message, UUID uuid, long timestamp) {
         this.name = name;

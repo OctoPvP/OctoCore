@@ -44,6 +44,9 @@ public class ScrollableMessageList extends Div {
         removeAll();
         add(vl);
     }
+    public void scrollToBottom() {
+        vl.getElement().executeJs("this.scrollTop = this.scrollHeight");
+    }
 
     public static class MessageItemComponent extends Div {
         private VerticalLayout vl = new VerticalLayout();

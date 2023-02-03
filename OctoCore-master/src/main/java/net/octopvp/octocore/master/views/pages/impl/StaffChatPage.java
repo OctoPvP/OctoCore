@@ -1,14 +1,11 @@
 package net.octopvp.octocore.master.views.pages.impl;
 
 import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.messages.MessageInput;
-import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -29,6 +26,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 import java.util.function.Function;
 
 @PageTitle("Staff Chat")
@@ -46,6 +44,7 @@ public class StaffChatPage extends Page {
 
     private User user;
     private ScrollableMessageList messageList;
+
     @Override
     public void init() {
         user = userService.get();
@@ -57,7 +56,10 @@ public class StaffChatPage extends Page {
         MessageInput messageInput = new MessageInput();
         messageInput.getStyle().set("width", "100%");
         messageInput.addSubmitListener(event -> {
-
+            StaffChatPacket packet = new StaffChatPacket(user.getMinecraftName(), "WEB", event.getValue(), new UUID(0, 0), System.currentTimeMillis());
+            packet.setWeb(true);
+            packet.setWebProfilePic(user.getProfilePictureURL());
+            packet.send();
         });
         for (StaffChatPacket message : staffChatModule.getMessages()) {
             messages.add(getMessageItem(message));
@@ -92,9 +94,10 @@ public class StaffChatPage extends Page {
                 NotificationUtils.create("There was an error updating the staff chat, please refresh the page.", NotificationVariant.LUMO_ERROR).open();
                 return null;
             }
-            ui.access(()-> {
+            ui.access(() -> {
                 messages.add(getMessageItem(packet));
                 messageList.setMessages(messages);
+                messageList.scrollToBottom();
             });
             return null;
         };
@@ -105,8 +108,11 @@ public class StaffChatPage extends Page {
         Date date = new Date(packet.getTimestamp());
         TimeZone timeZone = user.getTimeZone();
         Instant instant = date.toInstant().atZone(timeZone.toZoneId()).toInstant();
-        String userImage = PlayerName.HEAD_URL + packet.getUuid();
-        MessageListItem item = new MessageListItem(packet.getMessage(), instant, packet.getName() + " (" + packet.getServer() + ")", userImage);
-        return item;
+        if (packet.isWeb()) {
+            String userImage = packet.getWebProfilePic();
+            return new MessageListItem(packet.getMessage(), instant, packet.getName() + " (" + packet.getServer() + ")", userImage);
+        } else {
+            return new ScrollableMessageList.MinecraftMessageListItem(packet.getMessage(), instant, packet.getName() + " (" + packet.getServer() + ")", false);
+        }
     }
 }
