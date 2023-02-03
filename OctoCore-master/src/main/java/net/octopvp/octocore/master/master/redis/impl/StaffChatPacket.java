@@ -18,6 +18,7 @@ import java.util.UUID;
 public class StaffChatPacket extends RedisPacket implements Event {
     private String name, server, message;
     private UUID uuid;
+    private long timestamp = System.currentTimeMillis();
 
     @Override
     public void onReceive(JsonObject data) {

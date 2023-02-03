@@ -64,7 +64,7 @@ public class User {
     }
 
     // 2022-11-10 3:11 PM
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd h:mm a");
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd h:mm a");
     public String formatDate(long timestamp) {
         return formatDate(new Date(timestamp));
     }

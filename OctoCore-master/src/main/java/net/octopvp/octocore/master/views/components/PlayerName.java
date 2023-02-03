@@ -13,7 +13,7 @@ import net.octopvp.octocore.master.master.manager.ServerManager;
 public class PlayerName extends HorizontalLayout {
 
     private String playerName;
-    private static final String HEAD_URL = "https://mc-heads.net/avatar/%id%";
+    public static final String HEAD_URL = "https://mc-heads.net/avatar/";
 
     private boolean showOnlineIcon = false;
 
@@ -85,6 +85,6 @@ public class PlayerName extends HorizontalLayout {
     }
 
     public String getHeadUrl() {
-        return HEAD_URL.replace("%id%", playerName);
+        return HEAD_URL + playerName;
     }
 }
