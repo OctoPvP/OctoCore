@@ -14,6 +14,7 @@ import java.util.UUID;
 public class StaffChatPacket extends RedisPacket {
     private String name, server, message;
     private UUID uuid;
+    private boolean web = false;
 
     public StaffChatPacket(String name, String server, String message, UUID uuid) {
         this.name = name;

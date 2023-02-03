@@ -8,6 +8,7 @@ import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -48,10 +49,11 @@ public class StaffChatPage extends Page {
     @Override
     public void init() {
         user = userService.get();
+
         messageList = new ScrollableMessageList();
-        messageList.getStyle().set("width", "100%");
-        messageList.getStyle().set("height", "100%");
-        messageList.getStyle().set("overflow-y", "auto");
+        messageList.getStyle().set("width", "100%")
+                .set("max-height", "80vh") // TODO: somehow this doesn't work on smaller screens
+                .set("overflow-y", "scroll");
         MessageInput messageInput = new MessageInput();
         messageInput.getStyle().set("width", "100%");
         messageInput.addSubmitListener(event -> {
@@ -61,6 +63,14 @@ public class StaffChatPage extends Page {
             messages.add(getMessageItem(message));
         }
         messageList.setMessages(messages);
+
+        // make it vertically scrollable
+        messageList.getStyle()
+                .set("overflow-y", "auto")
+                .set("height", "100%")
+                .set("width", "100%");
+
+
         VerticalLayout chatLayout = new VerticalLayout(messageList, messageInput);
         //chatLayout.setHeight("30em");
         chatLayout.setWidth("100%");
