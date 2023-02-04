@@ -3,10 +3,10 @@ package net.octopvp.octocore.master.views.components;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import lombok.Getter;
 import net.octopvp.octocore.master.models.User;
@@ -44,6 +44,7 @@ public class ScrollableMessageList extends Div {
         removeAll();
         add(vl);
     }
+
     public void scrollToBottom() {
         List<Component> components = vl.getChildren().toList();
         if (components.size() > 0) {
@@ -58,16 +59,18 @@ public class ScrollableMessageList extends Div {
 
         public MessageItemComponent(MessageListItem item) {
             this.item = item;
-            Span name = new Span(item.getUserName() + " ");
-            name.getStyle().set("font-weight", "bold");
             Span timestamp = new Span(User.dateFormat.format(new Date(item.getTime().toEpochMilli())));
             timestamp.getStyle().set("color", "gray");
             Component avatar;
+            String server = null;
             if (item instanceof MinecraftMessageListItem i) {
                 avatar = i.getProfileComponent();
+                server = i.getServer();
             } else {
                 avatar = new Avatar(item.getUserName(), item.getUserImage());
             }
+            Span name = new Span(item.getUserName() + (server != null ? " (" + server + ")" : "") + " ");
+            name.getStyle().set("font-weight", "bold");
             HorizontalLayout avatarName = new HorizontalLayout(avatar, name, timestamp);
             vl.add(avatarName);
             Span text = new Span(item.getText());
@@ -79,22 +82,25 @@ public class ScrollableMessageList extends Div {
         }
     }
 
+    @Getter
     public static class MinecraftMessageListItem extends MessageListItem {
         private boolean showOnlineIndicator;
+        private String server;
 
         public MinecraftMessageListItem(String text,
+                                        String server,
                                         java.time.Instant time,
                                         String userName, boolean showOnlineIndicator) {
             super(text, time, userName);
             this.showOnlineIndicator = showOnlineIndicator;
-        }
-
-        public boolean isShowOnlineIndicator() {
-            return showOnlineIndicator;
+            this.server = server;
         }
 
         public Component getProfileComponent() {
-            return new PlayerName(getUserName(), showOnlineIndicator);
+            Image image = new Image(PlayerName.HEAD_URL + getUserName(), getUserName() + "'s avatar");
+            image.setHeight("32px");
+            image.setWidth("32px");
+            return image;
         }
     }
 }

@@ -110,9 +110,9 @@ public class StaffChatPage extends Page {
         Instant instant = date.toInstant().atZone(timeZone.toZoneId()).toInstant();
         if (packet.isWeb()) {
             String userImage = packet.getWebProfilePic();
-            return new MessageListItem(packet.getMessage(), instant, packet.getName() + " (" + packet.getServer() + ")", userImage);
+            return new MessageListItem(packet.getMessage(), instant, packet.getName(), userImage);
         } else {
-            return new ScrollableMessageList.MinecraftMessageListItem(packet.getMessage(), instant, packet.getName() + " (" + packet.getServer() + ")", false);
+            return new ScrollableMessageList.MinecraftMessageListItem(packet.getMessage(), packet.getServer(), instant, packet.getName(), false);
         }
     }
 }
