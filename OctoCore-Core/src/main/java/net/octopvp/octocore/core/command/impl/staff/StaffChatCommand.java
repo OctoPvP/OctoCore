@@ -11,7 +11,7 @@ import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.entity.Player;
 
-public class StaffChat {
+public class StaffChatCommand {
     @Command(name = "staffchat", aliases = {"sc"})
     @Permission(Permissions.STAFFCHAT)
     @PlayerOnly
@@ -25,7 +25,7 @@ public class StaffChat {
                 sender.sendMessage(Lang.ADMIN_CHAT_DISABLED.toString());
             }
         } else {
-            new StaffChatPacket(sender.getPlayer().getName(), OctoCore.getServerName(), message, sender.getPlayer().getUniqueId()).send();
+            new StaffChatPacket(sender.getPlayer().getName(), playerData.getFormattedName(false, sender, false), OctoCore.getServerName(), message, sender.getPlayer().getUniqueId()).send();
         }
         return CommandResult.SUCCESS;
     }

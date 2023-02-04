@@ -12,18 +12,19 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class AdminChatPacket extends RedisPacket {
-    private String name, server, message;
+    private String name, coloredName, server, message;
     private UUID uuid;
 
-    public AdminChatPacket(String name, String server, String message, UUID uuid) {
+    public AdminChatPacket(String name, String coloredName, String server, String message, UUID uuid) {
         this.name = name;
+        this.coloredName = coloredName;
         this.server = server;
         this.message = message;
         this.uuid = uuid;
     }
 
-    public AdminChatPacket(String name, String server, String message) {
-        this(name, server, message, null);
+    public AdminChatPacket(String name, String coloredName, String server, String message) {
+        this(name, coloredName, server, message, null);
     }
 
     public AdminChatPacket() {
@@ -31,7 +32,7 @@ public class AdminChatPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String msg = Lang.ADMIN_CHAT_FORMAT.getMsg(name, server, message);
+        String msg = Lang.ADMIN_CHAT_FORMAT.getMsg(coloredName, server, message);
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission(Permissions.ADMINCHAT)) {
                 player.sendMessage(msg);

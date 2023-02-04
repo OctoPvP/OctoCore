@@ -11,7 +11,7 @@ import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.entity.Player;
 
-public class AdminChat {
+public class AdminChatCommand {
     @Command(name = "adminchat", aliases = {"ac"})
     @Permission(Permissions.ADMINCHAT)
     @PlayerOnly
@@ -25,7 +25,7 @@ public class AdminChat {
                 sender.sendMessage(Lang.STAFF_CHAT_DISABLED.toString());
             }
         } else {
-            new AdminChatPacket(sender.getPlayer().getName(), OctoCore.getServerName(), message, sender.getPlayer().getUniqueId());
+            new AdminChatPacket(sender.getPlayer().getName(), playerData.getFormattedName(false, sender, false), OctoCore.getServerName(), message, sender.getPlayer().getUniqueId()).send();
         }
         return CommandResult.SUCCESS;
     }

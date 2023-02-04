@@ -28,7 +28,7 @@ public class ChatListener implements Listener {
                 e.getPlayer().sendMessage(Lang.ADMIN_CHAT_DISABLED.toString());
             }
             if (e.getPlayer().hasPermission(Permissions.STAFFCHAT)) {
-                new StaffChatPacket(e.getPlayer().getName(), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId());
+                new StaffChatPacket(e.getPlayer().getName(), playerData.getFormattedName(false, e.getPlayer(), false), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId()).send();
                 e.setCancelled(true);
                 return;
             } else {
@@ -42,7 +42,7 @@ public class ChatListener implements Listener {
                 e.getPlayer().sendMessage(Lang.STAFF_CHAT_DISABLED.toString());
             }
             if (e.getPlayer().hasPermission(Permissions.ADMINCHAT)) {
-                new AdminChatPacket(e.getPlayer().getName(), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId());
+                new AdminChatPacket(e.getPlayer().getName(), playerData.getFormattedName(false, e.getPlayer(), false), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId()).send();
                 e.setCancelled(true);
                 return;
             } else {
