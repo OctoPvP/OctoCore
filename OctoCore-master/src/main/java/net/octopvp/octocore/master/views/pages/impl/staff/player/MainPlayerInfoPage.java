@@ -1,4 +1,4 @@
-package net.octopvp.octocore.master.views.pages.impl.player;
+package net.octopvp.octocore.master.views.pages.impl.staff.player;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;

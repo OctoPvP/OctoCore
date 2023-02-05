@@ -1,8 +1,9 @@
-package net.octopvp.octocore.core.database.redis.packets.staff;
+package net.octopvp.octocore.core.database.redis.packets.staff.chat;
 
 import com.google.gson.JsonObject;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.common.redis.packets.ChatPacket;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.JDAManager;
 import net.octopvp.octocore.core.utils.msg.Lang;
@@ -11,24 +12,11 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class AdminChatPacket extends RedisPacket {
-    private String name, coloredName, server, message;
-    private UUID uuid;
-
+public class AdminChatPacket extends ChatPacket {
     public AdminChatPacket(String name, String coloredName, String server, String message, UUID uuid) {
-        this.name = name;
-        this.coloredName = coloredName;
-        this.server = server;
-        this.message = message;
-        this.uuid = uuid;
+        super(name, coloredName, server, message, uuid, System.currentTimeMillis());
     }
-
-    public AdminChatPacket(String name, String coloredName, String server, String message) {
-        this(name, coloredName, server, message, null);
-    }
-
-    public AdminChatPacket() {
-    }
+    public AdminChatPacket() {}
 
     @Override
     public void onReceive(JsonObject data) {

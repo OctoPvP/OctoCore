@@ -21,11 +21,13 @@ import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.pages.impl.HomeView;
 import net.octopvp.octocore.master.views.pages.impl.Servers;
 import net.octopvp.octocore.master.views.pages.impl.SettingsPage;
-import net.octopvp.octocore.master.views.pages.impl.StaffChatPage;
+import net.octopvp.octocore.master.views.pages.impl.staff.AdminChatPage;
+import net.octopvp.octocore.master.views.pages.impl.staff.ChatPage;
+import net.octopvp.octocore.master.views.pages.impl.staff.StaffChatPage;
 import net.octopvp.octocore.master.views.pages.impl.admin.UsersPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.RedisManagerPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.vote.VoteManager;
-import net.octopvp.octocore.master.views.pages.impl.player.MainPlayerInfoPage;
+import net.octopvp.octocore.master.views.pages.impl.staff.player.MainPlayerInfoPage;
 
 import java.util.*;
 
@@ -248,14 +250,15 @@ public class MainLayout extends AppLayout {
         menuItems.put("", new MenuItemInfo[]{
                 new MenuItemInfo("Home", "la la-home", HomeView.class),
                 new MenuItemInfo("Servers", "la la-server", Servers.class),
+        });
+        menuItems.put("Staff", new MenuItemInfo[]{
+                new MenuItemInfo("Player Info", "la la-user", MainPlayerInfoPage.class),
                 new MenuItemInfo("Staff Chat", "la la-comments", StaffChatPage.class),
+                new MenuItemInfo("Admin Chat", "la la-comments", AdminChatPage.class),
         });
         menuItems.put("Misc", new MenuItemInfo[]{
                 new MenuItemInfo("Vote Manager", "la la-vote-yea", VoteManager.class),
                 new MenuItemInfo("Redis Manager", "la la-exchange-alt", RedisManagerPage.class),
-        });
-        menuItems.put("Player", new MenuItemInfo[]{
-                new MenuItemInfo("Player Info", "la la-user", MainPlayerInfoPage.class),
         });
         menuItems.put("Admin", new MenuItemInfo[]{
                 new MenuItemInfo("Users", "la la-users", UsersPage.class),

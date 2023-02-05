@@ -5,7 +5,7 @@ import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.command.CommandResult;
-import net.octopvp.octocore.core.database.redis.packets.staff.StaffChatPacket;
+import net.octopvp.octocore.core.database.redis.packets.staff.chat.StaffChatPacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;

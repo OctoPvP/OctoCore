@@ -2,8 +2,8 @@ package net.octopvp.octocore.core.listeners;
 
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.database.redis.packets.staff.AdminChatPacket;
-import net.octopvp.octocore.core.database.redis.packets.staff.StaffChatPacket;
+import net.octopvp.octocore.core.database.redis.packets.staff.chat.AdminChatPacket;
+import net.octopvp.octocore.core.database.redis.packets.staff.chat.StaffChatPacket;
 import net.octopvp.octocore.core.manager.impl.ChatManager;
 import net.octopvp.octocore.core.manager.impl.FilterManager;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
