@@ -19,10 +19,9 @@ import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
 import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.pages.impl.HomeView;
-import net.octopvp.octocore.master.views.pages.impl.Servers;
+import net.octopvp.octocore.master.views.pages.impl.ServersPage;
 import net.octopvp.octocore.master.views.pages.impl.SettingsPage;
 import net.octopvp.octocore.master.views.pages.impl.staff.AdminChatPage;
-import net.octopvp.octocore.master.views.pages.impl.staff.ChatPage;
 import net.octopvp.octocore.master.views.pages.impl.staff.StaffChatPage;
 import net.octopvp.octocore.master.views.pages.impl.admin.UsersPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.RedisManagerPage;
@@ -249,7 +248,7 @@ public class MainLayout extends AppLayout {
         Map<String, MenuItemInfo[]> menuItems = new LinkedHashMap<>();
         menuItems.put("", new MenuItemInfo[]{
                 new MenuItemInfo("Home", "la la-home", HomeView.class),
-                new MenuItemInfo("Servers", "la la-server", Servers.class),
+                new MenuItemInfo("Servers", "la la-server", ServersPage.class),
         });
         menuItems.put("Staff", new MenuItemInfo[]{
                 new MenuItemInfo("Player Info", "la la-user", MainPlayerInfoPage.class),

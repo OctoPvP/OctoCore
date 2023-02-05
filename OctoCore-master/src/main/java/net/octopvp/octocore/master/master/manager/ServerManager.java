@@ -41,7 +41,7 @@ public class ServerManager implements IServerManager {
     @Override
     public boolean isOnline(GlobalPlayer player) {
         return getConnectedServers().stream().filter(serverData ->
-                serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
+                serverData.getNames().stream().map(String::toLowerCase).toList()
                         .contains(player.getName().toLowerCase())).findFirst().orElse(null) != null;
     }
 

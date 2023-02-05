@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RedisPackets {
+    private ServerDataPacket serverDataPacket;
 
     public RedisPackets() {
         LoggerFactory.getLogger(RedisPackets.class).info("Loading RedisPackets...");

@@ -30,7 +30,7 @@ public class ServerDataPacket extends RedisPacket {
 
     private double tps1, tps2, tps3;
 
-    private boolean maintenance, rpg;
+    private boolean maintenance;
 
     @Override
     public void onReceive(JsonObject jsonObject) {
@@ -59,12 +59,6 @@ public class ServerDataPacket extends RedisPacket {
         //fix ConcurrentModificationException -> https://stackoverflow.com/a/25131800
         serverData.getOnlinePlayers().removeIf(globalPlayer -> System.currentTimeMillis() - globalPlayer.getLastActivity() >= 5000L);
     }
-
-    @Override
-    public String getType() {
-        return "SERVER_DATA";
-    }
-
     public interface Implementation {
         void onServerRemoved(ServerData connectedServer);
     }

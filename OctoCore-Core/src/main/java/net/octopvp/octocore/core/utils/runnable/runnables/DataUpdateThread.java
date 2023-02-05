@@ -3,16 +3,19 @@ package net.octopvp.octocore.core.utils.runnable.runnables;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.packets.PlayerDataPacket;
+import net.octopvp.octocore.common.redis.packets.ServerDataPacket;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.database.redis.packets.server.ServerUpdatePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class DataUpdateThread extends Thread {
     private final OctoCore plugin;
@@ -45,7 +48,11 @@ public class DataUpdateThread extends Thread {
         if (OctoCoreCommon.getInstance().getRedisManager() == null) return;
 
         try {
-            new ServerUpdatePacket(OctoCore.getServerName()).send();
+            double[] tps = Bukkit.getServer().spigot().getTPS();
+            new ServerDataPacket(OctoCore.getServerName(), new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList())),
+                    Bukkit.getMaxPlayers(), Bukkit.getOnlinePlayers().size(),
+                    System.currentTimeMillis(), Bukkit.hasWhitelist(), tps[0], tps[1], tps[2], false)
+                    .send();
             Map<UUID, PlayerData> map = PlayerManager.getInstance().getPlayerProfiles();
             if (map == null || map.isEmpty()) return;
             for (PlayerData playerData : map.values()) {

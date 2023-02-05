@@ -25,7 +25,7 @@ import javax.annotation.security.RolesAllowed;
 @PageTitle("Servers")
 @Route(value = "servers", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
-public class Servers extends Page {
+public class ServersPage extends Page {
     private FeederThread thread;
 
     @Autowired
@@ -90,9 +90,9 @@ public class Servers extends Page {
 
     private static class FeederThread extends Thread {
         private final UI ui;
-        private final Servers view;
+        private final ServersPage view;
 
-        public FeederThread(UI ui, Servers view) {
+        public FeederThread(UI ui, ServersPage view) {
             this.ui = ui;
             this.view = view;
         }
