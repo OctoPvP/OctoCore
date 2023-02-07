@@ -1,3 +1,7 @@
+plugins {
+    java
+    `maven-publish`
+}
 description = "OctoCore Parent"
 
 val octomcRepository = hasProperty("octomcUsername") && hasProperty("octomcPassword")

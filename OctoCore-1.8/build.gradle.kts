@@ -11,8 +11,8 @@ repositories {
 
 dependencies {
     implementation(project(":OctoCore-Core"))
-    compileOnly("net.octopvp:OctoSpigot-api:1.8.8-R0.1-SNAPSHOT")
-    compileOnly("net.octopvp:OctoSpigot-Server:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("net.octopvp:octospigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("net.octopvp:octospigot-server:1.8.8-R0.1-SNAPSHOT")
 }
 tasks {
     shadowJar {
