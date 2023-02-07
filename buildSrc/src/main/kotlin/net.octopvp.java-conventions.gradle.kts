@@ -59,6 +59,16 @@ version = "1.0-SNAPSHOT"
 //java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
+    repositories {
+        maven {
+            url = uri("https://repo.octopvp.net/repo")
+            name = "octomc"
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
     publications.create<MavenPublication>("maven") {
         from(components["java"])
     }
