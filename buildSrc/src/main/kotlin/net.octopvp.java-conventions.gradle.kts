@@ -8,14 +8,6 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
-        url = uri("https://repo.octopvp.net/repo")
-        name = "octomc"
-        credentials(PasswordCredentials::class)
-        authentication {
-            create<BasicAuthentication>("basic")
-        }
-    }
-    maven {
         url = uri("https://m2.dv8tion.net/releases")
     }
 
