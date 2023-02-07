@@ -31,7 +31,7 @@ dependencies {
     compileOnly("net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT")
     compileOnly("com.viaversion:viaversion-api:4.4.2")
 
-    compileOnly("net.octopvp:OctoSpigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("net.octopvp:octospigot-api:1.8.8-R0.1-SNAPSHOT")
     compileOnly("net.md-5:bungeecord-chat:1.16-R0.4")
     compileOnly("com.mojang:authlib:1.5.25")
     //compileOnly("net.octopvp:OctoSpigot-Server:1.8.8-R0.1-SNAPSHOT") server is not needed because those are abstracted away into the version specific modules
