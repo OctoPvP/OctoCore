@@ -7,13 +7,6 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
-    maven ("https://repo.octopvp.net/repo"){
-        name = "octomc"
-        credentials(PasswordCredentials::class)
-        authentication {
-            create<BasicAuthentication>("basic")
-        }
-    }
 }
 
 dependencies {
