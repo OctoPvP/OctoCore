@@ -1,13 +1,11 @@
 description = "OctoCore Parent"
 
-allprojects {
+val octomcRepository = hasProperty("octomcUsername") && hasProperty("octomcPassword")
+
+System.out.println("octomcRepository: " + octomcRepository)
+
+subprojects {
     repositories {
-        maven ("https://repo.octopvp.net/repo"){
-            name = "octomc"
-            credentials(PasswordCredentials::class)
-            authentication {
-                create<BasicAuthentication>("basic")
-            }
-        }
+
     }
 }
