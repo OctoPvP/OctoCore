@@ -38,13 +38,6 @@ repositories {
     maven {
         url = uri("https://repo.viaversion.com")
     }
-    maven ("https://repo.octopvp.net/repo"){
-        name = "octomc"
-        credentials(PasswordCredentials::class)
-        authentication {
-            create<BasicAuthentication>("basic")
-        }
-    }
 }
 
 dependencies {
