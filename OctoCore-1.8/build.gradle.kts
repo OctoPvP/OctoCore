@@ -7,12 +7,21 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        url = uri("https://repo.octopvp.net/repo")
+        name = "octomc"
+        credentials {
+            username = findProperty("octomcUsername") as String
+            password = findProperty("octomcPassword") as String
+            System.out.println("Username: " + username + " | Password: " + password)
+        }
+    }
 }
 
 dependencies {
     implementation(project(":OctoCore-Core"))
-    compileOnly("net.octopvp:octospigot-api:1.8.8-R0.1-SNAPSHOT")
-    compileOnly("net.octopvp:octospigot-server:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("net.octopvp.octospigot:octospigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("net.octopvp.octospigot:octospigot-server:1.8.8-R0.1-SNAPSHOT")
 }
 tasks {
     shadowJar {

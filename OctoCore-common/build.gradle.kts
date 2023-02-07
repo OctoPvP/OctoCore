@@ -9,6 +9,15 @@ repositories {
     maven {
         url = uri("https://papermc.io/repo/repository/maven-public/")
     }
+    maven {
+        url = uri("https://repo.octopvp.net/repo")
+        name = "octomc"
+        credentials {
+            username = findProperty("octomcUsername") as String
+            password = findProperty("octomcPassword") as String
+            System.out.println("Username: " + username + " | Password: " + password)
+        }
+    }
 }
 
 dependencies {

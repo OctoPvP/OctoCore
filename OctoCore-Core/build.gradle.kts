@@ -6,6 +6,15 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        url = uri("https://repo.octopvp.net/repo")
+        name = "octomc"
+        credentials {
+            username = findProperty("octomcUsername") as String
+            password = findProperty("octomcPassword") as String
+            System.out.println("Username: " + username + " | Password: " + password)
+        }
+    }
 }
 var targetJavaVersion = "1.8" // We're using 1.8 to support 1.8.9 for the core, and so does the 1_8 module, but the 1_19 module uses java 17
 dependencies {
@@ -31,7 +40,7 @@ dependencies {
     compileOnly("net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT")
     compileOnly("com.viaversion:viaversion-api:4.4.2")
 
-    compileOnly("net.octopvp:octospigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("net.octopvp.octospigot:octospigot-api:1.8.8-R0.1-SNAPSHOT")
     compileOnly("net.md-5:bungeecord-chat:1.16-R0.4")
     compileOnly("com.mojang:authlib:1.5.25")
     //compileOnly("net.octopvp:OctoSpigot-Server:1.8.8-R0.1-SNAPSHOT") server is not needed because those are abstracted away into the version specific modules

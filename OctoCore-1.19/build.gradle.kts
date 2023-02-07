@@ -8,11 +8,20 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        url = uri("https://repo.octopvp.net/repo")
+        name = "octomc"
+        credentials {
+            username = findProperty("octomcUsername") as String
+            password = findProperty("octomcPassword") as String
+            System.out.println("Username: " + username + " | Password: " + password)
+        }
+    }
 }
 
 dependencies {
-    paperweightDevBundle("net.octopvp.octospigot", "1.19.3-R0.1-SNAPSHOT")
     implementation(project(":OctoCore-Core"))
+    paperweightDevBundle("net.octopvp.octospigot", "1.19.3-R0.1-SNAPSHOT")
     compileOnly("net.octopvp.octospigot:octospigot-api:1.19.3-R0.1-SNAPSHOT")
     //compileOnly("net.octopvp:octospigot-server:1.19.3-R0.1-SNAPSHOT")
     //val homeDir = System.getenv("HOMEDRIVE") + System.getenv("HOMEPATH");

@@ -8,6 +8,15 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
+        url = uri("https://repo.octopvp.net/repo")
+        name = "octomc"
+        credentials {
+            username = findProperty("octomcUsername") as String
+            password = findProperty("octomcPassword") as String
+            System.out.println("Username: " + username + " | Password: " + password)
+        }
+    }
+    maven {
         url = uri("https://m2.dv8tion.net/releases")
     }
 
@@ -38,6 +47,7 @@ repositories {
     maven {
         url = uri("https://repo.viaversion.com")
     }
+
 }
 
 dependencies {
@@ -63,9 +73,10 @@ publishing {
         maven {
             url = uri("https://repo.octopvp.net/repo")
             name = "octomc"
-            credentials(PasswordCredentials::class)
-            authentication {
-                create<BasicAuthentication>("basic")
+            credentials {
+                username = findProperty("octomcUsername") as String
+                password = findProperty("octomcPassword") as String
+                System.out.println("Username: " + username + " | Password: " + password)
             }
         }
     }
