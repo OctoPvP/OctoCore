@@ -37,7 +37,7 @@ dependencies {
     compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0")
     compileOnly("com.lunarclient:bukkitapi:1.0-SNAPSHOT")
     //compileOnly(files("../lib/bukkitapi.jar"))
-    compileOnly("net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT")
+    //compileOnly("net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT")
     compileOnly("com.viaversion:viaversion-api:4.4.2")
 
     compileOnly("net.octopvp.octospigot:octospigot-api:1.8.8-R0.1-SNAPSHOT")
