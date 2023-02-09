@@ -33,15 +33,15 @@ public class NotificationUtils { // https://vaadin.com/docs/latest/components/no
 
         List<Component> components = new ArrayList<>();
         switch (variant) {
-            case LUMO_SUCCESS -> {
+            case LUMO_SUCCESS: {
                 components.add(VaadinIcon.CHECK_CIRCLE.create());
                 break;
             }
-            case LUMO_ERROR -> {
+            case LUMO_ERROR: {
                 components.add(VaadinIcon.WARNING.create());
                 break;
             }
-            default -> {
+            default: {
                 components.add(VaadinIcon.INFO_CIRCLE.create());
             }
         }

@@ -112,11 +112,6 @@ public final class OctoCoreWaterfall extends Plugin {
             }
 
             @Override
-            public String getCommit() {
-                return "N/A";
-            }
-
-            @Override
             public String getName(UUID uuid) {
                 throw new UnsupportedOperationException("Not implemented");
             }

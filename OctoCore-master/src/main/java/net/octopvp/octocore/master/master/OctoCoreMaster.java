@@ -116,11 +116,6 @@ public class OctoCoreMaster {
             }
 
             @Override
-            public String getCommit() {
-                return "N/A";
-            }
-
-            @Override
             public String getName(UUID uuid) {
                 return accountUtil.getName(uuid);
             }

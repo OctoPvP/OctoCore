@@ -16,8 +16,6 @@ plugins {
 
 defaultTasks("clean", "build")
 
-//sourceCompatibility = '17'
-
 repositories {
     mavenCentral()
     mavenLocal()

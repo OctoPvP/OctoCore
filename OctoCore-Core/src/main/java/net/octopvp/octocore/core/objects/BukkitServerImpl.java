@@ -64,13 +64,6 @@ public class BukkitServerImpl implements ServerImplementation {
     }
 
     @Override
-    public String getCommit() {
-        //return OctoCore.getCommit();
-        // TODO
-        return "unknown";
-    }
-
-    @Override
     public String getName(UUID uuid) {
         return Bukkit.getOfflinePlayer(uuid).getName();
     }

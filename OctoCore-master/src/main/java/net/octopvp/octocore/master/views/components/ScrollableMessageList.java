@@ -63,7 +63,8 @@ public class ScrollableMessageList extends Div {
             timestamp.getStyle().set("color", "gray");
             Component avatar;
             String server = null;
-            if (item instanceof MinecraftMessageListItem i) {
+            if (item instanceof MinecraftMessageListItem) {
+                MinecraftMessageListItem i = (MinecraftMessageListItem) item;
                 avatar = i.getProfileComponent();
                 server = i.getServer();
             } else {

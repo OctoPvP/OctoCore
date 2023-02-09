@@ -14,7 +14,6 @@ repositories {
         credentials {
             username = findProperty("octomcUsername") as String
             password = findProperty("octomcPassword") as String
-            System.out.println("Username: " + username + " | Password: " + password)
         }
     }
 }

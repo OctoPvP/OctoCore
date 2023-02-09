@@ -13,7 +13,6 @@ repositories {
         credentials {
             username = findProperty("octomcUsername") as String
             password = findProperty("octomcPassword") as String
-            System.out.println("Username: " + username + " | Password: " + password)
         }
     }
     maven {
@@ -47,7 +46,6 @@ repositories {
     maven {
         url = uri("https://repo.viaversion.com")
     }
-
 }
 
 dependencies {
@@ -76,7 +74,6 @@ publishing {
             credentials {
                 username = findProperty("octomcUsername") as String
                 password = findProperty("octomcPassword") as String
-                System.out.println("Username: " + username + " | Password: " + password)
             }
         }
     }
