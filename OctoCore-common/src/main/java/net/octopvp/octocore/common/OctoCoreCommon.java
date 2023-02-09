@@ -23,7 +23,7 @@ public class OctoCoreCommon {
     public void init(Gson gson, ServerImplementation serverImplementation) {
         this.gson = gson;
         this.serverImplementation = serverImplementation;
-        System.out.println("Git Commit: " + serverImplementation.getCommit());
+        System.out.println("Git Commit: " + serverImplementation.getBuildGetter().getCommit());
     }
 
     public IServerManager getServerManager() {

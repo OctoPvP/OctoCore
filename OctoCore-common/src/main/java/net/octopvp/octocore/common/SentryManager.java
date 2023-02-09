@@ -15,7 +15,7 @@ public class SentryManager {
             // When first trying Sentry it's good to see what the SDK is doing:
             //options.setDebug(true);
             options.setServerName(OctoCoreCommon.getInstance().getServerName());
-            options.setRelease(OctoCoreCommon.getInstance().getServerImplementation().getCommit() + "/" + GitInfo.getBranch());
+            options.setRelease(OctoCoreCommon.getInstance().getServerImplementation().getBuildGetter().getCommitDate() + "/" + GitInfo.getBranch());
         });
         // TODO rewrite this
         /*
