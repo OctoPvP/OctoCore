@@ -138,6 +138,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         layout.add(new Span("UUID: " + playerData.getUuid()));
         layout.add(new Span("First Join: " + user.formatDate(playerData.getFirstJoin())));
         layout.add(new Span("Last Seen: " + user.formatDate(playerData.getLastSeen())));
+        layout.add(new Span("Highest Rank: " + playerData.getHighestRank().getName()));
         return layout;
     }
 
