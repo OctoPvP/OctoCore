@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @Getter
-public class AuthModule implements Module {
+public class AuthModule implements Module { // TODO: rewrite this module
     @Getter
     private static final HashMap<UUID, String> settingUpAuth = new HashMap<>();
     @Getter
@@ -104,7 +104,6 @@ public class AuthModule implements Module {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tempban --sender=OctoCore-AuthModule -s " + player.getName() + " 2h Failed 2fa");
 
                     AuditLogEntry entry = new AuditLogEntry("2fa failed", player.getName(), AuditLogType.AUTH_FAIL);
-                    OctoCore.getInstance().getJdaManager().sendAuditLogMsg(entry);
                     triesLeft.remove(player.getUniqueId());
                     return true;
                 }
@@ -163,7 +162,7 @@ public class AuthModule implements Module {
 
     @Override
     public void onEnable(OctoCore plugin) {
-        if (OctoCore.getServerType() == ServerType.HUB || OctoCore.getServerType() == ServerType.MASTER) {
+        if (OctoCore.getServerType() == ServerType.HUB) {
             serverAuthEnabled = true;
             //save memory :D (dont need those objects if the server isn't hub or master)
             secretGenerator = new DefaultSecretGenerator();

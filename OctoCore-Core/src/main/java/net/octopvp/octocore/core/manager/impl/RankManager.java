@@ -121,10 +121,12 @@ public class RankManager extends Manager implements IRankManager {
     public void init(OctoCore plugin) {
         instance = this;
         loadRanks();
+        /*
         if (OctoCore.isMaster()) {
             if (getDefaultRank() == null)
                 createDefaultRank();
         }
+         */
     }
 
     @Override

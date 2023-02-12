@@ -7,7 +7,6 @@ public enum ServerType {
     FACTIONS("Factions"),
     KITPVP("KitPvP"),
     DEV("Beta"),
-    MASTER("Master"),
     OTHER("Other"),
     LIMBO("Limbo");
     String name;

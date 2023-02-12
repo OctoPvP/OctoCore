@@ -60,7 +60,7 @@ public abstract class OctoCore extends JavaPlugin {
     @Getter
     private static String serverName;
     @Getter
-    private static boolean master, loading;
+    private static boolean loading;
     @Getter
     @Setter
     private static ServerType serverType;
@@ -97,8 +97,6 @@ public abstract class OctoCore extends JavaPlugin {
     private PluginMsgManager pluginMsgManager;
     @Getter
     private PlaceholderManager placeholderManager;
-    @Getter
-    private JDAManager jdaManager;
     @Getter
     private RedisManager redisManager; // TODO managers not registered
     @Getter
@@ -174,13 +172,11 @@ public abstract class OctoCore extends JavaPlugin {
 
         try {
             serverType = ServerType.valueOf(getConfig().getString("server-type").toUpperCase());
-            master = (serverType == ServerType.MASTER);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             ErrorData errorData = new ErrorData();
             errorData.addDescription("On Startup");
             errorData.addData("ServerType", getConfig().getString("server-type").toUpperCase());
-            errorData.addData("Master", master + "");
             errorData.addException(e);
             ErrorHandling.handleError(errorData);
         }
