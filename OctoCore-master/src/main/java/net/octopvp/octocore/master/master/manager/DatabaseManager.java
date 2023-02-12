@@ -10,6 +10,9 @@ import lombok.Getter;
 import net.octopvp.octocore.common.interfaces.manager.IDatabaseManager;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.master.master.OctoCoreMaster;
+import org.bson.Document;
+import org.bson.codecs.Encoder;
+import org.bson.json.JsonWriterSettings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +39,11 @@ public class DatabaseManager implements IDatabaseManager {
     private String mongoAuthDB;
     @Value("${master.mongo.auth.enabled}")
     private boolean mongoAuth;
+
+    @Getter
+    private static final JsonWriterSettings jsonWriterSettings = JsonWriterSettings.builder()
+            .int64Converter((value, writer) -> writer.writeNumber(value.toString()))
+            .build();
 
     @PostConstruct
     public void init() {

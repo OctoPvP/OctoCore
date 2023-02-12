@@ -3,6 +3,7 @@ package net.octopvp.octocore.master.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.octopvp.octocore.master.component.CurrentUserHandlerMethodArgumentResolver;
+import net.octopvp.octocore.master.master.OctoCoreMaster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,7 @@ public class MvcConfig implements WebMvcConfigurer { // TODO: Allow plugins to c
 
     @Bean
     public Gson gsonBean() {
-        return new GsonBuilder().setPrettyPrinting().create();
+        return OctoCoreMaster.getGson();
     }
 
     @Override

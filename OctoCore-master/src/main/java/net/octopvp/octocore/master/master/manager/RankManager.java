@@ -1,25 +1,26 @@
-package net.octopvp.octocore.core.manager.impl;
+package net.octopvp.octocore.master.master.manager;
 
+import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.interfaces.manager.IRankManager;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.object.enums.RankType;
 import net.octopvp.octocore.common.object.permissions.Rank;
-import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.database.DatabaseManager;
 import net.octopvp.octocore.common.redis.packets.ReloadRanksPacket;
-import net.octopvp.octocore.core.manager.Manager;
-import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.common.util.ChatColor;
+import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.master.master.OctoCoreMaster;
 import org.bson.Document;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -27,20 +28,34 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class RankManager extends Manager implements IRankManager {
+@Component
+public class RankManager implements IRankManager {
+    @Autowired
+    private DatabaseManager databaseManager;
+    @Autowired
+    private Gson gson;
     @Getter
-    private static final MongoCollection<Document> ranksCollection = DatabaseManager.getMongoDatabase().getCollection("ranks");
+    private MongoCollection<Document> ranksCollection;
     @Getter
-    private static final Set<Rank> ranks = new HashSet<>();
+    private final Set<Rank> ranks = new HashSet<>();
     @Getter
     private static RankManager instance;
-    private static boolean loadingRanks = false;
+    private boolean loadingRanks = false;
+
+    @PostConstruct
+    public void init() {
+        instance = this;
+        ranksCollection = databaseManager.getDatabase().getCollection("ranks");
+        loadRanks();
+        if (getDefaultRank() == null)
+            createDefaultRank();
+    }
 
     public void loadRanks() {
         Logger.info("Loading ranks...");
         loadingRanks = true;
         for (Document document : ranksCollection.find()) {
-            Rank rank = OctoCore.getGson().fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()), Rank.class);
+            Rank rank = gson.fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()), Rank.class);
             if (rank == null)
                 continue;
             if (ranks.contains(rank))
@@ -75,22 +90,10 @@ public class RankManager extends Manager implements IRankManager {
     @Override
     public void save(Rank rank) {
         if (ranksCollection.find(Filters.eq("rankId", rank.getRankId().toString())).first() != null)
-            ranksCollection.replaceOne(Filters.eq("rankId", rank.getRankId().toString()), Document.parse(OctoCore.getGson().toJson(rank)), new ReplaceOptions().upsert(true));
-        else ranksCollection.insertOne(Document.parse(OctoCore.getGson().toJson(rank)));
-        if (!OctoCore.isLoading())
+            ranksCollection.replaceOne(Filters.eq("rankId", rank.getRankId().toString()), Document.parse(gson.toJson(rank)), new ReplaceOptions().upsert(true));
+        else ranksCollection.insertOne(Document.parse(gson.toJson(rank)));
+        if (!OctoCoreMaster.isLoading())
             broadcastReload();
-    }
-
-    public void resetBungeePerms(Player player) {
-        ByteArrayOutputStream b = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(b);
-        try {
-            out.writeUTF(PluginMsgChannels.SubChannels.PERMISSION_UPDATED);
-            out.writeUTF(player.getUniqueId().toString());
-        } catch (IOException e) {
-            Logger.error("Failed to send permission to bungee. for " + player.getName());
-        }
-        player.sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.PLUGIN_MSG, b.toByteArray());
     }
 
     @Override
@@ -115,21 +118,6 @@ public class RankManager extends Manager implements IRankManager {
     public void delete(Rank rank) {
         ranksCollection.findOneAndDelete(Filters.eq("rankId", rank.getRankId().toString()));
         broadcastReload();
-    }
-
-    @Override
-    public void init(OctoCore plugin) {
-        instance = this;
-        loadRanks();
-        if (OctoCore.isMaster()) {
-            if (getDefaultRank() == null)
-                createDefaultRank();
-        }
-    }
-
-    @Override
-    public void disable() {
-
     }
 
     public Rank createDefaultRank() {

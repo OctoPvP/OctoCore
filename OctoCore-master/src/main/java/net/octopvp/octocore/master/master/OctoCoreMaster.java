@@ -14,6 +14,7 @@ import net.octopvp.octocore.common.redis.packets.VotePacket;
 import net.octopvp.octocore.master.component.LightningHolder;
 import net.octopvp.octocore.master.master.manager.DatabaseManager;
 import net.octopvp.octocore.master.master.manager.PunishModule;
+import net.octopvp.octocore.master.master.manager.RankManager;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 import net.octopvp.octocore.master.master.object.ServerStatus;
 import net.octopvp.octocore.master.master.redis.RedisPackets;
@@ -40,7 +41,7 @@ public class OctoCoreMaster {
     private static final Logger LOG = LoggerFactory
             .getLogger(OctoCoreMaster.class);
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create(); public static Gson getGson() { return GSON; }
+    private static final Gson GSON = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create(); public static Gson getGson() { return GSON; }
     @Getter
     private static RedisManager redisManager;
     @Value("${master.redis.hostname}")
@@ -66,6 +67,11 @@ public class OctoCoreMaster {
 
     @Autowired
     private PunishModule punishModule;
+    @Autowired
+    private RankManager rankManager;
+
+    @Getter
+    private static boolean loading = false;
 
     public OctoCoreMaster() {
         LOG.info("Starting Master...");
@@ -122,7 +128,7 @@ public class OctoCoreMaster {
 
             @Override
             public IRankManager getRankManager() {
-                throw new RuntimeException("Not implemented");
+                return rankManager;
             }
 
             @Override
