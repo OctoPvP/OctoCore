@@ -48,7 +48,7 @@ public class DataUpdateThread extends Thread {
         if (OctoCoreCommon.getInstance().getRedisManager() == null) return;
 
         try {
-            double[] tps = Bukkit.getServer().spigot().getTPS();
+            double[] tps = Bukkit.getTPS();
             new ServerDataPacket(OctoCore.getServerName(), new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList())),
                     Bukkit.getMaxPlayers(), Bukkit.getOnlinePlayers().size(),
                     System.currentTimeMillis(), Bukkit.hasWhitelist(), tps[0], tps[1], tps[2], false)
