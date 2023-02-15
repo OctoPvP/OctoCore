@@ -166,7 +166,7 @@ public abstract class OctoCore extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.SubChannels.PERMISSIONS);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.PLUGIN_MSG);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.BUNGEE);
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "test");
+        //Bukkit.getMessenger().registerOutgoingPluginChannel(this, "test");
         serverName = getInstance().getConfig().getString("name");
         OctoCoreCommon.getInstance().init(gson, new BukkitServerImpl());
 

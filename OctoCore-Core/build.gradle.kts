@@ -24,7 +24,7 @@ dependencies {
     implementation("com.warrenstrange:googleauth:1.5.0")
     implementation("dev.samstevens.totp:totp:1.7.1")
     implementation("org.slf4j:slf4j-api:2.0.0-alpha1")
-    implementation("net.octopvp:agile-gui:1.0.0") // TODO: shadowjar
+    implementation("net.octopvp:agile-gui:1.0.1") // TODO: shadowjar
     implementation("org.reflections:reflections:0.10.2")
 
     implementation("net.dv8tion:JDA:5.0.0-beta.2")

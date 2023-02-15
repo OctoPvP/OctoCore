@@ -6,12 +6,14 @@ import org.bukkit.Bukkit;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SetupPermissions implements Setup {
 
     @Override
     public void setup(OctoCore plugin) {
-        List<String> perms = Bukkit.getPluginManager().getPermissionsString();
+        List<String> perms = Bukkit.getPluginManager().getPermissions().stream().map(org.bukkit.permissions.Permission::getName).collect(Collectors.toList());
         for (Field declaredField : Permissions.class.getDeclaredFields()) {
             if (declaredField.getType() != String.class) continue;
             String node = null;
@@ -20,7 +22,7 @@ public class SetupPermissions implements Setup {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
-            if (node == "") {
+            if (Objects.equals(node, "")) {
                 continue;
             }
             if (perms.contains(node)) {
