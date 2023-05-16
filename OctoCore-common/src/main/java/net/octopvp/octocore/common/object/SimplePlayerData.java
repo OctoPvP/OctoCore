@@ -1,18 +1,23 @@
 package net.octopvp.octocore.common.object;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import lombok.Data;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.interfaces.IPlayerData;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
+import net.octopvp.octocore.common.mfa.MFAData;
+import net.octopvp.octocore.common.mfa.MFAType;
 import net.octopvp.octocore.common.object.enums.RankType;
 import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.permissions.Rank;
-import net.octopvp.octocore.common.object.punish.*;
-import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.ChatColor;
-import net.octopvp.octocore.common.util.GsonType;
+import net.octopvp.octocore.common.object.punish.Alt;
+import net.octopvp.octocore.common.object.punish.PunishData;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
+import net.octopvp.octocore.common.util.*;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
@@ -53,6 +58,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected PunishData punishData = new PunishData(this);
     protected WorldTime worldTime = WorldTime.DAY;
     protected ChatColor nameColor = ChatColor.GREEN;
+    protected Map<String, MFAData> mfaData = new HashMap<>();
 
     public SimplePlayerData(UUID uuid) { // not sure if we need name too, have a look at PlayerData in OctoCore-Core
         this.uuid = uuid;
@@ -121,9 +127,97 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         this.messageSettings.setIgnoreList(gson.fromJson(document.getString("ignoreList"), GsonType.STRING_LIST));
 
         this.messageSettings.getIgnoreList().removeIf(u -> u == null || u.isEmpty() || u.equalsIgnoreCase(this.name));
+
+        String mfaDataString = document.getString("mfaData");
+        if (mfaDataString != null && !mfaDataString.isEmpty()) {
+            JsonObject mfaDataJson = OctoCoreCommon.getInstance().getGson().fromJson(mfaDataString, JsonObject.class);
+            for (Map.Entry<String, JsonElement> stringJsonElementEntry : mfaDataJson.entrySet()) {
+                String key = stringJsonElementEntry.getKey();
+                MFAType type = MFAType.findType(key);
+                if (type == null) {
+                    Logger.error("Could not find MFAType for key " + key);
+                    continue;
+                }
+                JsonObject value = stringJsonElementEntry.getValue().getAsJsonObject();
+                this.mfaData.put(key, MFAData.deserialize(type, value));
+            }
+        }
         return this;
     }
+    public Document getData() {
+        return this.getData(false);
+    }
 
+    public Document getData(boolean getDoc) {
+        Document document = new Document();
+        document.put("uuid", uuid.toString());
+        document.put("name", name);
+        document.put("lowerName", lowerName);
+        document.put("grants", OctoCoreCommon.getInstance().getGson().toJson(grants));
+        document.put("dataVersion", dataVersion);
+        document.put("frozen", frozen);
+        document.put("nicked", nicked);
+        document.put("authEnabled", authEnabled);
+        document.put("vanished", vanished);
+        document.put("joinVanished", joinVanished);
+        document.put("customColorEnabled", customColorEnabled);
+        document.put("customColor", customColor);
+        document.put("coins", coins);
+        document.put("lastLoaded", lastLoaded);
+        document.put("lastLogin", lastLogin);
+        document.put("xp", xp);
+        document.put("firstJoin", firstJoin);
+        document.put("lastSave", lastSave);
+        document.put("nick", nick);
+        document.put("lastKnownName", lastKnownName);
+        document.put("nickPrefix", nickPrefix);
+        document.put("nickColor", nickColor);
+        document.put("server", server);
+        document.put("authSecret", authSecret);
+        document.put("lastSeenServer", lastSeenServer);
+        document.put("rankName", rankName);
+        document.put("lastSeen", lastSeen);
+        document.put("lastAuthedIp", lastAuthedIp);
+        document.put("lastSeenIp", lastSeenIp);
+        document.put("metaDataList", OctoCoreCommon.getInstance().getGson().toJson(metaDataList));
+        document.put("metaData", OctoCoreCommon.getInstance().getGson().toJson(metaData));
+        document.put("worldTime", worldTime.name());
+        if (nickTagID != null) document.put("nickTagID", nickTagID.toString());
+        if (nickUUID != null) document.put("nickUUID", nickUUID.toString());
+        if (tagID != null) document.put("tagID", tagID.toString());
+        document.put("playTime", playTime);
+        document.put("allowedTagsID", OctoCoreCommon.getInstance().getGson().toJson(allowedTagsID));
+        if (nameColor != null) document.put("nameColor", nameColor.name().toUpperCase());
+        document.put("nameColorBold", nameColorBold);
+        document.put("nameColorItalic", nameColorItalic);
+        document.put("staffChatAlerts", staffChatAlerts);
+        document.put("adminChatAlerts", adminChatAlerts);
+        document.put("reportAlerts", reportAlerts);
+        document.put("staffChat", staffChat);
+        document.put("adminChat", adminChat);
+        document.put("build", build);
+        document.put("nodes", OctoCoreCommon.getInstance().getGson().toJson(nodes));
+        document.put("address", address);
+        document.put("addresses", StringUtils.getStringFromList(this.addresses));
+        document.put("socialSpy", socialSpy);
+
+        document.put("ignoreList", OctoCoreCommon.getInstance().getGson().toJson(this.messageSettings.getIgnoreList(), GsonType.STRING_LIST));
+
+        document.put("globalChat", messageSettings.isGlobalChat());
+        document.put("sounds", messageSettings.isSoundsEnabled());
+        document.put("messagesOff", messageSettings.isMessagesOff());
+
+        if (mfaData != null && !mfaData.isEmpty()) {
+            JsonObject mfaDataJson = new JsonObject();
+            for (Map.Entry<String, MFAData> stringMFADataEntry : mfaData.entrySet()) {
+                mfaDataJson.add(stringMFADataEntry.getKey(), stringMFADataEntry.getValue().serializeFully());
+            }
+            document.put("mfaData", OctoCoreCommon.getInstance().getGson().toJson(mfaDataJson));
+        }
+
+        document.entrySet().removeIf(e -> e.getValue() == null);
+        return document;
+    }
     @Override
     public UUID getUniqueId() {
         return uuid;

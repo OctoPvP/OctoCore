@@ -24,6 +24,9 @@ dependencies {
     //implementation("org.slf4j:slf4j-log4j12:1.7.5")
     compileOnly("io.github.waterfallmc:waterfall-chat:1.18-R0.1-SNAPSHOT")
     compileOnly("com.google.code.gson:gson:2.8.9")
+
+    implementation("com.warrenstrange:googleauth:1.4.0")
+    implementation("com.yubico:webauthn-server-core:2.4.0")
 }
 
 var relocateBase = "net.octopvp.octocore.common.relocate."

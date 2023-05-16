@@ -101,7 +101,7 @@ public class GrantConfirmationMenu extends Menu<Gui> {
                         if (Bukkit.getPlayer(targetData.get().getUuid()) != null) {
                             PlayerData data = targetData.get();
                             data.applyGrant(grant);
-                            data.save();
+                            data.getData();
                         } else {
                             if (globalPlayer != null) {
                                 new GrantsUpdatePacket(
