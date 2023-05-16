@@ -6,12 +6,12 @@ buildscript {
     }
 }
 plugins {
-    id("org.springframework.boot") version "2.7.4"
-    id("io.spring.dependency-management") version "1.0.14.RELEASE"
+    id("org.springframework.boot") version "3.0.6"
+    id("io.spring.dependency-management") version "1.1.0"
     id("java")
-    id("com.vaadin") version "23.2.2"
+    id("com.vaadin") version "24.0.5"
     //id("net.octopvp.java-conventions") // Our default library config conflicts with spring boot
-    id("io.freefair.lombok") version "6.5.1"
+    id("io.freefair.lombok") version "8.0.1"
 }
 
 defaultTasks("clean", "build")
@@ -61,12 +61,11 @@ dependencies {
     //implementation("com.github.appreciated:apexcharts:23.0.0-LOCAL")
 
     implementation("org.springframework.security.extensions:spring-security-saml2-core:2.0.0.M31")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf") // login page for now, until we can get vaadin login to work with SAML
 }
 
 dependencyManagement {
     imports {
-        mavenBom("com.vaadin:vaadin-bom:23.3.3")
+        mavenBom("com.vaadin:vaadin-bom:24.0.5")
     }
 }
 

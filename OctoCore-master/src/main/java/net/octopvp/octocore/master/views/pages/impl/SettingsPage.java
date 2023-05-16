@@ -22,7 +22,7 @@ import net.octopvp.octocore.master.views.components.ThemeToggleButton;
 import net.octopvp.octocore.master.views.pages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,7 +70,7 @@ public class SettingsPage extends Page {
             filterTimezone.setPlaceholder("Filter timezones...");
             filterTimezone.addValueChangeListener(event -> {
                 String filter = event.getValue();
-                timeZoneSelect.setItems(Arrays.stream(TimeZone.getAvailableIDs()).filter(id -> id.toLowerCase().contains(filter.toLowerCase())));
+                timeZoneSelect.setItems(Arrays.stream(TimeZone.getAvailableIDs()).filter(id -> id.toLowerCase().contains(filter.toLowerCase())).toArray(String[]::new));
             });
             timeZoneSelect.setItems(TimeZone.getAvailableIDs());
             timeZoneSelect.setValue(user.getTimezoneId());
