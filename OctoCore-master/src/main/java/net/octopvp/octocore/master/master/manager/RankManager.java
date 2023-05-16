@@ -108,11 +108,12 @@ public class RankManager implements IRankManager {
 
     public void createNewRank(Rank rank) {
         ranks.add(rank);
-        rank.save();
+        rank.save(this);
     }
 
     public void broadcastReload() {
-        new ReloadRanksPacket().send();
+        databaseManager.getRedisManager().write(new ReloadRanksPacket());
+        // new ReloadRanksPacket().send();
     }
 
     public void delete(Rank rank) {
@@ -132,7 +133,7 @@ public class RankManager implements IRankManager {
             RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(0).setRankType(RankType.DEFAULT);
             Rank r = rank.build();
             ranks.add(r);
-            r.save();
+            r.save(this);
         }
         return defaultRank;
     }

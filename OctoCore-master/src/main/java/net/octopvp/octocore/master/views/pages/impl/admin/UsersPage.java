@@ -87,11 +87,6 @@ public class UsersPage extends Page {
                 Button saveUserButton = new Button("Save", new Icon(VaadinIcon.PLUS));
                 saveUserButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 saveUserButton.addClickListener(e1 -> {
-                    // check if the username is taken
-                    if (userRepository.existsByUsernameIgnoreCase(editUsernameField.getValue())) {
-                        NotificationUtils.create("Username is already taken", NotificationVariant.LUMO_ERROR).open();
-                        return;
-                    }
                     user.setUsername(editUsernameField.getValue());
                     user.setEmail(editEmailField.getValue());
                     user.setRoles(new HashSet<>(editRoles.getValue()));

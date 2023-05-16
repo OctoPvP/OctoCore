@@ -105,7 +105,7 @@ public class RankManager extends Manager implements IRankManager {
 
     public void createNewRank(Rank rank) {
         ranks.add(rank);
-        rank.save();
+        rank.save(this);
     }
 
     public void broadcastReload() {
