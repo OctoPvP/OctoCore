@@ -60,7 +60,7 @@ dependencies {
     implementation("com.github.SparklingComet:java-mojang-api:-SNAPSHOT")
     //implementation("com.github.appreciated:apexcharts:23.0.0-LOCAL")
 
-    implementation("org.springframework.security.extensions:spring-security-saml2-core:2.0.0.M31")
+    implementation("org.springframework.security:spring-security-saml2-service-provider")
 }
 
 dependencyManagement {
