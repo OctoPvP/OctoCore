@@ -37,6 +37,8 @@ public class RankManager implements IRankManager {
     private static RankManager instance;
     private boolean loadingRanks = false;
 
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(RankManager.class.getName());
+
     @PostConstruct
     public void init() {
         instance = this;
@@ -47,7 +49,7 @@ public class RankManager implements IRankManager {
     }
 
     public void loadRanks() {
-        Logger.info("Loading ranks...");
+        LOG.info("Loading ranks...");
         loadingRanks = true;
         for (Document document : ranksCollection.find()) {
             Rank rank = gson.fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()), Rank.class);
@@ -58,7 +60,7 @@ public class RankManager implements IRankManager {
             ranks.add(rank);
         }
         loadingRanks = false;
-        Logger.info("Loaded (%1) ranks.", ranks.size());
+        LOG.info("Loaded (" + ranks.size() + ") ranks.");
     }
 
     @Override

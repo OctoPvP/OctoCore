@@ -26,6 +26,7 @@ repositories {
         name = "vaadin-addons"
         url = uri("https://maven.vaadin.com/vaadin-addons")
     }
+    maven { url = uri("https://build.shibboleth.net/nexus/content/repositories/releases/") }
 }
 dependencies {
     implementation(project(":OctoCore-common"))
@@ -60,7 +61,7 @@ dependencies {
     implementation("com.github.SparklingComet:java-mojang-api:-SNAPSHOT")
     //implementation("com.github.appreciated:apexcharts:23.0.0-LOCAL")
 
-    implementation("org.springframework.security:spring-security-saml2-service-provider")
+    implementation("com.vaadin:sso-kit-starter")
 }
 
 dependencyManagement {

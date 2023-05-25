@@ -1,15 +1,16 @@
 # App Properties
 spring:
   security:
-    saml2:
-      relyingparty:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: https://auth.octomc.net/application/o/octocore-test-openid/
         registration:
-          octoauth:
-            singlelogout:
-              binding: POST
-              response-url: "https://auth.octomc.net/application/saml/octocore-test/slo/binding/post/"
-            assertingparty:
-              metadata-uri: "classpath:metadata/metadata-idp.xml"
+          keycloak:
+            client-id: 5NfUH80aPQycIdj6EdeulM2raWaZ7zaBOdxNqT4e
+            client-secret: AQ60SsTUGfGv5Ui4PXYjVtyLClpoh6hBLLqHZHPgSzh9PRcGZAZI4aBqescrZ2TmdQyPi5EQoZ3RwtKOKQyImpIgQ72eSzZuot9hNbq8Hn1SJI8CpLow2oQ4w43F5cnS
+            scope: openid,profile,email,roles
   gson:
     pretty-printing: true
   data:
@@ -30,10 +31,6 @@ auth:
   cookieName: 'auth'
 vaadin:
   pnpm-enabled: true
-jetbrains:
-  hub:
-    url: https://hub.octopvp.net/hub
-
 master:
   redis:
     hostname: 140.238.153.142
