@@ -2,7 +2,6 @@ package net.octopvp.octocore.master.services;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinServletRequest;
-import net.octopvp.octocore.master.config.WebSecurityConfig;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

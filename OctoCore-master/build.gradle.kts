@@ -60,8 +60,7 @@ dependencies {
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
     implementation("com.github.SparklingComet:java-mojang-api:-SNAPSHOT")
     //implementation("com.github.appreciated:apexcharts:23.0.0-LOCAL")
-
-    implementation("com.vaadin:sso-kit-starter")
+    implementation("org.springframework.security:spring-security-saml2-service-provider")
 }
 
 dependencyManagement {

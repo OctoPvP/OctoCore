@@ -15,6 +15,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
@@ -34,7 +35,6 @@ public class MasterApplication implements AppShellConfigurator {
         System.out.println("DEV: " + dev);
         SpringApplication.run(MasterApplication.class, args);
     }
-
     @Bean
     public CommandLineRunner loadData(PasswordEncoder passwordEncoder, MongoUserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
