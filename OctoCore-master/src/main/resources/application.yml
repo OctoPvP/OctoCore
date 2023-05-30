@@ -7,7 +7,7 @@ spring:
           octoauth:
             singlelogout:
               binding: REDIRECT
-              url: "https://auth.octomc.net/application/saml/octocore-test/slo/binding/post/"
+              url: "https://auth.octomc.net/application/saml/octocore-test/slo/binding/redirect/"
             assertingparty:
               singlesignon:
                 binding: REDIRECT

@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.saml2.provider.service.authentication.Saml2Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,12 @@ public class UserService {
         if (authentication == null) {
             return null;
         }
-        return userRepository.findByUsername(authentication.getName()).orElse(null);
+        Saml2Authentication saml2Authentication = (Saml2Authentication) authentication;
+        String name = saml2Authentication.getName();
+        if (name.contains("@"))
+            return userRepository.findByEmail(authentication.getName()).orElse(null);
+        else
+            return userRepository.findByUsername(authentication.getName()).orElse(null);
     }
 
     public void logout() {

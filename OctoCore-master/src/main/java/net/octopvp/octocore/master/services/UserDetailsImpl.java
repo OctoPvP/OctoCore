@@ -1,6 +1,5 @@
 package net.octopvp.octocore.master.services;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.octopvp.octocore.master.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,17 +13,13 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     private final String username;
 
-    @JsonIgnore
-    private final String password;
-
     private String userID;
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(String username, String password,
+    public UserDetailsImpl(String username,
                            Collection<? extends GrantedAuthority> authorities, String userID) {
         this.username = username;
-        this.password = password;
         this.authorities = authorities;
         this.userID = userID;
     }
@@ -39,7 +34,6 @@ public class UserDetailsImpl implements UserDetails {
 
         return new UserDetailsImpl(
                 user.getUsername(),
-                user.getPassword(),
                 authorities,
                 user.getUserID()
         );
@@ -52,7 +46,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return "dummy";
     }
 
     @Override
@@ -85,12 +79,12 @@ public class UserDetailsImpl implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDetailsImpl that = (UserDetailsImpl) o;
-        return Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(userID, that.userID) && Objects.equals(authorities, that.authorities);
+        return Objects.equals(username, that.username) && Objects.equals(userID, that.userID) && Objects.equals(authorities, that.authorities);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, userID, authorities);
+        return Objects.hash(username, userID, authorities);
     }
 
     public String getUserID() {

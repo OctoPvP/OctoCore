@@ -47,7 +47,10 @@ public class MainLayout extends AppLayout {
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         User user = authenticatedUser.get();
-        addToDrawer(createDrawerContent(user.isDarkMode()));
+        if (user != null)
+            addToDrawer(createDrawerContent(user.isDarkMode()));
+        else
+            addToDrawer(createDrawerContent(true));
     }
 
     /**

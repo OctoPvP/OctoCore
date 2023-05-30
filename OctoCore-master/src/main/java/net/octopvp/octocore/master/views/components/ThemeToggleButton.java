@@ -4,7 +4,6 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.dom.ThemeList;
@@ -12,10 +11,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
 import net.octopvp.octocore.master.services.UserService;
-import net.octopvp.octocore.master.views.MainLayout;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class ThemeToggleButton extends Button {
@@ -65,7 +61,7 @@ public class ThemeToggleButton extends Button {
             setIcon(VaadinIcon.SUN_O.create());
             u.setDarkMode(true);
         }
-        boolean dark = u.isDarkMode();
+        // boolean dark = u.isDarkMode();
         mongoUserRepository.save(u);
     }
 

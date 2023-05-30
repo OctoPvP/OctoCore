@@ -1,18 +1,17 @@
 package net.octopvp.octocore.master.models;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Document(collection = "users")
 @Getter
@@ -21,10 +20,6 @@ public class User {
     @NotBlank
     @Size(max = 20)
     private String username;
-
-    @NotBlank
-    @Size(max = 120)
-    private String password;
 
     @Email
     private String email;
@@ -46,9 +41,8 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(String username) {
         this.username = username;
-        this.password = password;
     }
 
     @Override
@@ -65,6 +59,7 @@ public class User {
 
     // 2022-11-10 3:11 PM
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd h:mm a");
+
     public String formatDate(long timestamp) {
         return formatDate(new Date(timestamp));
     }
