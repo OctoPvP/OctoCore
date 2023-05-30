@@ -19,8 +19,6 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends VaadinWebSecurity {
@@ -30,6 +28,8 @@ public class WebSecurityConfig extends VaadinWebSecurity {
     private RelyingPartyRegistrationRepository relyingPartyRegistrationRepository;
     @Autowired
     private Saml2LoginSettings settings;
+    @Autowired
+    private Saml2LogoutSettings logoutSettings;
 
     @Bean(name = "VaadinSecurityFilterChainBean")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,8 +42,7 @@ public class WebSecurityConfig extends VaadinWebSecurity {
                         .requestMatchers(new AntPathRequestMatcher("/favicon.ico"), new AntPathRequestMatcher("/VAADIN/**")).permitAll()
                         .anyRequest().authenticated())
                 .saml2Login(settings)
-                .saml2Logout(withDefaults())
-                .userDetailsService(userDetailsService)
+                .saml2Logout(logoutSettings)
                 .addFilterBefore(filter, Saml2WebSsoAuthenticationFilter.class);
         DefaultSecurityFilterChain chain = http.build();
         return chain;
@@ -57,11 +56,6 @@ public class WebSecurityConfig extends VaadinWebSecurity {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
-        http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(new AntPathRequestMatcher("/favicon.ico"), new AntPathRequestMatcher("/VAADIN/**")).permitAll().anyRequest().authenticated()
-                ).saml2Login(withDefaults())
-                .saml2Logout(withDefaults())
-                .userDetailsService(userDetailsService);  // Set the custom user details service
     }
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {

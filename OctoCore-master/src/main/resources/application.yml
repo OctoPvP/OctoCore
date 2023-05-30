@@ -6,10 +6,11 @@ spring:
         registration:
           octoauth:
             singlelogout:
-              binding: REDIRECT
-              url: "https://auth.octomc.net/application/saml/octocore-test/slo/binding/redirect/"
+              binding: POST
+              url: "https://auth.octomc.net/application/saml/octocore-test/slo/binding/post/"
             assertingparty:
               singlesignon:
+                url: "https://auth.octomc.net/application/saml/octocore-test/sso/binding/redirect/"
                 binding: REDIRECT
               metadata-uri: "https://auth.octomc.net/api/v3/providers/saml/11/metadata/?download"
   gson:

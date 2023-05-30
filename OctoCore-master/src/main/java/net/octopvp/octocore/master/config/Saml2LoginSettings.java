@@ -28,6 +28,7 @@ import java.util.*;
 public class Saml2LoginSettings implements Customizer<Saml2LoginConfigurer<HttpSecurity>> {
     private static final Map<String, String> roleMap = new HashMap<>();
     static {
+        roleMap.put("Managers", "ROLE_MANAGER");
         roleMap.put("Admins", "ROLE_ADMIN");
         roleMap.put("Users", "ROLE_USER");
         roleMap.put("Developers", "ROLE_DEV");
@@ -72,12 +73,15 @@ public class Saml2LoginSettings implements Customizer<Saml2LoginConfigurer<HttpS
         List<String> emailList = princ.getAttribute("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
         List<String> rolesList = princ.getAttribute("http://schemas.xmlsoap.org/claims/Group");
         List<Role> roles = new ArrayList<>(roleRepository.findAll());
+        List<Object> idpId = princ.getAttribute("http://schemas.goauthentik.io/2021/02/saml/uid");
         List<GrantedAuthority> authorities = new ArrayList<>();
+        Set<Role> rolesSet = new HashSet<>();
         for (String role : rolesList) {
             String roleName = roleMap.getOrDefault(role, role);
             Optional<Role> roleOptional = roles.stream().filter(r -> r.getName().equalsIgnoreCase(roleName)).findFirst();
             if (roleOptional.isPresent()) {
                 Role r = roleOptional.get();
+                rolesSet.add(r);
                 if (!authorities.contains(new SimpleGrantedAuthority(r.getName()))) {
                     authorities.add(new SimpleGrantedAuthority(r.getName()));
                 }
@@ -86,16 +90,36 @@ public class Saml2LoginSettings implements Customizer<Saml2LoginConfigurer<HttpS
         String email = emailList != null && emailList.size() > 0 ? emailList.get(0) : null;
         String username = usernameList != null && usernameList.size() > 0 ? usernameList.get(0) : email.split("@")[0];
         Optional<User> user = mongoUserRepository.findByUsername(username);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             user = mongoUserRepository.findByEmail(email);
-            if (!user.isPresent()) {
+            if (user.isEmpty()) {
                 User newUser = new User();
                 newUser.setUsername(username);
                 if (email != null) {
                     newUser.setEmail(email);
                 }
+                if (idpId != null && idpId.size() > 0) {
+                    newUser.setIdpID(idpId.get(0).toString());
+                }
+                newUser.setRoles(rolesSet);
                 mongoUserRepository.save(newUser);
             }
+        } else {
+            // check if we need to update anything like roles
+            User u = user.get();
+            boolean update = false;
+            if (!u.getRoles().equals(rolesSet)) {
+                u.setRoles(rolesSet);
+                update = true;
+            }
+            if (idpId != null && idpId.size() > 0) {
+                String id = idpId.get(0).toString();
+                if (!id.equals(u.getIdpID())) {
+                    u.setIdpID(id);
+                    update = true;
+                }
+            }
+            if (update) mongoUserRepository.save(u);
         }
         Saml2Authentication sAuth = (Saml2Authentication) authentication;
         sAuth = new Saml2Authentication((AuthenticatedPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal(), sAuth.getSaml2Response(), authorities);
