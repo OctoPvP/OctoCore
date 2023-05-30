@@ -15,6 +15,8 @@ import org.springframework.security.saml2.provider.service.web.Saml2MetadataFilt
 import org.springframework.security.saml2.provider.service.web.authentication.Saml2WebSsoAuthenticationFilter;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.util.AntPathMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -49,6 +51,9 @@ public class WebSecurityConfig extends VaadinWebSecurity {
         http.csrf().disable();
         http.cors().disable();
 
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(new AntPathRequestMatcher("/favicon.ico")).permitAll().anyRequest().authenticated()
+        );
     }
 
     @Bean
