@@ -1,31 +1,34 @@
 package net.octopvp.octocore.master.controller;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class LogoutController {
+    private static String html =  """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8"/>
+                    <title>Logout</title>
+                </head>
+                <body>
+                <h1>Logout</h1>
+                <p>You have been logged out.</p>
+                <a href="/login">Login</a>
+                </body>
+               """;
     @GetMapping("/auth/logout")
     public String clearCookies(HttpServletRequest request, HttpServletResponse response, Model model) {
-        // Get all the existing cookies
-        Cookie[] cookies = request.getCookies();
-        // Loop through each cookie and set its max age to 0 to delete it
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                cookie.setMaxAge(0);
-                response.addCookie(cookie);
-            }
-        }
-        // Invalidate the session to clear the JSESSIONID cookie
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return "logout.html";
+        response.setHeader("Clear-Site-Data", "\"cookies\", \"storage\"");
+        response.setHeader("Location", "/auth/logout/success");
+        return html;
+    }
+    @GetMapping("/auth/logout/success")
+    public String success(HttpServletRequest request, HttpServletResponse response, Model model) {
+        return html;
     }
 }

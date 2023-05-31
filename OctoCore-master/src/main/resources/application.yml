@@ -6,8 +6,8 @@ spring:
         registration:
           octoauth:
             singlelogout:
-              binding: POST
-              url: "https://auth.octomc.net/application/saml/octocore-test/slo/binding/post/"
+              binding: REDIRECT
+              url: "https://auth.octomc.net/application/saml/octocore-test/slo/binding/redirect/"
             assertingparty:
               singlesignon:
                 url: "https://auth.octomc.net/application/saml/octocore-test/sso/binding/redirect/"

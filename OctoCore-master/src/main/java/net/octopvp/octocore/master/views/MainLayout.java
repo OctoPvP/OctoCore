@@ -7,13 +7,11 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
@@ -137,13 +135,16 @@ public class MainLayout extends AppLayout {
                 contextMenu.setOpenOnClick(true);
                 MenuItem item = contextMenu.addItem("Logout", e -> {
                     // authenticatedUser.logout();
+                    /*
                     ConfirmDialog dialog = new ConfirmDialog();
                     dialog.setHeader("Logout");
                     dialog.setText("Logout is currently broken! Please clear your cookies.");
                     dialog.setConfirmText("Ok");
                     dialog.open();
+                     */
+                    // send GET request to /auth/logout, then redirect to /auth/logout/success, on the client
+                    UI.getCurrent().getPage().executeJs("fetch('/auth/logout', { method: 'GET' }).then(() => window.location.href = '/auth/logout/success')");
                 });
-                Tooltip.forComponent(item).setText("Please clear your cookies, logout is broken.");
             }
 
             layout.add(avatar, name);

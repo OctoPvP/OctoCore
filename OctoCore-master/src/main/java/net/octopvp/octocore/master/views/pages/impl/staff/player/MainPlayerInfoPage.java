@@ -38,6 +38,11 @@ public class MainPlayerInfoPage extends Page {
                 submit();
             }
         });
+        nameField.addKeyUpListener(event -> {
+            if (event.getKey() == Key.ENTER) {
+                submit();
+            }
+        });
         Button button = new Button("Submit");
         button.addClassNames("centered");
         button.getElement().setAttribute("type", "submit");

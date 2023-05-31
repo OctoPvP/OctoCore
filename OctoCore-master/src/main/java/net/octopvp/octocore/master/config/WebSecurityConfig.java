@@ -39,11 +39,17 @@ public class WebSecurityConfig extends VaadinWebSecurity {
         Saml2MetadataFilter filter = new Saml2MetadataFilter(relyingPartyRegistrationResolver, new OpenSamlMetadataResolver());
 
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(new AntPathRequestMatcher("/favicon.ico"), new AntPathRequestMatcher("/VAADIN/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/favicon.ico"), new AntPathRequestMatcher("/VAADIN/**"), new AntPathRequestMatcher("/auth/**")).permitAll()
                         .anyRequest().authenticated())
                 .saml2Login(settings)
                 .saml2Logout(logoutSettings)
-                .addFilterBefore(filter, Saml2WebSsoAuthenticationFilter.class);
+                .addFilterBefore(filter, Saml2WebSsoAuthenticationFilter.class)
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/auth/logout")
+                .invalidateHttpSession(false)
+                .clearAuthentication(false)
+        ;
         DefaultSecurityFilterChain chain = http.build();
         return chain;
     }
@@ -56,6 +62,7 @@ public class WebSecurityConfig extends VaadinWebSecurity {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
+        filterChain(http);
     }
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {

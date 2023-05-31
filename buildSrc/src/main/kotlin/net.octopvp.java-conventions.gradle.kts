@@ -51,7 +51,7 @@ repositories {
 dependencies {
     implementation("org.reflections:reflections:0.10.2")
     implementation("org.mongodb:mongodb-driver-sync:4.2.2")
-    implementation("redis.clients:jedis:2.9.0")
+    implementation("redis.clients:jedis:5.0.0-beta1")
     implementation("org.apache.commons:commons-compress:1.21")
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("club.minnced:discord-webhooks:0.5.7")
