@@ -1,6 +1,7 @@
 package net.octopvp.octocore.common.util;
 
 import com.google.gson.reflect.TypeToken;
+import net.octopvp.octocore.common.mfa.MFAData;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.punish.Alt;
@@ -30,4 +31,5 @@ public class GsonType {
     public static final Type STRING_SERVER_CONTEXT_MAP = new TypeToken<Map<String, ServerContext>>() {
 
     }.getType();
+
 }

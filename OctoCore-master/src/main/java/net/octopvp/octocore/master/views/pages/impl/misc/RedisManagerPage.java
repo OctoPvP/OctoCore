@@ -11,7 +11,7 @@ import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
 
-import javax.annotation.security.PermitAll;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Redis Manager")
 @Route(value = "redismgr", layout = MainLayout.class)

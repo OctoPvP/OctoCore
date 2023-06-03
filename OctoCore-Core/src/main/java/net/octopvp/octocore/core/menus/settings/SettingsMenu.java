@@ -11,7 +11,6 @@ import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.Skulls;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.msg.Lang;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -28,7 +27,7 @@ public class SettingsMenu extends Menu<Gui> {
                 .create()
                 .setCloseGuiAction(event -> {
                     if (changed) {
-                        data.save();
+                        data.getData();
                     }
                 });
     }

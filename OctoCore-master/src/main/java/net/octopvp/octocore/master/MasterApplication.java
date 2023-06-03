@@ -1,27 +1,14 @@
 package net.octopvp.octocore.master;
 
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
-import net.octopvp.octocore.master.models.Role;
-import net.octopvp.octocore.master.models.User;
-import net.octopvp.octocore.master.repository.MongoUserRepository;
-import net.octopvp.octocore.master.repository.RoleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SpringBootApplication
 @Theme("OctoCore")
@@ -35,7 +22,7 @@ public class MasterApplication implements AppShellConfigurator {
         System.out.println("DEV: " + dev);
         SpringApplication.run(MasterApplication.class, args);
     }
-
+    /*
     @Bean
     public CommandLineRunner loadData(PasswordEncoder passwordEncoder, MongoUserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
@@ -79,5 +66,5 @@ public class MasterApplication implements AppShellConfigurator {
             }
         };
     }
-
+     */
 }

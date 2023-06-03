@@ -1,102 +1,71 @@
 package net.octopvp.octocore.master.config;
 
-import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;
-import net.octopvp.octocore.master.saml.AppConfig;
-import net.octopvp.octocore.master.saml.BeanConfig;
+import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import net.octopvp.octocore.master.services.UserDetailsServiceImpl;
-import net.octopvp.octocore.master.views.pages.impl.login.LoginView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
-import org.springframework.security.saml.provider.identity.config.SamlIdentityProviderSecurityConfiguration;
-import org.springframework.security.saml.provider.identity.config.SamlIdentityProviderSecurityDsl;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.saml2.provider.service.metadata.OpenSamlMetadataResolver;
+import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
+import org.springframework.security.saml2.provider.service.web.DefaultRelyingPartyRegistrationResolver;
+import org.springframework.security.saml2.provider.service.web.Saml2MetadataFilter;
+import org.springframework.security.saml2.provider.service.web.authentication.Saml2WebSsoAuthenticationFilter;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.crypto.spec.SecretKeySpec;
-
+@Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class WebSecurityConfig extends VaadinWebSecurity {
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private RelyingPartyRegistrationRepository relyingPartyRegistrationRepository;
+    @Autowired
+    private Saml2LoginSettings settings;
+    @Autowired
+    private Saml2LogoutSettings logoutSettings;
 
-    @Configuration
-    @Order(1)
-    public static class SamlSecurity extends SamlIdentityProviderSecurityConfiguration {
+    @Bean(name = "VaadinSecurityFilterChainBean")
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable();
+        http.cors().disable();
+        DefaultRelyingPartyRegistrationResolver relyingPartyRegistrationResolver = new DefaultRelyingPartyRegistrationResolver(this.relyingPartyRegistrationRepository);
+        Saml2MetadataFilter filter = new Saml2MetadataFilter(relyingPartyRegistrationResolver, new OpenSamlMetadataResolver());
 
-        private final AppConfig appConfig;
-        private final BeanConfig beanConfig;
-
-        public SamlSecurity(BeanConfig beanConfig, @Qualifier("appConfig") AppConfig appConfig) {
-            super("/saml/idp/", beanConfig);
-            this.appConfig = appConfig;
-            this.beanConfig = beanConfig;
-        }
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            super.configure(http);
-
-            http.userDetailsService(beanConfig.userDetailsService())
-                    .formLogin();
-
-            http.apply(SamlIdentityProviderSecurityDsl.identityProvider())
-                    .configure(appConfig);
-        }
+        http.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(new AntPathRequestMatcher("/favicon.ico"), new AntPathRequestMatcher("/VAADIN/**"), new AntPathRequestMatcher("/auth/**")).permitAll()
+                        .anyRequest().authenticated())
+                .saml2Login(settings)
+                .saml2Logout(logoutSettings)
+                .addFilterBefore(filter, Saml2WebSsoAuthenticationFilter.class)
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/auth/logout")
+                .invalidateHttpSession(false)
+                .clearAuthentication(false)
+        ;
+        DefaultSecurityFilterChain chain = http.build();
+        return chain;
     }
 
-    @Configuration
-    @Order(2)
-    public static class AppSecurity extends VaadinWebSecurityConfigurerAdapter {
-        @Autowired
-        private UserDetailsServiceImpl userDetailsService;
-        private final BeanConfig beanConfig;
+    @Override
+    protected void configure(WebSecurity web) throws Exception {
+        super.configure(web);
+    }
 
-        public AppSecurity(BeanConfig beanConfig) {
-            this.beanConfig = beanConfig;
-        }
-        @Value("${auth.secret}")
-        private String secretKey;
-
-        @Bean
-        public BCryptPasswordEncoder bCryptPasswordEncoder() {
-            return new BCryptPasswordEncoder();
-        }
-
-        @Override
-        protected void configure(@Autowired AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(userDetailsService)
-                    .passwordEncoder(bCryptPasswordEncoder());
-        }
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.antMatcher("/**")
-                    .authorizeRequests()
-                    .antMatchers("/saml/**", "/dist/**", "/css/**", "/img/**", "/js/**", "/VAADIN/**").permitAll()
-                    .antMatchers("/**").authenticated()
-                    .and()
-                    .userDetailsService(userDetailsService)
-
-                    .formLogin()
-                    .loginPage("/login")
-                    .permitAll()
-            ;
-            super.configure(http);
-            //setLoginView(http, LoginView.class);
-            //setStatelessAuthentication(http, new SecretKeySpec(secretKey.getBytes(), JwsAlgorithms.HS256), "OctoCore");
-
-        }
-
-        @Bean
-        @Override
-        public AuthenticationManager authenticationManagerBean() throws Exception {
-            return super.authenticationManagerBean();
-        }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        super.configure(http);
+        filterChain(http);
+    }
+    @Bean
+    public PasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

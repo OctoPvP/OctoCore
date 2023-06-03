@@ -5,8 +5,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
-import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.interfaces.manager.IRankManager;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
@@ -20,10 +18,7 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import jakarta.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -42,6 +37,8 @@ public class RankManager implements IRankManager {
     private static RankManager instance;
     private boolean loadingRanks = false;
 
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(RankManager.class.getName());
+
     @PostConstruct
     public void init() {
         instance = this;
@@ -52,7 +49,7 @@ public class RankManager implements IRankManager {
     }
 
     public void loadRanks() {
-        Logger.info("Loading ranks...");
+        LOG.info("Loading ranks...");
         loadingRanks = true;
         for (Document document : ranksCollection.find()) {
             Rank rank = gson.fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()), Rank.class);
@@ -63,7 +60,7 @@ public class RankManager implements IRankManager {
             ranks.add(rank);
         }
         loadingRanks = false;
-        Logger.info("Loaded (%1) ranks.", ranks.size());
+        LOG.info("Loaded (" + ranks.size() + ") ranks.");
     }
 
     @Override
@@ -108,11 +105,12 @@ public class RankManager implements IRankManager {
 
     public void createNewRank(Rank rank) {
         ranks.add(rank);
-        rank.save();
+        rank.save(this);
     }
 
     public void broadcastReload() {
-        new ReloadRanksPacket().send();
+        databaseManager.getRedisManager().write(new ReloadRanksPacket());
+        // new ReloadRanksPacket().send();
     }
 
     public void delete(Rank rank) {
@@ -132,7 +130,7 @@ public class RankManager implements IRankManager {
             RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(0).setRankType(RankType.DEFAULT);
             Rank r = rank.build();
             ranks.add(r);
-            r.save();
+            r.save(this);
         }
         return defaultRank;
     }

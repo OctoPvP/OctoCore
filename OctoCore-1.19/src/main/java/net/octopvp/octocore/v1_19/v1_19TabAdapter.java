@@ -13,10 +13,11 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.octopvp.octocore.core.utils.tab.TabAdapter;
 import net.octopvp.octocore.core.utils.tab.skin.SkinType;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -33,7 +34,17 @@ public class v1_19TabAdapter extends TabAdapter {
      * @param packet the packet to send
      */
     private void sendPacket(Player player, Packet<?> packet) {
-        this.getPlayerConnection(player).getConnection().send(packet);
+        this.getPlayerConnection(player).send(packet);
+    }
+
+    /**
+     * Get the {@link ServerGamePacketListenerImpl} of a player
+     *
+     * @param player the player to get the player connection object from
+     * @return the object
+     */
+    private ServerGamePacketListenerImpl getPlayerConnection(Player player) {
+        return ((CraftPlayer) player).getHandle().connection;
     }
 
     /**
@@ -190,7 +201,7 @@ public class v1_19TabAdapter extends TabAdapter {
     public TabAdapter showRealPlayers(Player player) {
         if (!this.initialized.contains(player)) {
             //final ChannelPipeline pipeline = this.getPlayerConnection(player).a.k.pipeline();
-            final ChannelPipeline pipeline = this.getPlayerConnection(player).getConnection().channel.pipeline();
+            final ChannelPipeline pipeline = this.getPlayerConnection(player).connection.channel.pipeline();
 
             while (pipeline.get("packet_handler") == null) {
                 this.showRealPlayers(player);
@@ -243,16 +254,6 @@ public class v1_19TabAdapter extends TabAdapter {
                 super.write(context, packet, promise);
             }
         };
-    }
-
-    /**
-     * Get the {@link ServerGamePacketListener} of a player
-     *
-     * @param player the player to get the player connection object from
-     * @return the object
-     */
-    private ServerGamePacketListener getPlayerConnection(Player player) {
-        return ((CraftPlayer) player).getHandle().connection;
     }
 
     /**

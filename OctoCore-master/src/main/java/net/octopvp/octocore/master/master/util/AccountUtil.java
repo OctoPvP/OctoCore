@@ -3,11 +3,11 @@ package net.octopvp.octocore.master.master.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.shanerx.mojang.Mojang;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;

@@ -5,7 +5,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 public abstract class Page extends VerticalLayout {
     @PostConstruct

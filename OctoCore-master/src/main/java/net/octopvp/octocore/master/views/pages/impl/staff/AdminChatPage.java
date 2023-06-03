@@ -6,7 +6,7 @@ import net.octopvp.octocore.common.redis.packets.ChatPacket;
 import net.octopvp.octocore.master.master.redis.impl.staff.AdminChatPacket;
 import net.octopvp.octocore.master.views.MainLayout;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import java.util.UUID;
 
 @PageTitle("Admin Chat")

@@ -120,7 +120,7 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
                     grant.setRemovedBy(event.getWhoClicked().getName());
                     grant.setRemovedAt(System.currentTimeMillis());
                     if (!targetData.isOnline()) {
-                        targetData.save();
+                        targetData.getData();
                     }
                     new GrantsUpdatePacket(targetData.getName(), OctoCore.getGson().toJson(grant), false).send();
                     event.getWhoClicked().sendMessage(CC.GREEN + "You have revoked " + CC.YELLOW + grant.getRankName() + CC.GREEN + " from " + CC.YELLOW + targetData.getName() + CC.GREEN + "!");

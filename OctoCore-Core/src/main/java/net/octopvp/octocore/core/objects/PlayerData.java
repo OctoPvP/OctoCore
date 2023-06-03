@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
-import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.*;
 import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.permissions.Rank;
@@ -93,73 +92,14 @@ public class PlayerData extends SimplePlayerData {
         return this;
     }
 
-    public void save() {
-        this.save(false);
+    public Document save() {
+        return save(true);
     }
-
     public Document save(boolean getDoc) {
         this.lastDataSave = 0;
-        Document document = new Document();
-        document.put("uuid", uuid.toString());
-        document.put("name", name);
-        document.put("lowerName", lowerName);
-        document.put("grants", OctoCore.getGson().toJson(grants));
-        document.put("dataVersion", dataVersion);
-        document.put("frozen", frozen);
-        document.put("nicked", nicked);
-        document.put("authEnabled", authEnabled);
-        document.put("vanished", vanished);
-        document.put("joinVanished", joinVanished);
-        document.put("customColorEnabled", customColorEnabled);
-        document.put("customColor", customColor);
-        document.put("coins", coins);
-        document.put("lastLoaded", lastLoaded);
-        document.put("lastLogin", lastLogin);
-        document.put("xp", xp);
-        document.put("firstJoin", firstJoin);
-        document.put("lastSave", lastSave);
-        document.put("nick", nick);
-        document.put("lastKnownName", lastKnownName);
-        document.put("nickPrefix", nickPrefix);
-        document.put("nickColor", nickColor);
-        document.put("server", server);
-        document.put("authSecret", authSecret);
-        document.put("lastSeenServer", lastSeenServer);
-        document.put("rankName", rankName);
-        document.put("lastSeen", lastSeen);
-        document.put("lastAuthedIp", lastAuthedIp);
-        document.put("lastSeenIp", lastSeenIp);
-        document.put("metaDataList", OctoCore.getGson().toJson(metaDataList));
-        document.put("metaData", OctoCore.getGson().toJson(metaData));
-        document.put("worldTime", worldTime.name());
-        if (nickTagID != null) document.put("nickTagID", nickTagID.toString());
-        if (nickUUID != null) document.put("nickUUID", nickUUID.toString());
-        if (tagID != null) document.put("tagID", tagID.toString());
-        document.put("playTime", playTime);
-        document.put("allowedTagsID", OctoCore.getGson().toJson(allowedTagsID));
-        if (nameColor != null) document.put("nameColor", nameColor.name().toUpperCase());
-        document.put("nameColorBold", nameColorBold);
-        document.put("nameColorItalic", nameColorItalic);
-        document.put("staffChatAlerts", staffChatAlerts);
-        document.put("adminChatAlerts", adminChatAlerts);
-        document.put("reportAlerts", reportAlerts);
-        document.put("staffChat", staffChat);
-        document.put("adminChat", adminChat);
-        document.put("build", build);
-        document.put("nodes", OctoCore.getGson().toJson(nodes));
-        document.put("address", address);
-        document.put("addresses", StringUtils.getStringFromList(this.addresses));
-        document.put("socialSpy", socialSpy);
-
-        document.put("ignoreList", OctoCore.getGson().toJson(this.messageSettings.getIgnoreList(), GsonType.STRING_LIST));
-
-        document.put("globalChat", messageSettings.isGlobalChat());
-        document.put("sounds", messageSettings.isSoundsEnabled());
-        document.put("messagesOff", messageSettings.isMessagesOff());
-
-        document.entrySet().removeIf(e -> e.getValue() == null);
+        Document document = super.getData(getDoc);
         if (getDoc) {
-            document.put("bungeePermissions", OctoCore.getGson().toJson(this.bungeePerms, GsonType.NODE_LIST));
+            document.put("bungeePermissions", OctoCoreCommon.getInstance().getGson().toJson(this.bungeePerms, GsonType.NODE_LIST));
 
             return document;
         }
@@ -369,7 +309,7 @@ public class PlayerData extends SimplePlayerData {
     public void applyGrant(Grant grant) {
         grants.add(grant);
         if (Bukkit.getPlayer(uuid) != null) loadPerms(Bukkit.getPlayer(uuid));
-        save();
+        getData();
         this.cachedFormattedNameNoNickNoTag = null;
     }
 

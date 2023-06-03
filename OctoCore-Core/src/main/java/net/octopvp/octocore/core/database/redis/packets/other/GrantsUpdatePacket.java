@@ -27,7 +27,7 @@ public class GrantsUpdatePacket extends RedisPacket {
                 playerData.getGrants().add(grant);
             else playerData.getGrants().remove(grant);
             playerData.loadPerms(player);
-            playerData.save();
+            playerData.getData();
         }
     }
 }

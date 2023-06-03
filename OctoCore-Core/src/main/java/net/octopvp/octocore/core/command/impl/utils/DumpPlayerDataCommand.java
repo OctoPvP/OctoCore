@@ -17,7 +17,7 @@ public class DumpPlayerDataCommand {
             return CommandResult.INVALID_PLAYER;
         }
         sender.sendMessage(CC.GRAY + "Dumping data, please wait...");
-        String data = target.save(true).toJson();
+        String data = target.getData(true).toJson();
         new Hastebin().post(data).thenAcceptAsync((s) -> sender.sendMessage(CC.AQUA + "Pdata dump for: " + target.getName() + "\n" + s));
         return CommandResult.SUCCESS;
     }

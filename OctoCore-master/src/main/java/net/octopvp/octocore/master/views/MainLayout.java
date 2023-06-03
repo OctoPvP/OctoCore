@@ -8,6 +8,7 @@ import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -21,11 +22,11 @@ import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.pages.impl.HomeView;
 import net.octopvp.octocore.master.views.pages.impl.ServersPage;
 import net.octopvp.octocore.master.views.pages.impl.SettingsPage;
-import net.octopvp.octocore.master.views.pages.impl.staff.AdminChatPage;
-import net.octopvp.octocore.master.views.pages.impl.staff.StaffChatPage;
 import net.octopvp.octocore.master.views.pages.impl.admin.UsersPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.RedisManagerPage;
 import net.octopvp.octocore.master.views.pages.impl.misc.vote.VoteManager;
+import net.octopvp.octocore.master.views.pages.impl.staff.AdminChatPage;
+import net.octopvp.octocore.master.views.pages.impl.staff.StaffChatPage;
 import net.octopvp.octocore.master.views.pages.impl.staff.player.MainPlayerInfoPage;
 
 import java.util.*;
@@ -47,7 +48,10 @@ public class MainLayout extends AppLayout {
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         User user = authenticatedUser.get();
-        addToDrawer(createDrawerContent(user.isDarkMode()));
+        if (user != null)
+            addToDrawer(createDrawerContent(user.isDarkMode()));
+        else
+            addToDrawer(createDrawerContent(true));
     }
 
     /**
@@ -129,8 +133,17 @@ public class MainLayout extends AppLayout {
 
             for (ContextMenu contextMenu : contextMenus) { // Jfc div doesn't work
                 contextMenu.setOpenOnClick(true);
-                contextMenu.addItem("Logout", e -> {
-                    authenticatedUser.logout();
+                MenuItem item = contextMenu.addItem("Logout", e -> {
+                    // authenticatedUser.logout();
+                    /*
+                    ConfirmDialog dialog = new ConfirmDialog();
+                    dialog.setHeader("Logout");
+                    dialog.setText("Logout is currently broken! Please clear your cookies.");
+                    dialog.setConfirmText("Ok");
+                    dialog.open();
+                     */
+                    // send GET request to /auth/logout, then redirect to /auth/logout/success, on the client
+                    UI.getCurrent().getPage().executeJs("fetch('/auth/logout', { method: 'GET' }).then(() => window.location.href = '/auth/logout/success')");
                 });
             }
 

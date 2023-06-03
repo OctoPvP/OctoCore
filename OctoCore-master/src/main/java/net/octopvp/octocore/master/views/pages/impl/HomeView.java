@@ -14,8 +14,8 @@ import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.security.PermitAll;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.PermitAll;
 import java.util.TimeZone;
 
 @PageTitle("Home")

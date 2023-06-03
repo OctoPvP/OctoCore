@@ -6,7 +6,7 @@ import net.octopvp.octocore.common.object.FixedList;
 import net.octopvp.octocore.common.redis.packets.ChatPacket;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

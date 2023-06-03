@@ -2,6 +2,7 @@ package net.octopvp.octocore.master.master.manager;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import jakarta.annotation.PostConstruct;
 import net.octopvp.octocore.common.interfaces.manager.IPlayerManager;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.master.master.util.AccountUtil;
@@ -9,7 +10,6 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.UUID;
 @Component
 public class PlayerManager implements IPlayerManager {

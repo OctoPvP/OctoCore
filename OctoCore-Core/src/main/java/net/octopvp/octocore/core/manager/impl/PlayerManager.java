@@ -89,7 +89,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
         if (data == null && create) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
             data = createProfile(uuid, player.getName());
-            data.save();
+            data.getData();
         }
         return data;
     }
@@ -99,7 +99,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
         PlayerData data = getOfflineData(uuid);
         if (offline)
             data.load();
-        callback.run(data, PlayerData::save);
+        callback.run(data, PlayerData::getData);
     }
 
     public void modifyData(String name, ObjectConsumer<PlayerData> callback) {
@@ -107,7 +107,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
         PlayerData data = getOfflineData(name);
         if (offline)
             data.load();
-        callback.run(data, PlayerData::save);
+        callback.run(data, PlayerData::getData);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
         Tasks.runAsync(() -> {
             playerProfiles.remove(player.getUniqueId());
             data.setLastSeen(System.currentTimeMillis());
-            data.save();
+            data.getData();
         });
 
         Tasks.runLater(() -> new GlobalPlayerStatusUpdatePacket(player.getName(), true).send(), 30L);

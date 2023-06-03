@@ -21,7 +21,6 @@ dependencies {
     implementation("net.octopvp:Commander-Bukkit:0.0.2-REL") {
         exclude(group = "org.reflections")
     }
-    implementation("com.warrenstrange:googleauth:1.5.0")
     implementation("dev.samstevens.totp:totp:1.7.1")
     implementation("org.slf4j:slf4j-api:2.0.0-alpha1")
     implementation("net.octopvp:agile-gui:1.0.1") // TODO: shadowjar

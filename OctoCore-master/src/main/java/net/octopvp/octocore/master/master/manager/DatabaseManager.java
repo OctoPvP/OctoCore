@@ -6,17 +6,15 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import net.octopvp.octocore.common.interfaces.manager.IDatabaseManager;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.master.master.OctoCoreMaster;
-import org.bson.Document;
-import org.bson.codecs.Encoder;
 import org.bson.json.JsonWriterSettings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.Collections;
 
 @Component

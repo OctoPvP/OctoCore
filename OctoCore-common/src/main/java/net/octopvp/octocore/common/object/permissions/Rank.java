@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.StringUtils;
+import net.octopvp.octocore.common.interfaces.manager.IRankManager;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
@@ -40,8 +41,11 @@ public class Rank implements Cloneable {
     private boolean bold = false, italic = false, purchasable = false, changableMainColor = false;
     private ServerContext scope = ServerContext.global();
 
-    public void save() {
-        OctoCoreCommon.getInstance().getServerImplementation().getRankManager().save(this);
+    public void save(IRankManager ...rankManager) {
+        if (rankManager.length == 0)
+            OctoCoreCommon.getInstance().getServerImplementation().getRankManager().save(this);
+        else
+            rankManager[0].save(this);
     }
 
     @Override

@@ -14,7 +14,7 @@ import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import java.util.UUID;
 
 @PageTitle("Player Info")
@@ -35,6 +35,11 @@ public class MainPlayerInfoPage extends Page {
         nameField.addClassNames("centered");
         nameField.addKeyUpListener(event -> {
             if (event.getKey() == Key.ENTER || event.getKey() == Key.NUMPAD_ENTER) {
+                submit();
+            }
+        });
+        nameField.addKeyUpListener(event -> {
+            if (event.getKey() == Key.ENTER) {
                 submit();
             }
         });
