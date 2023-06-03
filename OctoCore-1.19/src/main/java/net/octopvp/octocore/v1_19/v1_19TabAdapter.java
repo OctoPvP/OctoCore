@@ -201,7 +201,7 @@ public class v1_19TabAdapter extends TabAdapter {
     public TabAdapter showRealPlayers(Player player) {
         if (!this.initialized.contains(player)) {
             //final ChannelPipeline pipeline = this.getPlayerConnection(player).a.k.pipeline();
-            final ChannelPipeline pipeline = this.getPlayerConnection(player).getConnection().channel.pipeline();
+            final ChannelPipeline pipeline = this.getPlayerConnection(player).connection.channel.pipeline();
 
             while (pipeline.get("packet_handler") == null) {
                 this.showRealPlayers(player);
