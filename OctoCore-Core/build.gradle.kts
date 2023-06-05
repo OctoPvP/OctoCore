@@ -26,14 +26,11 @@ dependencies {
     implementation("net.octopvp:agile-gui:1.0.1") // TODO: shadowjar
     implementation("org.reflections:reflections:0.10.2")
 
-    implementation("net.dv8tion:JDA:5.0.0-beta.2")
-
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         exclude(group = "org.yaml")
         exclude(group = "junit")
     }
     compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0")
-    compileOnly("com.lunarclient:bukkitapi:1.0-SNAPSHOT")
     //compileOnly(files("../lib/bukkitapi.jar"))
     //compileOnly("net.citizensnpcs:citizens-main:2.0.27-SNAPSHOT")
     compileOnly("com.viaversion:viaversion-api:4.4.2")

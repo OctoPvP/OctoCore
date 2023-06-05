@@ -1,6 +1,9 @@
 package net.octopvp.octocore.master.config;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import net.octopvp.octocore.master.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +21,11 @@ import org.springframework.security.saml2.provider.service.web.authentication.Sa
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 @Configuration
 @EnableWebSecurity
@@ -35,11 +43,28 @@ public class WebSecurityConfig extends VaadinWebSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.cors().disable();
+
         DefaultRelyingPartyRegistrationResolver relyingPartyRegistrationResolver = new DefaultRelyingPartyRegistrationResolver(this.relyingPartyRegistrationRepository);
         Saml2MetadataFilter filter = new Saml2MetadataFilter(relyingPartyRegistrationResolver, new OpenSamlMetadataResolver());
-
-        http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(new AntPathRequestMatcher("/favicon.ico"), new AntPathRequestMatcher("/VAADIN/**"), new AntPathRequestMatcher("/auth/**")).permitAll()
+        String[] allowPaths = {
+                "/favicon.ico",
+                "/VAADIN/**",
+                "/auth/**",
+                "/*.js",
+                "/*.css",
+                "/offline-stub.html",
+                "/login/**",
+        };
+        RequestMatcher[] matchers = new RequestMatcher[allowPaths.length];
+        for (int i = 0; i < allowPaths.length; i++) {
+            matchers[i] = new AntPathRequestMatcher(allowPaths[i]);
+        }
+        http
+                .headers()
+                .frameOptions().sameOrigin()
+                .and()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(matchers).permitAll()
                         .anyRequest().authenticated())
                 .saml2Login(settings)
                 .saml2Logout(logoutSettings)
@@ -50,6 +75,13 @@ public class WebSecurityConfig extends VaadinWebSecurity {
                 .invalidateHttpSession(false)
                 .clearAuthentication(false)
         ;
+        http.addFilterAfter((request, response, chain) -> {
+            if (request instanceof HttpServletRequest req) {
+                System.out.println("Request: " + (req.getMethod() + " " + req.getRequestURI()));
+            }
+            chain.doFilter(request, response);
+        }, Saml2WebSsoAuthenticationFilter.class);
+        setLoginView(http, "/login");
         DefaultSecurityFilterChain chain = http.build();
         return chain;
     }
