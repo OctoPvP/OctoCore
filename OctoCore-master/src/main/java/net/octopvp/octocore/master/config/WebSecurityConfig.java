@@ -1,11 +1,10 @@
 package net.octopvp.octocore.master.config;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
-import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import net.octopvp.octocore.master.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,10 +22,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends VaadinWebSecurity {
@@ -39,10 +34,12 @@ public class WebSecurityConfig extends VaadinWebSecurity {
     @Autowired
     private Saml2LogoutSettings logoutSettings;
 
+    @Value("${master.saml.discovery}")
+    private String registrationsStr;
+
     @Bean(name = "VaadinSecurityFilterChainBean")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.cors().disable();
+        http.csrf().disable().cors().disable();
 
         DefaultRelyingPartyRegistrationResolver relyingPartyRegistrationResolver = new DefaultRelyingPartyRegistrationResolver(this.relyingPartyRegistrationRepository);
         Saml2MetadataFilter filter = new Saml2MetadataFilter(relyingPartyRegistrationResolver, new OpenSamlMetadataResolver());
@@ -65,7 +62,8 @@ public class WebSecurityConfig extends VaadinWebSecurity {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(matchers).permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
                 .saml2Login(settings)
                 .saml2Logout(logoutSettings)
                 .addFilterBefore(filter, Saml2WebSsoAuthenticationFilter.class)
@@ -82,6 +80,7 @@ public class WebSecurityConfig extends VaadinWebSecurity {
             chain.doFilter(request, response);
         }, Saml2WebSsoAuthenticationFilter.class);
         setLoginView(http, "/login");
+        // setLoginView(http, LoginPage.class);
         DefaultSecurityFilterChain chain = http.build();
         return chain;
     }

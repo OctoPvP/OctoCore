@@ -59,6 +59,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.12.0")
 
     implementation("com.vaadin:vaadin-spring-boot-starter")
+    implementation("org.vaadin.stefan:html-table:1.2.0")
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
     implementation("com.github.SparklingComet:java-mojang-api:-SNAPSHOT")
     //implementation("com.github.appreciated:apexcharts:23.0.0-LOCAL")
