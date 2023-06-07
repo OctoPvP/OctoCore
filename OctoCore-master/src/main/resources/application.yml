@@ -34,6 +34,8 @@ auth:
 vaadin:
   pnpm-enabled: true
 master:
+  saml:
+    discovery: octoauth
   redis:
     hostname: 140.238.153.142
     port: 6379

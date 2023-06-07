@@ -41,7 +41,9 @@ public class Saml2LoginSettings implements Customizer<Saml2LoginConfigurer<HttpS
 
     @Override
     public void customize(Saml2LoginConfigurer<HttpSecurity> t) {
-        t.successHandler(new SavedRequestAwareAuthenticationSuccessHandler() {
+        t
+                // .loginPage("/login")
+                .successHandler(new SavedRequestAwareAuthenticationSuccessHandler() {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                 authentication = assignAuthorities(authentication, request);

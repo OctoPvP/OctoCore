@@ -23,9 +23,6 @@ dependencies {
     compileOnly("net.octopvp.octospigot:octospigot-server:1.8.8-R0.1-SNAPSHOT")
 }
 tasks {
-    shadowJar {
-
-    }
     withType<ProcessResources> {
         filesMatching("plugin.yml") {
             expand(project.properties)

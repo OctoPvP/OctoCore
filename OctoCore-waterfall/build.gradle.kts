@@ -11,7 +11,7 @@ repositories {
 }
 dependencies {
     implementation(project(":OctoCore-common"))
-    compileOnly("io.github.waterfallmc:waterfall-api:1.18-R0.1-SNAPSHOT")
+    compileOnly("io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT")
     //compileOnly("net.octopvp:OctoBungee-api:1.17-R0.1-SNAPSHOT")
     compileOnly("com.google.code.gson:gson:2.8.9")
 }
