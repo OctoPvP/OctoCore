@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 
 public class ConsoleCommand {
     @Command(name = "console")
-    @Cooldown(3)
     @Permission(Permissions.ADMIN)
     public CommandResult execute(@Sender CommandSender sender, @JoinStrings String command) {
         if (command.startsWith("/"))

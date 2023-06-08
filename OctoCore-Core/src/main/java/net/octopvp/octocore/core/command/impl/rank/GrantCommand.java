@@ -4,6 +4,7 @@ import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Name;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.commander.annotation.Sender;
+import net.octopvp.octocore.common.annotation.Sync;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 
 public class GrantCommand {
     @Command(name = "grant")
+    @Sync
     @Permission(Permissions.GRANT)
     public CommandResult execute(@Sender Player sender, @Name("target") PlayerData target) {
         sender.sendMessage(CC.GREEN + "Getting PlayerData...");

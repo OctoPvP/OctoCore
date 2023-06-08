@@ -36,6 +36,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -214,6 +215,7 @@ public abstract class OctoCore extends JavaPlugin {
                 .registerProvider(Rank.class, new RankProvider())
                 .registerProvider(OfflinePunishData.class, new OfflinePunishDataProvider())
                 .registerProvider(GlobalPlayer.class, new GlobalPlayerProvider())
+                .registerProvider(Enchantment.class, new EnchantmentProvider())
 
                 .registerCommandPostProcessor((ctx, obj) -> {
                     if (obj instanceof CommandResult) {
