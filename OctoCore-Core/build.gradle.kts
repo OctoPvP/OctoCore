@@ -47,6 +47,7 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.3.0")
 
     implementation("com.github.cryptomorin:XSeries:9.3.1") { isTransitive = false }
+    implementation("fr.mrmicky:fastboard:2.0.0")
 }
 
 var relocateBase = "net.octopvp.octocore.core.relocate."
