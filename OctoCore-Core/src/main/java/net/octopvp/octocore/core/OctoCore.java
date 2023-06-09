@@ -27,6 +27,7 @@ import net.octopvp.octocore.core.objects.BukkitServerImpl;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.setup.*;
+import net.octopvp.octocore.core.utils.AdventureUtils;
 import net.octopvp.octocore.core.utils.PacketUtil;
 import net.octopvp.octocore.core.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.core.utils.errorhandling.ErrorHandling;
@@ -160,6 +161,7 @@ public abstract class OctoCore extends JavaPlugin {
         });
         loading = true;
         Tasks.init(this);
+        AdventureUtils.init();
         if (getConfig().getBoolean("sentry.enable", false))
             SentryManager.init(getConfig().getString("sentry.sentry-dsn", ""));
         commander = BukkitCommander.getCommander(this);
@@ -257,7 +259,7 @@ public abstract class OctoCore extends JavaPlugin {
         Bukkit.getScheduler().cancelTasks(this);
         setupManager.disable(this);
         setupModules.disable(this);
-
+        AdventureUtils.disable();
     }
 
     public void setupVault() {

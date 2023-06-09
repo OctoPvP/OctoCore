@@ -83,7 +83,7 @@ public class ManageTagMenu extends Menu<Gui> {
     @Override
     public Gui createGui(Player player) {
         return Gui.gui()
-                .title(CC.AQUA + "Manage Tag")
+                .title(edit ? "Manage Tag" : "New Tag")
                 .rows(3)
                 .create();
     }
@@ -100,5 +100,6 @@ public class ManageTagMenu extends Menu<Gui> {
         } else {
             gui.setItem(22, closeButton());
         }
+        gui.getFiller().fill(Menu.PLACEHOLDER_ITEM);
     }
 }

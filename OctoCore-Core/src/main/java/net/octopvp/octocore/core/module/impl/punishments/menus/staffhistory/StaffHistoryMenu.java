@@ -19,7 +19,7 @@ public class StaffHistoryMenu extends Menu<Gui> {
     @Override
     public Gui createGui(Player player) {
         return Gui.gui()
-                .title(CC.PRIMARY + playerData.getName() + "'s staff history")
+                .title(playerData.getName() + "'s staff history")
                 .rows(4)
                 .create();
     }

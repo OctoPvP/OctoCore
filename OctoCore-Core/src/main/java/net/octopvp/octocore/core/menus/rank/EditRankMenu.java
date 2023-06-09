@@ -222,7 +222,7 @@ public class EditRankMenu extends Menu<Gui> {
     @Override
     public Gui createGui(Player player) {
         return Gui.gui()
-                .title(CC.AQUA + "Create a new rank")
+                .title("Create a new rank")
                 .rows(3)
                 .create();
     }

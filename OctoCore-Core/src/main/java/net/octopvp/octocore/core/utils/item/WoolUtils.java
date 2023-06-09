@@ -28,6 +28,9 @@ public class WoolUtils {
 
         return WoolUtils.woolColors.indexOf(color);
     }
+    public static XMaterial convertChatColorToWoolMaterial(net.octopvp.octocore.common.util.ChatColor color) {
+        return convertChatColorToWoolMaterial(ChatUtil.convertChatColor(color));
+    }
     public static XMaterial convertChatColorToWoolMaterial(ChatColor color) {
         return woolMaterials.get(convertChatColorToWoolData(color));
     }

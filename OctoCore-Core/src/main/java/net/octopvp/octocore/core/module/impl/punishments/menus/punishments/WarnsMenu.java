@@ -56,7 +56,7 @@ public class WarnsMenu extends PaginatedMenu<PaginatedGui> {
     @SuppressWarnings("deprecation")
     public GuiItem punishmentButton(IPunishment punishment, int order) {
         List<String> lore = PunishmentMenuCommons.addPunishmentLore(punishment);
-        return ItemBuilder.from(punishment.isActive() ? XMaterial.GREEN_WOOL : XMaterial.RED_WOOL)
+        return ItemBuilder.from(punishment.isActive() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
                 .name(CC.GREEN + "#" + order + " " + CC.GRAY + "(" + CC.YELLOW + PlayerData.DATE_FORMAT.format(new Date(punishment.getAddedAt())) + CC.GRAY + ")")
                 .setLore(lore)
                 .asGuiItem(event -> {

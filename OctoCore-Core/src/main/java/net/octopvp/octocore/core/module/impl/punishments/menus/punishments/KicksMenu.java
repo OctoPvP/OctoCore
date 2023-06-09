@@ -8,15 +8,13 @@ import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
+import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.core.utils.Buttons;
-import net.octopvp.octocore.core.utils.item.WoolUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -31,9 +29,10 @@ public class KicksMenu extends PaginatedMenu<PaginatedGui> {
     private final Menu<?> parent;
 
     public GuiItem punishmentButton(IPunishment punishment, int order) {
-        return ItemBuilder.from(Material.WOOL)
-                .durability(punishment.isActive() ? WoolUtils.convertChatColorToWoolData(ChatColor.GREEN) : WoolUtils.convertChatColorToWoolData(ChatColor.RED))
-                .name(CC.GREEN + "#" + order + " " + CC.GRAY + "(" + CC.YELLOW + DateUtils.getDate(punishment.getAddedAt()) + "" + CC.GRAY + ")")
+        // return ItemBuilder.from(Material.WOOL)
+        //        .durability(punishment.isActive() ? WoolUtils.convertChatColorToWoolData(ChatColor.GREEN) : WoolUtils.convertChatColorToWoolData(ChatColor.RED))
+        return ItemBuilder.from(punishment.isActive() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
+                .name(CC.GREEN + "#" + order + " " + CC.GRAY + "(" + CC.YELLOW + DateUtils.getDate(punishment.getAddedAt()) + CC.GRAY + ")")
                 .lore(CC.SEPARATOR,
                         CC.GREEN + "Added by" + CC.GRAY + ": " + CC.YELLOW + punishment.getAddedByName(),
                         CC.GREEN + "Reason" + CC.GRAY + ": " + CC.YELLOW + punishment.getReason(),

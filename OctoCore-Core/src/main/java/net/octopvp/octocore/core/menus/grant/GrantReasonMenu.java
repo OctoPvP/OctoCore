@@ -6,6 +6,7 @@ import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.PaginatedMenu;
+import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.conversations.grant.GrantReasonConversation;
@@ -63,7 +64,7 @@ public class GrantReasonMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     public GuiItem otherReason() {
-        return ItemBuilder.from(Material.BOOK_AND_QUILL)
+        return ItemBuilder.from(XMaterial.WRITABLE_BOOK.parseMaterial() != null ? XMaterial.WRITABLE_BOOK.parseMaterial() : Material.BOOK)
                 .name(CC.GREEN + "Other")
                 .lore(CC.AQUA + "Click to enter a custom reason.")
                 .asGuiItem(event -> {

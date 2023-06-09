@@ -109,7 +109,7 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
             lore.add("");
             lore.add(CC.YELLOW + "Click to revoke this grant!");
         }
-        return ItemBuilder.from(grant.isActive() ? XMaterial.GREEN_WOOL : XMaterial.RED_WOOL)
+        return ItemBuilder.from(grant.isActive() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
                 .name(grant.isActive() ? CC.GREEN + grant.getRankName() : CC.RED + grant.getRankName())
                 .setLore(lore)
                 .asGuiItem(event -> {

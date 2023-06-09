@@ -17,7 +17,7 @@ public class GrantCommand {
     @Sync
     @Permission(Permissions.GRANT)
     public CommandResult execute(@Sender Player sender, @Name("target") PlayerData target) {
-        sender.sendMessage(CC.GREEN + "Getting PlayerData...");
+        sender.sendMessage(CC.GREEN + "Opening menu for " + target.getName() + "...");
         new MainGrantMenu(target).open(sender);
         return CommandResult.SUCCESS;
     }

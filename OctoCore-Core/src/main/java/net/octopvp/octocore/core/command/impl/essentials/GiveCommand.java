@@ -17,6 +17,11 @@ public class GiveCommand {
     @Permission(Permissions.GIVE)
     @PlayerOnly
     public CommandResult execute(@Sender Player sender, String[] args) {
+        String argsJoined = String.join(" ", args);
+        if (argsJoined.contains("{")) { // contains nbt, use vanilla mc command
+            sender.performCommand("minecraft:give " + argsJoined);
+            return CommandResult.SUCCESS;
+        }
         if (args.length == 1) {
             Material material = ItemUtils.getItemMap().get(args[0].toUpperCase());
             if (material == null) {

@@ -4,6 +4,7 @@ import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
+import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.Material;
@@ -17,7 +18,7 @@ public class MainGrantMenu extends Menu<Gui> {
     }
 
     public GuiItem addGrant() {
-        return ItemBuilder.from(Material.BOOK_AND_QUILL)
+            return ItemBuilder.from(XMaterial.WRITABLE_BOOK.parseMaterial() != null ? XMaterial.WRITABLE_BOOK.parseMaterial() : Material.BOOK)
                 .name(CC.GREEN + "Add a new grant")
                 .asGuiItem(event -> new AddGrantMenu(playerData).open((Player) event.getWhoClicked()));
     }
@@ -39,8 +40,14 @@ public class MainGrantMenu extends Menu<Gui> {
 
     @Override
     public void populateGui(Gui gui, Player player) {
-        gui.setItem(11, addGrant());
-        gui.setItem(15, viewGrants());
-        gui.getFiller().fill(PLACEHOLDER_ITEM);
+        System.out.println("Populating main grant menu.");
+        try {
+            gui.setItem(11, addGrant());
+            gui.setItem(15, viewGrants());
+            gui.getFiller().fill(PLACEHOLDER_ITEM);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

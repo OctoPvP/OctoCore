@@ -7,6 +7,7 @@ import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
+import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
@@ -49,9 +50,10 @@ public class InheritedRanksMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     public GuiItem rankButton(Rank rankData) {
-        return ItemBuilder.from(Material.WOOL)
+        // return ItemBuilder.from(Material.WOOL)
+        // .durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())))
+        return ItemBuilder.from((rankData.isDefaultRank()) ? XMaterial.LIME_WOOL : WoolUtils.convertChatColorToWoolMaterial(rankData.getColor()))
                 .name(rankData.getDisplayName())
-                .durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())))
                 .lore(CC.SEPARATOR, CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(), CC.AQUA + "Inherited: " + CC.YELLOW + Arrays.toString(rankData.getInheritedRanksName()), CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
                         CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(), CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(), CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
                         CC.SEPARATOR,
@@ -88,7 +90,7 @@ public class InheritedRanksMenu extends PaginatedMenu<PaginatedGui> {
     @Override
     public PaginatedGui createGui(Player player) {
         return Gui.paginated()
-                .title(CC.GREEN + "Choose inherited ranks!")
+                .title("Choose inherited ranks!")
                 .rows(6)
                 .create();
     }

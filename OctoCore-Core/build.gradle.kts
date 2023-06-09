@@ -39,6 +39,12 @@ dependencies {
     compileOnly("net.md-5:bungeecord-chat:1.16-R0.4")
     compileOnly("com.mojang:authlib:1.5.25")
     //compileOnly("net.octopvp:OctoSpigot-Server:1.8.8-R0.1-SNAPSHOT") server is not needed because those are abstracted away into the version specific modules
+
+    // components
+    implementation("net.kyori:adventure-text-minimessage:4.14.0")
+    implementation("net.kyori:adventure-api:4.14.0")
+    implementation("net.kyori:adventure-text-serializer-legacy:4.14.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.0")
 }
 
 var relocateBase = "net.octopvp.octocore.core.relocate."

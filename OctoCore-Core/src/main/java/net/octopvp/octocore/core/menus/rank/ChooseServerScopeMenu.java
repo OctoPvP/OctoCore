@@ -49,7 +49,7 @@ public class ChooseServerScopeMenu extends PaginatedMenu<PaginatedGui> {
     @Override
     public PaginatedGui createGui(Player player) {
         return Gui.paginated()
-                .title(CC.AQUA + "Choose server scope")
+                .title("Choose server scope")
                 .rows(3)
                 .create();
     }

@@ -62,7 +62,7 @@ public class ChoosePermissionInheritedMenu extends Menu<Gui> {
     @Override
     public Gui createGui(Player player) {
         return Gui.gui()
-                .title(CC.GREEN + "Choose an action.")
+                .title("Choose an action.")
                 .rows(3)
                 .create();
     }

@@ -5,6 +5,7 @@ import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
+import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.core.OctoCore;
@@ -25,7 +26,7 @@ public class DurationMenu extends Menu<Gui> {
     private final PlayerData data;
 
     public GuiItem customDurationButton() {
-        return ItemBuilder.from(Material.BOOK_AND_QUILL)
+        return ItemBuilder.from(XMaterial.WRITABLE_BOOK.parseMaterial() != null ? XMaterial.WRITABLE_BOOK.parseMaterial() : Material.BOOK)
                 .name(CC.AQUA + "Custom Duration")
                 .lore(CC.GREEN + "Click to set a custom duration.")
                 .asGuiItem(event -> {
@@ -95,7 +96,7 @@ public class DurationMenu extends Menu<Gui> {
     @Override
     public Gui createGui(Player player) {
         return Gui.gui()
-                .title(CC.AQUA + "Choose duration")
+                .title("Choose duration")
                 .rows(3)
                 .create();
     }

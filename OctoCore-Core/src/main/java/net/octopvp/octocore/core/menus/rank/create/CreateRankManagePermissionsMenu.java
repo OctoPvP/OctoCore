@@ -96,7 +96,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
 
     public GuiItem permissionButton(Node node, Consumer<NodeBuilder> callback) {
         Node a = node;
-        return ItemBuilder.from(node.isAllowed() ? XMaterial.GREEN_WOOL : XMaterial.RED_WOOL)
+        return ItemBuilder.from(node.isAllowed() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
                 .name(
                         (node.isAllowed() ? CC.GREEN : CC.RED) + node.getPermission()
                 ).lore(

@@ -16,8 +16,10 @@ import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.RankManager;
 import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.core.utils.AdventureUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TestCommand {
@@ -88,7 +90,7 @@ public class TestCommand {
 
     @Command(name = "test", description = "test", aliases = {"test1", "test2"})
     @PlayerOnly
-    //@Permission(Permissions.ADMIN)
+    @Permission(Permissions.ADMIN)
     public CommandResult execute(@Sender Player sender) {
         PlayerData data = PlayerManager.getInstance().getData(sender.getUniqueId());
         if (data == null) {
@@ -99,6 +101,11 @@ public class TestCommand {
         data.applyGrant(grant);
         sender.sendMessage(ChatColor.GREEN + "Done");
         return CommandResult.SUCCESS;
+    }
+
+    @Command(name = "deserializetext", description = "Deserializes text to component format")
+    public void execute(@Sender CommandSender sender, @JoinStrings String text) {
+        AdventureUtils.sendMessage(sender, AdventureUtils.format(text));
     }
 
 }
