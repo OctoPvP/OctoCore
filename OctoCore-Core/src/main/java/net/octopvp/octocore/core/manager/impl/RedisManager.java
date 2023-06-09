@@ -1,6 +1,5 @@
 package net.octopvp.octocore.core.manager.impl;
 
-import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;

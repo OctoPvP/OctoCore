@@ -16,10 +16,11 @@ import java.time.Duration;
 import java.util.regex.Pattern;
 
 public class AdventureUtils {
+    private static final boolean useCache = Boolean.getBoolean("octocore.cache.adventure");
+    private static final Pattern MINI_MESSAGE_PATTERN = Pattern.compile("<[^>]*>");
     private static CacheLoader<String, Component> cacheLoader;
     private static LoadingCache<String, Component> cache;
     private static BukkitAudiences adventure;
-    private static final boolean useCache = Boolean.getBoolean("octocore.cache.adventure");
 
     public static BukkitAudiences adventure() {
         if (adventure == null) {
@@ -35,7 +36,6 @@ public class AdventureUtils {
         }
     }
 
-    private static final Pattern MINI_MESSAGE_PATTERN = Pattern.compile("<[^>]*>");
     public static Component formatNoCache(String text) {
         if (text == null) {
             return Component.empty();

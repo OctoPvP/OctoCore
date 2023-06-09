@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.IPlayerData;
-import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
+import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.database.redis.packets.player.AltUpdatePacket;
@@ -53,8 +53,8 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
         if (player == null) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
             List<Document> punishments = PunishModule.getPunishments().find().filter(Filters.and(
-                    Filters.eq("uuid", offlinePlayer.getUniqueId().toString()),
-                    activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", offlinePlayer.getUniqueId().toString())))
+                            Filters.eq("uuid", offlinePlayer.getUniqueId().toString()),
+                            activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", offlinePlayer.getUniqueId().toString())))
                     .into(new ArrayList<>());
 
             for (Document document : punishments) {

@@ -1,10 +1,10 @@
 package net.octopvp.octocore.core.menus.grant;
 
+import com.cryptomorin.xseries.XMaterial;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.Material;
@@ -18,7 +18,7 @@ public class MainGrantMenu extends Menu<Gui> {
     }
 
     public GuiItem addGrant() {
-            return ItemBuilder.from(XMaterial.WRITABLE_BOOK.parseMaterial() != null ? XMaterial.WRITABLE_BOOK.parseMaterial() : Material.BOOK)
+        return ItemBuilder.from(XMaterial.WRITABLE_BOOK.parseMaterial() != null ? XMaterial.WRITABLE_BOOK.parseMaterial() : Material.BOOK)
                 .name(CC.GREEN + "Add a new grant")
                 .asGuiItem(event -> new AddGrantMenu(playerData).open((Player) event.getWhoClicked()));
     }

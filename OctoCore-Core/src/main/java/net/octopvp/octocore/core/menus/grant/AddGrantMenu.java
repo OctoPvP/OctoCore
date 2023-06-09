@@ -1,11 +1,11 @@
 package net.octopvp.octocore.core.menus.grant;
 
+import com.cryptomorin.xseries.XMaterial;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.PaginatedMenu;
-import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
@@ -18,7 +18,6 @@ import net.octopvp.octocore.core.utils.Buttons;
 import net.octopvp.octocore.core.utils.item.WoolUtils;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

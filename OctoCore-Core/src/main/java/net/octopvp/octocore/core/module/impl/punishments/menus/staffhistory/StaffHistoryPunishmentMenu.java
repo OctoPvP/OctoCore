@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.module.impl.punishments.menus.staffhistory;
 
+import com.cryptomorin.xseries.XSound;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
@@ -15,7 +16,6 @@ import net.octopvp.octocore.core.utils.Buttons;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu<PaginatedGui> {
                 .asGuiItem(event -> {
                     activeOnly = !activeOnly;
                     update((Player) event.getWhoClicked());
-                    SoundUtil.playSound((Player) event.getWhoClicked(), Sound.ORB_PICKUP);
+                    SoundUtil.playSound((Player) event.getWhoClicked(), XSound.ENTITY_EXPERIENCE_ORB_PICKUP.parseSound());
                 });
     }
 

@@ -1,12 +1,12 @@
 package net.octopvp.octocore.core.menus.tag;
 
+import com.cryptomorin.xseries.XMaterial;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.database.redis.packets.player.TagUpdatePacket;

@@ -58,6 +58,26 @@ public class TestCommand {
         sender.sendMessage("Opened menu");
     }
 
+    @Command(name = "test", description = "test", aliases = {"test1", "test2"})
+    @PlayerOnly
+    @Permission(Permissions.ADMIN)
+    public CommandResult execute(@Sender Player sender) {
+        PlayerData data = PlayerManager.getInstance().getData(sender.getUniqueId());
+        if (data == null) {
+            sender.sendMessage(ChatColor.RED + "Data is null!");
+            return CommandResult.SUCCESS;
+        }
+        Grant grant = new GrantBuilder(RankManager.getInstance().getRankByName("Owner")).setActive(true).setPerm(true).setReason("lmao").setServer(ServerContext.global()).build();
+        data.applyGrant(grant);
+        sender.sendMessage(ChatColor.GREEN + "Done");
+        return CommandResult.SUCCESS;
+    }
+
+    @Command(name = "deserializetext", description = "Deserializes text to component format")
+    public void execute(@Sender CommandSender sender, @JoinStrings String text) {
+        AdventureUtils.sendMessage(sender, AdventureUtils.format(text));
+    }
+
     private static class TestMenu extends Menu<Gui> {
 
         @Override
@@ -86,26 +106,6 @@ public class TestCommand {
             }
             System.out.println("c3");
         }
-    }
-
-    @Command(name = "test", description = "test", aliases = {"test1", "test2"})
-    @PlayerOnly
-    @Permission(Permissions.ADMIN)
-    public CommandResult execute(@Sender Player sender) {
-        PlayerData data = PlayerManager.getInstance().getData(sender.getUniqueId());
-        if (data == null) {
-            sender.sendMessage(ChatColor.RED + "Data is null!");
-            return CommandResult.SUCCESS;
-        }
-        Grant grant = new GrantBuilder(RankManager.getInstance().getRankByName("Owner")).setActive(true).setPerm(true).setReason("lmao").setServer(ServerContext.global()).build();
-        data.applyGrant(grant);
-        sender.sendMessage(ChatColor.GREEN + "Done");
-        return CommandResult.SUCCESS;
-    }
-
-    @Command(name = "deserializetext", description = "Deserializes text to component format")
-    public void execute(@Sender CommandSender sender, @JoinStrings String text) {
-        AdventureUtils.sendMessage(sender, AdventureUtils.format(text));
     }
 
 }

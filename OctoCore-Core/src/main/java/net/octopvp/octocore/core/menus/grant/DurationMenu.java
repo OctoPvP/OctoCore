@@ -1,11 +1,11 @@
 package net.octopvp.octocore.core.menus.grant;
 
+import com.cryptomorin.xseries.XMaterial;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.core.OctoCore;

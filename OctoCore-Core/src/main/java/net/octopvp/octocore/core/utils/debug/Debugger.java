@@ -2,7 +2,6 @@ package net.octopvp.octocore.core.utils.debug;
 
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
-import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.listeners.JoinLeaveListener;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
@@ -126,6 +125,7 @@ public class Debugger {
             print(b);
         }
     }
+
     public void loadPunishments() {
         if (sender instanceof Player) {
             Player player = (Player) sender;

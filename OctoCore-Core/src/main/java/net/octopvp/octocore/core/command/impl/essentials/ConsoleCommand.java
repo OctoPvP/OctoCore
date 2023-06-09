@@ -1,6 +1,9 @@
 package net.octopvp.octocore.core.command.impl.essentials;
 
-import net.octopvp.commander.annotation.*;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.JoinStrings;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.Sender;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.command.CommandResult;
 import org.bukkit.Bukkit;

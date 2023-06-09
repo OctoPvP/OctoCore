@@ -95,6 +95,7 @@ public class PlayerData extends SimplePlayerData {
     public Document save() {
         return save(true);
     }
+
     public Document save(boolean getDoc) {
         this.lastDataSave = 0;
         Document document = super.getData(getDoc);

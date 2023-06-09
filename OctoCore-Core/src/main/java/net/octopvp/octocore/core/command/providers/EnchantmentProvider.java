@@ -9,7 +9,9 @@ import net.octopvp.commander.sender.CoreCommandSender;
 import net.octopvp.octocore.core.utils.Enchantments;
 import org.bukkit.enchantments.Enchantment;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
 
 public class EnchantmentProvider implements Provider<Enchantment> {
     @Override

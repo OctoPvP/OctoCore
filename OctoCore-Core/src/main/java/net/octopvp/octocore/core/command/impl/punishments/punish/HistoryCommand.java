@@ -4,14 +4,11 @@ import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Name;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.commander.annotation.Sender;
-import net.octopvp.octocore.common.annotation.Sync;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.command.CommandResult;
-import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.module.impl.punishments.menus.HistoryMenu;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
-import org.bson.Document;
 import org.bukkit.entity.Player;
 
 public class HistoryCommand {

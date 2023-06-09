@@ -1,8 +1,8 @@
 package net.octopvp.octocore.core.command.impl.punishments.undo;
 
 import net.octopvp.commander.annotation.*;
-import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.interfaces.IPunishment;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.database.redis.packets.player.UndoPunishmentPacket;

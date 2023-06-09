@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.module.impl.punishments.menus;
 
+import com.cryptomorin.xseries.XMaterial;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.agile.builder.item.ItemBuilder;
@@ -7,7 +8,6 @@ import net.octopvp.agile.components.GuiType;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;

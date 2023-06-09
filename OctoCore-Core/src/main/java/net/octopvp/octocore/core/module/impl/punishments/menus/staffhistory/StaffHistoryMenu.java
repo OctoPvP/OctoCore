@@ -1,11 +1,11 @@
 package net.octopvp.octocore.core.module.impl.punishments.menus.staffhistory;
 
+import com.cryptomorin.xseries.XMaterial;
 import lombok.AllArgsConstructor;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.objects.PlayerData;

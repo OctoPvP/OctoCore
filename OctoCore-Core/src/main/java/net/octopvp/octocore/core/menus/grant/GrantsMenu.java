@@ -1,12 +1,12 @@
 package net.octopvp.octocore.core.menus.grant;
 
+import com.cryptomorin.xseries.XMaterial;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
-import net.octopvp.agile.util.XMaterial;
 import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;

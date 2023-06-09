@@ -13,7 +13,6 @@ import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.core.utils.chat.Clickable;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import net.octopvp.octocore.core.utils.runnable.Tasks;

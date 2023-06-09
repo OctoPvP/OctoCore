@@ -1,7 +1,10 @@
 package net.octopvp.octocore.core.setup;
 
 import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.listeners.*;
+import net.octopvp.octocore.core.listeners.ChatListener;
+import net.octopvp.octocore.core.listeners.DeathListener;
+import net.octopvp.octocore.core.listeners.JoinLeaveListener;
+import net.octopvp.octocore.core.listeners.PunishmentListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;

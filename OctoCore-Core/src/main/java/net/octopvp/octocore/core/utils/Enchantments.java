@@ -3,7 +3,6 @@ package net.octopvp.octocore.core.utils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;

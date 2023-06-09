@@ -1,11 +1,8 @@
 package net.octopvp.octocore.core.utils.item;
 
-import net.octopvp.agile.util.XMaterial;
+import com.cryptomorin.xseries.XMaterial;
 import net.octopvp.octocore.core.utils.chat.ChatUtil;
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,9 +25,11 @@ public class WoolUtils {
 
         return WoolUtils.woolColors.indexOf(color);
     }
+
     public static XMaterial convertChatColorToWoolMaterial(net.octopvp.octocore.common.util.ChatColor color) {
         return convertChatColorToWoolMaterial(ChatUtil.convertChatColor(color));
     }
+
     public static XMaterial convertChatColorToWoolMaterial(ChatColor color) {
         return woolMaterials.get(convertChatColorToWoolData(color));
     }
