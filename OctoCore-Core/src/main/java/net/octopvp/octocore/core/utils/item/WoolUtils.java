@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class WoolUtils {
@@ -40,9 +41,9 @@ public class WoolUtils {
 
     public static int convertStringCCToWoolData(String cc) {
         AtomicReference<ChatColor> color = new AtomicReference<>();
-        if (cc == ChatColor.DARK_RED.toString()) color.set(ChatColor.RED);
-        if (cc == ChatColor.DARK_BLUE.toString()) color.set(ChatColor.BLUE);
-        if (cc == ChatColor.WHITE.toString()) color.set(ChatColor.WHITE);
+        if (Objects.equals(cc, ChatColor.DARK_RED.toString())) color.set(ChatColor.RED);
+        if (Objects.equals(cc, ChatColor.DARK_BLUE.toString())) color.set(ChatColor.BLUE);
+        if (Objects.equals(cc, ChatColor.WHITE.toString())) color.set(ChatColor.WHITE);
         woolColors.forEach(color1 -> {
             if (color1.toString() == cc)
                 color.set(color1);
