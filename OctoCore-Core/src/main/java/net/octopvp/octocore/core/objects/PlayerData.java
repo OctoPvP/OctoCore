@@ -524,7 +524,7 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public void setTag(PlayerTag tag) {
-        this.tagID = tag.getId();
+        this.tagID = tag != null ? tag.getId() : null;
         this.allowedTags = null;
     }
 
