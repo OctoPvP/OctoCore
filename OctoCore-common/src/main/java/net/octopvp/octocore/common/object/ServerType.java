@@ -2,6 +2,7 @@ package net.octopvp.octocore.common.object;
 
 public enum ServerType {
     PRACTICE("Practice"),
+    SURVIVAL("Survival"),
     HUB("Hub"),
     EVENT("Event"),
     FACTIONS("Factions"),

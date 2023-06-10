@@ -17,7 +17,9 @@ import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.manager.*;
 import net.octopvp.octocore.common.redis.RedisManager;
+import net.octopvp.octocore.common.redis.packets.PlayerDataPacket;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
 import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
@@ -29,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -149,6 +152,17 @@ public final class OctoCoreWaterfall extends Plugin {
                         throw new UnsupportedOperationException("Not implemented");
                     }
                 };
+            }
+        });
+        PlayerDataPacket.setImplementation(new PlayerDataPacket.PlayerDataPacketImplementation() {
+            @Override
+            public void runLater(Runnable runnable, Duration duration) {
+                ProxyServer.getInstance().getScheduler().schedule(OctoCoreWaterfall.this, runnable, duration.toMillis(), TimeUnit.MILLISECONDS);
+            }
+
+            @Override
+            public String getOfflineName(UUID uuid) {
+                return MojangAPIUtil.INSTANCE.getName(uuid);
             }
         });
         File file = new File(getDataFolder(), "config.yml");

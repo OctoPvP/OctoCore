@@ -5,6 +5,7 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.packets.PlayerDataPacket;
 import net.octopvp.octocore.common.redis.packets.ServerDataPacket;
 import net.octopvp.octocore.common.util.DataCache;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
@@ -45,7 +46,10 @@ public class DataUpdateThread extends Thread {
     public void update() {
         if (!plugin.isEnabled()) return;
 
-        if (OctoCoreCommon.getInstance().getRedisManager() == null) return;
+        if (OctoCoreCommon.getInstance().getRedisManager() == null) {
+            Logger.error("Redis manager is null, cannot update data");
+            return;
+        }
 
         try {
             double[] tps = Bukkit.getTPS();

@@ -3,14 +3,16 @@ package net.octopvp.octocore.master.master;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.vexsoftware.votifier.model.Vote;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import net.badbird5907.lightning.annotation.EventHandler;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.StringUtils;
+import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.redis.packets.VotePacket;
+import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.master.component.LightningHolder;
 import net.octopvp.octocore.master.master.manager.DatabaseManager;
 import net.octopvp.octocore.master.master.manager.PunishModule;
@@ -18,7 +20,6 @@ import net.octopvp.octocore.master.master.manager.RankManager;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 import net.octopvp.octocore.master.master.object.ServerStatus;
 import net.octopvp.octocore.master.master.redis.RedisPackets;
-import net.octopvp.octocore.master.master.util.AccountUtil;
 import net.octopvp.octocore.master.master.votifier.NuVotifierMaster;
 import net.octopvp.octocore.master.master.votifier.VotifierEvent;
 import net.octopvp.octocore.master.models.Setting;
@@ -31,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,7 +41,12 @@ public class OctoCoreMaster {
     private static final Logger LOG = LoggerFactory
             .getLogger(OctoCoreMaster.class);
 
-    private static final Gson GSON = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create(); public static Gson getGson() { return GSON; }
+    private static final Gson GSON = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
+
+    public static Gson getGson() {
+        return GSON;
+    }
+
     @Getter
     private static RedisManager redisManager;
     @Value("${master.redis.hostname}")
@@ -62,9 +67,6 @@ public class OctoCoreMaster {
 
     @Autowired
     private SettingRepository settingRepository;
-    @Autowired
-    private AccountUtil accountUtil;
-
     @Autowired
     private PunishModule punishModule;
     @Autowired
@@ -123,7 +125,7 @@ public class OctoCoreMaster {
 
             @Override
             public String getName(UUID uuid) {
-                return accountUtil.getName(uuid);
+                return MojangAPIUtil.INSTANCE.getName(uuid);
             }
 
             @Override
@@ -151,8 +153,6 @@ public class OctoCoreMaster {
     @Autowired
     private VotesRepository votesRepository;
 
-    @Autowired
-    private AccountUtil mojangAPI;
 
     @PostConstruct
     public void init() {
@@ -176,7 +176,7 @@ public class OctoCoreMaster {
                         Setting newSetting = new Setting("votes", "1");
                         settingRepository.save(newSetting);
                     }
-                    UUID uuid = mojangAPI.getUUID(vote.getUsername());
+                    UUID uuid = MojangAPIUtil.INSTANCE.getUUID(vote.getUsername());
                     votesRepository.save(new VoteModel(vote.getUsername(), uuid, vote.getServiceName()));
                     new VotePacket(uuid).send();
                 });

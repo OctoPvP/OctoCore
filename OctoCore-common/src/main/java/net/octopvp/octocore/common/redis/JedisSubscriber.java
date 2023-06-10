@@ -34,10 +34,13 @@ public class JedisSubscriber {
                     String type = object.get("type").getAsString();
                     JsonObject data = object.get("data").getAsJsonObject();
 
+                    boolean found = false;
                     for (RedisPacket redisPacket : listenerManager.getPackets().stream().filter(packet -> packet.getType().equalsIgnoreCase(type)).collect(Collectors.toList())) {
                         RedisPacket newPacket = OctoCoreCommon.getInstance().getGson().fromJson(data, redisPacket.getClass());
                         newPacket.onReceive(data);
+                        found = true;
                     }
+                    System.out.println("Received " + channel + ": " + found);
                 } catch (Exception e) {
                     System.out.println("Received message that could not be parsed");
                     e.printStackTrace();

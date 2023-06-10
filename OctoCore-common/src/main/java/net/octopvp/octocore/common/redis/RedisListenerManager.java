@@ -1,6 +1,7 @@
 package net.octopvp.octocore.common.redis;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.Disable;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
@@ -23,12 +24,19 @@ public class RedisListenerManager {
 
     @Getter
     private final Set<RedisPacket> packets = new HashSet<>();
+    @Getter
+    @Setter
+    private boolean commonAlreadyRegistered = false;
 
     public RedisListenerManager() {
 
     }
 
     public void init(String packageName, Object packetsClazz) {
+        if (!commonAlreadyRegistered) {
+            commonAlreadyRegistered = true;
+            init("net.octopvp.octocore.common.redis.packets", null);
+        }
         if (packetsClazz != null) {
             for (Field field : packetsClazz.getClass().getDeclaredFields()) {
                 Class<?> superClass = field.getType().getSuperclass();

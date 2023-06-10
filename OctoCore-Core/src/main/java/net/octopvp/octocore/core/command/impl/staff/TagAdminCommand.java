@@ -1,4 +1,4 @@
-package net.octopvp.octocore.core.command.impl.admin;
+package net.octopvp.octocore.core.command.impl.staff;
 
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Permission;

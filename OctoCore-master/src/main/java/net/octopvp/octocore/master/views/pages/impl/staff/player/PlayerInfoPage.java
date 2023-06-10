@@ -31,6 +31,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.function.SerializableBiConsumer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.*;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import net.octopvp.octocore.common.StringUtils;
@@ -38,11 +39,11 @@ import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
+import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.master.master.manager.PlayerManager;
 import net.octopvp.octocore.master.master.object.MasterPunishment;
 import net.octopvp.octocore.master.master.redis.impl.UndoPunishmentPacket;
-import net.octopvp.octocore.master.master.util.AccountUtil;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
 import net.octopvp.octocore.master.services.UserService;
@@ -54,7 +55,6 @@ import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.annotation.security.RolesAllowed;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -65,8 +65,6 @@ import java.util.function.Consumer;
 @RolesAllowed("ADMIN")
 @Log
 public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
-    @Autowired
-    private AccountUtil accountUtil;
     @Autowired
     private PlayerManager playerManager;
     @Autowired
@@ -83,7 +81,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
     public void setParameter(BeforeEvent event, String parameter) {
         user = userService.get();
         uuid = UUID.fromString(parameter);
-        name = accountUtil.getName(uuid);
+        name = MojangAPIUtil.INSTANCE.getName(uuid);
         location = event.getLocation();
         populate(location);
     }
@@ -253,6 +251,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
 
         return layout;
     }
+
     public void updatePunishments(PunishData data) {
         data.load();
         punishmentDataView = punishmentGrid.setItems(data.getPunishments().stream().sorted(Comparator.comparingLong(IPunishment::getAddedAt).reversed()).toList());
