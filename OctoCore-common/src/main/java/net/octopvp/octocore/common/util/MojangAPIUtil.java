@@ -1,31 +1,28 @@
-package net.octopvp.octocore.master.master.util;
+package net.octopvp.octocore.common.util;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.shanerx.mojang.Mojang;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
-@Component
-public class AccountUtil {
-    @Getter
-    private Mojang mojangAPI = new Mojang().connect();
+public class MojangAPIUtil {
+    public static final MojangAPIUtil INSTANCE = new MojangAPIUtil();
 
-    @PostConstruct
-    public void init() {
-
+    private MojangAPIUtil() {
     }
 
+    @Getter
+    private final Mojang mojangAPI = new Mojang().connect();
 
     private final UUID NULL = UUID.randomUUID();
 
-    private CacheLoader<String, UUID> uuidCacheLoader = new CacheLoader<>() {
+    private final CacheLoader<String, UUID> uuidCacheLoader = new CacheLoader<String, UUID>() {
         @Override
         public UUID load(String key) {
             UUID uuid = getUUIDFromMojang(key);
@@ -33,17 +30,17 @@ public class AccountUtil {
         }
     };
 
-    private LoadingCache<String, UUID> uuidCache = CacheBuilder.newBuilder()
+    private final LoadingCache<String, UUID> uuidCache = CacheBuilder.newBuilder()
             .expireAfterAccess(1, TimeUnit.HOURS)
             .build(uuidCacheLoader);
-    private CacheLoader<UUID, String> nameCacheLoader = new CacheLoader<>() {
+    private final CacheLoader<UUID, String> nameCacheLoader = new CacheLoader<UUID, String>() {
         @Override
         public String load(UUID key) throws Exception {
             return getNameFromMojang(key);
         }
     };
 
-    private LoadingCache<UUID, String> nameCache = CacheBuilder.newBuilder()
+    private final LoadingCache<UUID, String> nameCache = CacheBuilder.newBuilder()
             .expireAfterAccess(1, TimeUnit.HOURS)
             .build(nameCacheLoader);
 
@@ -60,6 +57,8 @@ public class AccountUtil {
         return null;
     }
 
+    private static final Pattern UUID_PATTERN = Pattern.compile("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)");
+
     @Deprecated
     public UUID getUUIDFromMojang(String name) {
         String s;
@@ -68,9 +67,7 @@ public class AccountUtil {
         } catch (Exception e) {
             return null;
         }
-        return UUID.fromString(s.replaceFirst(
-                "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"
-        ));
+        return UUID.fromString(UUID_PATTERN.matcher(s).replaceAll("$1-$2-$3-$4-$5"));
     }
 
     public String getNameFromMojang(UUID uuid) {

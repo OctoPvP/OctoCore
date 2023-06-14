@@ -5,12 +5,13 @@ import com.mongodb.client.model.Filters;
 import jakarta.annotation.PostConstruct;
 import net.octopvp.octocore.common.interfaces.manager.IPlayerManager;
 import net.octopvp.octocore.common.object.SimplePlayerData;
-import net.octopvp.octocore.master.master.util.AccountUtil;
+import net.octopvp.octocore.common.util.MojangAPIUtil;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
+
 @Component
 public class PlayerManager implements IPlayerManager {
     private MongoCollection<Document> pdataCollection = null;
@@ -18,17 +19,16 @@ public class PlayerManager implements IPlayerManager {
     @Autowired
     private DatabaseManager databaseManager;
 
-    @Autowired
-    private AccountUtil accountUtil;
-
     @PostConstruct
     public void init() {
         pdataCollection = databaseManager.getDatabase().getCollection("pdata");
     }
+
     @Override
     public Document getProfileDocument(UUID uuid) {
         return pdataCollection.find(Filters.eq("uuid", uuid.toString())).first();
     }
+
     @Override
     public MongoCollection<Document> getPdataCollection() {
         return pdataCollection;
@@ -45,7 +45,7 @@ public class PlayerManager implements IPlayerManager {
 
     @Override
     public SimplePlayerData getData(String name) {
-        return getData(accountUtil.getUUID(name));
+        return getData(MojangAPIUtil.INSTANCE.getUUID(name));
     }
 
     @Override
@@ -55,6 +55,6 @@ public class PlayerManager implements IPlayerManager {
 
     @Override
     public boolean doesDocumentExistByName(String name) {
-        return doesDocumentExistByUUID(accountUtil.getUUID(name));
+        return doesDocumentExistByUUID(MojangAPIUtil.INSTANCE.getUUID(name));
     }
 }

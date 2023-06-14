@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.menus.tag;
 
+import com.cryptomorin.xseries.XMaterial;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
@@ -26,7 +27,7 @@ public class MainTagMenu extends Menu<Gui> {
     }
 
     public GuiItem buy() {
-        return ItemBuilder.from(Material.GOLD_BARDING).name(CC.AQUA + "Buy Tags").lore(CC.SEPARATOR, CC.AQUA + "Click here to buy new tags!", CC.SEPARATOR).asGuiItem(event -> {
+        return ItemBuilder.from(XMaterial.GOLDEN_HORSE_ARMOR).name(CC.AQUA + "Buy Tags").lore(CC.SEPARATOR, CC.AQUA + "Click here to buy new tags!", CC.SEPARATOR).asGuiItem(event -> {
             SoundUtil.playError((Player) event.getWhoClicked());
             event.getWhoClicked().sendMessage(Lang.FEATURE_NOT_IMPLEMENTED.getMsg());
         });
@@ -46,7 +47,7 @@ public class MainTagMenu extends Menu<Gui> {
                 if (tag != null) tags.add(tag);
             });
             Logger.debug("Tags: " + tags.size() + " | " + tags);
-            new MyTagsMenu(tags, (Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
+            new MyTagsMenu(tags).open((Player) event.getWhoClicked());
         });
     }
 

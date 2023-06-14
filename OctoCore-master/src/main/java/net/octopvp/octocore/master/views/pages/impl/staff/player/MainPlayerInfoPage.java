@@ -7,23 +7,19 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.RolesAllowed;
+import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.common.util.Utilities;
-import net.octopvp.octocore.master.master.util.AccountUtil;
 import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.annotation.security.RolesAllowed;
 import java.util.UUID;
 
 @PageTitle("Player Info")
 @Route(value = "player/info", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
 public class MainPlayerInfoPage extends Page {
-    @Autowired
-    private AccountUtil accountUtil;
-
     TextField nameField;
 
     @Override
@@ -60,7 +56,7 @@ public class MainPlayerInfoPage extends Page {
             notification.setDuration(10 * 1000);
             notification.open();
         }
-        UUID uuid = isUUID ? UUID.fromString(name) : accountUtil.getUUID(name);
+        UUID uuid = isUUID ? UUID.fromString(name) : MojangAPIUtil.INSTANCE.getUUID(name);
         //redirect to /player/info/<uuid>
         if (uuid != null) {
             getUI().ifPresent(ui -> ui.navigate("/player/view/" + uuid));

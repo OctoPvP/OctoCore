@@ -26,8 +26,8 @@ public class ListTagsMenu extends PaginatedMenu<PaginatedGui> {
                         CC.SCOREBOARD_SEPARATOR,
                         CC.AQUA + "Tag: " + CC.WHITE + tag.getTag(),
                         CC.AQUA + "Description: " + CC.WHITE + tag.getDescription(),
-                        CC.SCOREBOARD_SEPARATOR,
-                        "&7ID: " + tag.getId()
+                        CC.SCOREBOARD_SEPARATOR
+                        // CC.GRAY + "ID: " + tag.getId()
                 ).asGuiItem();
     }
 

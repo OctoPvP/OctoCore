@@ -61,7 +61,6 @@ dependencies {
     implementation("com.vaadin:vaadin-spring-boot-starter")
     implementation("org.vaadin.stefan:html-table:1.2.0")
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
-    implementation("com.github.SparklingComet:java-mojang-api:-SNAPSHOT")
     //implementation("com.github.appreciated:apexcharts:23.0.0-LOCAL")
     implementation("org.springframework.security:spring-security-saml2-service-provider")
 }

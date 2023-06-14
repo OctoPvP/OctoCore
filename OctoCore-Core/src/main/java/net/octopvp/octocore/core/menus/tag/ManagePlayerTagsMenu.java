@@ -157,7 +157,7 @@ public class ManagePlayerTagsMenu extends Menu<PaginatedGui> {
     @Override
     public void populateGui(PaginatedGui gui, Player player) {
         gui.getFiller().fillBorder(ItemBuilder.from(Objects.requireNonNull(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem())).name(" ").asGuiItem());
-        gui.setItem(0, 0, addTagButton());
+        gui.setItem(0, addTagButton());
 
 
         for (PlayerTag allowedTag : data.getAllowedTags()) {

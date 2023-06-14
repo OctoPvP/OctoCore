@@ -2,7 +2,9 @@ package net.octopvp.octocore.common.redis.packets;
 
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.GlobalPlayer;
 import net.octopvp.octocore.common.object.MessageSettings;
@@ -21,7 +23,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PlayerDataPacket extends RedisPacket {
 
     private static final List<UUID> alreadyCreating = new CopyOnWriteArrayList<>();
-
+    @Getter
+    @Setter
     private static PlayerDataPacketImplementation implementation;
 
     private UUID uuid;
@@ -64,9 +67,11 @@ public class PlayerDataPacket extends RedisPacket {
             ServerData serverData = OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getServerData(server);
             if (serverData != null) {
                 alreadyCreating.add(uuid);
-                implementation.runLater(() -> {
-                    alreadyCreating.remove(uuid);
-                }, Duration.ofMillis(750)); // TODO remove this ASAP
+                if (implementation != null) {
+                    implementation.runLater(() -> {
+                        alreadyCreating.remove(uuid);
+                    }, Duration.ofMillis(750)); // TODO remove this ASAP
+                }
                 GlobalPlayer gPlayer = new GlobalPlayer(uuid, name);
 
                 serverData.getOnlinePlayers().add(gPlayer);
