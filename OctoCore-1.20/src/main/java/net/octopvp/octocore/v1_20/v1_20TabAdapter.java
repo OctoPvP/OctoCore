@@ -1,4 +1,4 @@
-package net.octopvp.octocore.v1_19;
+package net.octopvp.octocore.v1_20;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -17,13 +17,13 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.octopvp.octocore.core.utils.tab.TabAdapter;
 import net.octopvp.octocore.core.utils.tab.skin.SkinType;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class v1_19TabAdapter extends TabAdapter {
-    public static final v1_19TabAdapter INSTANCE = new v1_19TabAdapter();
+public class v1_20TabAdapter extends TabAdapter {
+    public static final v1_20TabAdapter INSTANCE = new v1_20TabAdapter();
     private final Map<Player, GameProfile[]> profiles = new HashMap<>();
     private final List<Player> initialized = new ArrayList<>();
 
