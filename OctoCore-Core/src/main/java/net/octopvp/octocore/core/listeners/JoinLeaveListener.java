@@ -7,7 +7,6 @@ import net.octopvp.octocore.core.database.redis.packets.player.GlobalPlayerStatu
 import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.core.manager.impl.PermissionManager;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.manager.impl.ScoreBoardManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
@@ -111,7 +110,6 @@ public class JoinLeaveListener implements Listener {
         }
         PlayerManager.getInstance().join(event.getPlayer());
 
-        ScoreBoardManager.handleJoin(event.getPlayer());
         /*
         Tasks.runLater(() -> {
             LunarClientAPI.getInstance().sendPacket(event.getPlayer(), new LCPacketServerUpdate("hypixel.net"));
