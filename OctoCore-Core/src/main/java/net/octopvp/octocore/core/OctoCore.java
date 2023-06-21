@@ -149,6 +149,7 @@ public abstract class OctoCore extends JavaPlugin {
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
+        saveDefaultConfig();
         new Logger(Bukkit.getLogger(), prefix, (message, players) -> {
             for (UUID uuid : players) {
                 Player player = Bukkit.getPlayer(uuid);

@@ -29,7 +29,7 @@ public final class ScoreboardModule implements Module, Listener {
     @Getter
     @Setter
     private Consumer<Player> joinHandler = player -> {
-        setPlayerScoreboard(player, new DefaultScoreboardHandler());
+        setPlayerScoreboard(player, OctoCore.getInstance().getServerImplementation().getScoreboardHandler());
     };
 
     public void setPlayerScoreboard(Player player, ScoreboardHandler<?> handler) {

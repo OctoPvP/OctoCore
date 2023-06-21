@@ -1,5 +1,4 @@
-#The master server on the network (can only be 1)
-server-type: MASTER
+server-type: HUB
 master:
   discord:
     enabled: true

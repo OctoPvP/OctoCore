@@ -21,6 +21,11 @@ dependencies {
 
     compileOnly("net.octopvp.octospigot:octospigot-api:1.8.8-R0.1-SNAPSHOT")
     compileOnly("net.octopvp.octospigot:octospigot-server:1.8.8-R0.1-SNAPSHOT")
+
+    implementation("net.kyori:adventure-text-minimessage:4.14.0")
+    implementation("net.kyori:adventure-api:4.14.0")
+    implementation("net.kyori:adventure-text-serializer-legacy:4.14.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.0")
 }
 tasks {
     withType<ProcessResources> {

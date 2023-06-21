@@ -14,7 +14,7 @@ public class TrashCommand {
     @Permission(Permissions.TRASH)
     @PlayerOnly
     public CommandResult execute(@Sender Player sender) {
-        sender.getPlayer().openInventory(Bukkit.createInventory(null, 54));
+        sender.getPlayer().openInventory(Bukkit.createInventory(null, 54, "Trash"));
         return CommandResult.SUCCESS;
     }
 }

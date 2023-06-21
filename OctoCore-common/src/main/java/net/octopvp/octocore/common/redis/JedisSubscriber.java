@@ -40,7 +40,7 @@ public class JedisSubscriber {
                         newPacket.onReceive(data);
                         found = true;
                     }
-                    System.out.println("Received " + channel + ": " + found);
+                    // System.out.println("Received " + channel + ": " + found);
                 } catch (Exception e) {
                     System.out.println("Received message that could not be parsed");
                     e.printStackTrace();
