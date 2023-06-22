@@ -1,6 +1,7 @@
 package net.octopvp.octocore.core.utils.msg;
 
 import net.octopvp.octocore.common.StringUtils;
+import net.octopvp.octocore.common.object.MessageSettings;
 import net.octopvp.octocore.common.util.CC;
 
 import java.util.ArrayList;
@@ -44,7 +45,8 @@ public enum Lang {
 
     TOGGLE_ON("&aToggled %1 ON!"), TOGGLE_OFF("&aToggled %1 &cOFF"),
 
-    GLOBAL_CHAT_IS_DISABLED("&cYou have global chat disabled! do /settings to enable it!");
+    GLOBAL_CHAT_IS_DISABLED("&cYou have global chat disabled! do /settings to enable it!"),
+    IGNORE_LIST_FULL("&cYou cannot ignore more than " + MessageSettings.MAX_IGNORE_SIZE + " players!"),;
     private final String msg;
 
     Lang(String msg) {

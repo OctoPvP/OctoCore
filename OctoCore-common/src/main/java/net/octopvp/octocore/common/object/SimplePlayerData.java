@@ -124,9 +124,9 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         this.messageSettings.getIgnoreList().clear();
         this.messageSettings.setSoundsEnabled(document.getBoolean("sounds"));
         this.messageSettings.setGlobalChat(document.getBoolean("globalChat"));
-        this.messageSettings.setIgnoreList(gson.fromJson(document.getString("ignoreList"), GsonType.STRING_LIST));
+        this.messageSettings.setIgnoreList(gson.fromJson(document.getString("ignoreList"), GsonType.STRING_UUID_MAP));
 
-        this.messageSettings.getIgnoreList().removeIf(u -> u == null || u.isEmpty() || u.equalsIgnoreCase(this.name));
+        this.messageSettings.getIgnoreList().keySet().removeIf(Objects::isNull);
 
         String mfaDataString = document.getString("mfaData");
         if (mfaDataString != null && !mfaDataString.isEmpty()) {

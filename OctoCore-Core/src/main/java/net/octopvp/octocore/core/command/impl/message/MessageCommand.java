@@ -4,7 +4,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.JoinStrings;
 import net.octopvp.commander.annotation.Name;
@@ -15,6 +14,7 @@ import net.octopvp.commander.exception.InvalidArgsException;
 import net.octopvp.commander.exception.MessageException;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.MessageSettings;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
@@ -22,15 +22,12 @@ import net.octopvp.octocore.core.database.redis.packets.player.MessagePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
-import net.octopvp.octocore.core.utils.chat.Clickable;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 public class MessageCommand {
@@ -42,32 +39,7 @@ public class MessageCommand {
         if (target == null) {
             return CommandResult.PLAYER_NOT_FOUND;
         }
-        boolean ignoreBypass = sender.hasPermission(Permissions.IGNORE_BYPASS);
-
-        if (senderPlayer.getUuid().equals(target.getUuid())) {
-            sender.sendMessage(Lang.CANNOT_MESSAGE_SELF.toString());
-            return CommandResult.SUCCESS;
-        }
-        if (target.isIgnoring(senderPlayer.getName()) && !ignoreBypass) {
-            sender.sendMessage(Lang.MSG_IGNORED.toString());
-            return CommandResult.SUCCESS;
-        }
-        if (senderPlayer.isIgnoring(target.getName()) && !ignoreBypass) {
-            sender.sendMessage(Lang.CANNOT_MESSAGE_SENDER_IGNORED.toString());
-            return CommandResult.SUCCESS;
-        }
-        if (target.getMessageSettings().isMessagesOff() && !ignoreBypass) {
-            sender.sendMessage(Lang.MSG_DISABLED.toString());
-            return CommandResult.SUCCESS;
-        }
-        if (senderPlayer.getMessageSettings().isMessagesOff() && !ignoreBypass) {
-            sender.sendMessage(Lang.SELF_MSG_DISABLED.toString());
-            return CommandResult.SUCCESS;
-        }
-
-        new MessagePacket(message, senderPlayer.getColoredName(), target.getColoredName(), senderPlayer.getUuid(), target.getUuid()).send();
-
-        return CommandResult.SUCCESS;
+        return execMsg(sender, message, target, senderPlayer);
     }
 
     @Command(name = "reply", aliases = "r")
@@ -90,16 +62,21 @@ public class MessageCommand {
             return CommandResult.PLAYER_NOT_FOUND;
         }
         GlobalPlayer senderPlayer = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(sender.getUniqueId());
+        return execMsg(sender, message, target, senderPlayer);
+    }
+
+    @NotNull
+    private CommandResult execMsg(@Sender Player sender, @JoinStrings String message, GlobalPlayer target, GlobalPlayer senderPlayer) {
         boolean ignoreBypass = sender.hasPermission(Permissions.IGNORE_BYPASS);
         if (senderPlayer.getUuid().equals(target.getUuid())) {
             sender.sendMessage(Lang.CANNOT_MESSAGE_SELF.toString());
             return CommandResult.SUCCESS;
         }
-        if (target.isIgnoring(senderPlayer.getName()) && !ignoreBypass) {
+        if (target.isIgnoring(senderPlayer.getUniqueId()) && !ignoreBypass) {
             sender.sendMessage(Lang.MSG_IGNORED.toString());
             return CommandResult.SUCCESS;
         }
-        if (senderPlayer.isIgnoring(target.getName()) && !ignoreBypass) {
+        if (senderPlayer.isIgnoring(target.getUniqueId()) && !ignoreBypass) {
             sender.sendMessage(Lang.CANNOT_MESSAGE_SENDER_IGNORED.toString());
             return CommandResult.SUCCESS;
         }
@@ -126,6 +103,10 @@ public class MessageCommand {
             throw new MessageException(Lang.ERROR.toString());
         }
         if (args[0].equalsIgnoreCase("add")) {
+            if (data.getMessageSettings().getIgnoreList().size() >= MessageSettings.MAX_IGNORE_SIZE) {
+                player.sendMessage(Lang.IGNORE_LIST_FULL.toString());
+                return;
+            }
             if (args.length < 2) {
                 throw new InvalidArgsException(ci);
             }

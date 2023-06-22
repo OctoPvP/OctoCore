@@ -92,8 +92,8 @@ public class GlobalPlayer {
         return false;
     }
 
-    public boolean isIgnoring(String name) {
-        if (name == null) return false;
-        return messageSettings.getIgnoreList().stream().anyMatch(u -> u.equalsIgnoreCase(name));
+    public boolean isIgnoring(UUID player) {
+        if (player == null) return false;
+        return messageSettings.isIgnoring(player);
     }
 }

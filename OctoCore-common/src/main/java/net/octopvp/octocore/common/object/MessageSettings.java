@@ -8,6 +8,7 @@ import java.util.*;
 @Getter
 @Setter
 public class MessageSettings {
+    public static final int MAX_IGNORE_SIZE = 100;
     private UUID lastMessage;
     private Map<UUID, String> ignoreList = new HashMap<>();
     private boolean soundsEnabled = true;
