@@ -36,7 +36,7 @@ public class SeenCommand {
         long hours = (diff % 86400000) / 3600000;
         long minutes = (diff % 3600000) / 60000;
 
-        sender.sendMessage(CC.translate(StringUtils.replacePlaceholders("&a%1 was last seen &6%2 day(s), %3 hours, %4 minutes ago.", op.getName(), days, hours, minutes)));
+        sender.sendMessage(CC.translate(StringUtils.replacePlaceholders("&a%1 was last seen &6%2 day(s), %3 hours, %4 minutes ago.", offlineInfo.getName(), days, hours, minutes)));
         return CommandResult.SUCCESS;
     }
 }

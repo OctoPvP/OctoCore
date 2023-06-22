@@ -201,7 +201,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         document.put("addresses", StringUtils.getStringFromList(this.addresses));
         document.put("socialSpy", socialSpy);
 
-        document.put("ignoreList", OctoCoreCommon.getInstance().getGson().toJson(this.messageSettings.getIgnoreList(), GsonType.STRING_LIST));
+        document.put("ignoreList", OctoCoreCommon.getInstance().getGson().toJson(this.messageSettings.getIgnoreList(), GsonType.STRING_UUID_MAP));
 
         document.put("globalChat", messageSettings.isGlobalChat());
         document.put("sounds", messageSettings.isSoundsEnabled());
