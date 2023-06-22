@@ -79,7 +79,13 @@ public class MojangAPIUtil {
     }
 
     public String getName(UUID uuid) {
-        if (uuid == null) throw new NullPointerException("UUID cannot be null");
+        if (uuid.getMostSignificantBits() == 0) { // bedrock player
+            try {
+                return XUIDUtils.getGamerTag(uuid.getLeastSignificantBits()).get(); // we love blocking the thread
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
         try {
             return nameCache.get(uuid);
         } catch (ExecutionException e) {

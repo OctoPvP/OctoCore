@@ -21,18 +21,22 @@ public class PlayerName extends HorizontalLayout {
     private Div statusCircle;
 
     public PlayerName(String name) {
-        this(name, false, -1);
+        this(name, false, -1, false);
     }
 
-    public PlayerName(String name, boolean showOnlineIcon) {
-        this(name, showOnlineIcon, -1);
+    public PlayerName(String name, boolean bedrock) {
+        this(name, false, -1, bedrock);
     }
 
-    public PlayerName(String name, boolean showOnlineIcon, boolean grid) {
-        this(name, showOnlineIcon, grid ? 0.35 : -1);
+    public PlayerName(String name, boolean showOnlineIcon, boolean bedrock) {
+        this(name, showOnlineIcon, -1, bedrock);
     }
 
-    public PlayerName(String name, boolean showOnline, double paddingEm) {
+    public PlayerName(String name, boolean showOnlineIcon, boolean grid, boolean bedrock) {
+        this(name, showOnlineIcon, grid ? 0.35 : -1, bedrock);
+    }
+
+    public PlayerName(String name, boolean showOnline, double paddingEm, boolean bedrock) {
         this.playerName = name;
         this.showOnlineIcon = showOnline;
         Div div = new Div();
@@ -69,7 +73,7 @@ public class PlayerName extends HorizontalLayout {
         } else {
             div.add(image);
         }
-        Span span = new Span(name);
+        Span span = new Span(bedrock ? "*" : name);
         if (paddingEm > 0) {
             span.getStyle().set("padding-top", paddingEm + "em");
         }

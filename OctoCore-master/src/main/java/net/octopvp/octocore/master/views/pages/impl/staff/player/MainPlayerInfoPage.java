@@ -2,6 +2,7 @@ package net.octopvp.octocore.master.views.pages.impl.staff.player;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
@@ -10,23 +11,25 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.common.util.Utilities;
+import net.octopvp.octocore.common.util.XUIDUtils;
 import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 @PageTitle("Player Info")
 @Route(value = "player/info", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
 public class MainPlayerInfoPage extends Page {
     TextField nameField;
-
+    Checkbox bedrockCheckbox;
     @Override
     public void init() {
         nameField = new TextField();
         nameField.setWidthFull();
-        nameField.setLabel("Name/UUID");
+        nameField.setLabel("Name/UUID/XUID");
         nameField.setRequired(true);
         nameField.addClassNames("centered");
         nameField.addKeyUpListener(event -> {
@@ -45,21 +48,30 @@ public class MainPlayerInfoPage extends Page {
         button.addClickListener(event -> {
             submit();
         });
-        add(nameField, button);
+        bedrockCheckbox = new Checkbox("Bedrock Player");
+        add(nameField, button, bedrockCheckbox);
     }
 
     public void submit() {
         String name = nameField.getValue();
+        if (name.isEmpty()) return;
         boolean isUUID = Utilities.isUUID(name);
         if (!isUUID) {
             Notification notification = NotificationUtils.create("Searching for player, this may take a second...", NotificationVariant.LUMO_PRIMARY);
             notification.setDuration(10 * 1000);
             notification.open();
         }
-        UUID uuid = isUUID ? UUID.fromString(name) : MojangAPIUtil.INSTANCE.getUUID(name);
+        boolean bedrockCheckbox = this.bedrockCheckbox.getValue();
+        UUID uuid = null;
+        try {
+            uuid = isUUID ? UUID.fromString(name) : bedrockCheckbox ? new UUID(0, XUIDUtils.getXUID(name.replace("*", "")).get()) :  MojangAPIUtil.INSTANCE.getUUID(name);
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
         //redirect to /player/info/<uuid>
         if (uuid != null) {
-            getUI().ifPresent(ui -> ui.navigate("/player/view/" + uuid));
+            UUID finalUuid = uuid;
+            getUI().ifPresent(ui -> ui.navigate("/player/view/" + finalUuid));
         } else {
             Notification notification = NotificationUtils.create("Player not found!", NotificationVariant.LUMO_ERROR);
             notification.setDuration(10 * 1000);

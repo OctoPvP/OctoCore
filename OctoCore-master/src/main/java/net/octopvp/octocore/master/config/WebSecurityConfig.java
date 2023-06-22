@@ -73,12 +73,14 @@ public class WebSecurityConfig extends VaadinWebSecurity {
                 .invalidateHttpSession(false)
                 .clearAuthentication(false)
         ;
+        /*
         http.addFilterAfter((request, response, chain) -> {
             if (request instanceof HttpServletRequest req) {
                 System.out.println("Request: " + (req.getMethod() + " " + req.getRequestURI()));
             }
             chain.doFilter(request, response);
         }, Saml2WebSsoAuthenticationFilter.class);
+         */
         setLoginView(http, "/login");
         // setLoginView(http, LoginPage.class);
         DefaultSecurityFilterChain chain = http.build();
