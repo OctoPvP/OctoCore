@@ -73,7 +73,7 @@ public class PlayerName extends HorizontalLayout {
         } else {
             div.add(image);
         }
-        Span span = new Span(bedrock ? "*" : name);
+        Span span = new Span(bedrock ? "*" + name : name);
         if (paddingEm > 0) {
             span.getStyle().set("padding-top", paddingEm + "em");
         }
