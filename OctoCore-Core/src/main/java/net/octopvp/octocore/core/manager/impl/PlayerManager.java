@@ -19,6 +19,7 @@ import net.octopvp.octocore.core.database.redis.packets.player.GlobalPlayerStatu
 import net.octopvp.octocore.core.database.redis.packets.staff.StaffLeavePacket;
 import net.octopvp.octocore.core.manager.Manager;
 import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -87,8 +88,9 @@ public class PlayerManager extends Manager implements IPlayerManager {
         }
         data = getOfflineData(uuid);
         if (data == null && create) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-            data = createProfile(uuid, player.getName());
+            // OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+            OfflineHelpers.OfflineInfo info = OfflineHelpers.getOfflineInfo(uuid);
+            data = createProfile(uuid, info.getName());
             data.getData();
         }
         return data;

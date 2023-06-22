@@ -15,6 +15,7 @@ import net.octopvp.octocore.core.database.redis.packets.player.AltUpdatePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -51,10 +52,11 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
         Player player = Bukkit.getPlayer(name);
 
         if (player == null) {
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
+            // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
+            UUID uuid = OfflineHelpers.getOfflinePlayerUUID(this.name);
             List<Document> punishments = PunishModule.getPunishments().find().filter(Filters.and(
-                            Filters.eq("uuid", offlinePlayer.getUniqueId().toString()),
-                            activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", offlinePlayer.getUniqueId().toString())))
+                            Filters.eq("uuid", uuid.toString()),
+                            activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", uuid.toString())))
                     .into(new ArrayList<>());
 
             for (Document document : punishments) {
@@ -66,7 +68,7 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
                 this.uniqueId = UUID.fromString(punishments.get(0).getString("uuid"));
                 this.address = punishments.get(0).getString("BannedIP");
             } else {
-                this.uniqueId = offlinePlayer.getUniqueId();
+                this.uniqueId = uuid;
                 this.address = PlayerManager.getInstance().getAddress(this.uniqueId);
             }
             punishments.forEach(document -> {

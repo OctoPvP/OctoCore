@@ -8,6 +8,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
@@ -30,14 +31,15 @@ public class StaffRollBackCommand {
     @Permission(Permissions.PUNISHMENT_STAFFROLLBACK)
     public CommandResult execute(CommandSender sender, @Name("player") String targetStr, @Duration long time, @Required @Name("bans/mutes/blacklists/warns") String type) {
         Tasks.runAsync(() -> {
-            OfflinePlayer target = Bukkit.getOfflinePlayer(PlayerManager.getInstance().getFixedName(targetStr));
+            // OfflinePlayer target = Bukkit.getOfflinePlayer(PlayerManager.getInstance().getFixedName(targetStr));
+            OfflineHelpers.OfflineInfo target = OfflineHelpers.getOfflineInfo(targetStr);
             if (!PlayerManager.getInstance().doesDocumentExistByUUID(target.getUniqueId()) && !targetStr.equalsIgnoreCase("console")) {
                 sender.sendMessage(Lang.COULD_NOT_FIND_DATA.toString());
                 return;
             }
             long check = System.currentTimeMillis() - time;
             if (type.equalsIgnoreCase("bans")) {
-                sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg(target.getName(), "bans"));
+                sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg(target.getDisplayName(), "bans"));
                 AtomicInteger expired = new AtomicInteger(0);
                 AtomicInteger active = new AtomicInteger(0);
                 PunishModule.getPunishments().find(Filters.eq("type", PunishmentType.BAN.toString())).into(new ArrayList<>()).forEach(document -> {
@@ -57,11 +59,11 @@ public class StaffRollBackCommand {
                     }
                 });
                 if (expired.get() + active.get() == 0) {
-                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(), "bans"));
+                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getDisplayName(), "bans"));
                     return;
                 }
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPED.getMsg(
-                        target.getName(),
+                        target.getDisplayName(),
                         expired.get() + active.get(),
                         "ban",
                         active.get(),
@@ -70,7 +72,7 @@ public class StaffRollBackCommand {
                 return;
             }
             if (type.equalsIgnoreCase("mutes")) {
-                sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg(target.getName(), "mutes"));
+                sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg(target.getDisplayName(), "mutes"));
                 AtomicInteger expired = new AtomicInteger(0);
                 AtomicInteger active = new AtomicInteger(0);
                 PunishModule.getPunishments().find(Filters.eq("type", PunishmentType.MUTE.toString())).into(new ArrayList<>()).forEach(document -> {
@@ -90,11 +92,11 @@ public class StaffRollBackCommand {
                     }
                 });
                 if (expired.get() + active.get() == 0) {
-                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(), "mutes"));
+                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getDisplayName(), "mutes"));
                     return;
                 }
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPED.getMsg(
-                        target.getName(),
+                        target.getDisplayName(),
                         expired.get() + active.get(),
                         "mute",
                         active.get(),
@@ -103,7 +105,7 @@ public class StaffRollBackCommand {
                 return;
             }
             if (type.equalsIgnoreCase("blacklists")) {
-                sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg(target.getName(), "blacklists"));
+                sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg(target.getDisplayName(), "blacklists"));
                 AtomicInteger expired = new AtomicInteger(0);
                 AtomicInteger active = new AtomicInteger(0);
                 PunishModule.getPunishments().find(Filters.eq("type", PunishmentType.BLACKLIST.toString())).into(new ArrayList<>()).forEach(document -> {
@@ -123,11 +125,11 @@ public class StaffRollBackCommand {
                     }
                 });
                 if (expired.get() + active.get() == 0) {
-                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(), "blacklists"));
+                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getDisplayName(), "blacklists"));
                     return;
                 }
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPED.getMsg(
-                        target.getName(),
+                        target.getDisplayName(),
                         expired.get() + active.get(),
                         "blacklist",
                         active.get(),
@@ -136,7 +138,7 @@ public class StaffRollBackCommand {
                 return;
             }
             if (type.equalsIgnoreCase("warns")) {
-                sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg(target.getName(), "warns"));
+                sender.sendMessage(Lang.STAFF_ROLLBACK_WIPING.getMsg(target.getDisplayName(), "warns"));
                 AtomicInteger expired = new AtomicInteger(0);
                 AtomicInteger active = new AtomicInteger(0);
                 PunishModule.getPunishments().find(Filters.eq("type", PunishmentType.WARN.toString())).into(new ArrayList<>()).forEach(document -> {
@@ -156,11 +158,11 @@ public class StaffRollBackCommand {
                     }
                 });
                 if (expired.get() + active.get() == 0) {
-                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getName(), "warns"));
+                    sender.sendMessage(Lang.STAFF_ROLLBACK_DONT_HAVE_HISTORY.getMsg(target.getDisplayName(), "warns"));
                     return;
                 }
                 sender.sendMessage(Lang.STAFF_ROLLBACK_WIPED.getMsg(
-                        target.getName(),
+                        target.getDisplayName(),
                         expired.get() + active.get(),
                         "warn",
                         active.get(),

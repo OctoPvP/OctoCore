@@ -21,7 +21,8 @@ public class Buttons {
                     .name(CC.GRAY + "Loading...")
                     .asGuiItem();
         }
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerData.getUuid());
+        // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerData.getUuid());
+        OfflineHelpers.OfflineInfo offlinePlayer = OfflineHelpers.getOfflineInfo(playerData.getUuid());
         List<String> lore = new ArrayList<>(
                 Arrays.asList(
                         CC.SEPARATOR,
@@ -41,12 +42,12 @@ public class Buttons {
                 lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.AQUA + "Never played before!");
             }
         }
-        lore.add(CC.AQUA + "First Joined" + CC.GRAY + ": " + CC.AQUA + (offlinePlayer.getFirstPlayed() != 0 ? DateUtils.getDate(offlinePlayer.getFirstPlayed()) : "Never played before!"));
+        lore.add(CC.AQUA + "First Joined" + CC.GRAY + ": " + CC.AQUA + (playerData.getFirstJoin() != 0 ? DateUtils.getDate(playerData.getFirstJoin()) : "Never played before!"));
         lore.add(CC.SEPARATOR);
         return ItemBuilder.skull()
                 .name(CC.AQUA + playerData.getName())
                 .lore(lore.stream().map(Legacy.SERIALIZER::deserialize).collect(Collectors.toList()))
-                .owner(offlinePlayer)
+                .owner(Bukkit.getOfflinePlayer(offlinePlayer.getUniqueId()))
                 .asGuiItem();
     }
 

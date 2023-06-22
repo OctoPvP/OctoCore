@@ -7,8 +7,7 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.command.CommandResult;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
@@ -21,12 +20,13 @@ public class SeenCommand {
             return CommandResult.INVALID_ARGS;
         }
         String name = args[0];
-        OfflinePlayer op = Bukkit.getOfflinePlayer(name);
+        // OfflinePlayer op = Bukkit.getOfflinePlayer(name);
+        OfflineHelpers.OfflineInfo offlineInfo = OfflineHelpers.getOfflineInfo(name);
         if (OctoCore.getInstance().getServerManager().isPlayerOnline(name)) {
-            sender.sendMessage(CC.GREEN + op.getName() + " is currently online!");
+            sender.sendMessage(CC.GREEN + offlineInfo.getDisplayName() + " is currently online!");
             return CommandResult.SUCCESS;
         }
-        UUID id = op.getUniqueId();
+        UUID id = offlineInfo.getUuid();
         long lastSeen = OctoCore.getInstance().getPlayerManager().getLastSeen(id), now = System.currentTimeMillis();
         if (lastSeen == -1) {
             return CommandResult.INVALID_PLAYER;

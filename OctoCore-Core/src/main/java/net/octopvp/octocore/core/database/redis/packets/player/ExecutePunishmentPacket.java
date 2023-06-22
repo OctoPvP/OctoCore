@@ -218,7 +218,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
     private String addedByName;
     private String server;
     private PunishmentType type;
-    private boolean IPRelative;
+    private boolean ipRelative;
     private String punishment;
 
     public static void altKick(List<Alt> alts, String name, String type, boolean permanent, String niceDuration, String reason, String sender, String expire) {
@@ -251,7 +251,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                 playerData = new PlayerData(uuid, name);
                 playerData.loadAlts(uuid);
             }
-            Logger.debug("Type: %1\nPermanent: %2\nSilent: %3\nIPRelative: %4", type, permanent, silent, IPRelative);
+            Logger.debug("Type: %1\nPermanent: %2\nSilent: %3\nIPRelative: %4", type, permanent, silent, ipRelative);
             if (type == PunishmentType.BAN) {
                 Tasks.run(() -> {
                     Player player = Bukkit.getPlayer(uuid);
@@ -268,7 +268,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                                         true)).toString());
                     }
                 });
-                if (IPRelative) {
+                if (ipRelative) {
                     altKick(playerData.getAltsSafely(), name, "BAN", permanent, niceDuration, reason, sender, niceExpire);
                 }
             }
@@ -344,13 +344,13 @@ public class ExecutePunishmentPacket extends RedisPacket {
             String typeStr;
             switch (type) {
                 case BAN:
-                    typeStr = (temp ? Lang.TEMP : Lang.PERM) + " " + (IPRelative ? "ip-" : "") + "banned";
+                    typeStr = (temp ? Lang.TEMP : Lang.PERM) + " " + (ipRelative ? "ip-" : "") + "banned";
                     break;
                 case KICK:
                     typeStr = "kicked";
                     break;
                 case MUTE:
-                    typeStr = (temp ? Lang.TEMP : Lang.PERM) + " " + (IPRelative ? "ip-" : "") + "muted";
+                    typeStr = (temp ? Lang.TEMP : Lang.PERM) + " " + (ipRelative ? "ip-" : "") + "muted";
                     break;
                 case WARN:
                     typeStr = "warned";

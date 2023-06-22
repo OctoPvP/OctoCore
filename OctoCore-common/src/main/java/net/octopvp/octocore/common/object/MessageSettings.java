@@ -3,21 +3,19 @@ package net.octopvp.octocore.common.object;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
 public class MessageSettings {
     private UUID lastMessage;
-    private List<String> ignoreList = new ArrayList<>();
+    private Map<UUID, String> ignoreList = new HashMap<>();
     private boolean soundsEnabled = true;
     private boolean globalChat = true;
     private boolean messagesOff = false;
 
-    public boolean isIgnoring(String name) {
-        if (name == null) return false;
-        return this.ignoreList.stream().anyMatch(u -> u.equalsIgnoreCase(name));
+    public boolean isIgnoring(UUID player) {
+        if (player == null) return false;
+        return this.ignoreList.containsKey(player);
     }
 }

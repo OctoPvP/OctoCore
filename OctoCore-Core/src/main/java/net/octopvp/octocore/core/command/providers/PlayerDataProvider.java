@@ -13,6 +13,7 @@ import net.octopvp.octocore.core.command.annotation.CreateData;
 import net.octopvp.octocore.core.command.annotation.OnlineOnly;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -40,7 +41,8 @@ public class PlayerDataProvider implements Provider<PlayerData> {
             return null;
         }
         String arg = args.pop();
-        OfflinePlayer player = Bukkit.getOfflinePlayer(arg);
+        // OfflinePlayer player = Bukkit.getOfflinePlayer(arg);
+        OfflineHelpers.OfflineInfo player = OfflineHelpers.getOfflineInfo(arg);
         PlayerData data = PlayerManager.getInstance().getData(player.getUniqueId());
         if (data == null && parameterInfo.getParameter().isAnnotationPresent(OnlineOnly.class)) {
             throw new CommandException("Player is not online.");

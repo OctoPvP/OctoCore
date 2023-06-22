@@ -29,6 +29,7 @@ import net.octopvp.octocore.core.manager.impl.RankManager;
 import net.octopvp.octocore.core.manager.impl.TagManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -202,7 +203,8 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public String requestName() {
-        return Bukkit.getOfflinePlayer(uuid).getName();
+        // return Bukkit.getOfflinePlayer(uuid).getName();
+        return OfflineHelpers.getOfflineInfo(uuid).getName();
     }
 
     public Node getNode(String perm) {

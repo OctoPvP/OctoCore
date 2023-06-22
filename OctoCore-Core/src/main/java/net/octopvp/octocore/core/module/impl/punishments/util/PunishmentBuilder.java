@@ -3,6 +3,7 @@ package net.octopvp.octocore.core.module.impl.punishments.util;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -15,7 +16,7 @@ public class PunishmentBuilder {
         this.punishment = new Punishment(data, type);
     }
 
-    public PunishmentBuilder(OfflinePlayer target, PunishmentType type) {
+    public PunishmentBuilder(OfflineHelpers.OfflineInfo target, PunishmentType type) {
         if (target == null) {
             throw new IllegalArgumentException("Target cannot be null!");
         }
@@ -27,7 +28,7 @@ public class PunishmentBuilder {
     }
 
     public PunishmentBuilder(UUID target, PunishmentType type) {
-        this(Bukkit.getOfflinePlayer(target), type);
+        this(OfflineHelpers.getOfflineInfo(target), type);
     }
 
     public PunishmentBuilder setActive(boolean active) {

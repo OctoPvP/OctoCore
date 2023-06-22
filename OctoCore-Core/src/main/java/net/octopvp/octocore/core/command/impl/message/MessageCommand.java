@@ -1,11 +1,18 @@
 package net.octopvp.octocore.core.command.impl.message;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.JoinStrings;
 import net.octopvp.commander.annotation.Name;
 import net.octopvp.commander.annotation.Sender;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
+import net.octopvp.commander.command.CommandInfo;
+import net.octopvp.commander.exception.InvalidArgsException;
+import net.octopvp.commander.exception.MessageException;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.GlobalPlayer;
 import net.octopvp.octocore.common.object.Permissions;
@@ -14,6 +21,7 @@ import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.database.redis.packets.player.MessagePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.chat.Clickable;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
@@ -21,6 +29,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class MessageCommand {
@@ -107,58 +117,68 @@ public class MessageCommand {
 
     @Command(name = "ignore", description = "Ignore a player", usage = "<add/remove/list>")
     @PlayerOnly
-    public CommandResult executeIgnore(@Sender Player player, String[] args) {
+    public void executeIgnore(@Sender Player player, String[] args, CommandInfo ci) {
         if (args.length < 1) {
-            return CommandResult.INVALID_ARGS;
+            throw new InvalidArgsException(ci);
         }
         PlayerData data = PlayerManager.getInstance().getData(player);
         if (data == null) {
-            return CommandResult.ERROR;
+            throw new MessageException(Lang.ERROR.toString());
         }
         if (args[0].equalsIgnoreCase("add")) {
             if (args.length < 2) {
-                return CommandResult.INVALID_ARGS;
+                throw new InvalidArgsException(ci);
             }
             if (args[1].equalsIgnoreCase(player.getName())) {
                 player.sendMessage(Lang.CANNOT_IGNORE_SELF.toString());
-                return CommandResult.SUCCESS;
+                return;
             }
             Tasks.runAsync(() -> {
-                OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                // OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                OfflineHelpers.OfflineInfo target = OfflineHelpers.getOfflineInfo(args[1]);
                 if (PlayerManager.getInstance().doesDocumentExistByName(target.getName())) {
-                    data.getMessageSettings().getIgnoreList().add(target.getName());
-                    player.sendMessage(Lang.SUCCESS_IGNORE.getMsg(target.getName()));
+                    data.getMessageSettings().getIgnoreList().put(target.getUuid(), target.getDisplayName());
+                    player.sendMessage(Lang.SUCCESS_IGNORE.getMsg(target.getDisplayName()));
                 } else {
                     player.sendMessage(Lang.PLAYER_NOT_FOUND.toString());
                 }
             });
-            return CommandResult.SUCCESS;
+            return;
         }
         if (args[0].equalsIgnoreCase("remove")) {
-            if (!data.getMessageSettings().isIgnoring(args[1])) {
-                player.sendMessage(Lang.NOT_IGNORED.toString());
-                return CommandResult.SUCCESS;
-            }
-            data.getMessageSettings().getIgnoreList().removeIf(name -> name.equalsIgnoreCase(args[1]));
-            player.sendMessage(Lang.SUCCESS_UNIGNORE.getMsg(args[1]));
-            return CommandResult.SUCCESS;
+            Tasks.runAsync(() -> {
+                OfflineHelpers.OfflineInfo target = OfflineHelpers.getOfflineInfo(args[1]);
+                if (!data.getMessageSettings().isIgnoring(target.getUuid())) {
+                    player.sendMessage(Lang.NOT_IGNORED.toString());
+                    return;
+                }
+                // data.getMessageSettings().getIgnoreList().removeIf(name -> name.equalsIgnoreCase(args[1]));
+                data.getMessageSettings().getIgnoreList().remove(target.getUuid());
+                player.sendMessage(Lang.SUCCESS_UNIGNORE.getMsg(args[1]));
+                return;
+            });
         }
         if (args[0].equalsIgnoreCase("list")) {
             if (data.getMessageSettings().getIgnoreList().size() > 0) {
                 player.sendMessage(CC.SEPARATOR);
                 player.sendMessage(Lang.IGNORE_LIST_HEADER.getMsg());
-                for (String s : data.getMessageSettings().getIgnoreList()) {
-                    TextComponent component = new Clickable()
-                            .add("&7 - &e" + s, CC.YELLOW + "Click to un-ignore this player!", "/ignore remove " + s);
-                    player.spigot().sendMessage(component);
+                String[] list = data.getMessageSettings().getIgnoreList().values().toArray(new String[0]);
+                Arrays.sort(list);
+                for (String s : list) {
+                    // TextComponent component = new Clickable()
+                    //        .add("&7 - &e" + s, CC.YELLOW + "Click to un-ignore this player!", "/ignore remove " + s);
+                    Component component = Component.text(" - ", NamedTextColor.GRAY)
+                            .append(Component.text(s, NamedTextColor.YELLOW)
+                                    .clickEvent(ClickEvent.runCommand("/ignore remove " + s))
+                                    .hoverEvent(HoverEvent.showText(Component.text("Click to un-ignore this player!", NamedTextColor.YELLOW))));
+                    player.sendMessage(component);
                 }
                 player.sendMessage(CC.SEPARATOR);
             } else {
                 player.sendMessage(Lang.NOT_IGNORING_ANYONE.toString());
             }
-            return CommandResult.SUCCESS;
+            return;
         }
-        return CommandResult.INVALID_ARGS;
+        throw new InvalidArgsException(ci);
     }
-
 }

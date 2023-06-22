@@ -8,6 +8,7 @@ import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.chat.Clickable;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Bukkit;
@@ -40,9 +41,9 @@ public class UndoPunishmentPacket extends RedisPacket {
             t = "punished";
         }
 
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(target);
-
-        String userName = PlayerManager.getInstance().getFormattedName(offlinePlayer.getName());
+        // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(target);
+        OfflineHelpers.OfflineInfo info = OfflineHelpers.getOfflineInfo(target);
+        String userName = PlayerManager.getInstance().getFormattedName(info.getName());
         Clickable clickable = new Clickable((silent ? Lang.PUNISHMENT_SILENT.toString() : "") + Lang.PUNISHMENT_UNDO.getMsg(
                 userName,
                 t,

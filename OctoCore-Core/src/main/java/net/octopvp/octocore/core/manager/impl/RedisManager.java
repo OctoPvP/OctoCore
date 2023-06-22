@@ -7,6 +7,7 @@ import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.database.DatabaseManager;
 import net.octopvp.octocore.core.database.redis.packets.server.ServerOfflinePacket;
 import net.octopvp.octocore.core.manager.Manager;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import org.bukkit.Bukkit;
 import redis.clients.jedis.Jedis;
 
@@ -38,7 +39,7 @@ public class RedisManager extends Manager {
 
             @Override
             public String getOfflineName(UUID uuid) {
-                return Bukkit.getOfflinePlayer(uuid).getName();
+                return OfflineHelpers.getOfflineInfo(uuid).getDisplayName(); // Bukkit.getOfflinePlayer(uuid).getName();
             }
         });
         OctoCore.getInstance().setActualRedisManager(new net.octopvp.octocore.common.redis.RedisManager(

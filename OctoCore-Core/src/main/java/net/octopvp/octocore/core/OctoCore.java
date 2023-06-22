@@ -217,7 +217,6 @@ public abstract class OctoCore extends JavaPlugin {
                 .registerProvider(OfflinePunishData.class, new OfflinePunishDataProvider())
                 .registerProvider(GlobalPlayer.class, new GlobalPlayerProvider())
                 .registerProvider(Enchantment.class, new EnchantmentProvider())
-
                 .registerCommandPostProcessor((ctx, obj) -> {
                     if (obj instanceof CommandResult) {
                         CommandResult result = (CommandResult) obj;

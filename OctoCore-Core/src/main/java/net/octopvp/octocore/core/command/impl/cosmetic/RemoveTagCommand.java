@@ -13,6 +13,7 @@ import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.TagManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.objects.PlayerTag;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -39,8 +40,8 @@ public class RemoveTagCommand {
                     return CommandResult.SUCCESS;
                 }
                 //on some other network server
-                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(target);
-                new TagUpdatePacket(TagUpdatePacket.TagUpdateReason.REMOVE_TAG, offlinePlayer.getUniqueId(), tag1.getId()).send();
+                // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(target);
+                new TagUpdatePacket(TagUpdatePacket.TagUpdateReason.REMOVE_TAG, OfflineHelpers.getOfflinePlayerUUID(target), tag1.getId()).send();
                 sender.sendMessage(CC.GREEN + "Requested pdata update for " + target + " reason: update owned tags");
             }
         } else {

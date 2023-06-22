@@ -17,9 +17,13 @@ import java.util.UUID;
 public class BanCommand {
     @Command(name = "ban", aliases = {"tempban"})
     @Permission(Permissions.PUNISHMENT_BAN)
-    public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent, @Name("player") OfflinePunishData data,
+    public CommandResult execute(CommandSender sender,
+                                 @Switch(value = "s", aliases = "silent") boolean silent,
+                                 @Name("player") OfflinePunishData data,
                                  @Duration(allowPermanent = true, defaultValue = "perm") @Name("duration") @Optional long duration,
-                                 @JoinStrings @Name("reason") String reason, @GetArgumentFor(1) @Name("duration") String durationString) {
+                                 @JoinStrings @Name("reason") String reason,
+                                 @GetArgumentFor(1) @Name("duration") String durationString
+    ) {
         Tasks.runAsync(() -> {
             data.load();
 

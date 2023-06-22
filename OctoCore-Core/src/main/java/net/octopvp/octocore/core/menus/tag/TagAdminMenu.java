@@ -8,6 +8,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -40,7 +41,8 @@ public class TagAdminMenu extends Menu<Gui> {
                     event.getWhoClicked().closeInventory();
                     new QuestionConversation(CC.GREEN + "Please enter the username of the player.", (answer) -> {
                         try {
-                            OfflinePlayer op = Bukkit.getOfflinePlayer(answer);
+                            // OfflinePlayer op = Bukkit.getOfflinePlayer(answer);
+                            OfflineHelpers.OfflineInfo op = OfflineHelpers.getOfflineInfo(answer);
                             PlayerData data = PlayerManager.getInstance().getOfflineData(op.getUniqueId());
                             if (data == null) {
                                 event.getWhoClicked().sendMessage(CC.RED + "That player does not exist!");

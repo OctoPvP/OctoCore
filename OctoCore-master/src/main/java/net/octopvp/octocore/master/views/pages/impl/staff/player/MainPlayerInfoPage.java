@@ -9,9 +9,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
+import net.octopvp.octocore.common.util.BedrockUtils;
 import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.common.util.Utilities;
-import net.octopvp.octocore.common.util.XUIDUtils;
 import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
@@ -64,7 +64,7 @@ public class MainPlayerInfoPage extends Page {
         boolean bedrockCheckbox = this.bedrockCheckbox.getValue();
         UUID uuid = null;
         try {
-            uuid = isUUID ? UUID.fromString(name) : bedrockCheckbox ? new UUID(0, XUIDUtils.getXUID(name.replace("*", "")).get()) :  MojangAPIUtil.INSTANCE.getUUID(name);
+            uuid = isUUID ? UUID.fromString(name) : bedrockCheckbox ? new UUID(0, BedrockUtils.getXUID(name.replace("*", "")).get()) :  MojangAPIUtil.INSTANCE.getUUID(name);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
