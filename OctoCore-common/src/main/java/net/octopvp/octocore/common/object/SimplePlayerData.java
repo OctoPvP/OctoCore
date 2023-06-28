@@ -67,7 +67,6 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
 
     public SimplePlayerData loadGrants(Document document) {
         Gson gson = OctoCoreCommon.getInstance().getGson();
-        Logger.debug(document.getString("grants"));
         this.grants = gson.fromJson(document.getString("grants"), GsonType.GRANT);
         this.grants.removeIf(Objects::isNull);
         return this;

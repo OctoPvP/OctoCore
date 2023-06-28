@@ -42,7 +42,6 @@ public class MainGrantMenu extends Menu<Gui> {
 
     @Override
     public void populateGui(Gui gui, Player player) {
-        System.out.println("Populating main grant menu.");
         try {
             gui.setItem(11, addGrant());
             gui.setItem(15, viewGrants());

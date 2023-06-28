@@ -18,10 +18,8 @@ public class GrantCommand {
     @Sync
     @Permission(Permissions.GRANT)
     public CommandResult execute(@Sender Player sender, @Name("target") PlayerData target) {
-        sender.sendMessage(CC.GREEN + "Opening menu for " + target.getName() + "...");
         if (!target.isLoaded()) {
-            Logger.debug("Loading data...");
-            Logger.debug(target.loadGrants());
+            target.loadGrants();
         }
         new MainGrantMenu(target).open(sender);
         return CommandResult.SUCCESS;
