@@ -23,6 +23,7 @@ import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import org.bson.Document;
+import sun.util.resources.cldr.ext.TimeZoneNames_fr_GF;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,14 +65,21 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         this.uuid = uuid;
     }
 
+    public SimplePlayerData loadGrants(Document document) {
+        Gson gson = OctoCoreCommon.getInstance().getGson();
+        Logger.debug(document.getString("grants"));
+        this.grants = gson.fromJson(document.getString("grants"), GsonType.GRANT);
+        this.grants.removeIf(Objects::isNull);
+        return this;
+    }
+
     public SimplePlayerData load(Document document) {
         Gson gson = OctoCoreCommon.getInstance().getGson();
         this.name = OctoCoreCommon.getInstance().getServerImplementation().getName(uuid);
 
         this.lowerName = name.toLowerCase();
         this.lastLoaded = System.currentTimeMillis();
-        this.grants = gson.fromJson(document.getString("grants"), GsonType.GRANT);
-        this.grants.removeIf(Objects::isNull);
+        loadGrants(document);
         this.dataVersion = getDouble(document, "dataVersion");
         this.frozen = document.getBoolean("frozen");
         this.nicked = document.getBoolean("nicked");
@@ -126,6 +134,9 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         this.messageSettings.setGlobalChat(document.getBoolean("globalChat"));
         this.messageSettings.setIgnoreList(gson.fromJson(document.getString("ignoreList"), GsonType.STRING_UUID_MAP));
 
+        if (messageSettings.getIgnoreList() == null) {
+            messageSettings.setIgnoreList(new HashMap<>());
+        }
         this.messageSettings.getIgnoreList().keySet().removeIf(Objects::isNull);
 
         String mfaDataString = document.getString("mfaData");
@@ -145,10 +156,6 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         return this;
     }
     public Document getData() {
-        return this.getData(false);
-    }
-
-    public Document getData(boolean getDoc) {
         Document document = new Document();
         document.put("uuid", uuid.toString());
         document.put("name", name);
@@ -249,7 +256,9 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
                         grant.getRank() != null && grant.getRank().getRankType() != RankType.HIDDEN)
                 .max(Comparator.comparingInt(grant -> grant.getRank().getWeight())).orElse(null);
     }
-
+    public long getLowestGrantExpire() {
+        return this.getActiveGrants().stream().mapToLong(Grant::getExpireTime).min().orElse(-1);
+    }
     public Set<Node> getFinalNodes() {
         Set<Node> nodes1 = new HashSet<>(nodes);
         for (Node finalNode : getHighestRank().getFinalNodes()) {

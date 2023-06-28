@@ -2,6 +2,7 @@ package net.octopvp.octocore.core.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.util.DataCache;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;
@@ -72,10 +73,8 @@ public class JoinLeaveListener implements Listener {
             }
 
             DataCache cache = new DataCache(uuid);
-            Document data0 = cache.getData();
-
-            playerData.load(data0);
-
+            Document cached = cache.getData();
+            playerData.load(cached);
 
             if (PlayerManager.getInstance().getData(event.getUniqueId()) == null) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());

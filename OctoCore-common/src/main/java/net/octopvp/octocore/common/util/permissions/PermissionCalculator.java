@@ -7,7 +7,7 @@ public class PermissionCalculator {
     public static final String ROOT_WILDCARD = "*", SUB_WILDCARD = ".*";
 
     public static PermissionResult hasPermissionResult(String perm, Collection<Node> permissions) {
-        return hasPermissionResult(perm, permissions, "$$this server$$");
+        return hasPermissionResult(perm, permissions, "__THIS_SERVER__");
     }
 
     public static PermissionResult hasPermissionResult(String perm, Collection<Node> permissions, String server) {
@@ -23,7 +23,7 @@ public class PermissionCalculator {
         Collections.reverse(permissions1);
 
         for (Node permission : permissions1) {
-            if (server == "$$this server$$") {
+            if (Objects.equals(server, "__THIS_SERVER__")) {
                 if (!permission.getScope().isThisServer())
                     continue;
             } else if (!permission.getScope().isServer(server))

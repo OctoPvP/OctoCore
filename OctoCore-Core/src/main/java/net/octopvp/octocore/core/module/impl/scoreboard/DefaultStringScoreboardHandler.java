@@ -17,7 +17,7 @@ public class DefaultStringScoreboardHandler implements ScoreboardHandler<String>
 
     @Override
     public String getTitle(Player player, FastBoardBase<String> board) {
-        return CC.AQUA + CC.B + "OctoPvP " + CC.GRAY + CC.SPLITTER + CC.WHITE + " " + OctoCore.getServerType();
+        return CC.AQUA + CC.B + "OctoMC " + CC.GRAY + CC.SPLITTER + CC.WHITE + " " + OctoCore.getServerType();
     }
 
     @Override
@@ -50,7 +50,18 @@ public class DefaultStringScoreboardHandler implements ScoreboardHandler<String>
         entries.add(CC.AQUA + "Online" + CC.GRAY + ": " + CC.GREEN + OctoCore.getInstance().getServerManager().getGlobalPlayers().size());
         entries.add("");
         entries.add(CC.SCOREBOARD_SEPARATOR);
-        entries.add(CC.SCOREBOARD_IP_SEPARATOR + (state ? CC.AQUA : CC.GREEN) + " " + OctoCore.getInstance().getConfig().getString("server-ip") + " " + CC.SCOREBOARD_IP_SEPARATOR);
+        int maxWidth = 32;
+        // entries.add(CC.SCOREBOARD_IP_SEPARATOR + (state ? CC.AQUA : CC.GREEN) + " " + OctoCore.getInstance().getConfig().getString("server-ip") + " " + CC.SCOREBOARD_IP_SEPARATOR);
+        String serverIp = OctoCore.getInstance().getConfig().getString("server-ip");
+        // center
+        int spaces = ((maxWidth - serverIp.length()) / 2);
+        StringBuilder ip = new StringBuilder();
+        for (int i = 0; i < spaces; i++)
+            ip.append(" ");
+        ip.append((state ? CC.AQUA : CC.GREEN) + serverIp);
+        for (int i = 0; i < spaces; i++)
+            ip.append(" ");
+        entries.add(ip.toString());
         return entries;
     }
 

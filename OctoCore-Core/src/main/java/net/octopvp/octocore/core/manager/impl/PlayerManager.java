@@ -13,6 +13,7 @@ import net.octopvp.octocore.common.object.enums.RankType;
 import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
@@ -60,11 +61,11 @@ public class PlayerManager extends Manager implements IPlayerManager {
         if (data != null) {
             return data;
         }
-        Document document = pdataCollection.find(Filters.eq("uuid", uuid.toString())).first();
+        Document document = new DataCache(uuid).getData();
+        if (document == null)
+            document = pdataCollection.find(Filters.eq("uuid", uuid.toString())).first();
+        if (document == null) return null;
 
-        if (document == null) {
-            return null;
-        }
         return new PlayerData(uuid, document.getString("name"));
     }
 
@@ -91,7 +92,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
             // OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
             OfflineHelpers.OfflineInfo info = OfflineHelpers.getOfflineInfo(uuid);
             data = createProfile(uuid, info.getName());
-            data.getData();
+            data.save();
         }
         return data;
     }
@@ -101,7 +102,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
         PlayerData data = getOfflineData(uuid);
         if (offline)
             data.load();
-        callback.run(data, PlayerData::getData);
+        callback.run(data, PlayerData::save);
     }
 
     public void modifyData(String name, ObjectConsumer<PlayerData> callback) {
@@ -109,7 +110,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
         PlayerData data = getOfflineData(name);
         if (offline)
             data.load();
-        callback.run(data, PlayerData::getData);
+        callback.run(data, PlayerData::save);
     }
 
     @Override
@@ -191,7 +192,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
         Tasks.runAsync(() -> {
             playerProfiles.remove(player.getUniqueId());
             data.setLastSeen(System.currentTimeMillis());
-            data.getData();
+            data.save();
         });
 
         Tasks.runLater(() -> new GlobalPlayerStatusUpdatePacket(player.getName(), true).send(), 30L);

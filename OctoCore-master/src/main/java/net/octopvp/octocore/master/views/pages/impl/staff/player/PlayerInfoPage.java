@@ -39,6 +39,7 @@ import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
+import net.octopvp.octocore.common.util.BedrockUtils;
 import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.master.master.manager.PlayerManager;
@@ -57,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -506,7 +508,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 PunishmentType type = PunishmentType.valueOf(typeSelect.getValue());
                 String reason = reasonField.getValue();
                 boolean silent = silentCheckbox.getValue();
-                LocalDateTime duration = durationPicker.getValue();
+                LocalDateTime end = durationPicker.getValue();
                 if (reason == null || reason.isEmpty()) {
                     reason = "No reason provided.";
                 }
@@ -516,7 +518,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 punishment.setWebPanelId(user.getUserID());
                 punishment.setWebPanelName(user.getUsername());
                 punishment.setSilent(silent);
-                if (type.hasDuration() && duration != null) punishment.setEnteredDuration("WEB_PANEL:" + duration);
+                if (type.hasDuration() && end != null) punishment.setEnteredDuration("WEB_PANEL:" + end);
                 UUID addedByID = user.getMinecraftUUID();
                 if (addedByID == null) addedByID = new UUID(0, 0);
                 punishment.setAddedBy(addedByID);
@@ -524,9 +526,9 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 punishment.setLast(true);
                 punishment.setAddedAt(System.currentTimeMillis());
                 punishment.setIPRelative(ip.getValue());
-                long durationMillis = duration == null ? -1 : duration.atZone(user.getTimeZone().toZoneId()).toInstant().toEpochMilli() - System.currentTimeMillis();
-                if (durationMillis != -1L) {
+                if (end != null) {
                     punishment.setPermanent(false);
+                    long durationMillis = end.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                     punishment.setDurationTime(durationMillis);
                 } else {
                     punishment.setPermanent(true);
@@ -573,7 +575,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 }
             }
             if (showMC) {
-                PlayerName pName = new PlayerName(punishment.getAddedByName(), false, true);
+                PlayerName pName = new PlayerName(punishment.getAddedByName(), false, BedrockUtils.isBedrockPlayer(punishment.getAddedBy()));
                 layout.add(pName);
             }
             return layout;
@@ -603,7 +605,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 }
             }
             if (showMC) {
-                PlayerName pName = new PlayerName(punishment.getRemovedBy(), false, true);
+                PlayerName pName = new PlayerName(punishment.getRemovedBy(), false, BedrockUtils.isBedrockPlayer(punishment.getRemovedById()));
                 layout.add(pName);
             }
             return layout;

@@ -105,7 +105,7 @@ public class PlayerDataPacket extends RedisPacket {
         globalPlayer.setOp(op);
 
         if (created) {
-            Logger.debug("Created global player: " + OctoCoreCommon.getInstance().getGson().toJson(globalPlayer));
+            // Logger.debug("Created global player: " + OctoCoreCommon.getInstance().getGson().toJson(globalPlayer));
         }
     }
 

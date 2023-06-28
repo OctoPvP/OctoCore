@@ -14,6 +14,7 @@ public class PermissionResult {
     @NonNull
     private PermissionReason reason;
     private long timestamp = System.currentTimeMillis();
+    private long expire = -1L;
 
     @Override
     public String toString() {
@@ -23,6 +24,7 @@ public class PermissionResult {
                 ", reason:\"" + reason + '\"' +
                 ", allowed:" + allowed() +
                 ", timestamp:" + timestamp +
+                ", expire:" + expire +
                 '}';
     }
 

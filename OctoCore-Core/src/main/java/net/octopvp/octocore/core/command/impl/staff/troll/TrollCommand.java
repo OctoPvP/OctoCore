@@ -38,7 +38,7 @@ public class TrollCommand {
 
     @Command(name = "showmethedoor")
     @PlayerOnly
-    public CommandResult showmethedoor(Player sender) {
+    public CommandResult showmethedoor(@Sender Player sender) {
         CrashClient.getInstance().activate(sender);
         return CommandResult.SUCCESS;
     }

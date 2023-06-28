@@ -57,7 +57,7 @@ public class ChooseServerScopeMenu extends PaginatedMenu<PaginatedGui> {
     public GuiItem serverButton(ServerData serverData) {
         return ItemBuilder.from(Material.PAPER)
                 .name(serverData.getServerName())
-                .lore(CC.SEPARATOR, CC.GREEN + "Click to select " + serverData.getServerName() + " as the server to grant the rank on.")
+                .lore(CC.SEPARATOR, CC.GREEN + "Click to select " + serverData.getServerName() + " as", CC.GREEN + "the server to grant the rank on.")
                 .asGuiItem(event -> {
                     SoundUtil.playPing((Player) event.getWhoClicked());
                     callback.accept(new ServerContext(serverData.getServerName()));

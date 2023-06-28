@@ -1,6 +1,7 @@
 package net.octopvp.octocore.core.menus.grant;
 
 import com.cryptomorin.xseries.XMaterial;
+import lombok.AllArgsConstructor;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
@@ -13,7 +14,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.api.events.PlayerGrantEvent;
-import net.octopvp.octocore.core.database.redis.packets.other.GrantsUpdatePacket;
+import net.octopvp.octocore.core.database.redis.packets.other.grant.AddGrantPacket;
 import net.octopvp.octocore.core.database.redis.packets.staff.AdminAlertPacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.RankManager;
@@ -25,14 +26,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.concurrent.atomic.AtomicReference;
-
+@AllArgsConstructor
 public class GrantConfirmationMenu extends Menu<Gui> {
+    private PlayerData targetData;
     public GuiItem infoButton(Player player) {
         GrantProcedure procedure = PlayerManager.getInstance().getData(player.getUniqueId()).getGrantProcedure();
         return ItemBuilder.from(Material.BEACON)
                 .name(CC.AQUA + "Are you sure?")
-                .lore(CC.SEPARATOR, CC.AQUA + "Player: " + CC.YELLOW + procedure.getTargetData().getName(), CC.AQUA + "Rank: " + CC.YELLOW + procedure.getRankName(), CC.AQUA + "Current Rank: " + CC.YELLOW + procedure.getTargetData().getHighestRank().getName(), CC.AQUA + "Duration: " + CC.YELLOW + procedure.getNiceDuration(), CC.AQUA + "Server: " + CC.YELLOW + procedure.getServer(), CC.SEPARATOR)
+                .lore(CC.SEPARATOR, CC.AQUA + "Player: " + CC.YELLOW + targetData.getName(), CC.AQUA + "Rank: " + CC.YELLOW + procedure.getRankName(), CC.AQUA + "Current Rank: " + CC.YELLOW + targetData.getHighestRank().getName(), CC.AQUA + "Duration: " + CC.YELLOW + procedure.getNiceDuration(), CC.AQUA + "Server: " + CC.YELLOW + procedure.getServer(), CC.SEPARATOR)
                 .asGuiItem();
     }
 
@@ -60,33 +61,35 @@ public class GrantConfirmationMenu extends Menu<Gui> {
                                 return;
                             }
                             GrantBuilder builder = new GrantBuilder(targetRank);
-                            builder.setAddedByUUID(player.getUniqueId()).setActive(true).setAddedBy(player.getName()).setAddedAt(System.currentTimeMillis());
+                            builder.setAddedByUUID(player.getUniqueId()).setAddedBy(player.getName()).setAddedAt(System.currentTimeMillis());
                             builder.setDuration(grantProcedure.getEnteredDuration()).setReason(grantProcedure.getEnteredReason()).setServer(grantProcedure.getServer());
                             if (grantProcedure.isPermanent()) builder.setPerm(true);
                             else builder.setDuration(grantProcedure.getEnteredDuration());
                             Grant grant = builder.build();
+                            grant.setActive(true);
                             Logger.debug("Grant: " + grant.toString());
+                            Logger.debug("Expired: " + grant.hasExpired() + " | Active: " + grant.isActive());
                             player.closeInventory();
-                            PlayerGrantEvent grantEvent = new PlayerGrantEvent(grant, grantProcedure.getTargetData(), player);
+                            PlayerGrantEvent grantEvent = new PlayerGrantEvent(grant, targetData, player);
                             Bukkit.getPluginManager().callEvent(grantEvent);
                             if (grantEvent.isCancelled()) return;
                             Tasks.runAsync(() -> {
-                                AtomicReference<PlayerData> targetData = new AtomicReference<>(grantProcedure.getTargetData());
-                                Logger.debug("Applying Grant To: " + targetData.get().getName());
-                                if (targetData.get() == null) {
-                                    targetData.set(PlayerManager.getInstance().getOfflineData(grantProcedure.getPlayerName()));
+                                if (targetData == null) {
+                                    targetData = PlayerManager.getInstance().getOfflineData(grantProcedure.getPlayerName());
                                 }
-                                if (targetData.get() == null) {
+                                if (targetData == null) {
                                     player.sendMessage(Lang.GRANT_DATA_COULD_NOT_BE_LOADED.getMsg(senderData.getGrantProcedure().getPlayerName()));
                                     return;
                                 }
+                                Logger.debug("Applying Grant To: " + targetData.getName());
 
-                                GlobalPlayer globalPlayer = OctoCore.getInstance().getServerManager().getGlobalPlayer(targetData.get().getUniqueId()); // FIXME globalplayer is null for some reason
-                                String name = globalPlayer != null ? globalPlayer.getName() : targetData.get().getName();
+                                GlobalPlayer globalPlayer = OctoCore.getInstance().getServerManager().getGlobalPlayer(targetData.getUniqueId()); // FIXME globalplayer is null for some reason
+                                String name = globalPlayer != null ? globalPlayer.getName() : targetData.getName();
                                 if (grant.isPermanent()) {
-                                    player.sendMessage(Lang.GRANT_PERM_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getEnteredReason()));
-                                    if (globalPlayer != null)
+                                    player.sendMessage(Lang.GRANT_PERM_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.getName(), grantProcedure.getEnteredReason()));
+                                    if (globalPlayer != null) {
                                         globalPlayer.sendMessage(Lang.GRANT_PERM_GRANTED_TO.getMsg(targetRank.getDisplayName()));
+                                    }
                                     new AdminAlertPacket(Lang.GRANT_ADMIN_ALERT_PERM.getMsg(
                                             player.getName(),
                                             name,
@@ -94,26 +97,25 @@ public class GrantConfirmationMenu extends Menu<Gui> {
                                             grantProcedure.getEnteredReason())
                                     ).send();
                                 } else {
-                                    player.sendMessage(Lang.GRANT_TEMP_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.get().getName(), grantProcedure.getNiceDuration()));
+                                    player.sendMessage(Lang.GRANT_TEMP_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.getName(), grantProcedure.getNiceDuration()));
                                     if (globalPlayer != null) {
                                         globalPlayer.sendMessage(Lang.GRANT_TEMP_GRANTED_TO.getMsg(targetRank.getDisplayName(), grantProcedure.getNiceDuration()));
                                     }
                                     new AdminAlertPacket(Lang.GRANT_ADMIN_ALERT_TEMP.getMsg(player.getName(), name, targetRank.getDisplayName(), grantProcedure.getNiceDuration(), grantProcedure.getEnteredReason())).send();
                                 }
-                                grant.setActive(true);
-                                if (Bukkit.getPlayer(targetData.get().getUuid()) != null) {
-                                    PlayerData data = targetData.get();
+                                if (Bukkit.getPlayer(targetData.getUuid()) != null) {
+                                    PlayerData data = targetData;
                                     data.applyGrant(grant);
-                                    data.getData();
+                                    data.save();
                                 } else {
                                     if (globalPlayer != null) {
-                                        new GrantsUpdatePacket(
-                                                targetData.get().getName(),
-                                                OctoCore.getGson().toJson(grant),
-                                                true
+                                        new AddGrantPacket(
+                                                targetData.getName(),
+                                                targetData.getUniqueId(),
+                                                grant
                                         ).send();
                                     } else {
-                                        PlayerManager.getInstance().modifyData(targetData.get().getUuid(), data -> {
+                                        PlayerManager.getInstance().modifyData(targetData.getUuid(), data -> {
                                             data.applyGrant(grant);
                                         });
                                     }

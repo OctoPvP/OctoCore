@@ -1,8 +1,8 @@
 package net.octopvp.octocore.core.module.impl.punishments.menus.punishments;
 
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.core.objects.PlayerData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,14 +28,14 @@ public class PunishmentMenuCommons {
                         "",
                         CC.GREEN + "Removed by" + CC.GRAY + ": " + CC.YELLOW + punishment.getRemovedBy(),
                         CC.GREEN + "Remove Reason" + CC.GRAY + ": " + CC.YELLOW + punishment.getRemovedFor(),
-                        CC.GREEN + "Removed On" + CC.GRAY + ": " + CC.YELLOW + PlayerData.DATE_FORMAT.format(new Date(punishment.getWhenRemoved()))
+                        CC.GREEN + "Removed On" + CC.GRAY + ": " + CC.YELLOW + OctoCoreCommon.DATE_FORMAT.format(new Date(punishment.getWhenRemoved()))
                 ));
             } else if (punishment.isRemovedOnWebPanel()) {
                 lore.addAll(Arrays.asList(
                         "",
                         CC.GREEN + "Removed by" + CC.GRAY + ": " + CC.YELLOW + punishment.getRemovedOnWebPanelName() + " (WEB)",
                         CC.GREEN + "Remove Reason" + CC.GRAY + ": " + CC.YELLOW + punishment.getRemovedFor(),
-                        CC.GREEN + "Removed On" + CC.GRAY + ": " + CC.YELLOW + PlayerData.DATE_FORMAT.format(new Date(punishment.getWhenRemoved())),
+                        CC.GREEN + "Removed On" + CC.GRAY + ": " + CC.YELLOW + OctoCoreCommon.DATE_FORMAT.format(new Date(punishment.getWhenRemoved())),
                         CC.GRAY + CC.ITALIC + "This punishment was removed on the web panel."
                 ));
             }

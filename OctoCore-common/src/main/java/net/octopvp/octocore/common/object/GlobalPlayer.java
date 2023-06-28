@@ -65,7 +65,7 @@ public class GlobalPlayer {
     }
 
     public boolean hasPermission(String permission, String server) {
-        if (server.equalsIgnoreCase(OctoCoreCommon.getInstance().getServerImplementation().getServerName()) || server.equalsIgnoreCase("$$this server$$"))
+        if (server.equalsIgnoreCase(OctoCoreCommon.getInstance().getServerImplementation().getServerName()) || server.equalsIgnoreCase("__THIS_SERVER__"))
             if (isOp())
                 return true;
         if (negatedPermissions.containsKey(permission))

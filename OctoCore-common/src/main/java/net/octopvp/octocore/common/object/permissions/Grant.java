@@ -17,6 +17,7 @@ import java.util.UUID;
 @Setter
 @RequiredArgsConstructor
 public class Grant {
+    private UUID id = UUID.randomUUID();
     private final String rankName;
     private final UUID rankId;
     private long addedAt, duration, removedAt;
@@ -36,7 +37,9 @@ public class Grant {
 
     public boolean hasExpired() {
         if (server.isThisServer()) {
-            if (!this.isActive()) return true;
+            if (!this.isActive()) {
+                return true;
+            }
             if (OctoCoreCommon.getInstance().getRankManager().getRankById(rankId) == null) {
                 if (OctoCoreCommon.getInstance().getRankManager().isLoadingRanks()) {
                     return false;
@@ -46,11 +49,15 @@ public class Grant {
                 }
                 return true;
             }
-            if (this.isPermanent() || duration < 0) return false;
-            boolean b = System.currentTimeMillis() >= this.addedAt + this.duration;
-            if (!b)
-                active = false;
-            return b;
+            if (this.isPermanent() || duration < 0) {
+                return false;
+            }
+            long expire = this.addedAt + this.duration;
+            boolean expired = System.currentTimeMillis() > expire;
+            if (expired) {
+                setActive(false);
+            }
+            return expired;
         }
         return true;
     }
@@ -70,6 +77,10 @@ public class Grant {
         return false;
     }
 
+    public boolean isManuallyRemoved() {
+        return removedAt > 0;
+    }
+
     public String getNiceDuration() {
         if (isPermanent()) return "Permanent";
 
@@ -77,7 +88,7 @@ public class Grant {
     }
 
     public String getNiceExpire() {
-        if (!isActive()) return "Expired";
+        if (!isActive()) return "Not Active";
         if (isPermanent()) return "Never";
         if (hasExpired()) return "Expired";
 
@@ -87,7 +98,12 @@ public class Grant {
         from.setTime(new Date(System.currentTimeMillis()));
         to.setTime(new Date(this.addedAt + this.getDuration()));
 
-        return DateUtils.formatDateDiff(from, to);
+        return "in " + DateUtils.formatDateDiff(from, to);
+    }
+
+    public String getExpireDate() {
+        if (isPermanent()) return "Never";
+        return OctoCoreCommon.DATE_FORMAT.format(new Date(this.addedAt + this.duration));
     }
 
     public Rank getRank() {

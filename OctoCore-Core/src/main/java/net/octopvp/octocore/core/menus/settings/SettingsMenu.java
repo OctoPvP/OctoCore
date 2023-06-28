@@ -27,7 +27,7 @@ public class SettingsMenu extends Menu<Gui> {
                 .create()
                 .setCloseGuiAction(event -> {
                     if (changed) {
-                        data.getData();
+                        data.save();
                     }
                 });
     }

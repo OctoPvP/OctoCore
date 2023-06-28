@@ -7,6 +7,7 @@ import net.octopvp.commander.annotation.Sender;
 import net.octopvp.octocore.common.annotation.Sync;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.menus.grant.MainGrantMenu;
 import net.octopvp.octocore.core.objects.PlayerData;
@@ -18,6 +19,10 @@ public class GrantCommand {
     @Permission(Permissions.GRANT)
     public CommandResult execute(@Sender Player sender, @Name("target") PlayerData target) {
         sender.sendMessage(CC.GREEN + "Opening menu for " + target.getName() + "...");
+        if (!target.isLoaded()) {
+            Logger.debug("Loading data...");
+            Logger.debug(target.loadGrants());
+        }
         new MainGrantMenu(target).open(sender);
         return CommandResult.SUCCESS;
     }

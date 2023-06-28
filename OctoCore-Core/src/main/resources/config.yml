@@ -1,23 +1,7 @@
 server-type: HUB
-master:
-  discord:
-    enabled: true
-    token: '-'
-    channels:
-      master-ctrl-status: '834815775046500419'
-      audit: '835393497669828608'
-  tebex:
-    api-key: ''
-
 name: lobby
-server-ip: beta.octopvp.net
+server-ip: play.octomc.net
 database:
-  sql:
-    username: octocore
-    password: octocore
-    db: octocore
-    url: localhost
-    port: 3306
   redis:
     enabled: false
     host: localhost
@@ -35,8 +19,8 @@ database:
       password: default
       db: default
 tab:
-  header: '&b&lOctoPvP&r\n'
-  footer: '\n&aOctoPvP.net\n'
+  header: '&b&lOctoMC&r\n'
+  footer: '\n&aOctoMC.net\n'
 update-tab-interval: 45
 update-pdata-interval: 100
 default-tab: true

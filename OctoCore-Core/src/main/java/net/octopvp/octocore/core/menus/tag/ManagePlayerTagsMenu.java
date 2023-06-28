@@ -135,7 +135,7 @@ public class ManagePlayerTagsMenu extends Menu<PaginatedGui> {
                         } else {
                             PlayerData d = PlayerManager.getInstance().getOfflineData(data.getUniqueId());
                             d.removeTag(tag.getId());
-                            d.getData();
+                            d.save();
                         }
                         SoundUtil.playPing((Player) event.getWhoClicked());
                         //data.load();

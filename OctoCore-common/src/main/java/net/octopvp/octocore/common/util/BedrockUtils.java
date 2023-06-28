@@ -36,7 +36,7 @@ public class BedrockUtils {
     private static LoadingCache<Long, String> gamerTagCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).maximumSize(200).build(gamerTagCacheLoader);
 
 
-    public static Function<UUID, Boolean> isBedrockPlayer = uuid -> uuid.getMostSignificantBits() == 0;
+    public static Function<UUID, Boolean> isBedrockPlayer = uuid -> uuid.getMostSignificantBits() == 0 && uuid.getLeastSignificantBits() != 0; // 0-0 is console
 
     public static boolean isBedrockPlayer(UUID uuid) {
         return isBedrockPlayer.apply(uuid);

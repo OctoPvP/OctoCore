@@ -26,8 +26,4 @@ public class GrantProcedure {
 
         return DateUtils.formatTimeMillis(this.enteredDuration);
     }
-
-    public PlayerData getTargetData() {
-        return PlayerManager.getInstance().getData(uuid);
-    }
 }

@@ -15,6 +15,8 @@ public class MainGrantMenu extends Menu<Gui> {
 
     public MainGrantMenu(PlayerData playerData) {
         this.playerData = playerData;
+        if (!playerData.isOnlineThisServer())
+            playerData.load();
     }
 
     public GuiItem addGrant() {

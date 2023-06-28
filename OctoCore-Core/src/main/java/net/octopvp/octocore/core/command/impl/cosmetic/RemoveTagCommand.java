@@ -54,7 +54,7 @@ public class RemoveTagCommand {
             PlayerTag tag1 = TagManager.getTagByName(tag);
             if (data.hasTag(tag1))
                 data.removeTag(tag1.getId());
-            data.getData();
+            data.save();
             sender.sendMessage(CC.GREEN + "Added tag " + tag1.getName() + " to " + target);
             return CommandResult.SUCCESS;
         }

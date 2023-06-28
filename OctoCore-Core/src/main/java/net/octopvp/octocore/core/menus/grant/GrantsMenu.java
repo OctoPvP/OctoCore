@@ -11,11 +11,12 @@ import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
-import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.database.redis.packets.other.GrantsUpdatePacket;
+import net.octopvp.octocore.core.database.redis.packets.other.grant.RemoveGrantPacket;
+import net.octopvp.octocore.core.database.redis.packets.staff.AdminAlertPacket;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.Buttons;
 import net.octopvp.octocore.core.utils.SoundUtil;
+import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -96,15 +97,28 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
                 CC.AQUA + "Added Date" + CC.GRAY + ": " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
                 CC.AQUA + "Duration" + CC.GRAY + ": " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
                 CC.AQUA + "Reason" + CC.GRAY + ": " + CC.YELLOW + grant.getReason(),
-                CC.AQUA + "Server" + CC.GRAY + ": " + CC.YELLOW + grant.getServer().getServer(),
-                "",
-                CC.AQUA + "Active" + CC.GRAY + ": " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
-                CC.AQUA + "Expires" + CC.GRAY + ": " + CC.YELLOW + grant.getNiceExpire(),
-                CC.SEPARATOR
+                CC.AQUA + "Server" + CC.GRAY + ": " + CC.YELLOW + grant.getServer().getServer()
         ));
+
+        if (grant.isManuallyRemoved()) {
+            lore.add(CC.AQUA + "Removed By" + CC.GRAY + ": " + CC.YELLOW + grant.getRemovedBy());
+            lore.add(CC.AQUA + "Removed Date" + CC.GRAY + ": " + CC.YELLOW + DateUtils.getDate(grant.getRemovedAt()));
+            lore.add("");
+        }
+
+        lore.addAll(Arrays.asList("",
+                CC.AQUA + "Active" + CC.GRAY + ": " + (grant.hasExpired() ? CC.RED + "No" : CC.GREEN + "Yes"),
+                CC.AQUA + "Expires" + CC.GRAY + ": " + CC.YELLOW + grant.getNiceExpire()));
+        if (!grant.isPermanent())
+            lore.add(CC.AQUA + "Expiry Date" + CC.GRAY + ": " + CC.YELLOW + grant.getExpireDate());
+        lore.add(CC.SEPARATOR);
+
         if (grant.hasExpired()) {
             lore.add("");
-            lore.add(CC.RED + "This grant has expired!");
+            if (grant.isManuallyRemoved())
+                lore.add(CC.RED + "This grant was manually removed!");
+            else
+                lore.add(CC.RED + "This grant has expired!");
         } else {
             lore.add("");
             lore.add(CC.YELLOW + "Click to revoke this grant!");
@@ -119,10 +133,16 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
                     grant.setActive(false);
                     grant.setRemovedBy(event.getWhoClicked().getName());
                     grant.setRemovedAt(System.currentTimeMillis());
-                    if (!targetData.isOnline()) {
-                        targetData.getData();
+                    grant.setRemovedByUUID(event.getWhoClicked().getUniqueId());
+                    if (!targetData.isOnline()) { // they are not on the server, so we'll save for them
+                        targetData.save();
                     }
-                    new GrantsUpdatePacket(targetData.getName(), OctoCore.getGson().toJson(grant), false).send();
+                    new AdminAlertPacket(Lang.GRANT_REVOKE_ADMIN_ALERT.getMsg(
+                            event.getWhoClicked().getName(),
+                            targetData.getName(),
+                            grant.getRank().getDisplayName()
+                    )).send();
+                    new RemoveGrantPacket(targetData.getName(), targetData.getUniqueId(), grant.getId()).send();
                     event.getWhoClicked().sendMessage(CC.GREEN + "You have revoked " + CC.YELLOW + grant.getRankName() + CC.GREEN + " from " + CC.YELLOW + targetData.getName() + CC.GREEN + "!");
                     event.getWhoClicked().closeInventory();
                     open((Player) event.getWhoClicked());

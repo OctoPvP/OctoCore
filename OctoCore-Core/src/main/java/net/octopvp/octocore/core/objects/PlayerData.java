@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
@@ -37,7 +38,6 @@ import org.bukkit.entity.Player;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class PlayerData extends SimplePlayerData {
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
     //TODO set defaults for this so theres no errors when using/loading old data from older updates (idk if this makes sense lol)
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
     private List<Node> bungeePerms = new ArrayList<>();
@@ -83,32 +82,33 @@ public class PlayerData extends SimplePlayerData {
         if (document == null) {
             document = PlayerManager.getInstance().getProfileDocument(uuid);
         }
-        if (document == null) {
-            return null;
+        boolean newData = document == null;
+        if (newData) {
+            save();
+        } else {
+            super.load(document);
+            if (cachedPermissions == null) cachedPermissions = new ConcurrentHashMap<>();
+            if (loadNotes == null) loadNotes = new ArrayList<>();
         }
-        super.load(document);
-        if (cachedPermissions == null) cachedPermissions = new ConcurrentHashMap<>();
-        if (loadNotes == null) loadNotes = new ArrayList<>();
         loaded = true;
         return this;
     }
 
-    public Document save() {
-        return save(true);
+    public SimplePlayerData loadGrants() {
+        return super.loadGrants(PlayerManager.getInstance().getProfileDocument(uuid));
     }
 
-    public Document save(boolean getDoc) {
+    public Document save() {
         this.lastDataSave = 0;
-        Document document = super.getData(getDoc);
-        if (getDoc) {
-            document.put("bungeePermissions", OctoCoreCommon.getInstance().getGson().toJson(this.bungeePerms, GsonType.NODE_LIST));
-
-            return document;
-        }
-        if (PlayerManager.getInstance().doesDocumentExistByUUID(uuid))
-            PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document);
-        else PlayerManager.getInstance().getPdataCollection().insertOne(document);
+        Document document = super.getData();
         new DataCache(this.uuid).update(document);
+        PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
+        return document;
+    }
+
+    public Document getBungeePermsDoc() {
+        Document document = super.getData();
+        document.put("bungeePermissions", OctoCoreCommon.getInstance().getGson().toJson(this.bungeePerms, GsonType.NODE_LIST));
         return document;
     }
 
@@ -299,11 +299,19 @@ public class PlayerData extends SimplePlayerData {
         if (op) return true;
         PermissionResult cachedResult = cachedPermissions.get(perm);
         if (cachedResult != null) {
-            if (cachedResult.getTimestamp() + 600000 < System.currentTimeMillis()) { //10 minutes ttl
+            // if (cachedResult.getTimestamp() + 600000 < System.currentTimeMillis()) { // 10 minutes ttl
+            long expire = cachedResult.getExpire();
+            if (expire != -1 && expire < System.currentTimeMillis()) {
                 cachedPermissions.remove(perm);
             } else return cachedResult.allowed();
         }
         PermissionResult result = PermissionCalculator.hasPermissionResult(perm, getFinalNodes());
+        long nextGrantExpire = this.getLowestGrantExpire();
+        if (nextGrantExpire != -1 || System.currentTimeMillis() - nextGrantExpire > 1200000)
+            result.setExpire(System.currentTimeMillis() + 600000); // expire in 10 minutes
+        // expire this permission when one of the grants expire
+        else result.setExpire(nextGrantExpire);
+
         cachedPermissions.put(perm, result);
         if (result.getReason() == PermissionReason.NOT_SET) return getHighestRank().hasPermission(perm);
         else return result.allowed();
@@ -312,7 +320,7 @@ public class PlayerData extends SimplePlayerData {
     public void applyGrant(Grant grant) {
         grants.add(grant);
         if (Bukkit.getPlayer(uuid) != null) loadPerms(Bukkit.getPlayer(uuid));
-        getData();
+        save();
         this.cachedFormattedNameNoNickNoTag = null;
     }
 

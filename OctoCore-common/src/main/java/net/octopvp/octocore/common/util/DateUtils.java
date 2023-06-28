@@ -1,5 +1,7 @@
 package net.octopvp.octocore.common.util;
 
+import net.octopvp.octocore.common.OctoCoreCommon;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -160,7 +162,7 @@ public class DateUtils {
     }
 
     public static String getDate(long value) {
-        return new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a").format(new Date(value));
+        return OctoCoreCommon.DATE_FORMAT.format(new Date(value));
     }
 
     public static long parseDateDiff(String time, boolean future) throws Exception {

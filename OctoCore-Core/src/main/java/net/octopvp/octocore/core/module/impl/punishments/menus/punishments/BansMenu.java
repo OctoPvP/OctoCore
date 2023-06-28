@@ -9,11 +9,11 @@ import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.Buttons;
 import org.bukkit.entity.Player;
 
@@ -34,7 +34,7 @@ public class BansMenu extends PaginatedMenu<PaginatedGui> {
     public static GuiItem punishmentButton(IPunishment punishment, int order) {
         List<String> lore = PunishmentMenuCommons.addPunishmentLore(punishment);
         return ItemBuilder.from(punishment.isActive() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
-                .name(CC.GREEN + "#" + order + " " + CC.GRAY + "(" + CC.YELLOW + PlayerData.DATE_FORMAT.format(new Date(punishment.getAddedAt())) + CC.GRAY + ")")
+                .name(CC.GREEN + "#" + order + " " + CC.GRAY + "(" + CC.YELLOW + OctoCoreCommon.DATE_FORMAT.format(new Date(punishment.getAddedAt())) + CC.GRAY + ")")
                 .setLore(lore)
                 .asGuiItem();
     }

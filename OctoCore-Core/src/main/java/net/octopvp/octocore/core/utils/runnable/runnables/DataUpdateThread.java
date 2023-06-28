@@ -63,7 +63,7 @@ public class DataUpdateThread extends Thread {
                 if (playerData == null) continue;
                 playerData.setLastDataSave(playerData.getLastDataSave() + 1);
                 if (playerData.getLastDataSave() >= 120) //save every 2 mins
-                    playerData.getData();
+                    playerData.save();
                 playerData.setPlayTime(playerData.getPlayTime() + 1); //increment playtime by 1 second
                 Player player = Bukkit.getPlayer(playerData.getUuid());
                 if (player == null) continue;
@@ -80,7 +80,7 @@ public class DataUpdateThread extends Thread {
                         playerData.getHighestRank().getWeight(), playerData.getMessageSettings(), playerData.getCachedFormattedNameNoNickNoTag(),
                         playerData.isOp()
                 ).send();
-                new DataCache(playerData.getUuid()).update(playerData.getData(true));
+                new DataCache(playerData.getUuid()).update(playerData.getData());
             }
         } catch (Exception e) {
             e.printStackTrace();

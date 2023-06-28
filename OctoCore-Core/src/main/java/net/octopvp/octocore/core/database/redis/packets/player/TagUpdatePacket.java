@@ -30,14 +30,13 @@ public class TagUpdatePacket extends RedisPacket {
         switch (type) {
             case GIVE_TAG: {
                 playerData.addTag(tag);
-                playerData.getData();
                 return;
             }
             case REMOVE_TAG: {
                 playerData.removeTag(tagId);
-                playerData.getData();
             }
         }
+        playerData.save();
     }
 
     public enum TagUpdateReason {

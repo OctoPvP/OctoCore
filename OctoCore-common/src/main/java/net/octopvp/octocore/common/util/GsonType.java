@@ -24,7 +24,7 @@ public class GsonType {
     //}.getType();
     public static final Type STRING_LIST = new TypeToken<List<String>>() {
     }.getType();
-    public static final Type STRING_UUID_MAP = new TypeToken<Map<String, UUID>>() {
+    public static final Type STRING_UUID_MAP = new TypeToken<Map<UUID, String>>() {
 
     }.getType();
     public static final Type UUID_SET = new TypeToken<HashSet<UUID>>() {

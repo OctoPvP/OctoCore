@@ -18,7 +18,6 @@ import java.util.List;
 
 public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Component> {
     /*
-
     {
     boolean a = false;
     int i = 0;
@@ -62,7 +61,7 @@ public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Comp
     @Override
     public Component getTitle(Player player, FastBoardBase<Component> board) {
         return Component.text("OctoMC", NamedTextColor.AQUA, TextDecoration.BOLD)
-                .append(Component.text(" | ", NamedTextColor.GRAY))
+                .append(Component.text(" | ", NamedTextColor.GRAY).decoration(TextDecoration.BOLD, false))
                 .append(Component.text(OctoCore.getServerType().getName(), NamedTextColor.WHITE));
     }
 

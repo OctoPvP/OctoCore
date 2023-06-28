@@ -10,9 +10,12 @@ import net.octopvp.octocore.common.interfaces.manager.IRankManager;
 import net.octopvp.octocore.common.interfaces.manager.IServerManager;
 import net.octopvp.octocore.common.redis.RedisManager;
 
+import java.text.SimpleDateFormat;
+
 @Getter
 @Setter
 public class OctoCoreCommon {
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
     @Getter
     private static final OctoCoreCommon instance = new OctoCoreCommon();
     private MongoClient mongoClient;

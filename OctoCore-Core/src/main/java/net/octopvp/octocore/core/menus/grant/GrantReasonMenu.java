@@ -8,6 +8,7 @@ import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.conversations.grant.GrantReasonConversation;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
@@ -52,14 +53,15 @@ public class GrantReasonMenu extends PaginatedMenu<PaginatedGui> {
                 .asGuiItem(event -> {
                     Player player = (Player) event.getWhoClicked();
                     PlayerData sendData = PlayerManager.getInstance().getData(player.getUniqueId());
-                    if (sendData == null || !playerData.isOnlineThisServer()) {
+                    if (sendData == null || playerData == null ) {
+                        Logger.debug("Player data is null, cannot continue");
                         player.closeInventory();
                         return;
                     }
                     sendData.getGrantProcedure().setEnteredReason(grantReason.getReason());
                     player.sendMessage(Lang.GRANT_REASON_SET.getMsg(grantReason.getReason()));
                     sendData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.CONFIRMATION);
-                    new GrantConfirmationMenu().open(player);
+                    new GrantConfirmationMenu(playerData).open(player);
                 });
     }
 
@@ -75,6 +77,6 @@ public class GrantReasonMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     public void prompt(Player player) {
-        OctoCore.getConversationFactory().withFirstPrompt(new GrantReasonConversation(playerData, player)).withLocalEcho(false).buildConversation(player).begin();
+        OctoCore.getConversationFactory().withFirstPrompt(new GrantReasonConversation(PlayerManager.getInstance().getData(player), playerData, player)).withLocalEcho(false).buildConversation(player).begin();
     }
 }

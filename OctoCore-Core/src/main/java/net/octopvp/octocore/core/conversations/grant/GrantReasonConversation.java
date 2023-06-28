@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
 public class GrantReasonConversation extends StringPrompt {
-    private final PlayerData playerData;
+    private final PlayerData senderData, targetData;
     private final Player player;
 
     @Override
@@ -26,14 +26,14 @@ public class GrantReasonConversation extends StringPrompt {
     @Override
     public Prompt acceptInput(ConversationContext conversationContext, String s) {
         Logger.debug(s);
-        if (playerData == null || playerData.getGrantProcedure() == null) {
+        if (senderData == null || senderData.getGrantProcedure() == null) {
             player.sendMessage(CC.RED + "Cancelled.");
             return END_OF_CONVERSATION;
         }
-        playerData.getGrantProcedure().setEnteredReason(s);
+        senderData.getGrantProcedure().setEnteredReason(s);
         player.sendMessage(Lang.GRANT_REASON_SET.getMsg(s));
-        playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.CONFIRMATION);
-        new GrantConfirmationMenu().open(player);
+        senderData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.CONFIRMATION);
+        new GrantConfirmationMenu(targetData).open(player);
         return Prompt.END_OF_CONVERSATION;
     }
 }

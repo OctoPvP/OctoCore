@@ -8,6 +8,7 @@ import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.GrantProcedure;
@@ -23,14 +24,14 @@ import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
 public class DurationMenu extends Menu<Gui> {
-    private final PlayerData data;
+    private final PlayerData targetData;
 
     public GuiItem customDurationButton() {
         return ItemBuilder.from(XMaterial.WRITABLE_BOOK.parseMaterial() != null ? XMaterial.WRITABLE_BOOK.parseMaterial() : Material.BOOK)
                 .name(CC.AQUA + "Custom Duration")
                 .lore(CC.GREEN + "Click to set a custom duration.")
                 .asGuiItem(event -> {
-                    callback(data, (Player) event.getWhoClicked());
+                    callback((Player) event.getWhoClicked());
                 });
     }
 
@@ -48,11 +49,12 @@ public class DurationMenu extends Menu<Gui> {
                     playerData.getGrantProcedure().setPermanent(true);
                     playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
                     event.getWhoClicked().sendMessage(Lang.GRANT_DURATION_SET.getMsg("Permanent"));
-                    new GrantReasonMenu(data).open((Player) event.getWhoClicked());
+                    new GrantReasonMenu(targetData).open((Player) event.getWhoClicked());
                 });
     }
 
-    private void callback(PlayerData playerData, Player player) {
+    private void callback(Player player) {
+        PlayerData playerData = PlayerManager.getInstance().getData(player);
         player.closeInventory();
         SoundUtil.playPing(player);
         OctoCore.getConversationFactory().withFirstPrompt(new StringPrompt() {
@@ -60,11 +62,12 @@ public class DurationMenu extends Menu<Gui> {
             public String getPromptText(ConversationContext conversationContext) {
                 return Lang.GRANT_ENTER_DURATION.getMsg();
             }
-
             @Override
             public Prompt acceptInput(ConversationContext conversationContext, String s) {
-                if (playerData == null || !playerData.isOnlineThisServer())
+                if (playerData == null) {
+                    Logger.debug("Player data is null");
                     return Prompt.END_OF_CONVERSATION;
+                }
                 if (playerData.getGrantProcedure() == null)
                     playerData.setGrantProcedure(new GrantProcedure(playerData));
                 if (s.equalsIgnoreCase("perm") || s.equalsIgnoreCase("permanent")) {
@@ -72,7 +75,8 @@ public class DurationMenu extends Menu<Gui> {
                     playerData.getGrantProcedure().setPermanent(true);
                     playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
                     player.sendMessage(Lang.GRANT_DURATION_SET.getMsg("Permanent"));
-                    new GrantReasonMenu(data).open(player);
+                    new GrantReasonMenu(targetData).open(player);
+                    Logger.debug("Player entered permanent");
                     return Prompt.END_OF_CONVERSATION;
                 }
                 long duration;
@@ -80,14 +84,16 @@ public class DurationMenu extends Menu<Gui> {
                     duration = System.currentTimeMillis() - DateUtils.parseDateDiff(s, false);
                 } catch (Exception e) {
                     player.sendMessage(Lang.GRANT_INVALID_TIME.getMsg());
-                    callback(playerData, player); //FIXME might not work
+                    callback(player); //FIXME might not work
+                    Logger.debug("Player entered invalid time, restarting conversation");
                     return Prompt.END_OF_CONVERSATION;
                 }
                 playerData.getGrantProcedure().setPermanent(false);
                 playerData.getGrantProcedure().setEnteredDuration(duration);
                 player.sendMessage(Lang.GRANT_DURATION_SET.getMsg(playerData.getGrantProcedure().getNiceDuration()));
                 playerData.getGrantProcedure().setGrantProcedureState(GrantProcedureState.REASON);
-                new GrantReasonMenu(data).open(player);
+                new GrantReasonMenu(targetData).open(player);
+                Logger.debug("Player entered valid time");
                 return Prompt.END_OF_CONVERSATION;
             }
         }).withLocalEcho(false).buildConversation(player).begin();

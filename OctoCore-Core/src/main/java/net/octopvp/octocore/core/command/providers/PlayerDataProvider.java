@@ -48,7 +48,9 @@ public class PlayerDataProvider implements Provider<PlayerData> {
             throw new CommandException("Player is not online.");
         }
         if (data != null) return data;
-        return PlayerManager.getInstance().getDataEvenIfOffline(player.getUniqueId(), parameterInfo.getParameter().isAnnotationPresent(CreateData.class));
+        PlayerData d = PlayerManager.getInstance().getDataEvenIfOffline(player.getUniqueId(), parameterInfo.getParameter().isAnnotationPresent(CreateData.class));
+        if (d == null) throw new CommandException("Player not found.");
+        return d;
     }
 
     @Override

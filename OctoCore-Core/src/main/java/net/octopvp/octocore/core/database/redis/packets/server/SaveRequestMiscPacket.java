@@ -27,12 +27,12 @@ public class SaveRequestMiscPacket extends RedisPacket {
     public void onReceive(JsonObject data) {
         if (uuid != null) {
             if (Bukkit.getPlayer(uuid) != null) {
-                PlayerManager.getInstance().getData(uuid).getData();
+                PlayerManager.getInstance().getData(uuid).save();
             }
         } else {
             Player player = Bukkit.getPlayer(name);
             if (player != null) {
-                PlayerManager.getInstance().getData(player).getData();
+                PlayerManager.getInstance().getData(player).save();
             }
         }
     }

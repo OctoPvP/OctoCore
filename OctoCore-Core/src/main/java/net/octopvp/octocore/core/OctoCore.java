@@ -28,6 +28,7 @@ import net.octopvp.octocore.core.objects.OfflinePunishData;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.setup.*;
 import net.octopvp.octocore.core.utils.AdventureUtils;
+import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.PacketUtil;
 import net.octopvp.octocore.core.utils.errorhandling.ErrorData;
 import net.octopvp.octocore.core.utils.errorhandling.ErrorHandling;
@@ -217,6 +218,7 @@ public abstract class OctoCore extends JavaPlugin {
                 .registerProvider(OfflinePunishData.class, new OfflinePunishDataProvider())
                 .registerProvider(GlobalPlayer.class, new GlobalPlayerProvider())
                 .registerProvider(Enchantment.class, new EnchantmentProvider())
+                .registerProvider(OfflineHelpers.OfflineInfo.class, new OfflineInfoProvider())
                 .registerCommandPostProcessor((ctx, obj) -> {
                     if (obj instanceof CommandResult) {
                         CommandResult result = (CommandResult) obj;
