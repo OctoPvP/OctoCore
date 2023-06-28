@@ -61,12 +61,15 @@ public class GrantConfirmationMenu extends Menu<Gui> {
                                 return;
                             }
                             GrantBuilder builder = new GrantBuilder(targetRank);
-                            builder.setAddedByUUID(player.getUniqueId()).setAddedBy(player.getName()).setAddedAt(System.currentTimeMillis());
-                            builder.setDuration(grantProcedure.getEnteredDuration()).setReason(grantProcedure.getEnteredReason()).setServer(grantProcedure.getServer());
-                            if (grantProcedure.isPermanent()) builder.setPerm(true);
-                            else builder.setDuration(grantProcedure.getEnteredDuration());
+                            builder.setAddedByUUID(player.getUniqueId())
+                                    .setAddedBy(player.getName())
+                                    .setAddedAt(System.currentTimeMillis())
+                                    .setDuration(grantProcedure.getEnteredDuration())
+                                    .setReason(grantProcedure.getEnteredReason())
+                                    .setServer(grantProcedure.getServer())
+                                    .setActive(true)
+                                    .setPerm(grantProcedure.isPermanent());
                             Grant grant = builder.build();
-                            grant.setActive(true);
                             Logger.debug("Grant: " + grant.toString());
                             Logger.debug("Expired: " + grant.hasExpired() + " | Active: " + grant.isActive());
                             player.closeInventory();
