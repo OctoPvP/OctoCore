@@ -22,6 +22,8 @@ public enum CommandResult {
     }
 
     public String getMsg(String... str) {
-        return StringUtils.replacePlaceholders(msg, str);
+        if (str == null || str.length == 0)
+            return msg;
+        return StringUtils.replacePlaceholders(msg, (Object[]) str);
     }
 }
