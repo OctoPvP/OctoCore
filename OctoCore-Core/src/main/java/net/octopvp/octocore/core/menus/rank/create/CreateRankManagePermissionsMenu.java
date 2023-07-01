@@ -170,9 +170,9 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
                 }
                 try {
                     Pattern pattern = Pattern.compile(filter);
-                    // if (pattern.matcher(perm).matches()) {
-                    //    return true;
-                    //}
+                    if (pattern.matcher(perm).matches()) {
+                        return true;
+                    }
                 } catch (Exception ignored) {
                 }
             }
