@@ -149,7 +149,8 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
                 });
     }
 
-    public GuiItem filterButton() {
+    @Override
+    public GuiItem getFilterButton() {
         return ItemBuilder.from(XMaterial.HOPPER)
                 .name(CC.GREEN + "Filter")
                 .lore(all ? CC.AQUA + "Currently Showing " + CC.U + "ALL" + CC.R + CC.AQUA + " active grants." : CC.AQUA + "Currently Showing " + CC.U + "Active Only" + CC.R + CC.AQUA + " grants.")
@@ -193,6 +194,5 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
     @Override
     public void addStaticButtons() {
         gui.setItem(4, Buttons.playerInfo(targetData));
-        gui.setItem(6, 6, filterButton());
     }
 }

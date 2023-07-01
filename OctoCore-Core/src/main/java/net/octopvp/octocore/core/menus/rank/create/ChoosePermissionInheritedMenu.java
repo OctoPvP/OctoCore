@@ -69,8 +69,9 @@ public class ChoosePermissionInheritedMenu extends Menu<Gui> {
 
     @Override
     public void populateGui(Gui gui, Player player) {
-        gui.setItem(10, permissionsButton());
-        gui.setItem(12, inheritedButton());
+        gui.getFiller().fill(PLACEHOLDER_ITEM);
+        gui.setItem(12, permissionsButton());
+        gui.setItem(14, inheritedButton());
         gui.setItem(26, doneButton());
         GuiItem backButton = ItemBuilder.from(Material.ARROW)
                 .name(CC.YELLOW + "Back")

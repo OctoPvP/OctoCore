@@ -39,16 +39,6 @@ public class InheritedRanksMenu extends PaginatedMenu<PaginatedGui> {
         this.startBuilder = builder.clone();
     }
 
-    public GuiItem filterButton() {
-        return ItemBuilder.from(Material.HOPPER)
-                .name(CC.GREEN + "Filter")
-                .lore(CC.GRAY + "Click to show " + (showOnlyInherited ? "all ranks" : "only inherited ranks"))
-                .asGuiItem(event -> {
-                    showOnlyInherited = !showOnlyInherited;
-                    update((Player) event.getWhoClicked());
-                });
-    }
-
     public GuiItem rankButton(Rank rankData) {
         // return ItemBuilder.from(Material.WOOL)
         // .durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())))
@@ -83,16 +73,22 @@ public class InheritedRanksMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     @Override
-    public void addStaticButtons() {
-        gui.setItem(37, filterButton());
+    public PaginatedGui createGui(Player player) {
+        return Gui.paginated()
+                .title("Choose inherited ranks")
+                .rows(6)
+                .create();
     }
 
     @Override
-    public PaginatedGui createGui(Player player) {
-        return Gui.paginated()
-                .title("Choose inherited ranks!")
-                .rows(6)
-                .create();
+    public GuiItem getFilterButton() {
+        return ItemBuilder.from(Material.HOPPER)
+                .name(CC.GREEN + "Filter")
+                .lore(CC.GRAY + "Click to show " + (showOnlyInherited ? "all ranks" : "only inherited ranks"))
+                .asGuiItem(event -> {
+                    showOnlyInherited = !showOnlyInherited;
+                    update((Player) event.getWhoClicked());
+                });
     }
 
     @Override

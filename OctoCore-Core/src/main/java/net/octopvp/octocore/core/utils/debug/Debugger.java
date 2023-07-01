@@ -2,7 +2,9 @@ package net.octopvp.octocore.core.utils.debug;
 
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
+import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.listeners.JoinLeaveListener;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.OctoPermissible;
@@ -131,6 +133,15 @@ public class Debugger {
             Player player = (Player) sender;
             PlayerData playerData = PlayerManager.getInstance().getData(player);
             playerData.getPunishData().load();
+        }
+    }
+
+    public void getDefaultRank() {
+        Rank rank = OctoCore.getInstance().getRankManager().getDefaultRank();
+        if (rank == null) {
+            print("Rank is null!");
+        } else {
+            print(rank.getDisplayName());
         }
     }
 }

@@ -50,7 +50,9 @@ public enum Lang {
     TOGGLE_ON("&aToggled %1 ON!"), TOGGLE_OFF("&aToggled %1 &cOFF"),
 
     GLOBAL_CHAT_IS_DISABLED("&cYou have global chat disabled! do /settings to enable it!"),
-    IGNORE_LIST_FULL("&cYou cannot ignore more than " + MessageSettings.MAX_IGNORE_SIZE + " players!"),;
+    IGNORE_LIST_FULL("&cYou cannot ignore more than " + MessageSettings.MAX_IGNORE_SIZE + " players!"),
+    FILTER_PERMISSION_PROMPT("&aPlease enter a permission to filter by! Regex is supported.")
+    ;
     private final String msg;
 
     Lang(String msg) {

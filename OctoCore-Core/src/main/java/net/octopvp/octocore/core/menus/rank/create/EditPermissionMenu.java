@@ -103,7 +103,7 @@ public class EditPermissionMenu extends Menu<Gui> {
             player.sendMessage(Lang.EDIT_PERMISSION_PERMISSION_SET_SUCCESS.getMsg(s));
             open(player);
             return Prompt.END_OF_CONVERSATION;
-        })).buildConversation(player).begin();
+        })).withLocalEcho(false).buildConversation(player).begin();
     }
 
     public GuiItem permissionButton() {

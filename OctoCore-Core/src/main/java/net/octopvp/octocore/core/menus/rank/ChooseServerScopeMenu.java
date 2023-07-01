@@ -12,6 +12,7 @@ import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
+import net.octopvp.octocore.core.utils.Skulls;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Material;
@@ -87,7 +88,8 @@ public class ChooseServerScopeMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     public GuiItem globalButton() {
-        return ItemBuilder.from(Material.SKULL_ITEM)
+        return ItemBuilder.skull()
+                .texture(Skulls.GLOBE_BASE_64)
                 .name(CC.AQUA + "Global")
                 .lore(CC.GREEN + "Selecting this will make the rank server-wide")
                 .asGuiItem(event -> {

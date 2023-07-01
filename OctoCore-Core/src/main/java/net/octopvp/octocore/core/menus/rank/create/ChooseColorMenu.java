@@ -36,12 +36,10 @@ public class ChooseColorMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     @Override
-    public GuiItem getBackButton(Menu<?> menu) {
-        return ItemBuilder.from(Material.ARROW)
-                .name(CC.RED + "Back")
-                .asGuiItem(event -> {
-                    callback.accept(builder);
-                });
+    public void addStaticButtons() {
+        gui.updateItem(gui.getRows(), 4, ItemBuilder.from(Material.ARROW)
+                .name(CC.YELLOW + "Back")
+                .asGuiItem(event -> callback.accept(builder)));
     }
 
     @Override
@@ -57,7 +55,7 @@ public class ChooseColorMenu extends PaginatedMenu<PaginatedGui> {
     public PaginatedGui createGui(Player player) {
         return Gui.paginated()
                 .title("Choose color")
-                .rows(7)
+                .rows(6)
                 .create();
     }
 }

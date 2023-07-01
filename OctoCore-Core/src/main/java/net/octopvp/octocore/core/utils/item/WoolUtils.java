@@ -32,7 +32,11 @@ public class WoolUtils {
     }
 
     public static XMaterial convertChatColorToWoolMaterial(ChatColor color) {
-        return woolMaterials.get(convertChatColorToWoolData(color));
+        int i = convertChatColorToWoolData(color);
+        if (i < 0) {
+            return XMaterial.WHITE_WOOL;
+        }
+        return woolMaterials.get(i);
     }
 
     public static int convertChatColorToWoolData(net.octopvp.octocore.common.util.ChatColor color) {

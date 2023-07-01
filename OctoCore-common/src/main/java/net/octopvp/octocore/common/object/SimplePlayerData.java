@@ -159,7 +159,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         document.put("uuid", uuid.toString());
         document.put("name", name);
         document.put("lowerName", lowerName);
-        document.put("grants", OctoCoreCommon.getInstance().getGson().toJson(grants));
+        document.put("grants", OctoCoreCommon.getInstance().getGson().toJson(grants.clone()));
         document.put("dataVersion", dataVersion);
         document.put("frozen", frozen);
         document.put("nicked", nicked);
