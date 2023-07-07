@@ -127,6 +127,11 @@ public class PunishData implements IPunishData {
     }
 
     @Override
+    public UUID getUuid() {
+        return playerData.getUuid();
+    }
+
+    @Override
     public String getAddress() {
         return playerData.getAddress();
     }
