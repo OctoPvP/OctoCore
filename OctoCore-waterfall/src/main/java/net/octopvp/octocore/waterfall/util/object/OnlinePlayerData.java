@@ -3,6 +3,7 @@ package net.octopvp.octocore.waterfall.util.object;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
@@ -50,7 +51,7 @@ public class OnlinePlayerData {
 
         if (!OctoCoreWaterfall.getInstance().getRedisManager().isConnected()) return;
 
-        try (Jedis jedis = OctoCoreWaterfall.getInstance().getRedisManager().getJedis()) {
+        try (Jedis jedis = RedisManager.getJedis()) {
             String json = jedis.hget("player-data", uuid.toString());
             //Logger.debug(json);
             if (json == null) return;

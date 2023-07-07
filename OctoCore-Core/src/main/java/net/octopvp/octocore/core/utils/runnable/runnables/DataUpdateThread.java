@@ -80,7 +80,7 @@ public class DataUpdateThread extends Thread {
                         playerData.getHighestRank().getWeight(), playerData.getMessageSettings(), playerData.getCachedFormattedNameNoNickNoTag(),
                         playerData.isOp()
                 ).send();
-                new DataCache(playerData.getUuid()).update(playerData.getData());
+                new DataCache(playerData.getUuid()).update(playerData.getData(), playerData.getBungeePerms());
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.util.permissions.Node;
 import org.bson.Document;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -26,8 +28,11 @@ public class DataCache {
         }
     }
 
-    public void update(Document document) {
+    public void update(Document document, List<Node> bungeePerms) {
         if (!OctoCoreCommon.getInstance().getRedisManager().isConnected()) return;
+        if (bungeePerms != null) {
+            document.put("bungeePermissions", OctoCoreCommon.getInstance().getGson().toJson(bungeePerms, GsonType.NODE_LIST));
+        }
 
         try (Jedis jedis = OctoCoreCommon.getInstance().getRedisManager().getPool().getResource()) {
             jedis.hset("player-data", this.uuid.toString(), document.toJson());
@@ -42,6 +47,9 @@ public class DataCache {
                 e.printStackTrace();
                 Logger.error("Failed to cache data for " + uuid + ": " + e.getMessage());
             }
+        }
+        if (bungeePerms != null) {
+            document.remove("bungeePermissions"); // leave document unchanged
         }
     }
 }

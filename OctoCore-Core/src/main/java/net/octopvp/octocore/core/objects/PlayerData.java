@@ -101,11 +101,14 @@ public class PlayerData extends SimplePlayerData {
     public Document save() {
         this.lastDataSave = 0;
         Document document = super.getData();
-        new DataCache(this.uuid).update(document);
         PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
+        new DataCache(this.uuid).update(document, getBungeePerms());
         return document;
     }
 
+    public String getBungeePermsJson() {
+        return OctoCoreCommon.getInstance().getGson().toJson(getBungeePerms(), GsonType.NODE_LIST);
+    }
     public Document getBungeePermsDoc() {
         Document document = super.getData();
         document.put("bungeePermissions", OctoCoreCommon.getInstance().getGson().toJson(this.bungeePerms, GsonType.NODE_LIST));
