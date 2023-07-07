@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class OfflinePunishData implements IPlayerData, IPunishData {
+public class OfflinePunishData implements IPunishData {
 
     private String name, address;
     private UUID uniqueId;
@@ -117,19 +117,9 @@ public class OfflinePunishData implements IPlayerData, IPunishData {
                 new AltUpdatePacket(this.uniqueId, this.name, globalPlayer.getUniqueId(), globalPlayer.getName());
             }
         });
-
-        this.alts.removeIf(alt -> alt.getName().equalsIgnoreCase(this.name));
-
-        //MAKE SURE THERE ARE NO DUPLICATED ALTS
-        List<Alt> alts = new ArrayList<>();
-        this.alts.forEach(alt -> {
-            if (alts.stream().filter(current -> current.getName().equalsIgnoreCase(alt.getName())).findFirst().orElse(null) == null) {
-                alts.add(alt);
-            }
-        });
-
+        List<Alt> nAlts = new ArrayList<>(this.alts);
         this.alts.clear();
-        this.alts.addAll(alts);
+        this.alts.addAll(Alt.removeDuplicates(nAlts, this));
 
         return this;
     }

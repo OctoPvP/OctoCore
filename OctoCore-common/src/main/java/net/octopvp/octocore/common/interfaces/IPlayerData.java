@@ -8,4 +8,5 @@ public interface IPlayerData {
     UUID getUniqueId();
 
     UUID getUuid();
+
 }

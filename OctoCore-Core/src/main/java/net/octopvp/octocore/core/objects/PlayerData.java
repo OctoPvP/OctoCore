@@ -109,6 +109,7 @@ public class PlayerData extends SimplePlayerData {
     public String getBungeePermsJson() {
         return OctoCoreCommon.getInstance().getGson().toJson(getBungeePerms(), GsonType.NODE_LIST);
     }
+
     public Document getBungeePermsDoc() {
         Document document = super.getData();
         document.put("bungeePermissions", OctoCoreCommon.getInstance().getGson().toJson(this.bungeePerms, GsonType.NODE_LIST));
@@ -172,17 +173,9 @@ public class PlayerData extends SimplePlayerData {
             }
         });
 
-        this.alts.removeIf(alt -> alt.getName().equalsIgnoreCase(this.name));
-
-        List<Alt> alts = new ArrayList<>();
-        this.alts.forEach(alt -> { //remove duplicates
-            if (alts.stream().filter(current -> current.getName().equalsIgnoreCase(alt.getName())).findFirst().orElse(null) == null) {
-                alts.add(alt);
-            }
-        });
-
+        List<Alt> nAlts = new ArrayList<>(this.alts);
         this.alts.clear();
-        this.alts.addAll(alts);
+        this.alts.addAll(Alt.removeDuplicates(nAlts, this));
     }
 
     public void updateTime(Player player) {
@@ -312,7 +305,7 @@ public class PlayerData extends SimplePlayerData {
         long nextGrantExpire = this.getLowestGrantExpire();
         if (nextGrantExpire != -1 || System.currentTimeMillis() - nextGrantExpire > 1200000)
             result.setExpire(System.currentTimeMillis() + 600000); // expire in 10 minutes
-        // expire this permission when one of the grants expire
+            // expire this permission when one of the grants expire
         else result.setExpire(nextGrantExpire);
 
         cachedPermissions.put(perm, result);

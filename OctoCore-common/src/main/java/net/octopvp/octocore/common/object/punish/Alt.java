@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.interfaces.IPlayerData;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 
@@ -107,6 +108,23 @@ public class Alt implements IPunishData {
     @Override
     public boolean isIPBanned() {
         return punishData != null && punishData.isIPBanned();
+    }
+
+
+    public static List<Alt> removeDuplicates(List<Alt> alts, IPlayerData iPlayerData) {
+        alts.removeIf(alt -> alt.getName().equalsIgnoreCase(iPlayerData.getName()) || alt.getUniqueId().equals(iPlayerData.getUniqueId()));
+        List<Alt> newAlts = new ArrayList<>();
+        alts.forEach(alt -> {
+            if (newAlts.stream().filter(current -> current.getName().equalsIgnoreCase(alt.getName())).findFirst().orElse(null) == null) {
+                newAlts.add(alt);
+            }
+        });
+        return newAlts;
+    }
+
+    @Override
+    public UUID getUuid() {
+        return uniqueId;
     }
 }
 
