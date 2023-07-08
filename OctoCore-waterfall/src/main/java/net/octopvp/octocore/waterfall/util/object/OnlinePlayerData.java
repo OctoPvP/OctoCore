@@ -40,10 +40,6 @@ public class OnlinePlayerData {
         return nodes.stream().anyMatch(node -> node.getPermission().equalsIgnoreCase(perm));
     }
 
-    public void unSetPerm(String perm) {
-        nodes.removeIf(node -> node.getPermission().equalsIgnoreCase(perm));
-    }
-
     public void update() {
         Logger.debug("Updating for " + uuid);
         cachedPermResults.clear();
