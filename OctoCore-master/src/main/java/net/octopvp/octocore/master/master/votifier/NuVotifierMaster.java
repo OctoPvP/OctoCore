@@ -11,6 +11,7 @@ import com.vexsoftware.votifier.platform.VotifierPlugin;
 import com.vexsoftware.votifier.platform.scheduler.VotifierScheduler;
 import com.vexsoftware.votifier.util.KeyCreator;
 import com.vexsoftware.votifier.util.TokenUtil;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import net.octopvp.octocore.master.component.LightningHolder;
 import net.octopvp.octocore.master.master.votifier.models.VotifierConfig;
@@ -21,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.security.Key;
 import java.security.KeyPair;
@@ -53,7 +53,7 @@ public class NuVotifierMaster implements VoteHandler, VotifierPlugin {
     /**
      * Keys used for websites.
      */
-    private Map<String, Key> tokens = new HashMap<>();
+    private final Map<String, Key> tokens = new HashMap<>();
 
     private VotifierScheduler scheduler;
     private LoggingAdapter pluginLogger;
@@ -64,8 +64,8 @@ public class NuVotifierMaster implements VoteHandler, VotifierPlugin {
     public static final BlockingQueue<SyncWrapper> runSyncQueue = new LinkedBlockingQueue<>();
 
     public static class SyncWrapper {
-        private Runnable runnable;
-        private CompletableFuture<?> future;
+        private final Runnable runnable;
+        private final CompletableFuture<?> future;
 
         public SyncWrapper(Runnable runnable, CompletableFuture<?> future) {
             this.runnable = runnable;
@@ -290,7 +290,7 @@ public class NuVotifierMaster implements VoteHandler, VotifierPlugin {
         }
     }
 
-    private static Logger logger = LoggerFactory.getLogger(NuVotifierMaster.class);
+    private static final Logger logger = LoggerFactory.getLogger(NuVotifierMaster.class);
 
     public static Logger getLogger() {
         return logger;

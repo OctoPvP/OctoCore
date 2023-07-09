@@ -12,7 +12,6 @@ import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.chat.Clickable;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.stream.Collectors;

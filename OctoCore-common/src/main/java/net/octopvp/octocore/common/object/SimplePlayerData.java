@@ -17,13 +17,15 @@ import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
-import net.octopvp.octocore.common.util.*;
+import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.ChatColor;
+import net.octopvp.octocore.common.util.GsonType;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.permissions.Node;
 import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import org.bson.Document;
-import sun.util.resources.cldr.ext.TimeZoneNames_fr_GF;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -154,6 +156,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         }
         return this;
     }
+
     public Document getData() {
         Document document = new Document();
         document.put("uuid", uuid.toString());
@@ -224,6 +227,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         document.entrySet().removeIf(e -> e.getValue() == null);
         return document;
     }
+
     @Override
     public UUID getUniqueId() {
         return uuid;
@@ -255,9 +259,11 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
                         grant.getRank() != null && grant.getRank().getRankType() != RankType.HIDDEN)
                 .max(Comparator.comparingInt(grant -> grant.getRank().getWeight())).orElse(null);
     }
+
     public long getLowestGrantExpire() {
         return this.getActiveGrants().stream().mapToLong(Grant::getExpireTime).min().orElse(-1);
     }
+
     public Set<Node> getFinalNodes() {
         Set<Node> nodes1 = new HashSet<>(nodes);
         for (Node finalNode : getHighestRank().getFinalNodes()) {
@@ -299,7 +305,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
             return this.getHighestRank().getDisplayColor();
         }
         if (this.isNameColorBold() && this.isNameColorItalic()) {
-            return this.nameColor + ChatColor.BOLD.toString() + ChatColor.ITALIC.toString();
+            return this.nameColor + ChatColor.BOLD.toString() + ChatColor.ITALIC;
         }
         if (this.isNameColorBold()) {
             return this.nameColor + ChatColor.BOLD.toString();

@@ -34,7 +34,7 @@ public class ScrollableMessageList extends Div {
         update();
     }
 
-    private VerticalLayout vl = new VerticalLayout();
+    private final VerticalLayout vl = new VerticalLayout();
 
     public void update() {
         vl.removeAll();
@@ -54,8 +54,8 @@ public class ScrollableMessageList extends Div {
     }
 
     public static class MessageItemComponent extends Div {
-        private VerticalLayout vl = new VerticalLayout();
-        private MessageListItem item;
+        private final VerticalLayout vl = new VerticalLayout();
+        private final MessageListItem item;
 
         public MessageItemComponent(MessageListItem item) {
             this.item = item;
@@ -63,8 +63,7 @@ public class ScrollableMessageList extends Div {
             timestamp.getStyle().set("color", "gray");
             Component avatar;
             String server = null;
-            if (item instanceof MinecraftMessageListItem) {
-                MinecraftMessageListItem i = (MinecraftMessageListItem) item;
+            if (item instanceof MinecraftMessageListItem i) {
                 avatar = i.getProfileComponent();
                 server = i.getServer();
             } else {
@@ -85,8 +84,8 @@ public class ScrollableMessageList extends Div {
 
     @Getter
     public static class MinecraftMessageListItem extends MessageListItem {
-        private boolean showOnlineIndicator;
-        private String server;
+        private final boolean showOnlineIndicator;
+        private final String server;
 
         public MinecraftMessageListItem(String text,
                                         String server,

@@ -1,33 +1,21 @@
 package net.octopvp.octocore.core.command.impl.message;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.JoinStrings;
 import net.octopvp.commander.annotation.Name;
 import net.octopvp.commander.annotation.Sender;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
-import net.octopvp.commander.command.CommandInfo;
-import net.octopvp.commander.exception.InvalidArgsException;
-import net.octopvp.commander.exception.MessageException;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.GlobalPlayer;
-import net.octopvp.octocore.common.object.MessageSettings;
 import net.octopvp.octocore.common.object.Permissions;
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.database.redis.packets.player.MessagePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
-import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.msg.Lang;
-import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 public class MessageCommand {

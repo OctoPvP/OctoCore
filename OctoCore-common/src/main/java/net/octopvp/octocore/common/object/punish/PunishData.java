@@ -93,6 +93,7 @@ public class PunishData implements IPunishData {
         }
         return this;
     }
+
     public PunishData loadIfNot() {
         if (!loaded) load();
         return this;

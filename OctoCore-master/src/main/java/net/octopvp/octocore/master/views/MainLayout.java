@@ -35,10 +35,10 @@ import java.util.*;
 public class MainLayout extends AppLayout {
     private H1 viewTitle;
 
-    private UserService authenticatedUser;
-    private AccessAnnotationChecker accessChecker;
+    private final UserService authenticatedUser;
+    private final AccessAnnotationChecker accessChecker;
 
-    private MongoUserRepository mongoUserRepository;
+    private final MongoUserRepository mongoUserRepository;
 
     public MainLayout(UserService authenticatedUser, AccessAnnotationChecker accessChecker, MongoUserRepository mongoUserRepository) {
         this.authenticatedUser = authenticatedUser;

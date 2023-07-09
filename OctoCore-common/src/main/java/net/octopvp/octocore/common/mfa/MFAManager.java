@@ -5,13 +5,17 @@ import net.octopvp.octocore.common.mfa.impl.TOTPMFAProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MFAManager {
-    @Getter private static final MFAManager instance = new MFAManager();
-    private MFAManager() {}
+    @Getter
+    private static final MFAManager instance = new MFAManager();
 
-    private List<MFAProvider<? extends MFAData>> providers = new ArrayList<>(Arrays.asList(
+    private MFAManager() {
+    }
+
+    private final List<MFAProvider<? extends MFAData>> providers = new ArrayList<>(Collections.singletonList(
             new TOTPMFAProvider()
     ));
 

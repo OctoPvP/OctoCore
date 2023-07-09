@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class FixedList<T> extends ArrayList<T> {
-    private int maxSize;
+    private final int maxSize;
+
     public FixedList(int maxSize) {
         this.maxSize = maxSize;
     }

@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 public class ErrorHandling {
     public static String formatError(Exception e) {
-        StringBuilder sb = new StringBuilder(e + "");
+        StringBuilder sb = new StringBuilder(String.valueOf(e));
         for (StackTraceElement stackTraceElement : e.getStackTrace()) {
             sb.append("\n").append("\tat ").append(stackTraceElement.toString());
         }
@@ -19,7 +19,7 @@ public class ErrorHandling {
         //TODO use logger
         String rng = Utilities.genRandomString(5).toUpperCase();
         e.addData("Time", new Date().toString());
-        e.addData("CurrentTimeMillis", System.currentTimeMillis() + "");
+        e.addData("CurrentTimeMillis", String.valueOf(System.currentTimeMillis()));
         e.addData("ID", rng);
         Logger.debug("Error detected. Posting to hastebin. Error code: " + rng);
         StringBuilder toHasteBin = new StringBuilder("---------------------------------------\nAny extra data that may be needed\n\n");

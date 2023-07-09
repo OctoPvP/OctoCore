@@ -4,7 +4,8 @@ public enum MFAType {
     TOTP("totp"),
     SECURITY_KEY("security_key");
 
-    private String type;
+    private final String type;
+
     MFAType(String type) {
         this.type = type;
     }

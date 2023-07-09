@@ -62,6 +62,7 @@ public class DurationMenu extends Menu<Gui> {
             public String getPromptText(ConversationContext conversationContext) {
                 return Lang.GRANT_ENTER_DURATION.getMsg();
             }
+
             @Override
             public Prompt acceptInput(ConversationContext conversationContext, String s) {
                 if (playerData == null) {

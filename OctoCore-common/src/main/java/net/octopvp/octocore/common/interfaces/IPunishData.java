@@ -5,7 +5,6 @@ import net.octopvp.octocore.common.object.punish.PunishmentType;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 public interface IPunishData extends IPlayerData {
     Collection<IPunishment> getPunishments();

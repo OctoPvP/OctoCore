@@ -39,7 +39,7 @@ public final class CC {
             ACCENT = ChatColor.DARK_AQUA.toString(),
             SPLITTER = "\u2503",
             SCOREBOARD_SEPARATOR = GRAY + S + "---------------------",
-                SCOREBOARD_IP_SEPARATOR = GRAY + S + "--",
+            SCOREBOARD_IP_SEPARATOR = GRAY + S + "--",
             SEPARATOR = GRAY + S + "-------------------------------------",
             BULLET = "\u2022",
             DOT = BULLET,

@@ -2,7 +2,6 @@ package net.octopvp.octocore.core.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.util.DataCache;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;

@@ -12,12 +12,12 @@ import net.octopvp.octocore.master.master.manager.ServerManager;
 @Getter
 public class PlayerName extends HorizontalLayout {
 
-    private String playerName;
+    private final String playerName;
     public static final String HEAD_URL = "https://mc-heads.net/avatar/";
 
     private boolean showOnlineIcon = false;
 
-    private Image image;
+    private final Image image;
     private Div statusCircle;
 
     public PlayerName(String name) {

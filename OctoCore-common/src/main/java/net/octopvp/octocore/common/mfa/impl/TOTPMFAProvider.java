@@ -9,8 +9,9 @@ import net.octopvp.octocore.common.mfa.MFAType;
 
 public class TOTPMFAProvider implements MFAProvider<TOTPMFAProvider.TOTPMFAData> {
 
-    private GoogleAuthenticator gAuth = new GoogleAuthenticator();
-    private GoogleAuthenticatorKey key = gAuth.createCredentials();
+    private final GoogleAuthenticator gAuth = new GoogleAuthenticator();
+    private final GoogleAuthenticatorKey key = gAuth.createCredentials();
+
     @Override
     public boolean isEnabled() {
         return false;

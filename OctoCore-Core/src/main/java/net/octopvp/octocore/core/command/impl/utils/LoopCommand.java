@@ -19,7 +19,7 @@ public class LoopCommand {
         }
         if (delay == 0) {
             for (int i = 0; i < times; i++) {
-                Bukkit.dispatchCommand(sender, cmd.replace("%i", i + ""));
+                Bukkit.dispatchCommand(sender, cmd.replace("%i", String.valueOf(i)));
             }
             return CommandResult.SUCCESS;
         }

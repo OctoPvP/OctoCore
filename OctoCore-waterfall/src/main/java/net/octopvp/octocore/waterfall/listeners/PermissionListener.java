@@ -48,8 +48,7 @@ public class PermissionListener implements Listener {
     @EventHandler
     public void onPermCheck(PermissionCheckEvent event) {
         Logger.debug("Permission check: %1", event.getPermission());
-        if (event.getSender() instanceof ProxiedPlayer) {
-            ProxiedPlayer player = (ProxiedPlayer) event.getSender();
+        if (event.getSender() instanceof ProxiedPlayer player) {
             OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
             Logger.debug("Player: %1, Data: %2", player.getName(), data);
             if (data == null)

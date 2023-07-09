@@ -8,8 +8,8 @@ import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import net.octopvp.octocore.common.object.FixedList;
-import net.octopvp.octocore.master.master.manager.StaffChatModule;
 import net.octopvp.octocore.common.redis.packets.ChatPacket;
+import net.octopvp.octocore.master.master.manager.StaffChatModule;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.services.UserService;
 import net.octopvp.octocore.master.views.components.ScrollableMessageList;
@@ -35,6 +35,7 @@ public abstract class ChatPage extends Page {
     protected StaffChatModule staffChatModule;
 
     public abstract void submitChat(String message);
+
     @Override
     public void init() {
         user = userService.get();

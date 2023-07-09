@@ -2,13 +2,12 @@ package net.octopvp.octocore.master.views.pages.impl.staff;
 
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.RolesAllowed;
 import net.octopvp.octocore.common.redis.packets.ChatPacket;
 import net.octopvp.octocore.master.master.redis.impl.staff.StaffChatPacket;
 import net.octopvp.octocore.master.views.MainLayout;
 
-import jakarta.annotation.security.RolesAllowed;
 import java.util.UUID;
-import java.util.function.Function;
 
 @PageTitle("Staff Chat")
 @Route(value = "staffchat", layout = MainLayout.class)

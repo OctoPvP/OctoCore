@@ -1,10 +1,10 @@
 package net.octopvp.octocore.master.views.pages.impl.admin;
 
 import com.vaadin.flow.router.*;
+import jakarta.annotation.security.RolesAllowed;
 import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 
-import jakarta.annotation.security.RolesAllowed;
 import java.util.UUID;
 
 @PageTitle("Users")
@@ -13,6 +13,7 @@ import java.util.UUID;
 public class ViewUserPage extends Page implements HasUrlParameter<String> {
     private UUID uuid;
     private Location location;
+
     @Override
     public void init() {
 

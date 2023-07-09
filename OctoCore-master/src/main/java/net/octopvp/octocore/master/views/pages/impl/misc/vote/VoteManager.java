@@ -6,13 +6,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vexsoftware.votifier.model.Vote;
+import jakarta.annotation.security.PermitAll;
 import net.octopvp.octocore.master.component.LightningHolder;
 import net.octopvp.octocore.master.master.votifier.VotifierEvent;
 import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
-
-import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Vote Manager")
 @Route(value = "votemgr", layout = MainLayout.class)

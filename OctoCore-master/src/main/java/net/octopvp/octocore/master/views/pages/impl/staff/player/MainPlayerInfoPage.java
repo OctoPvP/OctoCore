@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 public class MainPlayerInfoPage extends Page {
     TextField nameField;
     Checkbox bedrockCheckbox;
+
     @Override
     public void init() {
         nameField = new TextField();
@@ -64,7 +65,7 @@ public class MainPlayerInfoPage extends Page {
         boolean bedrockCheckbox = this.bedrockCheckbox.getValue();
         UUID uuid = null;
         try {
-            uuid = isUUID ? UUID.fromString(name) : bedrockCheckbox ? new UUID(0, BedrockUtils.getXUID(name.replace("*", "")).get()) :  MojangAPIUtil.INSTANCE.getUUID(name);
+            uuid = isUUID ? UUID.fromString(name) : bedrockCheckbox ? new UUID(0, BedrockUtils.getXUID(name.replace("*", "")).get()) : MojangAPIUtil.INSTANCE.getUUID(name);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }

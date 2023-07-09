@@ -15,9 +15,9 @@ import net.octopvp.octocore.master.services.UserService;
 import java.util.Objects;
 
 public class ThemeToggleButton extends Button {
-    private MongoUserRepository mongoUserRepository;
-    private UserService userService;
-    private String userID;
+    private final MongoUserRepository mongoUserRepository;
+    private final UserService userService;
+    private final String userID;
 
     public ThemeToggleButton(MongoUserRepository mongoUserRepository, UserService userService, String userID) {
         this.mongoUserRepository = mongoUserRepository;
@@ -39,6 +39,7 @@ public class ThemeToggleButton extends Button {
             } else updateTheme(themeList);
         });
     }
+
     public void updateTheme(ThemeList themeList) {
         if (mongoUserRepository == null) {
             if (themeList.contains(Lumo.DARK)) {

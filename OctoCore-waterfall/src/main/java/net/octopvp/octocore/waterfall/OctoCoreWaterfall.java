@@ -15,7 +15,7 @@ import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.interfaces.manager.*;
-import net.octopvp.octocore.common.manager.*;
+import net.octopvp.octocore.common.manager.DefaultServerManagerImpl;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.redis.packets.PlayerDataPacket;
 import net.octopvp.octocore.common.util.Logger;

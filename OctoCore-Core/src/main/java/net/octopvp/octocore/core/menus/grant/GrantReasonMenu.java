@@ -53,7 +53,7 @@ public class GrantReasonMenu extends PaginatedMenu<PaginatedGui> {
                 .asGuiItem(event -> {
                     Player player = (Player) event.getWhoClicked();
                     PlayerData sendData = PlayerManager.getInstance().getData(player.getUniqueId());
-                    if (sendData == null || playerData == null ) {
+                    if (sendData == null || playerData == null) {
                         Logger.debug("Player data is null, cannot continue");
                         player.closeInventory();
                         return;

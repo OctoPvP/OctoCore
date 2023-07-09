@@ -3,7 +3,6 @@ package net.octopvp.octocore.core.objects;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.util.DateUtils;
-import net.octopvp.octocore.core.manager.impl.PlayerManager;
 
 import java.util.UUID;
 

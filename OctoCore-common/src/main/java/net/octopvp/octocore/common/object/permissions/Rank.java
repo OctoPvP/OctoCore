@@ -6,12 +6,12 @@ import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.interfaces.manager.IRankManager;
+import net.octopvp.octocore.common.interfaces.util.PairMap;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.object.enums.RankType;
 import net.octopvp.octocore.common.object.maps.HashPairMap;
-import net.octopvp.octocore.common.interfaces.util.PairMap;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.ChatColor;
 import net.octopvp.octocore.common.util.permissions.Node;
@@ -41,7 +41,7 @@ public class Rank implements Cloneable {
     private boolean bold = false, italic = false, purchasable = false, changableMainColor = false;
     private ServerContext scope = ServerContext.global();
 
-    public void save(IRankManager ...rankManager) {
+    public void save(IRankManager... rankManager) {
         if (rankManager.length == 0)
             OctoCoreCommon.getInstance().getServerImplementation().getRankManager().save(this);
         else
@@ -136,28 +136,28 @@ public class Rank implements Cloneable {
 
     public String getDisplayName() {
         if (this.isItalic() && this.isBold()) {
-            return this.getColor() + "" + ChatColor.BOLD + ChatColor.ITALIC + this.getName();
+            return this.getColor() + String.valueOf(ChatColor.BOLD) + ChatColor.ITALIC + this.getName();
         }
         if (this.isBold()) {
-            return this.getColor() + "" + ChatColor.BOLD + this.getName();
+            return this.getColor() + String.valueOf(ChatColor.BOLD) + this.getName();
         }
         if (this.isItalic()) {
-            return this.getColor() + "" + ChatColor.ITALIC + this.getName();
+            return this.getColor() + String.valueOf(ChatColor.ITALIC) + this.getName();
         }
         return this.getColor() + this.getName();
     }
 
     public String getDisplayColor() {
         if (this.isItalic() && this.isBold()) {
-            return this.getColor() + "" + ChatColor.BOLD + "" + ChatColor.ITALIC;
+            return this.getColor() + String.valueOf(ChatColor.BOLD) + ChatColor.ITALIC;
         }
         if (this.isBold()) {
-            return this.getColor() + "" + ChatColor.BOLD;
+            return this.getColor() + String.valueOf(ChatColor.BOLD);
         }
         if (this.isItalic()) {
-            return this.getColor() + "" + ChatColor.ITALIC;
+            return this.getColor() + String.valueOf(ChatColor.ITALIC);
         }
-        return this.getColor() + "";
+        return String.valueOf(this.getColor());
     }
 
     public String getPrefix() {

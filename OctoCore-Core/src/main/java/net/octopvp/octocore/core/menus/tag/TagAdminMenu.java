@@ -9,9 +9,7 @@ import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 

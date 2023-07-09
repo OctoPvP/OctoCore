@@ -19,7 +19,7 @@ public class StaffChatCommand {
         PlayerData playerData = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
         if (message == null) {
             playerData.setStaffChat(!playerData.isStaffChat());
-            sender.sendMessage((playerData.isStaffChat() ? Lang.STAFF_CHAT_ENABLED : Lang.STAFF_CHAT_DISABLED) + "");
+            sender.sendMessage(String.valueOf(playerData.isStaffChat() ? Lang.STAFF_CHAT_ENABLED : Lang.STAFF_CHAT_DISABLED));
             if (playerData.isAdminChat()) {
                 playerData.setAdminChat(false);
                 sender.sendMessage(Lang.ADMIN_CHAT_DISABLED.toString());

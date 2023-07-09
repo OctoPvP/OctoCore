@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 @AllArgsConstructor
 public class GrantConfirmationMenu extends Menu<Gui> {
     private PlayerData targetData;
+
     public GuiItem infoButton(Player player) {
         GrantProcedure procedure = PlayerManager.getInstance().getData(player.getUniqueId()).getGrantProcedure();
         return ItemBuilder.from(Material.BEACON)

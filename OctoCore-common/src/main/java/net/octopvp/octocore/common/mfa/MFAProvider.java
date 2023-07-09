@@ -5,6 +5,7 @@ public interface MFAProvider<T extends MFAData> {
 
     /**
      * Makes sure a code is valid (valid as in length, characters, etc, not as in if it's correct)
+     *
      * @param code
      * @return
      */

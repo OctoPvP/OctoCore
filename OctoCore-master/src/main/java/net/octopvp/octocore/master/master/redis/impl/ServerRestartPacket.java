@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.master.master.redis.LightningRedisPacket;
 
 @AllArgsConstructor

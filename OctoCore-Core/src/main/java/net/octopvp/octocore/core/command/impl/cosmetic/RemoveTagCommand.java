@@ -16,7 +16,6 @@ import net.octopvp.octocore.core.objects.PlayerTag;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 public class RemoveTagCommand {

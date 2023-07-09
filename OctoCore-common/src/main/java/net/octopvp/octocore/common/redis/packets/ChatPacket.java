@@ -1,9 +1,9 @@
 package net.octopvp.octocore.common.redis.packets;
 
-import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
+
 import java.util.UUID;
 
 @Getter

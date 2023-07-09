@@ -3,7 +3,9 @@ package net.octopvp.octocore.common.object;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Getter
 @Setter

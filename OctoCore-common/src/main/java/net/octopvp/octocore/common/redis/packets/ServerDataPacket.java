@@ -8,7 +8,6 @@ import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
-import net.octopvp.octocore.common.util.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,6 +59,7 @@ public class ServerDataPacket extends RedisPacket {
         //fix ConcurrentModificationException -> https://stackoverflow.com/a/25131800
         serverData.getOnlinePlayers().removeIf(globalPlayer -> System.currentTimeMillis() - globalPlayer.getLastActivity() >= 5000L);
     }
+
     public interface Implementation {
         void onServerRemoved(ServerData connectedServer);
     }

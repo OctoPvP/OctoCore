@@ -73,7 +73,7 @@ public class OctoCoreMaster {
     private RankManager rankManager;
 
     @Getter
-    private static boolean loading = false;
+    private static final boolean loading = false;
 
     public OctoCoreMaster() {
         LOG.info("Starting Master...");

@@ -13,27 +13,26 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class BedrockUtils {
-    private static CacheLoader<String, Long> xuidCacheLoader = new CacheLoader<String, Long>() {
+    private static final CacheLoader<String, Long> xuidCacheLoader = new CacheLoader<String, Long>() {
         @Override
         public Long load(String key) throws Exception {
             return getXUID(key).get();
         }
     };
 
-    private static LoadingCache<String, Long> xuidCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).maximumSize(200).build(xuidCacheLoader);
+    private static final LoadingCache<String, Long> xuidCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).maximumSize(200).build(xuidCacheLoader);
 
-    private static CacheLoader<Long, String> gamerTagCacheLoader = new CacheLoader<Long, String>() {
+    private static final CacheLoader<Long, String> gamerTagCacheLoader = new CacheLoader<Long, String>() {
         @Override
         public String load(Long key) throws Exception {
             return getGamerTag(key).get();
         }
     };
-    private static LoadingCache<Long, String> gamerTagCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).maximumSize(200).build(gamerTagCacheLoader);
+    private static final LoadingCache<Long, String> gamerTagCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).maximumSize(200).build(gamerTagCacheLoader);
 
 
     public static Function<UUID, Boolean> isBedrockPlayer = uuid -> uuid.getMostSignificantBits() == 0 && uuid.getLeastSignificantBits() != 0; // 0-0 is console
@@ -112,6 +111,7 @@ public class BedrockUtils {
             return new UUID(0, xuid);
         }
     }
+
     public static CompletableFuture<BedrockInfo> getBedrockInfo(long xuid) {
         if (gamerTagCache.getIfPresent(xuid) != null) {
             return CompletableFuture.completedFuture(new BedrockInfo(xuid, gamerTagCache.getIfPresent(xuid)));

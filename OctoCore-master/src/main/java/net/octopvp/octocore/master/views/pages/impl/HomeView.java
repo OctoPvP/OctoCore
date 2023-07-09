@@ -2,11 +2,13 @@ package net.octopvp.octocore.master.views.pages.impl;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import jakarta.annotation.security.PermitAll;
 import net.octopvp.octocore.master.master.OctoCoreMaster;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 import net.octopvp.octocore.master.services.UserService;
@@ -14,8 +16,6 @@ import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.security.PermitAll;
 import java.util.TimeZone;
 
 @PageTitle("Home")

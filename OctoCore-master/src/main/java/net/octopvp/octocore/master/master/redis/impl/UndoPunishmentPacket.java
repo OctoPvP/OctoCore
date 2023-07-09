@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
-import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.master.master.redis.LightningRedisPacket;
 
 @NoArgsConstructor

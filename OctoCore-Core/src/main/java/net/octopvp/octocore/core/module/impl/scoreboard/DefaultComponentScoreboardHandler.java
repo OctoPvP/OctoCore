@@ -57,7 +57,8 @@ public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Comp
      */
     private static final Component SCOREBOARD_SEPERATOR = Component.text("--------------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
             SCOREBOARD_IP_SEPERATOR = Component.text("---", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH);
-    private static String serverIp = OctoCore.getInstance().getConfig().getString("server-ip");
+    private static final String serverIp = OctoCore.getInstance().getConfig().getString("server-ip");
+
     @Override
     public Component getTitle(Player player, FastBoardBase<Component> board) {
         return Component.text("OctoMC", NamedTextColor.AQUA, TextDecoration.BOLD)

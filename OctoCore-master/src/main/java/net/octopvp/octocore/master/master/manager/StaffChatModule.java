@@ -1,12 +1,12 @@
 package net.octopvp.octocore.master.master.manager;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import net.octopvp.octocore.common.object.FixedList;
 import net.octopvp.octocore.common.redis.packets.ChatPacket;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,7 @@ public class StaffChatModule {
     private static StaffChatModule instance;
 
     @Getter
-    private List<Function<ChatPacket, Void>> updateCallbacks = new ArrayList<>();
+    private final List<Function<ChatPacket, Void>> updateCallbacks = new ArrayList<>();
 
     @PostConstruct
     public void init() {
@@ -28,7 +28,8 @@ public class StaffChatModule {
     }
 
     @Getter
-    private Map<Class<? extends ChatPacket>, FixedList<ChatPacket>> messages = new HashMap<>(); // Store last 100 messages
+    private final Map<Class<? extends ChatPacket>, FixedList<ChatPacket>> messages = new HashMap<>(); // Store last 100 messages
+
     public void onMessageSent(ChatPacket packet) {
         log.info("Received staff chat message from " + packet.getName() + " on " + packet.getServer() + ": " + packet.getMessage());
         messages.computeIfAbsent(packet.getClass(), k -> new FixedList<>(100)).add(packet);

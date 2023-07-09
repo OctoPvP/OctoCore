@@ -5,15 +5,21 @@ import java.util.Properties;
 
 public interface BuildInfo {
     String getCommitShort();
+
     String getCommit();
+
     String getCommitDate();
+
     String getBranch();
+
     int getBuildNumber();
+
     String getBuildDate();
 
-    public static class DefaultBuildInfo implements BuildInfo {
+    class DefaultBuildInfo implements BuildInfo {
         private static BuildInfo instance;
         private static final Properties properties = new Properties();
+
         public DefaultBuildInfo() {
             try {
                 properties.load(getClass().getClassLoader().getResourceAsStream("build.properties"));

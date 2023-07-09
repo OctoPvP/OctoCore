@@ -16,6 +16,7 @@ public class LoginPage extends VerticalLayout {
 
     @Value("${master.saml.discovery}")
     private String idps;
+
     public LoginPage() {
         add(
                 new H1("Login to OctoCore"),
@@ -24,6 +25,7 @@ public class LoginPage extends VerticalLayout {
                 new IdpSelection(idps.split(","))
         );
     }
+
     public static class IdpSelection extends VerticalLayout {
         public IdpSelection(String[] idps) {
             // make a table of buttons

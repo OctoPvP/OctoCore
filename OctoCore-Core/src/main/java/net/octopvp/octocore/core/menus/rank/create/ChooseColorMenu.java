@@ -5,7 +5,6 @@ import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.builders.RankBuilder;

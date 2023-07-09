@@ -1,5 +1,6 @@
 package net.octopvp.octocore.master.master.manager;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import net.octopvp.octocore.common.interfaces.manager.IServerManager;
 import net.octopvp.octocore.common.object.GlobalPlayer;
@@ -8,13 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Component
 public class ServerManager implements IServerManager {
@@ -36,7 +35,7 @@ public class ServerManager implements IServerManager {
     }
 
     @Getter
-    private Set<ServerData> connectedServers = ConcurrentHashMap.newKeySet();
+    private final Set<ServerData> connectedServers = ConcurrentHashMap.newKeySet();
 
     @Override
     public boolean isOnline(GlobalPlayer player) {
@@ -94,6 +93,7 @@ public class ServerManager implements IServerManager {
         for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
             if (globalPlayer.getName().equalsIgnoreCase(name)) {
                 r = true;
+                break;
             }
         }
         return r;
@@ -105,6 +105,7 @@ public class ServerManager implements IServerManager {
         for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
             if (globalPlayer.getUuid().equals(uuid)) {
                 r = true;
+                break;
             }
         }
         return r;

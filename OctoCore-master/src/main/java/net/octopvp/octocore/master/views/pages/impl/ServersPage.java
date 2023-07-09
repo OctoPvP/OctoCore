@@ -12,6 +12,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.RolesAllowed;
 import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 import net.octopvp.octocore.master.services.UserService;
@@ -19,8 +20,6 @@ import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Servers")
 @Route(value = "servers", layout = MainLayout.class)
@@ -34,7 +33,7 @@ public class ServersPage extends Page {
     private Grid<ServerData> grid;
     private GridListDataView<ServerData> dataView;
 
-    private TextField searchField = new TextField();
+    private final TextField searchField = new TextField();
 
     @Override
     public void init() { // A table of servers

@@ -2,7 +2,6 @@ package net.octopvp.octocore.waterfall.redis;
 
 import lombok.Getter;
 import net.md_5.bungee.config.Configuration;
-import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.Logger;

@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 public class UsersPage extends Page {
     @Autowired
     private MongoUserRepository userRepository;
-    private TextField searchField = new TextField();
+    private final TextField searchField = new TextField();
     private GridListDataView<User> dataView;
 
     @Autowired

@@ -1,7 +1,6 @@
 package net.octopvp.octocore.master.config;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
-import jakarta.servlet.http.HttpServletRequest;
 import net.octopvp.octocore.master.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -97,6 +96,7 @@ public class WebSecurityConfig extends VaadinWebSecurity {
         super.configure(http);
         filterChain(http);
     }
+
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();

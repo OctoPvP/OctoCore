@@ -5,13 +5,12 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.master.views.MainLayout;
 import net.octopvp.octocore.master.views.pages.Page;
 import net.octopvp.octocore.master.views.util.NotificationUtils;
-
-import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Redis Manager")
 @Route(value = "redismgr", layout = MainLayout.class)

@@ -12,8 +12,7 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import lombok.AllArgsConstructor;
-import net.octopvp.octocore.master.models.Setting;
+import jakarta.annotation.security.RolesAllowed;
 import net.octopvp.octocore.master.models.User;
 import net.octopvp.octocore.master.repository.MongoUserRepository;
 import net.octopvp.octocore.master.services.UserService;
@@ -22,8 +21,6 @@ import net.octopvp.octocore.master.views.components.ThemeToggleButton;
 import net.octopvp.octocore.master.views.pages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.annotation.security.RolesAllowed;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
@@ -49,15 +46,19 @@ public class SettingsPage extends Page {
         */
         add(new AppearanceSection());
     }
+
     public static abstract class SettingsSection extends VerticalLayout {
         public SettingsSection() {
             add(new Span(getName()));
             getComponents().forEach(this::add);
             add(new Hr());
         }
+
         public abstract List<Component> getComponents();
+
         public abstract String getName();
     }
+
     public class AppearanceSection extends SettingsSection {
         @Override
         public List<Component> getComponents() {
@@ -94,10 +95,11 @@ public class SettingsPage extends Page {
             return "Appearance";
         }
     }
+
     public class SecuritySection extends SettingsSection {
         @Override
         public List<Component> getComponents() {
-            return Arrays.asList(new Button("Dummy"));
+            return List.of(new Button("Dummy"));
         }
 
         @Override

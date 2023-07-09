@@ -5,8 +5,8 @@ import com.vexsoftware.votifier.platform.scheduler.ScheduledVotifierTask;
 import java.util.concurrent.Future;
 
 public class TaskWrapper implements ScheduledVotifierTask {
-    private Future<?> future;
-    private boolean canCancel;
+    private final Future<?> future;
+    private final boolean canCancel;
 
     public TaskWrapper(Future<?> future, boolean... canCancel) {
         this.future = future;

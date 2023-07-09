@@ -125,6 +125,7 @@ public class Utilities {
         }
         return json1;
     }
+
     public static <T> List<T> addAll(List<T> list, T... objects) {
         list.addAll(Arrays.asList(objects));
         return list;

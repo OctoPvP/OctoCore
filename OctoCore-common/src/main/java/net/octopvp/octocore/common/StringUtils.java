@@ -39,6 +39,7 @@ public class StringUtils {
             colorMap.put(ChatColor.WHITE, new ColorSet<>(255, 255, 255));
         }
     }
+
     public static String centerText(String text) {
         int maxWidth = 72, //TODO tweak this
                 spaces = (int) Math.round((maxWidth - 1.4 * ChatColor.stripColor(text).length()) / 2);
@@ -376,7 +377,7 @@ public class StringUtils {
             case 11:
                 return "December";
         }
-        return month + "";
+        return String.valueOf(month);
     }
 
     public static String capatalizeFirst(String in) {

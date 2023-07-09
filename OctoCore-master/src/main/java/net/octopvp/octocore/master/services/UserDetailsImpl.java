@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     private final String username;
 
-    private String userID;
+    private final String userID;
 
     private final Collection<? extends GrantedAuthority> authorities;
 
@@ -27,7 +27,8 @@ public class UserDetailsImpl implements UserDetails {
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> {
-                    if (!role.getName().toUpperCase().startsWith("ROLE_")) return new SimpleGrantedAuthority("ROLE_" + role);
+                    if (!role.getName().toUpperCase().startsWith("ROLE_"))
+                        return new SimpleGrantedAuthority("ROLE_" + role);
                     return new SimpleGrantedAuthority(role.getName());
                 })
                 .collect(Collectors.toList());

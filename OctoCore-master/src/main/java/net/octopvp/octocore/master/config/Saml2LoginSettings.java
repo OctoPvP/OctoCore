@@ -27,6 +27,7 @@ import java.util.*;
 @Component
 public class Saml2LoginSettings implements Customizer<Saml2LoginConfigurer<HttpSecurity>> {
     private static final Map<String, String> roleMap = new HashMap<>();
+
     static {
         roleMap.put("Managers", "ROLE_MANAGER");
         roleMap.put("Admins", "ROLE_ADMIN");
@@ -34,6 +35,7 @@ public class Saml2LoginSettings implements Customizer<Saml2LoginConfigurer<HttpS
         roleMap.put("Developers", "ROLE_DEV");
         roleMap.put("Moderators", "ROLE_MOD");
     }
+
     @Autowired
     private MongoUserRepository mongoUserRepository;
     @Autowired
@@ -44,12 +46,12 @@ public class Saml2LoginSettings implements Customizer<Saml2LoginConfigurer<HttpS
         t
                 // .loginPage("/login")
                 .successHandler(new SavedRequestAwareAuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                authentication = assignAuthorities(authentication, request);
-                super.onAuthenticationSuccess(request, response, authentication);
-            }
-        });
+                    @Override
+                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                        authentication = assignAuthorities(authentication, request);
+                        super.onAuthenticationSuccess(request, response, authentication);
+                    }
+                });
     }
 
     private Authentication assignAuthorities(Authentication authentication, HttpServletRequest request) {

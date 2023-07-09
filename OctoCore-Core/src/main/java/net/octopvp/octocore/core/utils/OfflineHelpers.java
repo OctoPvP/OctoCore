@@ -25,6 +25,7 @@ public class OfflineHelpers {
         public boolean isBedrock() {
             return uuid.getMostSignificantBits() == 0;
         }
+
         public String getDisplayName() {
             return isBedrock() ? BedrockUtils.bedrockPrefix + name : name;
         }
@@ -71,6 +72,7 @@ public class OfflineHelpers {
         }
         return new OfflineInfo(player.getName(), player.getUniqueId());
     }
+
     public static OfflineInfo getOfflineInfo(UUID uuid) {
         if (uuid == null) return null;
         if (BedrockUtils.isBedrockPlayer(uuid)) {
