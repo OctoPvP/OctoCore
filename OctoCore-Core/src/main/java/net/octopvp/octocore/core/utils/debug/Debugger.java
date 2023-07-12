@@ -3,6 +3,7 @@ package net.octopvp.octocore.core.utils.debug;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.object.permissions.Rank;
+import net.octopvp.octocore.common.redis.packets.PlayerMessagePacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.listeners.JoinLeaveListener;
@@ -143,5 +144,10 @@ public class Debugger {
         } else {
             print(rank.getDisplayName());
         }
+    }
+
+    public void testPacket() {
+        PlayerMessagePacket packet = new PlayerMessagePacket(((Player) sender).getUniqueId(), "test");
+        packet.send();
     }
 }

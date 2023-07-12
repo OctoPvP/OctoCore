@@ -228,6 +228,37 @@ public class Rank implements Cloneable {
         return new RankBuilder(this);
     }
 
+    public static List<Rank> findCircularInheritance(Rank rank, Rank rank1) {
+        Set<UUID> visited = new HashSet<>();
+        List<Rank> circularInheritancePath = new ArrayList<>();
+        return findCircularInheritanceHelper(rank, rank1, visited, circularInheritancePath);
+    }
+
+    private static List<Rank> findCircularInheritanceHelper(Rank rank, Rank rank1, Set<UUID> visited, List<Rank> circularInheritancePath) {
+        if (visited.contains(rank.getRankId())) {
+            circularInheritancePath.add(rank);
+            return circularInheritancePath; // Circular inheritance detected
+        }
+
+        visited.add(rank.getRankId());
+
+        for (Rank rank2 : rank.getInheritedRanksConverted()) {
+            circularInheritancePath.add(rank);
+            if (rank2.getRankId().equals(rank1.getRankId())) {
+                circularInheritancePath.add(rank2);
+                return circularInheritancePath;
+            }
+            List<Rank> result = findCircularInheritanceHelper(rank2, rank1, visited, circularInheritancePath);
+            if (result != null) {
+                return result;
+            }
+            circularInheritancePath.remove(rank); // Remove the current rank from the path if it doesn't lead to circular inheritance
+        }
+
+        visited.remove(rank.getRankId()); // Remove the rank from visited set when backtracking
+        return null;
+    }
+
     public enum OrderedInheritance {
         SMALL_TO_LARGE, LARGE_TO_SMALL
     }

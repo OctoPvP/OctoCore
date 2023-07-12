@@ -6,15 +6,18 @@ import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlayerMessagePacket extends RedisPacket {
-    private String name, message;
+    private UUID uuid;
+    private String message;
 
     @Override
     public void onReceive(JsonObject data) {
         if (OctoCoreCommon.getInstance().isBungee()) {
-            OctoCoreCommon.getInstance().getServerImplementation().sendMessage(name, message);
+            OctoCoreCommon.getInstance().getServerImplementation().sendMessage(uuid, message);
         }
     }
 }

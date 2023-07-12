@@ -64,6 +64,7 @@ public final class OctoCoreWaterfall extends Plugin {
 
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
+        OctoCoreCommon.getInstance().setBungee(true);
         OctoCoreCommon.getInstance().init(gson, new ServerImplementation() {
             @Override
             public void sendMessage(UUID uuid, String message) {

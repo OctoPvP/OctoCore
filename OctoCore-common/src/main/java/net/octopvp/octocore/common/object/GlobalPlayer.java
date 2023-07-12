@@ -50,7 +50,7 @@ public class GlobalPlayer {
     }
 
     public void sendMessage(String message) {
-        new PlayerMessagePacket(name, message).send();
+        new PlayerMessagePacket(uuid, message).send();
     }
 
     public UUID getUniqueId() {
