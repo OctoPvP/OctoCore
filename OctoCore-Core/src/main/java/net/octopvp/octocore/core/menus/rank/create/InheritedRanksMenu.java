@@ -42,7 +42,7 @@ public class InheritedRanksMenu extends PaginatedMenu<PaginatedGui> {
     public GuiItem rankButton(Rank rankData) {
         // return ItemBuilder.from(Material.WOOL)
         // .durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())))\
-        List<Rank> circular = Rank.findCircularInheritance(builder.getRank(), rankData);
+        boolean wouldBeCircular = Rank.wouldHaveCircularInheritance(builder.getRank(), rankData) != null;
         return ItemBuilder.from((rankData.isDefaultRank()) ? XMaterial.LIME_WOOL : WoolUtils.convertChatColorToWoolMaterial(rankData.getColor()))
                 .name(rankData.getDisplayName())
                 .lore(
@@ -53,13 +53,14 @@ public class InheritedRanksMenu extends PaginatedMenu<PaginatedGui> {
                         CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
                         CC.SEPARATOR,
                         CC.YELLOW + (builder.getRank().getInheritedRanks().contains(rankData.getRankId()) ?
-                                CC.RED + "Click to remove inherited rank" : (circular != null && !circular.isEmpty() ?
+                                CC.RED + "Click to remove inherited rank" : (wouldBeCircular ?
                                 CC.RED + "Cannot add as inherited rank, due to circular inheritance." :
                                 "Click to add inherited rank"
                         ))
 
                 ).asGuiItem(event -> {
-                    if (circular != null && !circular.isEmpty()) {
+                    if (wouldBeCircular) {
+                        List<Rank> circular = Rank.findCircularInheritancePre(builder.getRank(), rankData);
                         SoundUtil.playError((Player) event.getWhoClicked());
                         StringBuilder circularBuilder = new StringBuilder();
                         for (Rank rank : circular) {

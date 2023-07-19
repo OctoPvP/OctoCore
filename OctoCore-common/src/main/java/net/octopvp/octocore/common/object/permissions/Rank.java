@@ -232,11 +232,44 @@ public class Rank implements Cloneable {
         return new RankBuilder(this);
     }
 
+    public static Rank wouldHaveCircularInheritance(Rank rank, Rank rank1) {
+        Set<UUID> visited = new HashSet<>();
+        return wouldHaveCircularInheritanceHelper(rank, rank1, visited);
+    }
+
+    private static Rank wouldHaveCircularInheritanceHelper(Rank rank, Rank rank1, Set<UUID> visited) {
+        if (visited.contains(rank.getRankId())) {
+            return null; // Circular inheritance detected
+        }
+
+        visited.add(rank.getRankId());
+
+        for (Rank rank2 : rank.getInheritedRanksConverted()) {
+            if (rank2.getRankId().equals(rank1.getRankId())) {
+                return rank2;
+            }
+            Rank r = wouldHaveCircularInheritanceHelper(rank2, rank1, visited);
+            if (r != null) {
+                return r;
+            }
+        }
+
+        visited.remove(rank.getRankId()); // Remove the rank from visited set when backtracking
+        return null;
+    }
+
+
     public static List<Rank> findCircularInheritance(Rank rank, Rank rank1) {
         Set<UUID> visited = new HashSet<>();
         List<Rank> circularInheritancePath = new ArrayList<>();
 
         return findCircularInheritanceHelper(rank, rank1, visited, circularInheritancePath);
+    }
+
+    public static List<Rank> findCircularInheritancePre(Rank rank, Rank rank1) {
+        Rank rankClone = rank.clone();
+        rankClone.getInheritedRanks().add(rank1.getRankId());
+        return findCircularInheritance(rankClone, rank1);
     }
 
     private static List<Rank> findCircularInheritanceHelper(Rank rank, Rank rank1, Set<UUID> visited, List<Rank> circularInheritancePath) {
