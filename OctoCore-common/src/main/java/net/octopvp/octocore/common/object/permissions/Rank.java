@@ -49,8 +49,12 @@ public class Rank implements Cloneable {
     }
 
     @Override
-    public Rank clone() throws CloneNotSupportedException {
-        return (Rank) super.clone();
+    public Rank clone() {
+        try {
+            return (Rank) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String[] getInheritedRanksName() {
@@ -231,6 +235,7 @@ public class Rank implements Cloneable {
     public static List<Rank> findCircularInheritance(Rank rank, Rank rank1) {
         Set<UUID> visited = new HashSet<>();
         List<Rank> circularInheritancePath = new ArrayList<>();
+
         return findCircularInheritanceHelper(rank, rank1, visited, circularInheritancePath);
     }
 
@@ -243,16 +248,18 @@ public class Rank implements Cloneable {
         visited.add(rank.getRankId());
 
         for (Rank rank2 : rank.getInheritedRanksConverted()) {
-            circularInheritancePath.add(rank);
+            List<Rank> newPath = new ArrayList<>(circularInheritancePath); // Create a new copy of the path to avoid modifying the existing one
+
+            newPath.add(rank);
             if (rank2.getRankId().equals(rank1.getRankId())) {
-                circularInheritancePath.add(rank2);
-                return circularInheritancePath;
+                newPath.add(rank2);
+                return newPath;
             }
-            List<Rank> result = findCircularInheritanceHelper(rank2, rank1, visited, circularInheritancePath);
+
+            List<Rank> result = findCircularInheritanceHelper(rank2, rank1, visited, newPath);
             if (result != null) {
                 return result;
             }
-            circularInheritancePath.remove(rank); // Remove the current rank from the path if it doesn't lead to circular inheritance
         }
 
         visited.remove(rank.getRankId()); // Remove the rank from visited set when backtracking
