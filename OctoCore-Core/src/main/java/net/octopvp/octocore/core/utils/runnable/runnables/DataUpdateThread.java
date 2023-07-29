@@ -1,5 +1,7 @@
 package net.octopvp.octocore.core.utils.runnable.runnables;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.redis.packets.PlayerDataPacket;
@@ -8,6 +10,7 @@ import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
@@ -71,6 +74,12 @@ public class DataUpdateThread extends Thread {
                 playerData.setOp(player.isOp());
                 String name = playerData.getName();
                 if (name == null && playerData.isOnline()) name = player.getName();
+
+                if (playerData.isVanished()) {
+                    Component actionBar = Component.text("You are vanished with a priority of ").color(NamedTextColor.GREEN)
+                            .append(Component.text(VanishManager.getInstance().getVanishPriority(playerData)).color(NamedTextColor.YELLOW));
+                    OctoCore.getInstance().getServerImplementation().sendActionBar(player, actionBar);
+                }
 
                 new PlayerDataPacket(playerData.getUuid(), OctoCore.getServerName(), name, OctoCore.getServerName(), playerData.getAddress(),
                         playerData.getRankName(), System.currentTimeMillis(), playerData.getFirstJoin(), playerData.getLastLogin(),

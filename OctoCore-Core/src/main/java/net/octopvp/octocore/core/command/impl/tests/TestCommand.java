@@ -38,10 +38,10 @@ public class TestCommand {
         return CommandResult.SUCCESS;
     }
 
-    @Command(name = "test1")
+    @Command(name = "flags")
     @Permission(Permissions.ADMIN)
-    public void test(@Sender Player sender, @Required String s) {
-        sender.sendMessage(s);
+    public void test(@Sender Player sender, @Optional Player player,  @Flag(value = "priority", aliases = "p") int priority, @Switch(value = "test", aliases = "t") boolean test) {
+        sender.sendMessage("Priority: " + priority + " | " + (player == null ? "null" : player.getName()) + " | " + test);
     }
 
     @Command(name = "testmenu", description = "testmenu")

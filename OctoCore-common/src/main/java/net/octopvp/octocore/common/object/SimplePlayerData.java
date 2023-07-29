@@ -49,7 +49,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected HashSet<UUID> allowedTagsID = new HashSet<>();
     protected boolean nameColorBold = false, nameColorItalic = false, staffChatAlerts = true, adminChatAlerts = true;
     protected boolean reportAlerts = true, staffChat = false, adminChat = false, build = false;
-    protected boolean frozen, nicked = false, authEnabled = false, vanished = false, joinVanished = false;
+    protected boolean frozen, nicked = false, authEnabled = false, joinVanished = false;
     protected boolean customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false;
     protected boolean joinAlert = false, socialSpy = false;
     protected Collection<Alt> alts = new ArrayList<>();
@@ -85,7 +85,6 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         this.frozen = document.getBoolean("frozen");
         this.nicked = document.getBoolean("nicked");
         this.authEnabled = document.getBoolean("authEnabled");
-        this.vanished = document.getBoolean("vanished");
         this.joinVanished = document.getBoolean("joinVanished");
         this.customColorEnabled = document.getBoolean("customColorEnabled");
         this.customColor = document.getString("customColor");
@@ -167,7 +166,6 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         document.put("frozen", frozen);
         document.put("nicked", nicked);
         document.put("authEnabled", authEnabled);
-        document.put("vanished", vanished);
         document.put("joinVanished", joinVanished);
         document.put("customColorEnabled", customColorEnabled);
         document.put("customColor", customColor);

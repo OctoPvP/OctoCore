@@ -28,6 +28,7 @@ import net.octopvp.octocore.core.database.redis.packets.staff.StaffConnectPacket
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.RankManager;
 import net.octopvp.octocore.core.manager.impl.TagManager;
+import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
@@ -536,6 +537,10 @@ public class PlayerData extends SimplePlayerData {
 
     public PlayerTag getNickTag() {
         return TagManager.getTag(nickTagID);
+    }
+
+    public boolean isVanished() {
+        return VanishManager.getInstance().isVanished(uuid);
     }
 
     @Override
