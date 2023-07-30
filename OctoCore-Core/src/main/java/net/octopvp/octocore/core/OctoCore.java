@@ -147,6 +147,7 @@ public abstract class OctoCore extends JavaPlugin {
             }
         }
         PacketUtil.setProtocolManager(ProtocolLibrary.getProtocolManager());
+        getServerImplementation().onLoad();
     }
 
     @Override
@@ -250,12 +251,14 @@ public abstract class OctoCore extends JavaPlugin {
         new SetupOther().setup(this);
         Logger.info("Done!");
         dataUpdateThread.start();
+        getServerImplementation().onEnable();
         loading = false;
         Logger.info("OctoCore took " + (System.currentTimeMillis() - start) + "ms to load.");
     }
 
     @Override
     public void onDisable() {
+        getServerImplementation().onDisable();
         String dcReason = new DisconnectReason("This server is restarting!").toString();
         Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(dcReason));
         Bukkit.getScheduler().cancelTasks(this);

@@ -82,7 +82,7 @@ public class DataUpdateThread extends Thread {
                 }
 
                 new PlayerDataPacket(playerData.getUuid(), OctoCore.getServerName(), name, OctoCore.getServerName(), playerData.getAddress(),
-                        playerData.getRankName(), System.currentTimeMillis(), playerData.getFirstJoin(), playerData.getLastLogin(),
+                        playerData.getRankName(), System.currentTimeMillis(), playerData.getFirstJoin(), playerData.getLastLogin(), VanishManager.getInstance().getVanishPriority(playerData),
                         playerData.isVanished(), playerData.isStaffChatAlerts(), playerData.isAdminChatAlerts(), playerData.isReportAlerts(),
                         playerData.hasPermission(Permissions.STAFF), playerData.getAllowedTagsID(), playerData.getAllEffectivePermissions(),
                         playerData.getAllNegatedPermissions(), playerData.getAltsSafely(), playerData.getAddresses(),

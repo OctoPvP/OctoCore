@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public class VanishCommand {
     @Command(name = "vanish", aliases = {"v"}, description = "Vanish from other players")
     @Permission("octocore.command.vanish")
-    public void vanish(@Sender Player sender, @Optional Player target1, @Flag(value = "priority", aliases = "p") @Range(min = 1) int priority) {
+    public void vanish(@Sender Player sender, @Optional @Name("target") Player target1, @Flag(value = "priority", aliases = "p") @Range(min = 1) int priority, @Switch(value = "silent", aliases = "s") boolean silent) {
         // TODO @DefaultNumber(1) figure out why default broke
         Player target = target1 == null ? sender : target1;
         BiConsumer<Integer, Boolean> vanish = (i, b) -> {
@@ -27,7 +27,9 @@ public class VanishCommand {
                     sender.sendMessage(CC.RED + "You cannot vanish with a higher priority than " + p);
                 return;
             }
-            VanishManager.getInstance().vanish(target, priority);
+            VanishManager.getInstance().vanish(target, priority, silent);
+            data.setJoinVanished(true);
+            data.save();
             if (target != sender)
                 sender.sendMessage(CC.GREEN + "You have vanished " + target.getName() + " with a priority of " + CC.YELLOW + priority + CC.GREEN + ".");
             else
@@ -38,7 +40,8 @@ public class VanishCommand {
             return;
         }
         if (VanishManager.getInstance().isVanished(target)) {
-            VanishManager.getInstance().unvanish(target);
+            VanishManager.getInstance().unvanish(target, silent);
+            PlayerManager.getInstance().modifyData(target.getUniqueId(), data -> data.setJoinVanished(false));
             if (target != sender)
                 sender.sendMessage(CC.GREEN + "You have unvanished " + target.getName() + ".");
             else

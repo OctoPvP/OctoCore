@@ -126,7 +126,7 @@ public class PlayerData extends SimplePlayerData {
         this.address = player.getAddress().getAddress().getHostAddress();
 
         if (hasPermission(Permissions.SEND_JOIN_MESSAGE) && joinAlert)
-            new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName()).send();
+            new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName(), VanishManager.getInstance().getVanishPriority(this), joinVanished).send();
 
         updateTime(player);
     }
@@ -391,7 +391,7 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public String getDisplayName() {
-        if (nicked) return CC.translate(getCurrentColor() + getNickColor() + CC.R);
+        if (nicked) return CC.translate(getCurrentColor() + getNick() + CC.R);
         else return CC.translate(getCurrentColor() + getName() + CC.R);
     }
 

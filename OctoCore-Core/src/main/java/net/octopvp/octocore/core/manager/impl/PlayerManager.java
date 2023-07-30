@@ -202,7 +202,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
             GlobalPlayer globalPlayer = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(name);
 
             if (globalPlayer != null && globalPlayer.isLeaving() && globalPlayer.hasPermission(Permissions.SEND_LEAVE_MESSAGE)) {
-                new StaffLeavePacket(globalPlayer.getName(), globalPlayer.getServer() != null ? globalPlayer.getServer() : "Unknown").send();
+                new StaffLeavePacket(globalPlayer.getName(), globalPlayer.getServer() != null ? globalPlayer.getServer() : "Unknown", globalPlayer.getRankWeight(), globalPlayer.isVanished()).send();
             }
             quitting.remove(uuid);
         }, 80L);
@@ -218,12 +218,13 @@ public class PlayerManager extends Manager implements IPlayerManager {
     }
 
 
-    public void join(Player player) {
+    public PlayerData join(Player player) {
         PlayerData data = getData(player.getUniqueId());
         data.onJoin(player);
         data.loadPunishmentsPerformed();
         data.setFullJoined(true);
         RankManager.getInstance().resetBungeePerms(player);
+        return data;
     }
 
     public long getLastSeen(UUID uuid) {

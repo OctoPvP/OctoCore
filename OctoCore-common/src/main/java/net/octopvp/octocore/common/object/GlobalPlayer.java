@@ -21,7 +21,7 @@ public class GlobalPlayer {
 
     private String server, lastServer, address, rankName, coloredName;
     private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, leaving, op, staff;
-    private long lastSeen, lastActivity = -1L, firstJoined = System.currentTimeMillis();
+    private long lastSeen, lastActivity = -1L, firstJoined = System.currentTimeMillis(), vanishPriority = 1;
     private List<UUID> allTags = new ArrayList<>();
     private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
     private Map<String, ServerContext> negatedPermissions = new ConcurrentHashMap<>();

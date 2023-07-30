@@ -30,7 +30,7 @@ public class PlayerDataPacket extends RedisPacket {
     private UUID uuid;
     private String server;
     private String name, lastServer, address, rank;
-    private long lastActivity, firstJoined, lastSeen;
+    private long lastActivity, firstJoined, lastSeen, vanishPriority;
     private boolean vanished, staffChatAlerts, adminChatAlerts, reportAlerts, staff;
     private Set<UUID> allTags;
     private Map<String, ServerContext> permissions, negatedPermissions;
@@ -103,6 +103,7 @@ public class PlayerDataPacket extends RedisPacket {
         globalPlayer.setMessageSettings(messageSettings);
         globalPlayer.setColoredName(coloredName);
         globalPlayer.setOp(op);
+        globalPlayer.setVanishPriority(vanishPriority);
 
         if (created) {
             // Logger.debug("Created global player: " + OctoCoreCommon.getInstance().getGson().toJson(globalPlayer));

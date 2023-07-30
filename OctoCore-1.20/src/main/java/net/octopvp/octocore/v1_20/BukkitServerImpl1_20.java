@@ -2,12 +2,30 @@ package net.octopvp.octocore.v1_20;
 
 import net.kyori.adventure.text.Component;
 import net.octopvp.octocore.core.BukkitServerImplementation;
+import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.module.impl.scoreboard.DefaultComponentScoreboardHandler;
 import net.octopvp.octocore.core.module.impl.scoreboard.ScoreboardHandler;
+import net.octopvp.octocore.v1_20.listener.VanishListener_1_20;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class BukkitServerImpl1_20 implements BukkitServerImplementation {
     public static final BukkitServerImpl1_20 INSTANCE = new BukkitServerImpl1_20();
+
+    @Override
+    public void onLoad() {
+
+    }
+
+    @Override
+    public void onEnable() {
+        Bukkit.getServer().getPluginManager().registerEvents(new VanishListener_1_20(), OctoCore.getInstance());
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
 
     @Override
     public ScoreboardHandler<?> getScoreboardHandler() {

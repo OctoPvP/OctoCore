@@ -12,6 +12,21 @@ import org.bukkit.entity.Player;
 
 public class BukkitServerImpl1_8 implements BukkitServerImplementation {
     @Override
+    public void onLoad() {
+
+    }
+
+    @Override
+    public void onEnable() {
+
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
+
+    @Override
     public ScoreboardHandler<?> getScoreboardHandler() {
         return new DefaultStringScoreboardHandler();
     }

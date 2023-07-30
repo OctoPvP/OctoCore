@@ -1,12 +1,15 @@
 package net.octopvp.octocore.core.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.core.manager.impl.PermissionManager;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
@@ -101,12 +104,25 @@ public class JoinLeaveListener implements Listener {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onJoin(PlayerJoinEvent event) { //TODO join vanished
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onJoin(PlayerJoinEvent event) {
         if (event.getPlayer() == null || !event.getPlayer().isOnline()) {
             return;
         }
-        PlayerManager.getInstance().join(event.getPlayer());
+        PlayerData playerData = PlayerManager.getInstance().join(event.getPlayer());
+
+        // TODO: Componentize this
+        if (playerData.isJoinVanished()) {
+            Logger.info("Vanishing " + playerData.getName() + " on join.");
+            event.setJoinMessage(null);
+            VanishManager.getInstance().vanish(event.getPlayer(), -1, true);
+        } else {
+            Logger.info("Not vanishing " + playerData.getName() + " on join.");
+            String joinMessage = CC.GRAY + "[" + CC.GREEN + "+" + CC.GRAY + "] " + playerData.getFormattedName(true, event.getPlayer(), false);
+            event.setJoinMessage(joinMessage);
+            VanishManager.getInstance().update(event.getPlayer());
+        }
+
 
         /*
         Tasks.runLater(() -> {
