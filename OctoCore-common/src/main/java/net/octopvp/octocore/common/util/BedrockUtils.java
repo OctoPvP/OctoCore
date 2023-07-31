@@ -41,12 +41,12 @@ public class BedrockUtils {
         return isBedrockPlayer.apply(uuid);
     }
 
-    public static String bedrockPrefix = "*";
+    public static String bedrockPrefix = ".";
 
     private static final OkHttpClient client = new OkHttpClient().newBuilder().build();
 
     public static CompletableFuture<Long> getXUID(String gamertag1) {
-        String gamertag = gamertag1.replace("*", "");
+        String gamertag = gamertag1.replace(bedrockPrefix, "");
         if (xuidCache.getIfPresent(gamertag) != null) {
             return CompletableFuture.completedFuture(xuidCache.getIfPresent(gamertag));
         }
