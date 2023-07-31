@@ -28,15 +28,10 @@ public class PotentialAltsMenu extends PaginatedMenu<PaginatedGui> {
                 .name(CC.MAIN + "About")
                 .lore(
                         " ",
-                        CC.GRAY + "This menu is showing all " + CC.SECONDARY + playerData.getName() + "'s " + CC.GRAY + "alts",
-                        CC.GRAY + "that are recorded on ip addresses",
-                        CC.GRAY + "that user were joining from.",
+                        CC.GRAY + "All alts of " + playerData.getName() +
                         " ",
-                        CC.GRAY + "- " + CC.RED + "This is not secure and doesn't mean",
-                        CC.GRAY + "- " + CC.RED + "that the user is actually alting!",
-                        " ",
-                        CC.VALUE + "Alts amount" + CC.GRAY + ": " + CC.SECONDARY + playerData.getAlts().size(),
-                        CC.VALUE + "Banned alts" + CC.GRAY + ": " + CC.SECONDARY + playerData.getAlts().stream().filter(Alt::isBanned).collect(Collectors.toList()).size(),
+                        CC.VALUE + "Alts amount" + CC.GRAY + ": " + CC.YELLOW + playerData.getAlts().size(),
+                        CC.VALUE + "Banned alts" + CC.GRAY + ": " + CC.YELLOW + playerData.getAlts().stream().filter(Alt::isBanned).collect(Collectors.toList()).size(),
                         " "
                 ).asGuiItem());
     }
