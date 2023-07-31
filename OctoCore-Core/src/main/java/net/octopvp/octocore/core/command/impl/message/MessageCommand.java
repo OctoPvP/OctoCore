@@ -1,18 +1,17 @@
 package net.octopvp.octocore.core.command.impl.message;
 
-import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.JoinStrings;
-import net.octopvp.commander.annotation.Name;
-import net.octopvp.commander.annotation.Sender;
+import net.octopvp.commander.annotation.*;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.command.CommandResult;
+import net.octopvp.octocore.core.command.annotation.OnlineOnly;
 import net.octopvp.octocore.core.database.redis.packets.player.MessagePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,17 +20,19 @@ import java.util.UUID;
 public class MessageCommand {
     @Command(name = "message", aliases = {"msg", "w", "m", "tell", "t"})
     @PlayerOnly
-    public CommandResult execute(@Sender Player sender, @Name("player") GlobalPlayer target, @JoinStrings String message) {
-        GlobalPlayer senderPlayer = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(sender.getUniqueId());
+    @Cooldown(1)
+    public CommandResult execute(@Sender Player sender, @Name("player") @OnlineOnly(network = true) PlayerData target, @JoinStrings String message) {
+        PlayerData senderData = PlayerManager.getInstance().getData(sender.getUniqueId());
 
         if (target == null) {
             return CommandResult.PLAYER_NOT_FOUND;
         }
-        return execMsg(sender, message, target, senderPlayer);
+        return execMsg(sender, message, target, senderData);
     }
 
     @Command(name = "reply", aliases = "r")
     @PlayerOnly
+    @Cooldown(1)
     public CommandResult executeReply(@Sender Player sender, @JoinStrings String message) {
         if (message.isEmpty()) {
             return CommandResult.INVALID_ARGS;
@@ -45,26 +46,25 @@ public class MessageCommand {
             return CommandResult.SUCCESS;
         }
         UUID targetId = data.getLastMessaged();
-        GlobalPlayer target = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(targetId);
+        OnlinePlayer target = OctoCoreCommon.getInstance().getServerManager().getOnlinePlayer(targetId);
         if (target == null) {
             return CommandResult.PLAYER_NOT_FOUND;
         }
-        GlobalPlayer senderPlayer = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(sender.getUniqueId());
-        return execMsg(sender, message, target, senderPlayer);
+        return execMsg(sender, message, PlayerManager.getInstance().getDataEvenIfOffline(targetId, false), PlayerManager.getInstance().getData(sender.getUniqueId()));
     }
 
     @NotNull
-    private CommandResult execMsg(@Sender Player sender, @JoinStrings String message, GlobalPlayer target, GlobalPlayer senderPlayer) {
+    private CommandResult execMsg(@Sender Player sender, @JoinStrings String message, PlayerData target, PlayerData senderPlayer) {
         boolean ignoreBypass = sender.hasPermission(Permissions.IGNORE_BYPASS);
         if (senderPlayer.getUuid().equals(target.getUuid())) {
             sender.sendMessage(Lang.CANNOT_MESSAGE_SELF.toString());
             return CommandResult.SUCCESS;
         }
-        if (target.isIgnoring(senderPlayer.getUniqueId()) && !ignoreBypass) {
+        if (target.getMessageSettings().isIgnoring(senderPlayer.getUniqueId()) && !ignoreBypass) {
             sender.sendMessage(Lang.MSG_IGNORED.toString());
             return CommandResult.SUCCESS;
         }
-        if (senderPlayer.isIgnoring(target.getUniqueId()) && !ignoreBypass) {
+        if (senderPlayer.getMessageSettings().isIgnoring(target.getUniqueId()) && !ignoreBypass) {
             sender.sendMessage(Lang.CANNOT_MESSAGE_SENDER_IGNORED.toString());
             return CommandResult.SUCCESS;
         }
@@ -76,7 +76,7 @@ public class MessageCommand {
             sender.sendMessage(Lang.SELF_MSG_DISABLED.toString());
             return CommandResult.SUCCESS;
         }
-        new MessagePacket(message, senderPlayer.getColoredName(), target.getColoredName(), senderPlayer.getUuid(), target.getUuid()).send();
+        new MessagePacket(message, senderPlayer.getFormattedName(false, sender, true), target.getFormattedName(false, Bukkit.getPlayer(target.getUniqueId()), true), senderPlayer.getUuid(), target.getUuid()).send();
         return CommandResult.SUCCESS;
     }
 }

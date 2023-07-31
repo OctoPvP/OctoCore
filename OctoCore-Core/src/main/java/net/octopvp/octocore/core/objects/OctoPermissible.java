@@ -2,6 +2,7 @@ package net.octopvp.octocore.core.objects;
 
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
@@ -23,15 +24,16 @@ public class OctoPermissible extends PermissibleBase {
     @Override
     public boolean hasPermission(String inName) {
         if (uuid == null) {
-            Logger.error("Perm check: UUID is null!");
-            return false;
+            Logger.error("Perm check: UUID is null! Falling back to old permissible base.");
+            return oldPermissibleBase.hasPermission(inName);
         }
         PlayerData data = PlayerManager.getInstance().getData(this.uuid);
         if (data == null) {
             Logger.error("PlayerData is null! - " + PlayerManager.getInstance().getPlayerProfiles().size() + " | " + Arrays.stream(PlayerManager.getInstance()
                     .getPlayerProfiles().keySet().toArray(new UUID[0])).map(UUID::toString).collect(Collectors.joining(", ")));
+            Logger.error(Bukkit.isPrimaryThread());
             Thread.dumpStack();
-            return false;
+            return oldPermissibleBase.hasPermission(inName);
         }
         return data.hasPermission(inName);
     }

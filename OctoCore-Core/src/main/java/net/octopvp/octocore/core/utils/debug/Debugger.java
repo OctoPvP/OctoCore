@@ -118,7 +118,7 @@ public class Debugger {
     }
 
     public void listGlobal() {
-        OctoCoreCommon.getInstance().getServerManager().getGlobalPlayers().forEach((player) -> print(player.getName()));
+        OctoCoreCommon.getInstance().getServerManager().getOnlinePlayers().forEach((player) -> print(player.getName()));
     }
 
     public void isPermissibleInjected() {

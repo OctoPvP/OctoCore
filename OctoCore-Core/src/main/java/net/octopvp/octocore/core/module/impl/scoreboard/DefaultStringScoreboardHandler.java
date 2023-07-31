@@ -47,7 +47,7 @@ public class DefaultStringScoreboardHandler implements ScoreboardHandler<String>
         entries.add("");
         entries.add(CC.AQUA + "Your Name" + CC.GRAY + ": " + CC.GREEN + name);
         entries.add(CC.AQUA + "Rank" + CC.GRAY + ": " + CC.GREEN + playerData.getCurrentPrefix());
-        entries.add(CC.AQUA + "Online" + CC.GRAY + ": " + CC.GREEN + OctoCore.getInstance().getServerManager().getGlobalPlayers().size());
+        entries.add(CC.AQUA + "Online" + CC.GRAY + ": " + CC.GREEN + OctoCore.getInstance().getServerManager().getOnlinePlayers().size());
         entries.add("");
         entries.add(CC.SCOREBOARD_SEPARATOR);
         int maxWidth = 32;

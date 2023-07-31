@@ -216,10 +216,11 @@ public abstract class OctoCore extends JavaPlugin {
                 .registerDependency(ServerManager.class, serverManager)
 
                 .registerProvider(PlayerData.class, new PlayerDataProvider())
+                .registerProvider(SimplePlayerData.class, new PlayerDataProvider())
                 .registerProvider(GameMode.class, new GameModeProvider())
                 .registerProvider(Rank.class, new RankProvider())
                 .registerProvider(OfflinePunishData.class, new OfflinePunishDataProvider())
-                .registerProvider(GlobalPlayer.class, new GlobalPlayerProvider())
+                .registerProvider(OnlinePlayer.class, new OnlinePlayerProvider())
                 .registerProvider(Enchantment.class, new EnchantmentProvider())
                 .registerProvider(OfflineHelpers.OfflineInfo.class, new OfflineInfoProvider())
                 .registerCommandPostProcessor((ctx, obj) -> {

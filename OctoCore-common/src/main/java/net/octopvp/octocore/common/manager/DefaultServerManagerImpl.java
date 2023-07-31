@@ -2,7 +2,7 @@ package net.octopvp.octocore.common.manager;
 
 import lombok.Getter;
 import net.octopvp.octocore.common.interfaces.manager.IServerManager;
-import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.common.object.ServerData;
 
 import java.util.ArrayList;
@@ -17,10 +17,13 @@ public class DefaultServerManagerImpl implements IServerManager {
     private final Set<ServerData> connectedServers = ConcurrentHashMap.newKeySet();
 
     @Override
-    public boolean isOnline(GlobalPlayer player) {
-        return getConnectedServers().stream().filter(serverData ->
-                serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList())
-                        .contains(player.getName().toLowerCase())).findFirst().orElse(null) != null;
+    public boolean isOnline(UUID player) {
+        return connectedServers.stream().anyMatch(serverData -> serverData.getOnlinePlayers().contains(player));
+    }
+
+    @Override
+    public boolean isOnline(String name) {
+        return connectedServers.stream().anyMatch(serverData -> serverData.getNames().contains(name));
     }
 
     @Override
@@ -36,57 +39,17 @@ public class DefaultServerManagerImpl implements IServerManager {
     }
 
     @Override
-    public List<GlobalPlayer> getGlobalPlayers() {
-        List<GlobalPlayer> players = new ArrayList<>();
-        this.connectedServers.forEach(serverData -> players.addAll(serverData.getOnlinePlayers()));
-        return players;
+    public List<OnlinePlayer> getOnlinePlayers() {
+        return this.connectedServers.stream().map(ServerData::getOnlinePlayers).flatMap(List::stream).collect(Collectors.toList());
     }
 
     @Override
-    public GlobalPlayer getGlobalPlayer(String name) {
-        for (ServerData server : this.connectedServers) {
-            for (GlobalPlayer globalPlayer : server.getOnlinePlayers()) {
-                if (globalPlayer.getName().equalsIgnoreCase(name)) {
-                    return globalPlayer;
-                }
-            }
-        }
-        return null;
+    public OnlinePlayer getOnlinePlayer(UUID uuid) {
+        return getOnlinePlayers().stream().filter(onlinePlayer -> onlinePlayer.getUuid().equals(uuid)).findFirst().orElse(null);
     }
 
     @Override
-    public GlobalPlayer getGlobalPlayer(UUID uuid) {
-        for (ServerData server : this.connectedServers) {
-            for (GlobalPlayer globalPlayer : server.getOnlinePlayers()) {
-                if (globalPlayer.getUuid().equals(uuid)) {
-                    return globalPlayer;
-                }
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public boolean isPlayerOnline(String name) {
-        boolean r = false;
-        for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
-            if (globalPlayer.getName().equalsIgnoreCase(name)) {
-                r = true;
-                break;
-            }
-        }
-        return r;
-    }
-
-    @Override
-    public boolean isPlayerOnline(UUID uuid) {
-        boolean r = false;
-        for (GlobalPlayer globalPlayer : getGlobalPlayers()) {
-            if (globalPlayer.getUuid().equals(uuid)) {
-                r = true;
-                break;
-            }
-        }
-        return r;
+    public OnlinePlayer getOnlinePlayer(String name) {
+        return getOnlinePlayers().stream().filter(onlinePlayer -> onlinePlayer.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 }

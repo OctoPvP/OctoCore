@@ -6,7 +6,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
 import lombok.Getter;
-import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 
 @Getter
@@ -59,7 +59,7 @@ public class PlayerName extends HorizontalLayout {
             updateStatusCircle();
             statusCircle.setId("status-icon-" + name);
 
-            GlobalPlayer player = ServerManager.getInstance().getGlobalPlayer(name);
+            OnlinePlayer player = ServerManager.getInstance().getOnlinePlayer(name);
 
             if (player != null) {
                 Tooltip.forComponent(statusCircle)
@@ -81,7 +81,7 @@ public class PlayerName extends HorizontalLayout {
     }
 
     public boolean isOnline() {
-        return ServerManager.getInstance().isPlayerOnline(playerName);
+        return ServerManager.getInstance().isOnline(playerName);
     }
 
     public void updateStatusCircle() {

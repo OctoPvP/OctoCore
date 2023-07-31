@@ -8,6 +8,7 @@ import net.octopvp.commander.command.ParameterInfo;
 import net.octopvp.commander.exception.CommandException;
 import net.octopvp.commander.provider.Provider;
 import net.octopvp.commander.sender.CoreCommandSender;
+import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.command.annotation.CreateData;
 import net.octopvp.octocore.core.command.annotation.OnlineOnly;
@@ -43,7 +44,15 @@ public class PlayerDataProvider implements Provider<PlayerData> {
         OfflineHelpers.OfflineInfo player = OfflineHelpers.getOfflineInfo(arg);
         PlayerData data = PlayerManager.getInstance().getData(player.getUniqueId());
         if (data == null && parameterInfo.getParameter().isAnnotationPresent(OnlineOnly.class)) {
-            throw new CommandException("Player is not online.");
+            OnlineOnly onlineOnly = parameterInfo.getParameter().getAnnotation(OnlineOnly.class);
+            if (!onlineOnly.network()) {
+                throw new CommandException("Player is not online.");
+            }
+            OnlinePlayer onlinePlayer = OctoCore.getInstance().getServerManager().getOnlinePlayer(player.getUniqueId());
+            if (onlinePlayer == null) {
+                throw new CommandException("Player is not online.");
+            }
+            data = PlayerManager.getInstance().getDataEvenIfOffline(onlinePlayer.getUuid(), false);
         }
         if (data != null) return data;
         PlayerData d = PlayerManager.getInstance().getDataEvenIfOffline(player.getUniqueId(), parameterInfo.getParameter().isAnnotationPresent(CreateData.class));

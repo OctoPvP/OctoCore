@@ -110,9 +110,9 @@ public class OfflinePunishData implements IPunishData {
             }
         }
 
-        OctoCoreCommon.getInstance().getServerManager().getGlobalPlayers().forEach(globalPlayer -> {
-            if (!globalPlayer.getUniqueId().toString().equals(this.uniqueId.toString()) && globalPlayer.getAddress().equalsIgnoreCase(address) && this.getAlt(globalPlayer.getUniqueId()) == null) {
-                new AltUpdatePacket(this.uniqueId, this.name, globalPlayer.getUniqueId(), globalPlayer.getName());
+        OctoCoreCommon.getInstance().getServerManager().getOnlinePlayers().forEach(onlinePlayer -> {
+            if (!onlinePlayer.getUuid().equals(this.uniqueId) && onlinePlayer.getAddress().equalsIgnoreCase(address) && this.getAlt(onlinePlayer.getUuid()) == null) {
+                new AltUpdatePacket(this.uniqueId, this.name, onlinePlayer.getUuid(), onlinePlayer.getName());
             }
         });
         List<Alt> nAlts = new ArrayList<>(this.alts);

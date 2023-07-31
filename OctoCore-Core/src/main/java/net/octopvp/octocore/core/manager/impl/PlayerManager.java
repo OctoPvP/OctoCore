@@ -7,7 +7,7 @@ import lombok.Getter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.manager.IPlayerManager;
 import net.octopvp.octocore.common.interfaces.util.ObjectConsumer;
-import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.enums.RankType;
 import net.octopvp.octocore.common.object.permissions.Grant;
@@ -16,7 +16,6 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.core.database.redis.packets.staff.StaffLeavePacket;
 import net.octopvp.octocore.core.manager.Manager;
 import net.octopvp.octocore.core.objects.PlayerData;
@@ -36,8 +35,6 @@ public class PlayerManager extends Manager implements IPlayerManager {
     private static PlayerManager instance;
     @Getter
     private final Map<UUID, PlayerData> playerProfiles = new ConcurrentHashMap<>();
-    @Getter
-    private final Map<UUID, Integer> quitting = new HashMap<>();
     @Getter
     private MongoCollection<Document> pdataCollection = null;
 
@@ -188,29 +185,9 @@ public class PlayerManager extends Manager implements IPlayerManager {
         PlayerData data = getData(player);
         if (data == null) return;
         data.setSavingOnQuit(true);
-        Tasks.runAsync(() -> {
-            playerProfiles.remove(player.getUniqueId());
-            data.setLastSeen(System.currentTimeMillis());
-            data.save();
-        });
-
-        Tasks.runLater(() -> new GlobalPlayerStatusUpdatePacket(player.getName(), true).send(), 30L);
-
-        String name = player.getName();
-        UUID uuid = player.getUniqueId();
-        BukkitTask task = Tasks.runAsyncLater(() -> {
-            GlobalPlayer globalPlayer = OctoCoreCommon.getInstance().getServerManager().getGlobalPlayer(name);
-
-            if (globalPlayer != null && globalPlayer.isLeaving() && globalPlayer.hasPermission(Permissions.SEND_LEAVE_MESSAGE)) {
-                new StaffLeavePacket(globalPlayer.getName(), globalPlayer.getServer() != null ? globalPlayer.getServer() : "Unknown", globalPlayer.getRankWeight(), globalPlayer.isVanished()).send();
-            }
-            quitting.remove(uuid);
-        }, 80L);
-
-        if (task != null) {
-            quitting.put(player.getUniqueId(), task.getTaskId());
-        }
-
+        playerProfiles.remove(player.getUniqueId());
+        data.setLastSeen(System.currentTimeMillis());
+        data.save();
     }
 
     public Document getDocument(String name) {

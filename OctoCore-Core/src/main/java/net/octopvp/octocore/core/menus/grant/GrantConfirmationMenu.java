@@ -6,7 +6,7 @@ import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
-import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.common.object.builders.GrantBuilder;
 import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.permissions.Rank;
@@ -87,12 +87,12 @@ public class GrantConfirmationMenu extends Menu<Gui> {
                                 }
                                 Logger.debug("Applying Grant To: " + targetData.getName());
 
-                                GlobalPlayer globalPlayer = OctoCore.getInstance().getServerManager().getGlobalPlayer(targetData.getUniqueId()); // FIXME globalplayer is null for some reason
-                                String name = globalPlayer != null ? globalPlayer.getName() : targetData.getName();
+                                OnlinePlayer onlinePlayer = OctoCore.getInstance().getServerManager().getOnlinePlayer(targetData.getUniqueId());
+                                String name = onlinePlayer != null ? onlinePlayer.getName() : targetData.getName();
                                 if (grant.isPermanent()) {
                                     player.sendMessage(Lang.GRANT_PERM_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.getName(), grantProcedure.getEnteredReason()));
-                                    if (globalPlayer != null) {
-                                        globalPlayer.sendMessage(Lang.GRANT_PERM_GRANTED_TO.getMsg(targetRank.getDisplayName()));
+                                    if (onlinePlayer != null) {
+                                        onlinePlayer.sendMessage(Lang.GRANT_PERM_GRANTED_TO.getMsg(targetRank.getDisplayName()));
                                     }
                                     new AdminAlertPacket(Lang.GRANT_ADMIN_ALERT_PERM.getMsg(
                                             player.getName(),
@@ -102,8 +102,8 @@ public class GrantConfirmationMenu extends Menu<Gui> {
                                     ).send();
                                 } else {
                                     player.sendMessage(Lang.GRANT_TEMP_GRANTED_EXECUTOR.getMsg(targetRank.getDisplayName(), targetData.getName(), grantProcedure.getNiceDuration()));
-                                    if (globalPlayer != null) {
-                                        globalPlayer.sendMessage(Lang.GRANT_TEMP_GRANTED_TO.getMsg(targetRank.getDisplayName(), grantProcedure.getNiceDuration()));
+                                    if (onlinePlayer != null) {
+                                        onlinePlayer.sendMessage(Lang.GRANT_TEMP_GRANTED_TO.getMsg(targetRank.getDisplayName(), grantProcedure.getNiceDuration()));
                                     }
                                     new AdminAlertPacket(Lang.GRANT_ADMIN_ALERT_TEMP.getMsg(player.getName(), name, targetRank.getDisplayName(), grantProcedure.getNiceDuration(), grantProcedure.getEnteredReason())).send();
                                 }
@@ -112,7 +112,7 @@ public class GrantConfirmationMenu extends Menu<Gui> {
                                     data.applyGrant(grant);
                                     data.save();
                                 } else {
-                                    if (globalPlayer != null) {
+                                    if (onlinePlayer != null) {
                                         new AddGrantPacket(
                                                 targetData.getName(),
                                                 targetData.getUniqueId(),

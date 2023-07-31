@@ -1,24 +1,13 @@
 package net.octopvp.octocore.core.utils.runnable.runnables;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.object.Permissions;
-import net.octopvp.octocore.common.redis.packets.PlayerDataPacket;
+import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.common.redis.packets.ServerDataPacket;
-import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.manager.impl.VanishManager;
-import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class DataUpdateThread extends Thread {
@@ -56,41 +45,8 @@ public class DataUpdateThread extends Thread {
 
         try {
             double[] tps = Bukkit.getTPS();
-            new ServerDataPacket(OctoCore.getServerName(), new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList())),
-                    Bukkit.getMaxPlayers(), Bukkit.getOnlinePlayers().size(),
-                    System.currentTimeMillis(), Bukkit.hasWhitelist(), tps[0], tps[1], tps[2], false)
-                    .send();
-            Map<UUID, PlayerData> map = PlayerManager.getInstance().getPlayerProfiles();
-            if (map == null || map.isEmpty()) return;
-            for (PlayerData playerData : map.values()) {
-                if (playerData == null) continue;
-                playerData.setLastDataSave(playerData.getLastDataSave() + 1);
-                if (playerData.getLastDataSave() >= 120) //save every 2 mins
-                    playerData.save();
-                playerData.setPlayTime(playerData.getPlayTime() + 1); //increment playtime by 1 second
-                Player player = Bukkit.getPlayer(playerData.getUuid());
-                if (player == null) continue;
-                if (player.getName() == null || player.getUniqueId() == null) continue;
-                playerData.setOp(player.isOp());
-                String name = playerData.getName();
-                if (name == null && playerData.isOnline()) name = player.getName();
-
-                if (playerData.isVanished()) {
-                    Component actionBar = Component.text("You are vanished with a priority of ").color(NamedTextColor.GREEN)
-                            .append(Component.text(VanishManager.getInstance().getVanishPriority(playerData)).color(NamedTextColor.YELLOW));
-                    OctoCore.getInstance().getServerImplementation().sendActionBar(player, actionBar);
-                }
-
-                new PlayerDataPacket(playerData.getUuid(), OctoCore.getServerName(), name, OctoCore.getServerName(), playerData.getAddress(),
-                        playerData.getRankName(), System.currentTimeMillis(), playerData.getFirstJoin(), playerData.getLastLogin(), VanishManager.getInstance().getVanishPriority(playerData),
-                        playerData.isVanished(), playerData.isStaffChatAlerts(), playerData.isAdminChatAlerts(), playerData.isReportAlerts(),
-                        playerData.hasPermission(Permissions.STAFF), playerData.getAllowedTagsID(), playerData.getAllEffectivePermissions(),
-                        playerData.getAllNegatedPermissions(), playerData.getAltsSafely(), playerData.getAddresses(),
-                        playerData.getHighestRank().getWeight(), playerData.getMessageSettings(), playerData.getCachedFormattedNameNoNickNoTag(),
-                        playerData.isOp()
-                ).send();
-                new DataCache(playerData.getUuid()).update(playerData.getData(), playerData.getBungeePerms());
-            }
+            ArrayList<OnlinePlayer> onlinePlayers = Bukkit.getOnlinePlayers().stream().map(player -> new OnlinePlayer(player.getUniqueId(), player.getName(), player.getAddress().getAddress().getHostAddress(), OctoCore.getServerName())).collect(Collectors.toCollection(ArrayList::new));
+            new ServerDataPacket(OctoCore.getServerName(), onlinePlayers, Bukkit.getMaxPlayers(), System.currentTimeMillis(), Bukkit.hasWhitelist(), tps[0], tps[1], tps[2], false).send();
         } catch (Exception e) {
             e.printStackTrace();
         }

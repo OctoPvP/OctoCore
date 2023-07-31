@@ -5,21 +5,20 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.database.redis.packets.player.GlobalPlayerStatusUpdatePacket;
 import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;
-import net.octopvp.octocore.core.manager.impl.PermissionManager;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
+import net.octopvp.octocore.core.objects.OctoPermissible;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -46,7 +45,7 @@ public class JoinLeaveListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
-        if (!OctoCore.getInstance().isEnabled()) {
+        if (OctoCore.isLoading()) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("The server hasn't started yet!").toString());
             return;
         }
@@ -56,13 +55,6 @@ public class JoinLeaveListener implements Listener {
             String name = event.getName();
             UUID uuid = event.getUniqueId();
             //PlayerManager.loadPData(event.getUniqueId(), event.getName(), true);
-
-            new GlobalPlayerStatusUpdatePacket(name, false).send();
-
-            if (PlayerManager.getInstance().getQuitting().containsKey(uuid)) {
-                Bukkit.getServer().getScheduler().cancelTask(PlayerManager.getInstance().getQuitting().get(uuid));
-                PlayerManager.getInstance().getQuitting().remove(uuid);
-            }
 
             PlayerData playerData = PlayerManager.getInstance().createProfile(uuid, name);
 
@@ -94,14 +86,25 @@ public class JoinLeaveListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogin(PlayerLoginEvent event) {
         PlayerData data = PlayerManager.getInstance().getData(event.getPlayer());
-        PermissionManager.injectPermissible(event.getPlayer(), data);
-        if (OctoCore.getInstance().getServerManager().isPlayerOnline(event.getPlayer().getUniqueId())) {
-            data.setLastServerOn(OctoCore.getInstance().getServerManager().getGlobalPlayer(event.getPlayer().getUniqueId()).getServer());
+        if (data == null) {
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
+            return;
+        }
+        PermissibleBase old = event.getPlayer().getPermissibleBase();
+        PermissibleBase newBase = new OctoPermissible(event.getPlayer(), event.getPlayer().getUniqueId(), old);
+        event.getPlayer().setPermissibleBase(newBase);
+        if (event.getPlayer().getPermissibleBase() instanceof OctoPermissible) {
+            Logger.debug("Successfully injected permissible!");
+            data.loadPerms(event.getPlayer());
+        } else {
+            Logger.error("Could not inject permissible!");
+            //PlayerManager.captureSentryEvent("Could not inject permissible!", player);
+        }
+        if (OctoCore.getInstance().getServerManager().isOnline(event.getPlayer().getUniqueId())) {
+            data.setLastServerOn(OctoCore.getInstance().getServerManager().getOnlinePlayer(event.getPlayer().getUniqueId()).getServer());
         } else {
             data.setJoinAlert(true);
         }
-        if (data == null)
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
     }
 
     @EventHandler(priority = EventPriority.HIGH)

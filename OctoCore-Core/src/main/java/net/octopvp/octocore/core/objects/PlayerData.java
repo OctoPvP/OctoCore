@@ -168,9 +168,9 @@ public class PlayerData extends SimplePlayerData {
             }
         }
 
-        OctoCoreCommon.getInstance().getServerManager().getGlobalPlayers().forEach(globalPlayer -> {
-            if (!globalPlayer.getUniqueId().toString().equals(this.uuid.toString()) && globalPlayer.getAddress().equalsIgnoreCase(address) && this.getAlt(globalPlayer.getUniqueId()) == null) {
-                new AltUpdatePacket(this.uuid, this.name, globalPlayer.getUniqueId(), globalPlayer.getName());
+        OctoCoreCommon.getInstance().getServerManager().getOnlinePlayers().forEach(player -> {
+            if (!player.getUuid().equals(this.uuid) && player.getAddress().equalsIgnoreCase(address) && this.getAlt(player.getUuid()) == null) {
+                new AltUpdatePacket(this.uuid, this.name, player.getUuid(), player.getName());
             }
         });
 
@@ -221,17 +221,11 @@ public class PlayerData extends SimplePlayerData {
 
     public String getFormattedName(boolean nicked, Player player, boolean... showtag) {
         String prefix = getHighestRank().getPrefix();
+        String displayName = player != null ? player.getDisplayName() : getDisplayName();
         boolean shouldShowTag = showtag.length == 0 || showtag[0];
         if (nicked)
-            return CC.translate(prefix + (CC.strip(prefix).equals("") ? player.getDisplayName() : " " + player.getDisplayName())) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
-        return CC.translate(prefix +
-                getCurrentColor() +
-                (CC.strip(prefix).equals("") ?
-                        player.getName() : " " +
-                        player.getName())) +
-                (getTag() != null &&
-                        shouldShowTag ? " " +
-                        getTagString() : "");
+            return CC.translate(prefix + (CC.strip(prefix).isEmpty() ? displayName : " " + displayName)) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
+        return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).equals("") ? name : " " + name)) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
         /*
         if (nicked)
             return CC.translate((this.isNicked() ? nickPrefix : getHighestRank().getPrefix()) + (this.isNicked() ? nickColor : getCurrentColor()) + " " + (this.isNicked() ? nick : lastKnownName)) + (tag != null ? " " + getTagString() : "");
@@ -248,11 +242,7 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public String getActualMainColor() {
-        return (customColor != null && isCustomColorEnabled() ?
-                customColor :
-                getHighestRank()
-                        .getColor()
-                        .toString());
+        return (customColor != null && isCustomColorEnabled() ? customColor : getHighestRank().getColor().toString());
     }
 
     public boolean isOnline(String name) { // FIXME inverted this because its returning false even if they are online

@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OnlineOnly {
-
+    boolean network() default false; // if true, the player must be on the network, else they must be on the server
 }

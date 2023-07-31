@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ public class ServerData {
     private long lastTick;
     private boolean whitelisted, maintenance;
     private int maxPlayers;
-    private List<GlobalPlayer> onlinePlayers = new ArrayList<>();
+    private List<OnlinePlayer> onlinePlayers = new ArrayList<>();
     private List<String> names = new ArrayList<>();
     private double[] recentTps = new double[]{20.0, 20.0, 20.0};
 
@@ -34,7 +35,8 @@ public class ServerData {
         int playerCount = (int) (Math.random() * 100);
         for (int i = 0; i < playerCount; i++) {
             String randName = "Player" + (int) (Math.random() * 1000);
-            serverData.getOnlinePlayers().add(GlobalPlayer.createDummyPlayer(randName));
+            serverData.getOnlinePlayers().add(OnlinePlayer.createDummyData());
+            serverData.getNames().add(randName);
         }
         return serverData;
     }

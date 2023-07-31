@@ -59,7 +59,7 @@ public class OnlinePlayerData {
                 });*/
                 nodes.addAll(permissions);
             }
-            this.vanished = document.getBoolean("vanished");
+            this.vanished = document.getBoolean("joinVanished"); // used to be vanished but we've removed that from playerdata
         }
     }
 

@@ -6,11 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,9 +23,9 @@ public class ServerDataPacket extends RedisPacket {
     private static Implementation implementation = null;
     private String name;
 
-    private ArrayList<String> names;
+    private ArrayList<OnlinePlayer> onlinePlayers;
 
-    private int maxPlayers, players;
+    private int maxPlayers;
 
     private long lastTick;
 
@@ -37,12 +40,13 @@ public class ServerDataPacket extends RedisPacket {
         ServerData serverData = OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getServerData(name);
         if (serverData == null)
             serverData = OctoCoreCommon.getInstance().getServerImplementation().getServerManager().createServerData(name);
-        serverData.setNames(names);
+        serverData.setNames(onlinePlayers.stream().map(OnlinePlayer::getName).collect(Collectors.toList()));
         serverData.setMaxPlayers(maxPlayers);
         serverData.setLastTick(lastTick);
         serverData.setWhitelisted(whitelisted);
         serverData.setRecentTps(new double[]{tps1, tps2, tps3});
         serverData.setMaintenance(maintenance);
+        serverData.setOnlinePlayers(onlinePlayers);
         Iterator<ServerData> iterator = OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers().iterator();
         while (iterator.hasNext()) {
             ServerData connectedServer = iterator.next();
@@ -56,8 +60,6 @@ public class ServerDataPacket extends RedisPacket {
                 if (implementation != null) implementation.onServerRemoved(connectedServer);
             }
         }
-        //fix ConcurrentModificationException -> https://stackoverflow.com/a/25131800
-        serverData.getOnlinePlayers().removeIf(globalPlayer -> System.currentTimeMillis() - globalPlayer.getLastActivity() >= 5000L);
     }
 
     public interface Implementation {

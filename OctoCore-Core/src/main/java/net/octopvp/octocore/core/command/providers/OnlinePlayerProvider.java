@@ -5,7 +5,7 @@ import net.octopvp.commander.command.CommandInfo;
 import net.octopvp.commander.command.ParameterInfo;
 import net.octopvp.commander.provider.Provider;
 import net.octopvp.commander.sender.CoreCommandSender;
-import net.octopvp.octocore.common.object.GlobalPlayer;
+import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.core.OctoCore;
 import org.bukkit.entity.Player;
 
@@ -13,12 +13,12 @@ import java.util.Deque;
 import java.util.List;
 import java.util.UUID;
 
-public class GlobalPlayerProvider implements Provider<GlobalPlayer> {
+public class OnlinePlayerProvider implements Provider<OnlinePlayer> {
     @Override
-    public GlobalPlayer provide(CommandContext context, CommandInfo commandInfo, ParameterInfo parameterInfo, Deque<String> args) {
+    public OnlinePlayer provide(CommandContext context, CommandInfo commandInfo, ParameterInfo parameterInfo, Deque<String> args) {
         if (commandInfo.getCommander().getPlatform().isSenderParameter(parameterInfo))
-            return OctoCore.getInstance().getServerManager().getGlobalPlayer((UUID) context.getCommandSender().getIdentifier());
-        return OctoCore.getInstance().getServerManager().getGlobalPlayer(args.pop());
+            return OctoCore.getInstance().getServerManager().getOnlinePlayer((UUID) context.getCommandSender().getIdentifier());
+        return OctoCore.getInstance().getServerManager().getOnlinePlayer(args.pop());
     }
 
     @Override
