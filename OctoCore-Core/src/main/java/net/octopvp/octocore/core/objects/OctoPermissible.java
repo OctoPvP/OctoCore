@@ -1,6 +1,8 @@
 package net.octopvp.octocore.core.objects;
 
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.permissions.PermissionReason;
+import net.octopvp.octocore.common.util.permissions.PermissionResult;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,7 +37,9 @@ public class OctoPermissible extends PermissibleBase {
             Thread.dumpStack();
             return oldPermissibleBase.hasPermission(inName);
         }
-        return data.hasPermission(inName);
+        PermissionResult result = data.calculatePermissionResult(inName);
+        if (result.getReason() == PermissionReason.NOT_SET) isOp(); // return oldPermissibleBase.hasPermission(inName);
+        return result.allowed();
     }
 
     @Override

@@ -115,6 +115,9 @@ public class Rank implements Cloneable {
         return ranks;
     }
 
+    public PermissionResult calculatePermission(String permission) {
+        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes());
+    }
     public boolean hasPermission(String permission) {
         return PermissionCalculator.hasPermissionResult(permission, getFinalNodes()).allowed();
     }
