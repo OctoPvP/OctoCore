@@ -71,7 +71,6 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
     }
 
     public GuiItem permissionButton(Node node, Consumer<NodeBuilder> callback) {
-        Node a = node;
         return ItemBuilder.from(node.isAllowed() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
                 .name(
                         (node.isAllowed() ? CC.GREEN : CC.RED) + node.getPermission()
@@ -85,10 +84,10 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
                     ClickType clickType = event.getClick();
                     Player player = (Player) event.getWhoClicked();
                     if (clickType == ClickType.SHIFT_RIGHT) {
-                        builder.unsetPermission(a);
-                        update(player);
+                        builder.unsetPermission(node);
+                        open(player);
                     } else if (clickType == ClickType.LEFT) {
-                        new EditPermissionMenu(new NodeBuilder(a), false, prev, callback).open(player);
+                        new EditPermissionMenu(new NodeBuilder(node), false, prev, callback).open(player);
                     }
                 });
     }
