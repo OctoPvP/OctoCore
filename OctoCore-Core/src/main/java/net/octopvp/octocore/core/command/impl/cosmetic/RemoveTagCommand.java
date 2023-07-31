@@ -23,7 +23,7 @@ public class RemoveTagCommand {
     @Permission(Permissions.ADMIN)
     @Cooldown(1)
     public CommandResult execute(CommandSender sender, @Required String target, @Required String tag) {
-        if (OctoCore.getInstance().getServerManager().isPlayerOnline(target)) {
+        if (OctoCore.getInstance().getServerManager().isOnline(target)) {
             if (Bukkit.getPlayer(target) != null) {
                 //on this server
                 PlayerData profile = PlayerManager.getInstance().getData(Bukkit.getPlayer(target).getUniqueId());

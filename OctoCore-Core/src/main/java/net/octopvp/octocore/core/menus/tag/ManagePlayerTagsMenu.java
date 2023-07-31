@@ -129,7 +129,7 @@ public class ManagePlayerTagsMenu extends Menu<PaginatedGui> {
                 .asGuiItem()
                 .click(event -> {
                     if (event.getClick() == ClickType.SHIFT_RIGHT) {
-                        if (OctoCoreCommon.getInstance().getServerManager().isPlayerOnline(data.getUuid())) {
+                        if (OctoCoreCommon.getInstance().getServerManager().isOnline(data.getUuid())) {
                             //new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "REMOVE_TAG").addProperty("tagId", tag.getId().toString())).send();
                             new TagUpdatePacket(TagUpdatePacket.TagUpdateReason.REMOVE_TAG, data.getUuid(), tag.getId()).send();
                         } else {

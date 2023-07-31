@@ -22,7 +22,7 @@ public class SeenCommand {
         String name = args[0];
         // OfflinePlayer op = Bukkit.getOfflinePlayer(name);
         OfflineHelpers.OfflineInfo offlineInfo = OfflineHelpers.getOfflineInfo(name);
-        if (OctoCore.getInstance().getServerManager().isPlayerOnline(name)) {
+        if (OctoCore.getInstance().getServerManager().isOnline(name)) {
             sender.sendMessage(CC.GREEN + offlineInfo.getDisplayName() + " is currently online!");
             return CommandResult.SUCCESS;
         }
