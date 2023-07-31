@@ -44,8 +44,8 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected List<String> metaDataList = new ArrayList<>();
     protected Map<String, String> metaData = new ConcurrentHashMap<>();
     protected UUID tagID = null, nickTagID = null, nickUUID;
-    protected int /*playtime in seconds, dont need to make it an long since 2.1b seconds is 66 years*/
-            playTime = 0, coins;
+    protected long playTime = 0, // seconds
+            coins;
     protected HashSet<UUID> allowedTagsID = new HashSet<>();
     protected boolean nameColorBold = false, nameColorItalic = false, staffChatAlerts = true, adminChatAlerts = true;
     protected boolean reportAlerts = true, staffChat = false, adminChat = false, build = false;
