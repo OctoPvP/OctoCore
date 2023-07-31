@@ -28,18 +28,6 @@ public class RedisManager extends Manager {
             jedisSettings.setAuth(true);
             jedisSettings.setPassword(getConfig().getString("database.redis.auth.password"));
         }
-        PlayerDataPacket.setImplementation(new PlayerDataPacket.PlayerDataPacketImplementation() {
-            @Override
-            public void runLater(Runnable runnable, Duration duration) {
-                long ticks = duration.toMillis() / 50;
-                OctoCore.getInstance().getServer().getScheduler().runTaskLater(OctoCore.getInstance(), runnable, ticks);
-            }
-
-            @Override
-            public String getOfflineName(UUID uuid) {
-                return OfflineHelpers.getOfflineInfo(uuid).getDisplayName(); // Bukkit.getOfflinePlayer(uuid).getName();
-            }
-        });
         OctoCore.getInstance().setActualRedisManager(new net.octopvp.octocore.common.redis.RedisManager(
                 jedisSettings.getAddress(), jedisSettings.getPort(), jedisSettings.getPassword(), /*"net.octopvp.octocore.paper.database.redis.packets"*/
                 DatabaseManager.class.getPackage().getName() + ".redis.packets"

@@ -154,17 +154,6 @@ public final class OctoCoreWaterfall extends Plugin {
                 };
             }
         });
-        PlayerDataPacket.setImplementation(new PlayerDataPacket.PlayerDataPacketImplementation() {
-            @Override
-            public void runLater(Runnable runnable, Duration duration) {
-                ProxyServer.getInstance().getScheduler().schedule(OctoCoreWaterfall.this, runnable, duration.toMillis(), TimeUnit.MILLISECONDS);
-            }
-
-            @Override
-            public String getOfflineName(UUID uuid) {
-                return MojangAPIUtil.INSTANCE.getName(uuid);
-            }
-        });
         File file = new File(getDataFolder(), "config.yml");
         if (!file.exists()) {
             try (InputStream in = getResourceAsStream("config.yml")) {
