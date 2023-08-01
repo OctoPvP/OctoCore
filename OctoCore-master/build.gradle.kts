@@ -75,7 +75,7 @@ dependencyManagement {
 // this is just an example of how to configure the Gradle Vaadin Plugin:
 // for more configuration options please see: https://vaadin.com/docs/latest/guide/start/gradle/#all-options
 vaadin {
-    pnpmEnable = true
+    pnpmEnable = false // use npm
 }
 //tasks.register("prepareKotlinBuildScriptModel"){}
 description = "OctoCore Master"

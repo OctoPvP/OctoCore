@@ -35,7 +35,7 @@ auth:
   expiration: 86400000 # 1 day
   cookieName: 'auth'
 vaadin:
-  pnpm-enabled: true
+  pnpm-enabled: false
 master:
   saml:
     discovery: octoauth
