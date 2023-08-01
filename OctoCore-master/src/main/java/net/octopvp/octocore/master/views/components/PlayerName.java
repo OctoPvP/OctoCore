@@ -7,6 +7,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
 import lombok.Getter;
 import net.octopvp.octocore.common.object.OnlinePlayer;
+import net.octopvp.octocore.common.util.BedrockUtils;
 import net.octopvp.octocore.master.master.manager.ServerManager;
 
 @Getter
@@ -73,7 +74,7 @@ public class PlayerName extends HorizontalLayout {
         } else {
             div.add(image);
         }
-        Span span = new Span(bedrock ? "*" + name : name);
+        Span span = new Span(bedrock ? BedrockUtils.bedrockPrefix + name : name);
         if (paddingEm > 0) {
             span.getStyle().set("padding-top", paddingEm + "em");
         }

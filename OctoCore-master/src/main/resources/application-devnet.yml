@@ -1,0 +1,61 @@
+# App Properties
+spring:
+  security:
+    saml2:
+      relyingparty:
+        registration:
+          octoauth:
+            singlelogout:
+              binding: REDIRECT
+              url: "https://auth.octomc.net/application/saml/octocore-devnet/slo/binding/redirect/"
+            assertingparty:
+              singlesignon:
+                url: "https://auth.octomc.net/application/saml/octocore-devnet/sso/binding/redirect/"
+                binding: REDIRECT
+              metadata-uri: "https://auth.octomc.net/api/v3/providers/saml/15/metadata/?download"
+  gson:
+    pretty-printing: true
+  data:
+    mongodb:
+      database: 'OctoCore'
+      host: '192.168.1.6'
+      port: 27017
+      username: 'Admin'
+      password: '4%Fa03*xYTWbp9za'
+      authentication-database: 'admin'
+  mvc:
+    converters:
+      preferred-json-mapper: 'gson'
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+auth:
+  secret: jsdogh298gh92uihuiheg29jfewiohg2
+  expiration: 86400000 # 1 day
+  cookieName: 'auth'
+vaadin:
+  pnpm-enabled: true
+master:
+  saml:
+    discovery: octoauth
+  redis:
+    hostname: '192.168.1.6'
+    port: 6379
+    password: ''
+  mongo:
+    database: 'OctoCore'
+    host: '192.168.1.6'
+    port: 27017
+    auth:
+      enabled: true
+      user: 'Admin'
+      password: '4%Fa03*xYTWbp9za'
+      db: 'admin'
+server:
+  ssl:
+    enabled: true
+    # ssl/cert.pem, chain.pem, fullchain.pem, privkey.pem
+    key-store: 'ssl/fullchain.pem'
+    certificate: 'ssl/cert.pem'
+    certificate-private-key: 'ssl/privkey.pem'

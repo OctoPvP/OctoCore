@@ -62,10 +62,10 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Consumer;
 
+@Log
 @PageTitle("Player Info")
 @Route(value = "player/view", layout = MainLayout.class)
 @RolesAllowed("ADMIN")
-@Log
 public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
     @Autowired
     private PlayerManager playerManager;
@@ -90,7 +90,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
 
     public void populate(Location location) {
         Button refresh = new Button(VaadinIcon.REFRESH.create());
-        HorizontalLayout title = new HorizontalLayout(new PlayerName(name, true), refresh);
+        HorizontalLayout title = new HorizontalLayout(new PlayerName(name, uuid.getMostSignificantBits() == 0), refresh);
         refresh.addClickListener(clickEvent -> {
             removeAll();
             populate(location);
