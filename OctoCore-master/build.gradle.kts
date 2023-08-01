@@ -79,3 +79,7 @@ vaadin {
 }
 //tasks.register("prepareKotlinBuildScriptModel"){}
 description = "OctoCore Master"
+
+tasks.named("build") {
+    dependsOn(":OctoCore-master:vaadinBuildFrontend")
+}
