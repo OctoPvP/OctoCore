@@ -543,6 +543,10 @@ public class PlayerData extends SimplePlayerData {
         return this.uuid;
     }
 
+    public int getVanishPriority() {
+        return VanishManager.getInstance().getVanishPriority(this);
+    }
+
     public enum SaveState {
         SAVED, SAVING
     }

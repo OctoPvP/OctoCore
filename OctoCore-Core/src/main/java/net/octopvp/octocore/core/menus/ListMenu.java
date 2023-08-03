@@ -36,6 +36,7 @@ public class ListMenu extends PaginatedMenu<PaginatedGui> {
                 .setName(data.getDisplayName())
                 .lore(
                         CC.GREEN + "Rank" + CC.GRAY + ": " + data.getHighestRank().getDisplayName(),
+                        CC.GREEN + "Vanished" + CC.GRAY + ": " + data.isVanished(),
                         CC.GREEN + "Nicked" + CC.GRAY + ": " + (data.isNicked() ? CC.GREEN + "Yes" : CC.RED + "No"),
                         CC.GREEN + "First Join" + CC.GRAY + ": " + new Date(data.getFirstJoin())
                 )

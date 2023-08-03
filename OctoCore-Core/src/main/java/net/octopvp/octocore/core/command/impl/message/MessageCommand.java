@@ -9,6 +9,7 @@ import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.command.annotation.OnlineOnly;
 import net.octopvp.octocore.core.database.redis.packets.player.MessagePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Bukkit;
@@ -23,8 +24,7 @@ public class MessageCommand {
     @Cooldown(1)
     public CommandResult execute(@Sender Player sender, @Name("player") @OnlineOnly(network = true) PlayerData target, @JoinStrings String message) {
         PlayerData senderData = PlayerManager.getInstance().getData(sender.getUniqueId());
-
-        if (target == null) {
+        if (target == null || (target.isVanished() && target.getVanishPriority() > senderData.getVanishPriority())) {
             return CommandResult.PLAYER_NOT_FOUND;
         }
         return execMsg(sender, message, target, senderData);
@@ -47,7 +47,7 @@ public class MessageCommand {
         }
         UUID targetId = data.getLastMessaged();
         OnlinePlayer target = OctoCoreCommon.getInstance().getServerManager().getOnlinePlayer(targetId);
-        if (target == null) {
+        if (target == null || (target.isVanished() && target.getVanishPriority() > data.getVanishPriority())) {
             return CommandResult.PLAYER_NOT_FOUND;
         }
         return execMsg(sender, message, PlayerManager.getInstance().getDataEvenIfOffline(targetId, false), PlayerManager.getInstance().getData(sender.getUniqueId()));

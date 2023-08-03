@@ -13,9 +13,11 @@ import java.util.UUID;
 public class OnlinePlayer {
     private UUID uuid;
     private String name, address, server;
+    private boolean vanished;
+    private int vanishPriority;
 
     public static OnlinePlayer createDummyData() {
-        return new OnlinePlayer(UUID.randomUUID(), "Player" + (int) (Math.random() * 1000), "127.0.0.1", "dummy");
+        return new OnlinePlayer(UUID.randomUUID(), "Player" + (int) (Math.random() * 1000), "127.0.0.1", "dummy", false, 1);
     }
 
     public void sendMessage(String message) {

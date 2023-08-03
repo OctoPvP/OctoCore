@@ -2,6 +2,7 @@ package net.octopvp.octocore.core.command.impl.staff;
 
 import net.octopvp.commander.annotation.*;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.core.database.redis.packets.staff.StaffVanishStateUpdatePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.objects.PlayerData;
@@ -30,6 +31,7 @@ public class VanishCommand {
             VanishManager.getInstance().vanish(target, priority, silent);
             data.setJoinVanished(true);
             data.save();
+            new StaffVanishStateUpdatePacket(PlayerManager.getInstance().getData(target).getFormattedName(false, target.getPlayer(), false), true, priority).send();
             if (target != sender)
                 sender.sendMessage(CC.GREEN + "You have vanished " + target.getName() + " with a priority of " + CC.YELLOW + priority + CC.GREEN + ".");
             else
@@ -42,6 +44,7 @@ public class VanishCommand {
         if (VanishManager.getInstance().isVanished(target)) {
             VanishManager.getInstance().unvanish(target, silent);
             PlayerManager.getInstance().modifyData(target.getUniqueId(), data -> data.setJoinVanished(false));
+            new StaffVanishStateUpdatePacket(PlayerManager.getInstance().getData(target).getFormattedName(false, target.getPlayer(), false), false, priority).send();
             if (target != sender)
                 sender.sendMessage(CC.GREEN + "You have unvanished " + target.getName() + ".");
             else
