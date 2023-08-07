@@ -66,7 +66,7 @@ public class WebSecurityConfig extends VaadinWebSecurity {
                 )
                 .saml2Login(settings)
                 .saml2Logout(logoutSettings)
-                .addFilterBefore(filter, ForwardedHeaderFilter.class)
+                .addFilterBefore(new ForwardedHeaderFilter(), Saml2MetadataFilter.class)
                 .addFilterBefore(filter, Saml2WebSsoAuthenticationFilter.class)
                 .logout()
                 .logoutUrl("/logout")
