@@ -15,6 +15,7 @@ repositories {
         }
     }
 }
+description = "OctoCore Core"
 var targetJavaVersion = "1.8" // We're using 1.8 to support 1.8.9 for the core, and so does the 1_8 module, but the 1_19 module uses java 17
 dependencies {
     implementation(project(":OctoCore-common"))
@@ -58,4 +59,43 @@ tasks {
     }
 }
 
-description = "OctoCore Core"
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+}
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from(sourceSets["main"].allJava)
+}
+artifacts {
+    add("archives", javadocJar)
+    add("archives", sourcesJar)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            pom {
+                name.set("OctoCore-common")
+                description.set("OctoCore common module")
+                url.set("https://github.com/OctoPvP/OctoCore")
+                from(components["java"])
+                artifact(sourcesJar)
+                artifact(javadocJar)
+                scm {
+                    url.set("https://github.com/OctoPvP/OctoCore")
+                }
+            }
+        }
+    }
+    repositories {
+        maven ("https://repo.octopvp.net/repo"){
+            name = "octomc"
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
+}
+

@@ -1,7 +1,9 @@
 plugins {
     id("net.octopvp.java-conventions")
     id("io.freefair.lombok") version "6.5.1"
+    id("maven-publish")
 }
+description = "OctoCore Commons"
 
 repositories {
     mavenCentral()
@@ -48,6 +50,43 @@ tasks {
         archiveBaseName.set("OctoCore-common-no-deps")
     }
 }
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+}
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from(sourceSets["main"].allJava)
+}
+artifacts {
+    add("archives", javadocJar)
+    add("archives", sourcesJar)
+}
 
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            pom {
+                name.set("OctoCore-common")
+                description.set("OctoCore common module")
+                url.set("https://github.com/OctoPvP/OctoCore")
+                from(components["java"])
+                artifact(sourcesJar)
+                artifact(javadocJar)
+                scm {
+                    url.set("https://github.com/OctoPvP/OctoCore")
+                }
+            }
+        }
+    }
+    repositories {
+        maven ("https://repo.octopvp.net/repo"){
+            name = "octomc"
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
+}
 
-description = "OctoCore Commons"
