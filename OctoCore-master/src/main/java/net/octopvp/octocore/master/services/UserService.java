@@ -33,12 +33,10 @@ public class UserService {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         if (authentication == null) {
-            System.out.println("Auth is null");
             return null;
         }
         Saml2Authentication saml2Authentication = (Saml2Authentication) authentication;
         String name = saml2Authentication.getName();
-        System.out.println("Auth name: " + name);
         if (name.contains("@"))
             return userRepository.findByEmail(authentication.getName()).orElse(null);
         else
