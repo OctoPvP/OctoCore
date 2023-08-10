@@ -152,7 +152,6 @@ public abstract class OctoCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Logger.info("Starting OctoCore");
         long start = System.currentTimeMillis();
         if (!getDataFolder().exists())
             //noinspection ResultOfMethodCallIgnored
@@ -169,6 +168,7 @@ public abstract class OctoCore extends JavaPlugin {
                 }
             }
         });
+        Logger.info("Starting OctoCore");
         loading = true;
         Tasks.init(this);
         AdventureUtils.init();
