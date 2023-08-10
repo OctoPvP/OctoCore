@@ -74,10 +74,17 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         return this;
     }
 
-    public SimplePlayerData load(Document document) {
-        Gson gson = OctoCoreCommon.getInstance().getGson();
+    public void updateName() {
         this.name = OctoCoreCommon.getInstance().getServerImplementation().getName(uuid);
+    }
 
+    public SimplePlayerData load(Document document) {
+        updateName();
+        Gson gson = OctoCoreCommon.getInstance().getGson();
+        if (this.name == null) {
+            Logger.error("Failed to load player data for " + uuid + " because the name was null.");
+            Logger.info("Name: " + OctoCoreCommon.getInstance().getServerImplementation().getName(uuid));
+        }
         this.lowerName = name.toLowerCase();
         this.lastLoaded = System.currentTimeMillis();
         loadGrants(document);

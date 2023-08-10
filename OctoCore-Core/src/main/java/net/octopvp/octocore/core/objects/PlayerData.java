@@ -80,6 +80,7 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public SimplePlayerData load(Document document) {
+        updateName();
         if (document == null) {
             document = PlayerManager.getInstance().getProfileDocument(uuid);
         }

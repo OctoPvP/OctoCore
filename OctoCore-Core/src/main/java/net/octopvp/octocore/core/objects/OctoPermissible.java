@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.objects;
 
+import lombok.Getter;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.permissions.PermissionReason;
 import net.octopvp.octocore.common.util.permissions.PermissionResult;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 public class OctoPermissible extends PermissibleBase {
     private final UUID uuid;
+    @Getter
     private final PermissibleBase oldPermissibleBase;
 
     public OctoPermissible(Player player, UUID uuid, PermissibleBase old) {
@@ -47,10 +49,6 @@ public class OctoPermissible extends PermissibleBase {
         return super.isOp();
     }
 
-    public PermissibleBase getOldPermissibleBase() {
-        return oldPermissibleBase;
-    }
-
     @Override
     public boolean hasPermission(Permission perm) {
         return hasPermission(perm.getName());
@@ -65,7 +63,7 @@ public class OctoPermissible extends PermissibleBase {
         PlayerData data = PlayerManager.getInstance().getData(this.uuid);
         if (data == null) {
             Logger.error("PlayerData is null!");
-            Thread.dumpStack();
+            // Thread.dumpStack();
             return;
         }
         data.getCachedPermissions().clear();
