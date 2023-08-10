@@ -165,8 +165,6 @@ public abstract class OctoCore extends JavaPlugin {
         loading = true;
         Tasks.init(this);
         AdventureUtils.init();
-        if (getConfig().getBoolean("sentry.enable", false))
-            SentryManager.init(getConfig().getString("sentry.sentry-dsn", ""));
         commander = BukkitCommander.getCommander(this);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.SubChannels.PERMISSIONS);
@@ -186,6 +184,8 @@ public abstract class OctoCore extends JavaPlugin {
             errorData.addException(e);
             ErrorHandling.handleError(errorData);
         }
+        if (getConfig().getBoolean("sentry.enable", false))
+            SentryManager.init(getConfig().getString("sentry.sentry-dsn", ""));
         spawn = new Location(
                 Bukkit.getServer().getWorld(getConfig().getString("settings.world-name")),
                 getConfig().getDouble("settings.spawn.x"),
