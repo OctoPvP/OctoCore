@@ -253,7 +253,7 @@ public abstract class OctoCore extends JavaPlugin {
         Logger.info("Done!");
         dataUpdateThread.start();
         getServerImplementation().onEnable();
-        loading = false;
+        Tasks.runLater(() -> loading = false, 20L);
         Logger.info("OctoCore took " + (System.currentTimeMillis() - start) + "ms to load.");
     }
 

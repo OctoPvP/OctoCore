@@ -65,7 +65,10 @@ public class BukkitServerImpl implements ServerImplementation {
 
     @Override
     public String getName(UUID uuid) {
-        return Bukkit.getOfflinePlayer(uuid).getName();
+        if (Bukkit.getPlayer(uuid) != null)
+            return Bukkit.getPlayer(uuid).getName();
+        else
+            return Bukkit.getOfflinePlayer(uuid).getName();
     }
 
     @Override
