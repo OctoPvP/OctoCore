@@ -38,10 +38,8 @@ public class RedisManager {
         settings.setPort(port);
         try {
             this.pool = new JedisPool(hostname, port);
-            Jedis jedis = this.pool.getResource();
             try {
-                if (this.settings.isAuth())
-                    jedis.auth(this.settings.getPassword());
+                getJedis();
                 OctoCoreCommon.getInstance().getServerImplementation().logDebug("Registering Pub/Sub");
                 this.subscriber = new JedisSubscriber(CHANNEL, settings, listenerManager);
             } catch (Exception e) {

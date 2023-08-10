@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.permissions.Node;
 import org.bson.Document;
 import redis.clients.jedis.Jedis;
@@ -19,7 +20,7 @@ public class DataCache {
 
     public Document getData() {
         if (!OctoCoreCommon.getInstance().getRedisManager().isConnected()) return null;
-        try (Jedis jedis = OctoCoreCommon.getInstance().getRedisManager().getPool().getResource()) {
+        try (Jedis jedis = RedisManager.getJedis()) {
             String json = jedis.hget("player-data", this.uuid.toString());
             if (json == null) return null;
             return Document.parse(json);
@@ -34,7 +35,7 @@ public class DataCache {
             document.put("bungeePermissions", OctoCoreCommon.getInstance().getGson().toJson(bungeePerms, GsonType.NODE_LIST));
         }
 
-        try (Jedis jedis = OctoCoreCommon.getInstance().getRedisManager().getPool().getResource()) {
+        try (Jedis jedis = RedisManager.getJedis()) {
             jedis.hset("player-data", this.uuid.toString(), document.toJson());
             // we're on keydb, call EXPIREMEMBER
             // EXPIREMEMBER player-data 5bd217f6-b89a-4064-a7f9-11733e8baafa 2
