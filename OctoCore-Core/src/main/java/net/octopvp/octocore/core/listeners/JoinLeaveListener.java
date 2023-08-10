@@ -4,6 +4,7 @@ import net.octopvp.octocore.common.object.DisconnectReason;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
@@ -54,8 +55,7 @@ public class JoinLeaveListener implements Listener {
             if (kicked) return;
             String name = event.getName();
             UUID uuid = event.getUniqueId();
-            //PlayerManager.loadPData(event.getUniqueId(), event.getName(), true);
-
+            MojangAPIUtil.INSTANCE.getNameCache().put(uuid, name); // Bukkit#getOfflinePlayer may be incomplete on servers w/o a player cache as getting via uuid doesnt do mojang lookups
             PlayerData playerData = PlayerManager.getInstance().createProfile(uuid, name);
 
             playerData.getPunishData().forceLoadActiveBansAndBlacklists();

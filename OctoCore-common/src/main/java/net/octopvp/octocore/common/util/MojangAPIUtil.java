@@ -40,6 +40,7 @@ public class MojangAPIUtil {
         }
     };
 
+    @Getter
     private final LoadingCache<UUID, String> nameCache = CacheBuilder.newBuilder()
             .expireAfterAccess(1, TimeUnit.HOURS)
             .build(nameCacheLoader);

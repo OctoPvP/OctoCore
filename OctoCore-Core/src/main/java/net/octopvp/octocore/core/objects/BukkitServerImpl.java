@@ -3,6 +3,7 @@ package net.octopvp.octocore.core.objects;
 import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
@@ -65,15 +66,10 @@ public class BukkitServerImpl implements ServerImplementation {
 
     @Override
     public String getName(UUID uuid) {
-        System.out.println("Getting name for UUID " + uuid.toString());
         if (Bukkit.getPlayer(uuid) != null) {
-            System.out.println("Player is online, returning name");
             return Bukkit.getPlayer(uuid).getName();
         } else {
-            System.out.println("Player is offline, returning offline name");
-            String name = Bukkit.getOfflinePlayer(uuid).getName();
-            System.out.println("Offline name is " + name);
-            return name;
+            return MojangAPIUtil.INSTANCE.getName(uuid);
         }
     }
 
