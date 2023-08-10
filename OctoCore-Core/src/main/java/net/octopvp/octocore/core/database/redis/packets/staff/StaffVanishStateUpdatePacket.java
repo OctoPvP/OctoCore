@@ -22,7 +22,7 @@ public class StaffVanishStateUpdatePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        String msg = Lang.STAFF_ALERTS.getMsg(player + CC.GREEN + (vanished ? " vanished" : " unvanished") + " with priority " + CC.YELLOW + vanishPriority);
+        String msg = Lang.STAFF_ALERTS.getMsg(player + CC.GREEN + (vanished ? " vanished with priority " + CC.YELLOW + vanishPriority : " unvanished"));
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission(Permissions.VANISH)) {
                 PlayerData playerData = PlayerManager.getInstance().getData(onlinePlayer);
