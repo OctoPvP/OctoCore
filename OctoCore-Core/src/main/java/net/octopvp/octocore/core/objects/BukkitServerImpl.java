@@ -65,14 +65,14 @@ public class BukkitServerImpl implements ServerImplementation {
 
     @Override
     public String getName(UUID uuid) {
-        Logger.debug("Getting name for UUID " + uuid.toString());
+        System.out.println("Getting name for UUID " + uuid.toString());
         if (Bukkit.getPlayer(uuid) != null) {
-            Logger.debug("Player is online, returning name");
+            System.out.println("Player is online, returning name");
             return Bukkit.getPlayer(uuid).getName();
         } else {
-            Logger.debug("Player is offline, returning offline name");
+            System.out.println("Player is offline, returning offline name");
             String name = Bukkit.getOfflinePlayer(uuid).getName();
-            Logger.debug("Offline name is " + name);
+            System.out.println("Offline name is " + name);
             return name;
         }
     }
