@@ -66,22 +66,6 @@ group = "net.octopvp"
 version = "1.0-SNAPSHOT"
 //java.sourceCompatibility = JavaVersion.VERSION_1_8
 
-publishing {
-    repositories {
-        maven {
-            url = uri("https://repo.octopvp.net/repo")
-            name = "octomc"
-            credentials {
-                username = findProperty("octomcUsername") as String
-                password = findProperty("octomcPassword") as String
-            }
-        }
-    }
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-    }
-}
-
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
 }
