@@ -58,3 +58,47 @@ tasks {
         targetCompatibility = targetJavaVersion
     }
 }
+
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+}
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from(sourceSets["main"].allJava)
+}
+artifacts {
+    add("archives", javadocJar)
+    add("archives", sourcesJar)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            pom {
+                name.set("OctoCore-common")
+                description.set("OctoCore common module")
+                url.set("https://github.com/OctoPvP/OctoCore")
+                from(components["java"])
+                artifact(sourcesJar)
+                artifact(javadocJar)
+                scm {
+                    url.set("https://github.com/OctoPvP/OctoCore")
+                }
+            }
+        }
+    }
+    repositories {
+        maven ("https://repo.octopvp.net/repo"){
+            name = "octomc"
+            credentials {
+                username = findProperty("octomcUsername") as String
+                password = findProperty("octomcPassword") as String
+            }
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
+}
+
