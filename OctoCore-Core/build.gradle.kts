@@ -91,7 +91,10 @@ publishing {
     repositories {
         maven ("https://repo.octopvp.net/repo"){
             name = "octomc"
-            credentials(PasswordCredentials::class)
+            credentials {
+                username = findProperty("octomcUsername") as String
+                password = findProperty("octomcPassword") as String
+            }
             authentication {
                 create<BasicAuthentication>("basic")
             }
