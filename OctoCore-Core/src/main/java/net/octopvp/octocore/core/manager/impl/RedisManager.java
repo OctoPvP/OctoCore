@@ -24,7 +24,7 @@ public class RedisManager extends Manager {
         JedisSettings jedisSettings = new JedisSettings();
         jedisSettings.setAddress(getConfig().getString("database.redis.host"));
         jedisSettings.setPort(getConfig().getInt("database.redis.port"));
-        if (getConfig().getBoolean("database.redis.auth")) {
+        if (getConfig().getBoolean("database.redis.auth.enabled")) {
             jedisSettings.setAuth(true);
             jedisSettings.setPassword(getConfig().getString("database.redis.auth.password"));
         }
