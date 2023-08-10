@@ -158,6 +158,9 @@ public abstract class OctoCore extends JavaPlugin {
             //noinspection ResultOfMethodCallIgnored
             getDataFolder().mkdirs();
         saveDefaultConfig();
+        serverName = getInstance().getConfig().getString("name");
+        OctoCoreCommon.getInstance().init(gson, new BukkitServerImpl());
+
         new Logger(Bukkit.getLogger(), prefix, (message, players) -> {
             for (UUID uuid : players) {
                 Player player = Bukkit.getPlayer(uuid);
@@ -175,8 +178,6 @@ public abstract class OctoCore extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.PLUGIN_MSG);
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginMsgChannels.BUNGEE);
         //Bukkit.getMessenger().registerOutgoingPluginChannel(this, "test");
-        serverName = getInstance().getConfig().getString("name");
-        OctoCoreCommon.getInstance().init(gson, new BukkitServerImpl());
 
         try {
             serverType = ServerType.valueOf(getConfig().getString("server-type").toUpperCase());
