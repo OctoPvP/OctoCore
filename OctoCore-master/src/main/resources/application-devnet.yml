@@ -49,7 +49,7 @@ master:
     port: 27017
     auth:
       enabled: true
-      user: 'Admin'
+      username: 'Admin'
       password: '4%Fa03*xYTWbp9za'
       db: 'admin'
 server:

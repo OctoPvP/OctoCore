@@ -39,9 +39,9 @@ public class DatabaseManager extends Manager implements IDatabaseManager {
     public void init(OctoCore plugin) {
         MongoCredential credentials;
         Logger.info("Connecting to mongo");
-        String base = "database.mongo.auth.";
-        if (plugin.getConfig().getBoolean(base + "enabled")) {
-            credentials = MongoCredential.createCredential(plugin.getConfig().getString(base + "username"), plugin.getConfig().getString(base + "db"), plugin.getConfig().getString(base + "password").toCharArray());
+        String authBase = "database.mongo.auth.";
+        if (plugin.getConfig().getBoolean(authBase + "enabled")) {
+            credentials = MongoCredential.createCredential(plugin.getConfig().getString(authBase + "username"), plugin.getConfig().getString(authBase + "db"), plugin.getConfig().getString(authBase + "password").toCharArray());
             mongoClient = MongoClients.create(
                     MongoClientSettings.builder()
                             .applyToClusterSettings(builder ->

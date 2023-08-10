@@ -46,6 +46,6 @@ master:
     port: 27017
     auth:
       enabled: false
-      user: ''
+      username: ''
       password: ''
       db: 'admin'

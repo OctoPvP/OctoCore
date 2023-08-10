@@ -152,7 +152,11 @@ public abstract class OctoCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Logger.info("Starting OctoCore");
         long start = System.currentTimeMillis();
+        if (!getDataFolder().exists())
+            //noinspection ResultOfMethodCallIgnored
+            getDataFolder().mkdirs();
         saveDefaultConfig();
         new Logger(Bukkit.getLogger(), prefix, (message, players) -> {
             for (UUID uuid : players) {
@@ -192,11 +196,6 @@ public abstract class OctoCore extends JavaPlugin {
                 getConfig().getDouble("settings.spawn.y"),
                 getConfig().getDouble("settings.spawn.z"));
         Utilities.init();
-        Logger.info("Starting OctoCore");
-        if (!getDataFolder().exists())
-            //noinspection ResultOfMethodCallIgnored
-            getDataFolder().mkdirs();
-        new SetupConfig().setup(this);
 
         this.dataUpdateThread = new DataUpdateThread(this);
 
