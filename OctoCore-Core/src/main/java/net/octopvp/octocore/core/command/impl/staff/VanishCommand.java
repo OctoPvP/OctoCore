@@ -31,7 +31,7 @@ public class VanishCommand {
             VanishManager.getInstance().vanish(target, priority, silent);
             data.setJoinVanished(true);
             data.save();
-            new StaffVanishStateUpdatePacket(PlayerManager.getInstance().getData(target).getFormattedName(false, target.getPlayer(), false), true, priority).send();
+            new StaffVanishStateUpdatePacket(PlayerManager.getInstance().getData(target).getFormattedName(false, target.getPlayer(), false), true, VanishManager.getInstance().getCurrentVanishPriority(target.getUniqueId())).send();
             if (target != sender)
                 sender.sendMessage(CC.GREEN + "You have vanished " + target.getName() + " with a priority of " + CC.YELLOW + priority + CC.GREEN + ".");
             else

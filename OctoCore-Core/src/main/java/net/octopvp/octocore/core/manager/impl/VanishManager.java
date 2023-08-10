@@ -60,6 +60,10 @@ public class VanishManager extends Manager implements Listener {
         return 1;
     }
 
+    public int getCurrentVanishPriority(UUID uuid) {
+        return vanished.getOrDefault(uuid, 0);
+    }
+
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         PlayerData playerData = PlayerManager.getInstance().getData(event.getPlayer());
