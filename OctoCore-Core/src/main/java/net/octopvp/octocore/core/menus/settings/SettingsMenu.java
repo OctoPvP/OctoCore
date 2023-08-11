@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.menus.settings;
 
+import com.cryptomorin.xseries.XMaterial;
 import lombok.RequiredArgsConstructor;
 import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
@@ -36,7 +37,7 @@ public class SettingsMenu extends Menu<Gui> {
 
     public GuiItem changeTimeButton() {
         WorldTime time = data.getWorldTime();
-        return ItemBuilder.from(Material.WATCH)
+        return ItemBuilder.from(XMaterial.COMPASS)
                 .name(CC.GREEN + "Current time: " + data.getWorldTime().getFormattedName())
                 .lore(
                         CC.SEPARATOR,
@@ -99,7 +100,7 @@ public class SettingsMenu extends Menu<Gui> {
     }
 
     public GuiItem toggleMessages() {
-        return ItemBuilder.from(Material.DIODE)
+        return ItemBuilder.from(XMaterial.REPEATER)
                 .name(data.getMessageSettings().isMessagesOff() ? CC.GREEN + "Private messages: OFF" : CC.GREEN + "Private messages: ON")
                 .lore(data.getMessageSettings().isMessagesOff() ? CC.YELLOW + "Click to toggle messages on" : CC.YELLOW + "Click to toggle messages off")
                 .asGuiItem(event -> {
