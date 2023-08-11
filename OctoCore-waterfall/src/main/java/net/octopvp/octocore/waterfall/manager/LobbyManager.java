@@ -30,7 +30,7 @@ public class LobbyManager {
         AtomicReference<ServerInfo> returnServer = new AtomicReference<>();
         HashMap<String, ServerInfo> hubServers = new HashMap<>();
         ProxyServer.getInstance().getServersCopy().forEach((k, v) -> {
-            if (StringUtils.containsIgnoreCase(k, "hub"))
+            if (StringUtils.containsIgnoreCase(k, "hub") || StringUtils.containsIgnoreCase(k, "lobby"))
                 hubServers.put(k, v);
         });
         int server = Utilities.getRandomInt(0, hubServers.size()); //FIXME might need to minus 1 from the hub servers siz
