@@ -33,7 +33,7 @@ public class ListMenu extends PaginatedMenu<PaginatedGui> {
         PlayerData data = PlayerManager.getInstance().getData(player);
         return ItemBuilder.skull()
                 .owner(player)
-                .setName(data.getDisplayName())
+                .name(data.getFormattedName(false, player, true))
                 .lore(
                         CC.GREEN + "Rank" + CC.GRAY + ": " + data.getHighestRank().getDisplayName(),
                         CC.GREEN + "Vanished" + CC.GRAY + ": " + data.isVanished(),
