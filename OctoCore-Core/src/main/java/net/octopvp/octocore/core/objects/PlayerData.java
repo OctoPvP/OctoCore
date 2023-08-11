@@ -262,9 +262,9 @@ public class PlayerData extends SimplePlayerData {
     public String getTagString() {
         if (getTag() == null) return "";
         if (isNicked()) {
-            return CC.D_GRAY + CC.ARROW_LEFT + getNickTag().getTag() + CC.D_GRAY + CC.ARROW_RIGHT;
+            return CC.GRAY + CC.ARROW_LEFT + getNickTag().getTag() + CC.GRAY + CC.ARROW_RIGHT;
         }
-        return CC.D_GRAY + CC.ARROW_LEFT + getTag().getTag() + CC.D_GRAY + CC.ARROW_RIGHT;
+        return CC.GRAY + CC.ARROW_LEFT + getTag().getTag() + CC.GRAY + CC.ARROW_RIGHT;
     }
 
     public boolean hasTag(String tagName) {
