@@ -102,7 +102,7 @@ public class SettingsMenu extends Menu<Gui> {
     public GuiItem toggleMessages() {
         return ItemBuilder.from(XMaterial.REPEATER)
                 .name(data.getMessageSettings().isMessagesOff() ? CC.GREEN + "Private messages: OFF" : CC.GREEN + "Private messages: ON")
-                .lore(data.getMessageSettings().isMessagesOff() ? CC.YELLOW + "Click to toggle messages on" : CC.YELLOW + "Click to toggle messages off")
+                .lore(data.getMessageSettings().isMessagesOff() ? CC.YELLOW + "Click to toggle messages on" : CC.YELLOW + "Click to toggle messages OFF")
                 .asGuiItem(event -> {
                     Player player = (Player) event.getWhoClicked();
                     changed = true;
@@ -114,9 +114,9 @@ public class SettingsMenu extends Menu<Gui> {
 
     @Override
     public void populateGui(Gui gui, Player player) {
-        gui.setItem(10, changeTimeButton());
-        gui.setItem(12, toggleGlobalChat());
-        gui.setItem(14, toggleMessages());
+        gui.setItem(11, changeTimeButton());
+        gui.setItem(13, toggleGlobalChat());
+        gui.setItem(15, toggleMessages());
         gui.getFiller().fill(PLACEHOLDER_ITEM);
     }
 }
