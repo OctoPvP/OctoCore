@@ -22,7 +22,7 @@ public class MessageCommand {
     @Command(name = "message", aliases = {"msg", "w", "m", "tell", "t"})
     @PlayerOnly
     @Cooldown(1)
-    public CommandResult execute(@Sender Player sender, @Name("player") @OnlineOnly(network = true) PlayerData target, @JoinStrings String message) {
+    public CommandResult execute(@Sender Player sender, @Name("player") @OnlineOnly(network = true) PlayerData target, @JoinStrings @Name("message") String message) {
         PlayerData senderData = PlayerManager.getInstance().getData(sender.getUniqueId());
         if (target == null || (target.isVanished() && target.getVanishPriority() > senderData.getVanishPriority())) {
             return CommandResult.PLAYER_NOT_FOUND;
@@ -33,7 +33,7 @@ public class MessageCommand {
     @Command(name = "reply", aliases = "r")
     @PlayerOnly
     @Cooldown(1)
-    public CommandResult executeReply(@Sender Player sender, @JoinStrings String message) {
+    public CommandResult executeReply(@Sender Player sender, @JoinStrings @Name("message") String message) {
         if (message.isEmpty()) {
             return CommandResult.INVALID_ARGS;
         }
@@ -54,7 +54,7 @@ public class MessageCommand {
     }
 
     @NotNull
-    private CommandResult execMsg(@Sender Player sender, @JoinStrings String message, PlayerData target, PlayerData senderPlayer) {
+    private CommandResult execMsg(Player sender, String message, PlayerData target, PlayerData senderPlayer) {
         boolean ignoreBypass = sender.hasPermission(Permissions.IGNORE_BYPASS);
         if (senderPlayer.getUuid().equals(target.getUuid())) {
             sender.sendMessage(Lang.CANNOT_MESSAGE_SELF.toString());

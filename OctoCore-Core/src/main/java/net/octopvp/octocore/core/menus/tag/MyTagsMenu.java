@@ -12,6 +12,7 @@ import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.objects.PlayerTag;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import org.bukkit.entity.Player;
+import org.bukkit.util.ChatPaginator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +48,10 @@ public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
                 .lore(
                         CC.SEPARATOR,
                         CC.AQUA + "Tag: " + CC.WHITE + tag.getTag(),
-                        CC.AQUA + "Description: " + CC.WHITE + tag.getDescription(),
-                        CC.SEPARATOR,
-                        (playerTag[0] ? CC.RED + "Click to remove!" : CC.YELLOW + "Click to use!")
-                ).asGuiItem(event -> {
+                        CC.AQUA + "Description:"
+                ).addLore(ChatPaginator.wordWrap(tag.getDescription(), 30))
+                .addLore(CC.SEPARATOR,
+                        (playerTag[0] ? CC.RED + "Click to remove!" : CC.YELLOW + "Click to use!")).asGuiItem(event -> {
                     SoundUtil.playPing(player);
                     if (playerTag[0]) {
                         playerTag[0] = false;
