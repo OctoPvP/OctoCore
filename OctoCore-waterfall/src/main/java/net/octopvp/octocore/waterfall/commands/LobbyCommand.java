@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.waterfall.manager.LobbyManager;
 
 public class LobbyCommand extends Command {
     public LobbyCommand() {
@@ -16,5 +17,6 @@ public class LobbyCommand extends Command {
         if (!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(new TextComponent(CC.RED + "You must be a player to do this!"));
         }
+        LobbyManager.sendToRandomLobby((ProxiedPlayer) sender);
     }
 }

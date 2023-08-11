@@ -1,4 +1,4 @@
-package net.octopvp.octocore.waterfall.lobby;
+package net.octopvp.octocore.waterfall.manager;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class SendToRandomLobby {
+public class LobbyManager {
     public static void sendToRandomLobby(ProxiedPlayer player) {
         if (player.getServer() == null)
             return;

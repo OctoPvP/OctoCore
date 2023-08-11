@@ -23,6 +23,7 @@ public class SettingsMenu extends Menu<Gui> {
     @Override
     public Gui createGui(Player player) {
         return (Gui) Gui.gui()
+                .title("Settings")
                 .rows(3)
                 .create()
                 .setCloseGuiAction(event -> {

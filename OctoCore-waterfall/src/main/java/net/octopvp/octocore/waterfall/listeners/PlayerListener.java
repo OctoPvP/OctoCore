@@ -11,6 +11,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import net.octopvp.octocore.common.PluginMsgChannels;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.waterfall.manager.OnlinePlayersManager;
 import net.octopvp.octocore.waterfall.util.object.OnlinePlayerData;
@@ -47,6 +48,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onSwitch(ServerSwitchEvent event) {
+        event.getPlayer().sendMessage(CC.GRAY + "Sending you to " + event.getPlayer().getServer().getInfo().getName() + "...");
         OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(event.getPlayer().getUniqueId());//new server will send us nodes again
         if (data == null) {
             OnlinePlayersManager.getDataMap().put(event.getPlayer().getUniqueId(), new OnlinePlayerData(event.getPlayer().getUniqueId()));
