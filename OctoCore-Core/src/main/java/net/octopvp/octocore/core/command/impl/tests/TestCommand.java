@@ -40,7 +40,7 @@ public class TestCommand {
 
     @Command(name = "flags")
     @Permission(Permissions.ADMIN)
-    public void test(@Sender Player sender, @Optional Player player,  @Flag(value = "priority", aliases = "p") int priority, @Switch(value = "test", aliases = "t") boolean test) {
+    public void test(@Sender Player sender, @Optional Player player, @Flag(value = "priority", aliases = "p") int priority, @Switch(value = "test", aliases = "t") boolean test) {
         sender.sendMessage("Priority: " + priority + " | " + (player == null ? "null" : player.getName()) + " | " + test);
     }
 

@@ -17,7 +17,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -52,7 +51,8 @@ public class VanishManager extends Manager implements Listener {
     }
 
     public int getVanishPriority(SimplePlayerData playerData, boolean... skipVanished) { // gets their current vanish priority
-        if ((skipVanished.length == 0 || !skipVanished[0]) && vanished.containsKey(playerData.getUuid())) return vanished.get(playerData.getUuid());
+        if ((skipVanished.length == 0 || !skipVanished[0]) && vanished.containsKey(playerData.getUuid()))
+            return vanished.get(playerData.getUuid());
         Rank rank = playerData.getHighestRank();
         if (rank != null) {
             return rank.getWeight() <= 0 ? 1 : rank.getWeight();

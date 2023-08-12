@@ -9,7 +9,6 @@ import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.entity.Player;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class VanishCommand {
     @Command(name = "vanish", aliases = {"v"}, description = "Vanish from other players")

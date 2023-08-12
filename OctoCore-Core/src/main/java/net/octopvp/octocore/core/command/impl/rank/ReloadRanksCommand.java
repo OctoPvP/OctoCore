@@ -8,7 +8,6 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.manager.impl.RankManager;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class ReloadRanksCommand {
     @Command(name = "reloadranks")

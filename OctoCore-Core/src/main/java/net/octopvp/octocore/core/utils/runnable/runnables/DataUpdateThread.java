@@ -15,7 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class DataUpdateThread extends Thread {
     private final OctoCore plugin;

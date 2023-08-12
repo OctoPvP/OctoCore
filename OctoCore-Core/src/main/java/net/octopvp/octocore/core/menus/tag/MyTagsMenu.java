@@ -50,8 +50,8 @@ public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
                         CC.AQUA + "Tag: " + CC.WHITE + tag.getTag(),
                         CC.AQUA + "Description:"
                 ).addLore(ChatPaginator.wordWrap(tag.getDescription(), 30))
-                .addLore(CC.SEPARATOR,
-                        (playerTag[0] ? CC.RED + "Click to remove!" : CC.YELLOW + "Click to use!")).asGuiItem(event -> {
+                .addLore(CC.SEPARATOR, (playerTag[0] ? CC.RED + "Click to remove!" : CC.YELLOW + "Click to use!"))
+                .asGuiItem(event -> {
                     SoundUtil.playPing(player);
                     if (playerTag[0]) {
                         playerTag[0] = false;

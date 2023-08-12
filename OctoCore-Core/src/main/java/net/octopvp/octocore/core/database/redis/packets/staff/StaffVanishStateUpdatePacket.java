@@ -7,7 +7,6 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Bukkit;

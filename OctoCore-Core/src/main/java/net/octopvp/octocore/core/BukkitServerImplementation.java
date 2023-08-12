@@ -6,7 +6,9 @@ import org.bukkit.entity.Player;
 
 public interface BukkitServerImplementation {
     void onLoad();
+
     void onEnable();
+
     void onDisable();
 
     ScoreboardHandler<?> getScoreboardHandler();

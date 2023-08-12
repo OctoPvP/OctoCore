@@ -9,7 +9,6 @@ import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.command.annotation.OnlineOnly;
 import net.octopvp.octocore.core.database.redis.packets.player.MessagePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.Bukkit;

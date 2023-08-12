@@ -8,7 +8,6 @@ import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.Manager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
-import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.objects.PlayerData;
