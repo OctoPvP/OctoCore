@@ -71,7 +71,7 @@ public class DataUpdateThread extends Thread {
                             .append(Component.text(VanishManager.getInstance().getVanishPriority(playerData)).color(NamedTextColor.YELLOW));
                     OctoCore.getInstance().getServerImplementation().sendActionBar(player, actionBar);
                 }
-                new DataCache(playerData.getUuid()).update(playerData.getData(), playerData.getBungeePerms());
+                new DataCache(playerData.getUuid()).update(playerData.getData());
             }
             double[] tps = Bukkit.getTPS();
             new ServerDataPacket(OctoCore.getServerName(), onlinePlayers, Bukkit.getMaxPlayers(), System.currentTimeMillis(), Bukkit.hasWhitelist(), tps[0], tps[1], tps[2], false).send();
