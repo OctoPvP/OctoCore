@@ -19,6 +19,8 @@ import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.Utilities;
+import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.NodeAdapter;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.command.providers.*;
 import net.octopvp.octocore.core.database.DatabaseManager;
@@ -54,6 +56,7 @@ public abstract class OctoCore extends JavaPlugin {
     @Getter
     private static final Gson gson = new GsonBuilder().setPrettyPrinting()
             .serializeNulls()
+            .registerTypeAdapter(Node.class, new NodeAdapter())
             .enableComplexMapKeySerialization().create();    // https://stackoverflow.com/a/44800004/11588583
     public static String prefix = "[OctoCore] ";
     private static Chat chat;

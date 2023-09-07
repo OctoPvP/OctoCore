@@ -13,6 +13,8 @@ import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.redis.packets.VotePacket;
 import net.octopvp.octocore.common.util.MojangAPIUtil;
+import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.NodeAdapter;
 import net.octopvp.octocore.master.component.LightningHolder;
 import net.octopvp.octocore.master.master.manager.DatabaseManager;
 import net.octopvp.octocore.master.master.manager.PunishModule;
@@ -41,7 +43,9 @@ public class OctoCoreMaster {
     private static final Logger LOG = LoggerFactory
             .getLogger(OctoCoreMaster.class);
 
-    private static final Gson GSON = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(Node.class, new NodeAdapter())
+            .serializeNulls().enableComplexMapKeySerialization().create();
 
     public static Gson getGson() {
         return GSON;

@@ -6,7 +6,8 @@ import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.enums.RankType;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.ChatColor;
-import net.octopvp.octocore.common.util.permissions.Node;
+import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.PermissionManager;
 
 import java.util.UUID;
 
@@ -84,37 +85,43 @@ public class RankBuilder implements Cloneable {
     }
 
     public RankBuilder addNode(Node node) {
-        rank.getNodes().add(node);
+        PermissionManager.getInstance().addNode(node, rank.getNodes());
         return this;
     }
 
     public RankBuilder addPermission(String s) {
-        rank.getNodes().add(new Node(s, new ServerContext("Global"), true, rank.getWeight()));
+        // rank.getNodes().add(new Node(s, new ServerContext("Global"), true, rank.getWeight()));
+        PermissionManager.getInstance().addNode(Node.create(s, false, "*"), rank.getNodes());
         return this;
     }
 
     public RankBuilder addPermission(String s, ServerContext context) {
-        rank.getNodes().add(new Node(s, context, true, rank.getWeight()));
+        // rank.getNodes().add(new Node(s, context, true, rank.getWeight()));
+        PermissionManager.getInstance().addNode(Node.create(s, false, context.getServersString()), rank.getNodes());
         return this;
     }
 
     public RankBuilder addPermission(String s, String context) {
-        rank.getNodes().add(new Node(s, new ServerContext(context), true, rank.getWeight()));
+        // rank.getNodes().add(new Node(s, new ServerContext(context), true, rank.getWeight()));
+        PermissionManager.getInstance().addNode(Node.create(s, false, context), rank.getNodes());
         return this;
     }
 
     public RankBuilder negatePermission(String s) {
-        rank.getNodes().add(new Node(s, new ServerContext("Global"), false, rank.getWeight()));
+        // rank.getNodes().add(new Node(s, new ServerContext("Global"), false, rank.getWeight()));
+        PermissionManager.getInstance().addNode(Node.create(s, true, "*"), rank.getNodes());
         return this;
     }
 
     public RankBuilder negatePermission(String s, ServerContext context) {
-        rank.getNodes().add(new Node(s, context, false, rank.getWeight()));
+        // rank.getNodes().add(new Node(s, context, false, rank.getWeight()));
+        PermissionManager.getInstance().addNode(Node.create(s, true, context.getServersString()), rank.getNodes());
         return this;
     }
 
     public RankBuilder negatePermission(String s, String context) {
-        rank.getNodes().add(new Node(s, new ServerContext(context), false, rank.getWeight()));
+        // rank.getNodes().add(new Node(s, new ServerContext(context), false, rank.getWeight()));
+        PermissionManager.getInstance().addNode(Node.create(s, true, context), rank.getNodes());
         return this;
     }
 

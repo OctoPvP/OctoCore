@@ -11,11 +11,11 @@ import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.guis.PaginatedGui;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.agile.menu.PaginatedMenu;
+import net.octopvp.octocore.common.object.builders.NodeBuilder;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.callback.ReturnableTypeCallback;
-import net.octopvp.octocore.common.util.permissions.Node;
-import net.octopvp.octocore.common.util.permissions.NodeBuilder;
+import net.octopvp.octocore.common.util.perms.Node;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.utils.SoundUtil;
@@ -71,9 +71,9 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
     }
 
     public GuiItem permissionButton(Node node, Consumer<NodeBuilder> callback) {
-        return ItemBuilder.from(node.isAllowed() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
+        return ItemBuilder.from(!node.isNegated("*") ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
                 .name(
-                        (node.isAllowed() ? CC.GREEN : CC.RED) + node.getPermission()
+                        (node.isAllowed() ? CC.GREEN : CC.RED) + node.getPermissionString()
                 ).lore(
                         CC.SEPARATOR,
                         CC.AQUA + "Allowed: " + (node.isAllowed() ? CC.GREEN + "Yes" : CC.RED + "No"),
@@ -95,7 +95,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
     @Override
     public List<GuiItem> getItems(Player player) {
         List<GuiItem> items = new ArrayList<>();
-        builder.getRank().getNodes().forEach(node -> {
+        builder.getRank().getNodes().forEach((key, node) -> {
             if (filterOptions.test(node)) {
                 items.add(permissionButton(node, (nodeBuilder) -> {
                     // set the node to the new node
@@ -155,10 +155,10 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
             if ((negated == null || !negated.isPresent()) && (filter == null || filter.isEmpty())) {
                 return true;
             }
-            String perm = node.getPermission().toLowerCase();
+            String perm = node.getPermissionString().toLowerCase();
             if (negated != null && negated.isPresent()) {
                 boolean negatedState = negated.get();
-                boolean nodeNegated = node.isNegated();
+                boolean nodeNegated = node.isNegatedIgnoreScope();
                 if (negatedState != nodeNegated) {
                     return false;
                 }

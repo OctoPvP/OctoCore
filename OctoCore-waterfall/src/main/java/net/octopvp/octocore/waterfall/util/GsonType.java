@@ -2,7 +2,7 @@ package net.octopvp.octocore.waterfall.util;
 
 import com.google.gson.reflect.TypeToken;
 import net.octopvp.octocore.common.object.ServerContext;
-import net.octopvp.octocore.common.util.permissions.Node;
+import net.octopvp.octocore.common.util.perms.Node;
 
 import java.lang.reflect.Type;
 import java.util.HashSet;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class GsonType {
-    public static final Type NODE_LIST = new TypeToken<List<Node>>() {
+    public static final Type NODE_MAP = new TypeToken<Map<String, Node>>() {
     }.getType();
     public static final Type OBJECT = new TypeToken<Object>() {
     }.getType();

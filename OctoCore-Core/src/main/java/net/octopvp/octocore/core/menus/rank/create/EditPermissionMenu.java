@@ -6,8 +6,9 @@ import net.octopvp.agile.builder.item.ItemBuilder;
 import net.octopvp.agile.guis.Gui;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
+import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.object.builders.NodeBuilder;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.permissions.NodeBuilder;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.manager.impl.FilterManager;
@@ -61,7 +62,7 @@ public class EditPermissionMenu extends Menu<Gui> {
     public GuiItem scopeButton() {
         return ItemBuilder.from(Material.SIGN)
                 .name(CC.AQUA + "Scope")
-                .lore(CC.SEPARATOR, CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().getServer(), CC.SEPARATOR, CC.YELLOW + "Click to set scope!")
+                .lore(CC.SEPARATOR, CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().orElse(new ServerContext("Global")).getServersString(), CC.SEPARATOR, CC.YELLOW + "Click to set scope!")
                 .asGuiItem(event -> new ChooseServerScopeMenu((context) -> {
                     nodeBuilder.setScope(context);
                     open((Player) event.getWhoClicked());
@@ -122,7 +123,7 @@ public class EditPermissionMenu extends Menu<Gui> {
         return ItemBuilder.from(Material.LEVER)
                 .name((nodeBuilder.isAllowed() ? CC.GREEN : CC.RED) + nodeBuilder.getPermission())
                 .lore(CC.AQUA + "Allowed: " + (nodeBuilder.isAllowed() ? CC.GREEN + "Yes" : CC.RED + "No"),
-                        CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().getServer(),
+                        CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().orElse(new ServerContext("Global")).getServersString(),
                         CC.AQUA + "Permission: " + CC.YELLOW + nodeBuilder.getPermission())
                 .asGuiItem(event -> {
                 });

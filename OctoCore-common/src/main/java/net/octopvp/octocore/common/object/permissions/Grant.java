@@ -67,11 +67,23 @@ public class Grant {
         if (OctoCoreCommon.getInstance().getRankManager().getRankById(rankId) == null) return false;
 
         if (!this.server.isGlobal()) {
-            ServerData serverData = OctoCoreCommon.getInstance().getServerManager().getServerData(this.server.getServer());
+            /*
+            ServerData serverData = OctoCoreCommon.getInstance().getServerManager().getServerData(this.server.getServersString());
             if (serverData != null && !serverData.getServerName().equalsIgnoreCase(OctoCoreCommon.getInstance().getServerName())) {
                 if (isPermanent()) return true;
 
                 return System.currentTimeMillis() < this.addedAt + this.duration;
+            }
+             */
+            // update it to work with multiple servers
+            String[] servers = this.server.getServers();
+            for (String server : servers) {
+                ServerData serverData = OctoCoreCommon.getInstance().getServerManager().getServerData(server);
+                if (serverData != null && !serverData.getServerName().equalsIgnoreCase(OctoCoreCommon.getInstance().getServerName())) {
+                    if (isPermanent()) return true;
+
+                    return System.currentTimeMillis() < this.addedAt + this.duration;
+                }
             }
         }
         return false;

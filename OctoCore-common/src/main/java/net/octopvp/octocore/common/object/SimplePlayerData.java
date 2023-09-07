@@ -21,10 +21,9 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.ChatColor;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.permissions.Node;
-import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
-import net.octopvp.octocore.common.util.permissions.PermissionReason;
-import net.octopvp.octocore.common.util.permissions.PermissionResult;
+import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.PermissionCheckResult;
+import net.octopvp.octocore.common.util.perms.PermissionManager;
 import org.bson.Document;
 
 import java.util.*;
@@ -56,7 +55,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected List<String> addresses = new ArrayList<>();
     protected List<UUID> ignoredPlayers = new ArrayList<>();
     protected MessageSettings messageSettings = new MessageSettings();
-    protected List<Node> nodes = new ArrayList<>();
+    protected Map<String, Node> nodes = new HashMap<>(); // a tree of permission nodes
     protected ArrayList<Grant> grants = new ArrayList<>();
     protected PunishData punishData = new PunishData(this);
     protected WorldTime worldTime = WorldTime.DAY;
@@ -130,8 +129,8 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         this.staffChat = document.getBoolean("staffChat");
         this.adminChat = document.getBoolean("adminChat");
         this.build = document.getBoolean("build");
-        this.nodes = gson.fromJson(document.getString("nodes"), GsonType.NODE_LIST);
-        this.nodes.removeIf(Objects::isNull);
+        this.nodes = gson.fromJson(document.getString("nodes"), GsonType.NODE_MAP);
+        this.nodes.entrySet().removeIf(e -> e.getKey() == null || e.getValue() == null);
         this.address = document.getString("address");
         this.socialSpy = document.getBoolean("socialSpy");
 
@@ -268,7 +267,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     public long getLowestGrantExpire() {
         return this.getActiveGrants().stream().mapToLong(Grant::getExpireTime).min().orElse(-1);
     }
-
+    /*
     public Set<Node> getFinalNodes() {
         Set<Node> nodes1 = new HashSet<>(nodes);
         for (Node finalNode : getHighestRank().getFinalNodes()) {
@@ -277,6 +276,12 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
             }
         }
         return nodes1;
+    }
+     */
+    public Map<String, Node> getFinalNodes() {
+        Map<String, Node> nodeMap = new HashMap<>(nodes);
+        PermissionManager.getInstance().mergeNodeTrees(nodeMap, getHighestRank().getFinalNodes());
+        return nodeMap;
     }
 
     public List<Grant> getActiveGrants() {
@@ -329,22 +334,22 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     }
 
     public boolean hasPermission(Node node) {
-        return hasPermission(node.getPermission());
+        return hasPermission(node.getPermissionString());
     }
 
     public boolean hasPermission(String perm) {
-        PermissionResult result = PermissionCalculator.hasPermissionResult(perm, getFinalNodes());
-        if (result.getReason() == PermissionReason.NOT_SET)
+        PermissionCheckResult result = PermissionManager.getInstance().checkPermission(perm, getFinalNodes());
+        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET)
             return getHighestRank().hasPermission(perm); // Delegate to highest rank
         else return result.allowed();
     }
 
-    public PermissionResult getPermissionResult(String permission, String server) {
-        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes(), server);
+    public PermissionCheckResult getPermissionResult(String permission, String server) {
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes(), server);
     }
 
-    public PermissionResult getPermissionResult(String permission) {
-        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes());
+    public PermissionCheckResult getPermissionResult(String permission) {
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes());
     }
 
     @Override

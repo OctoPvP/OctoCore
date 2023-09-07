@@ -194,7 +194,6 @@ public class PlayerManager extends Manager implements IPlayerManager {
         data.onJoin(player);
         data.loadPunishmentsPerformed();
         data.setFullJoined(true);
-        RankManager.getInstance().resetBungeePerms(player);
         return data;
     }
 

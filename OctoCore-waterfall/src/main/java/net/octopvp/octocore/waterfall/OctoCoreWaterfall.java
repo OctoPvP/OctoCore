@@ -18,7 +18,8 @@ import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.manager.DefaultServerManagerImpl;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.MojangAPIUtil;
+import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.NodeAdapter;
 import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
 import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
@@ -30,7 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +39,7 @@ public final class OctoCoreWaterfall extends Plugin {
     @Getter
     private static final Gson gson = new GsonBuilder().setPrettyPrinting()
             .serializeNulls()
+            .registerTypeAdapter(Node.class, new NodeAdapter())
             .enableComplexMapKeySerialization().create();
     @Getter
     private static OctoCoreWaterfall instance;

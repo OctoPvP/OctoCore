@@ -1,19 +1,22 @@
-package net.octopvp.octocore.common.util.permissions;
+package net.octopvp.octocore.common.object.builders;
 
 import lombok.Getter;
 import net.octopvp.octocore.common.object.ServerContext;
+import net.octopvp.octocore.common.util.perms.Node;
+
+import java.util.Optional;
 
 @Getter
 public class NodeBuilder implements Cloneable {
     private String permission = "Not Set";
-    private ServerContext scope = new ServerContext("Global");
+    private Optional<ServerContext> scope = Optional.empty();
     private boolean allowed = true;
     private int weight = 0;
 
     public NodeBuilder(Node node) {
-        permission = node.getPermission();
-        scope = node.getScope();
-        allowed = node.isAllowed();
+        permission = node.getPermissionString();
+        scope = node.getServerContext();
+        allowed = !node.getNegated().orElse(false);
     }
 
     public NodeBuilder() {
@@ -30,12 +33,12 @@ public class NodeBuilder implements Cloneable {
     }
 
     public NodeBuilder setScope(String scope) {
-        this.scope = new ServerContext(scope);
+        this.scope = Optional.of(new ServerContext(scope));
         return this;
     }
 
     public NodeBuilder setScope(ServerContext context) {
-        this.scope = context;
+        this.scope = Optional.ofNullable(context);
         return this;
     }
 
@@ -44,19 +47,14 @@ public class NodeBuilder implements Cloneable {
         return this;
     }
 
-    public int getWeight() {
-        return weight;
-    }
-
-    public NodeBuilder setWeight(int weight) {
-        this.weight = weight;
-        return this;
-    }
-
     public Node build() {
         if (permission.equalsIgnoreCase("Not Set")) {
             throw new IllegalArgumentException("Permission is not set");
         }
-        return new Node(permission, scope, allowed, weight);
+        return Node.create(
+                permission,
+                allowed,
+                scope.map(ServerContext::getServersString).orElse("*")
+        );
     }
 }

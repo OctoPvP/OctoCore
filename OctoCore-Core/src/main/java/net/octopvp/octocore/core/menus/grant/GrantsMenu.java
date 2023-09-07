@@ -97,7 +97,7 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
                 CC.AQUA + "Added Date" + CC.GRAY + ": " + CC.YELLOW + DateUtils.getDate(grant.getAddedAt()),
                 CC.AQUA + "Duration" + CC.GRAY + ": " + CC.YELLOW + (grant.isPermanent() ? "Permanent" : grant.getNiceDuration()),
                 CC.AQUA + "Reason" + CC.GRAY + ": " + CC.YELLOW + grant.getReason(),
-                CC.AQUA + "Server" + CC.GRAY + ": " + CC.YELLOW + grant.getServer().getServer()
+                CC.AQUA + "Server" + CC.GRAY + ": " + CC.YELLOW + grant.getServer().getServersString()
         ));
 
         if (grant.isManuallyRemoved()) {

@@ -4,22 +4,24 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.redis.RedisManager;
+import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.permissions.Node;
-import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
+import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.PermissionManager;
 import net.octopvp.octocore.waterfall.OctoCoreWaterfall;
-import net.octopvp.octocore.waterfall.util.GsonType;
 import org.bson.Document;
 import redis.clients.jedis.Jedis;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 public class OnlinePlayerData {
     private final UUID uuid;
-    private Set<Node> nodes = new HashSet<>();
+    private Map<String, Node> nodes = new HashMap<>();
     private Map<String, Boolean> cachedPermResults = new HashMap<>();
     private boolean frozen = false, vanished = false;
 
@@ -30,15 +32,20 @@ public class OnlinePlayerData {
             //Logger.debug(" - Cached: " + cachedPermResults.get(perm.toLowerCase()));
             return cachedPermResults.get(perm);
         }
-        result = PermissionCalculator.hasPermissionResult(perm, nodes).allowed();
+        result = PermissionManager.getInstance().checkPermission(perm, nodes).allowed();
         //Logger.debug(" - Result: " + result);
         cachedPermResults.put(perm.toLowerCase(), result);
         return result;
     }
 
-    public boolean isPermSet(String perm) {
-        return nodes.stream().anyMatch(node -> node.getPermission().equalsIgnoreCase(perm));
+    public Node getNode(String perm) {
+        return PermissionManager.getInstance().findNode(perm, nodes);
     }
+
+    public boolean isPermSet(String perm) {
+        return getNode(perm) != null;
+    }
+
 
     public void update() {
         Logger.debug("Updating for " + uuid);
@@ -52,13 +59,7 @@ public class OnlinePlayerData {
             //Logger.debug(json);
             if (json == null) return;
             Document document = Document.parse(json);
-            if (document.containsKey("bungeePermissions")) {
-                List<Node> permissions = OctoCoreWaterfall.getGson().fromJson(document.getString("bungeePermissions"), GsonType.NODE_LIST);
-                /*.forEach(node -> {
-                    Logger.debug(" - " + node.getPermission());
-                });*/
-                nodes.addAll(permissions);
-            }
+            this.nodes = OctoCoreWaterfall.getGson().fromJson(document.getString("nodes"), GsonType.NODE_MAP);
             this.vanished = document.getBoolean("joinVanished"); // used to be vanished but we've removed that from playerdata
         }
     }

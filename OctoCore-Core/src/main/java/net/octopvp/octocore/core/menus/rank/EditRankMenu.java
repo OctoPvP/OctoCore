@@ -70,7 +70,7 @@ public class EditRankMenu extends Menu<Gui> {
     public GuiItem serverButton() {
         return ItemBuilder.from(Material.ANVIL)
                 .name(CC.AQUA + "Server")
-                .lore(CC.SEPARATOR, CC.AQUA + "Server: " + CC.YELLOW + builder.getRank().getScope().getServer(), CC.SEPARATOR)
+                .lore(CC.SEPARATOR, CC.AQUA + "Server: " + CC.YELLOW + builder.getRank().getScope().getServersString(), CC.SEPARATOR)
                 .asGuiItem(event -> {
                     new ChooseServerScopeMenu((server) -> {
                         if (server == null)

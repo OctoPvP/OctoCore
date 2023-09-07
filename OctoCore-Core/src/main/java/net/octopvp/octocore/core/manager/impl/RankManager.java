@@ -4,7 +4,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
-import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.interfaces.manager.IRankManager;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
@@ -17,11 +16,7 @@ import net.octopvp.octocore.core.database.DatabaseManager;
 import net.octopvp.octocore.core.manager.Manager;
 import org.bson.Document;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -78,18 +73,6 @@ public class RankManager extends Manager implements IRankManager {
         else ranksCollection.insertOne(Document.parse(OctoCore.getGson().toJson(rank)));
         if (!OctoCore.isLoading())
             broadcastReload();
-    }
-
-    public void resetBungeePerms(Player player) {
-        ByteArrayOutputStream b = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(b);
-        try {
-            out.writeUTF(PluginMsgChannels.SubChannels.PERMISSION_UPDATED);
-            out.writeUTF(player.getUniqueId().toString());
-        } catch (IOException e) {
-            Logger.error("Failed to send permission to bungee. for " + player.getName());
-        }
-        player.sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.PLUGIN_MSG, b.toByteArray());
     }
 
     @Override

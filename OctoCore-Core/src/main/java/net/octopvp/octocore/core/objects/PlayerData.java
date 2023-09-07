@@ -1,6 +1,5 @@
 package net.octopvp.octocore.core.objects;
 
-import com.google.common.collect.Lists;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
@@ -8,25 +7,22 @@ import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.PluginMsgChannels;
-import net.octopvp.octocore.common.object.*;
+import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.object.SimplePlayerData;
+import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.object.permissions.Grant;
-import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.DateUtils;
-import net.octopvp.octocore.common.util.GsonType;
-import net.octopvp.octocore.common.util.permissions.Node;
-import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
-import net.octopvp.octocore.common.util.permissions.PermissionReason;
-import net.octopvp.octocore.common.util.permissions.PermissionResult;
+import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.PermissionCheckResult;
+import net.octopvp.octocore.common.util.perms.PermissionManager;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.database.redis.packets.player.AltUpdatePacket;
 import net.octopvp.octocore.core.database.redis.packets.staff.StaffConnectPacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
-import net.octopvp.octocore.core.manager.impl.RankManager;
 import net.octopvp.octocore.core.manager.impl.TagManager;
 import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
@@ -36,9 +32,6 @@ import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -48,8 +41,6 @@ import java.util.stream.Collectors;
 public class PlayerData extends SimplePlayerData {
     //TODO set defaults for this so theres no errors when using/loading old data from older updates (idk if this makes sense lol)
     //private Map<String, Pair<ServerContext,Boolean>> permissions = new HashMap<>();
-    private List<Node> bungeePerms = new ArrayList<>();
-
     private transient boolean fullyJoined = false, op = false;
     private transient int lastDataSave = 0;
     private transient String lastMessage; //only applies to this server for spam prot (maybe :))
@@ -57,7 +48,7 @@ public class PlayerData extends SimplePlayerData {
     private transient List<Punishment> punishmentsExecuted = new ArrayList<>();
     private transient List<LoadNote> loadNotes = new ArrayList<>();
     private transient GrantProcedure grantProcedure = null;
-    private transient Map<String, PermissionResult> cachedPermissions = new ConcurrentHashMap<>();
+    private transient Map<String, PermissionCheckResult> cachedPermissions = new ConcurrentHashMap<>();
 
     private UUID lastMessaged = null;
 
@@ -104,17 +95,7 @@ public class PlayerData extends SimplePlayerData {
         this.lastDataSave = 0;
         Document document = super.getData();
         PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
-        new DataCache(this.uuid).update(document, getBungeePerms());
-        return document;
-    }
-
-    public String getBungeePermsJson() {
-        return OctoCoreCommon.getInstance().getGson().toJson(getBungeePerms(), GsonType.NODE_LIST);
-    }
-
-    public Document getBungeePermsDoc() {
-        Document document = super.getData();
-        document.put("bungeePermissions", OctoCoreCommon.getInstance().getGson().toJson(this.bungeePerms, GsonType.NODE_LIST));
+        new DataCache(this.uuid).update(document);
         return document;
     }
 
@@ -206,7 +187,7 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public Node getNode(String perm) {
-        return nodes.stream().filter(node -> node.getPermission().equalsIgnoreCase(perm)).findFirst().orElse(null);
+        return PermissionManager.getInstance().findNode(perm, nodes);
     }
 
     public boolean nodeExists(String perm) {
@@ -282,8 +263,8 @@ public class PlayerData extends SimplePlayerData {
         return (isNicked() ? nickUUID : uuid);
     }
 
-    public PermissionResult calculatePermissionResult(String perm) {
-        PermissionResult cachedResult = cachedPermissions.get(perm);
+    public PermissionCheckResult calculatePermissionResult(String perm) {
+        PermissionCheckResult cachedResult = cachedPermissions.get(perm);
         if (cachedResult != null) {
             // if (cachedResult.getTimestamp() + 600000 < System.currentTimeMillis()) { // 10 minutes ttl
             long expire = cachedResult.getExpire();
@@ -291,7 +272,7 @@ public class PlayerData extends SimplePlayerData {
                 cachedPermissions.remove(perm);
             } else return cachedResult;
         }
-        PermissionResult result = PermissionCalculator.hasPermissionResult(perm, getFinalNodes());
+        PermissionCheckResult result = PermissionManager.getInstance().checkPermission(perm, getFinalNodes(), OctoCoreCommon.getInstance().getServerName());
         long nextGrantExpire = this.getLowestGrantExpire();
         if (nextGrantExpire != -1 || System.currentTimeMillis() - nextGrantExpire > 1200000)
             result.setExpire(System.currentTimeMillis() + 600000); // expire in 10 minutes
@@ -299,14 +280,14 @@ public class PlayerData extends SimplePlayerData {
         else result.setExpire(nextGrantExpire);
 
         cachedPermissions.put(perm, result);
-        if (result.getReason() == PermissionReason.NOT_SET) return getHighestRank().calculatePermission(perm);
+        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET) return getHighestRank().calculatePermission(perm);
         return result;
     }
 
     @Override
-    public boolean hasPermission(String perm) { //haha this is a laggy mess
-        PermissionResult result = calculatePermissionResult(perm);
-        if (result.getReason() == PermissionReason.NOT_SET) return op;
+    public boolean hasPermission(String perm) { // haha this is a laggy mess | update: 9/7/2023 - rewrote to a faster tree system
+        PermissionCheckResult result = calculatePermissionResult(perm);
+        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET) return op;
         else return result.allowed();
     }
 
@@ -318,138 +299,16 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public void loadPerms(Player player) {
-        //Map<String,Boolean> bungeePermissions = new HashMap<>();
         this.cachedFormattedNameNoNickNoTag = null;
-        Set<Node> bungeePermissions = new HashSet<>();
-        List<Grant> currentGrants = new ArrayList<>(this.grants);
-        for (Grant grant : currentGrants) {
-            if (grant.hasExpired()) continue;
-            Rank rankData = grant.getRank();
-            if (rankData != null) {
-                bungeePermissions.addAll(rankData.getEffectiveBungeePermissions());
-                ArrayList<UUID> inheritances = Lists.newArrayList(rankData.getInheritedRanks());
-                inheritances.forEach(inheritance -> {
-                    Rank rankInheritance = RankManager.getInstance().getRankById(inheritance);
-                    bungeePermissions.addAll(rankInheritance.getEffectiveBungeePermissions());
-                });
-            }
-        }
-
-        Rank defaultRank = RankManager.getInstance().getDefaultRank();
-        if (defaultRank != null) {
-            bungeePermissions.addAll(defaultRank.getEffectiveBungeePermissions());
-            Set<UUID> inheritances = defaultRank.getInheritedRanks();
-            inheritances.forEach(inheritance -> {
-                Rank rankInheritance = RankManager.getInstance().getRankById(inheritance);
-                if (rankInheritance != null) {
-                    bungeePermissions.addAll(rankInheritance.getEffectiveBungeePermissions());
-                }
-            });
-        }
         if (!player.getDisplayName().equals(this.getDisplayName())) //TODO handle nicks
             player.setDisplayName(this.getDisplayName());
-        this.bungeePerms.clear();
-        this.bungeePerms.addAll(bungeePermissions);
 
-        RankManager.getInstance().resetBungeePerms(player);
         postPermissionLoad(player);
-    }
-
-    public Map<String, ServerContext> getAllEffectivePermissions() {
-        Map<String, ServerContext> permissions = new HashMap<>();
-        List<Grant> currentGrants = new ArrayList<>(this.grants);
-        for (Grant grant : currentGrants) {
-            if (grant.hasExpired()) continue;
-            Rank rankData = grant.getRank();
-            if (rankData != null) {
-                permissions.putAll(rankData.getAllEffectivePermissions());
-
-                List<UUID> inheritances = new ArrayList<>(rankData.getInheritedRanks());
-                inheritances.forEach(inheritance -> {
-                    Rank rankInheritance = RankManager.getInstance().getRankById(inheritance);
-
-                    if (rankInheritance != null) {
-                        permissions.putAll(rankInheritance.getAllEffectivePermissions());
-                    }
-                });
-            }
-        }
-        Rank defaultRank = RankManager.getInstance().getDefaultRank();
-        if (defaultRank != null) {
-            permissions.putAll(defaultRank.getAllEffectivePermissions());
-            defaultRank.getInheritedRanks().forEach(i -> {
-                Rank inherited = RankManager.getInstance().getRankById(i);
-                if (inherited != null) permissions.putAll(inherited.getAllEffectivePermissions());
-            });
-        }
-        permissions.putAll(this.getAllSetEffectivePermissions());
-        return permissions;
     }
 
     public String getDisplayName() {
         if (nicked) return CC.translate(getCurrentColor() + getNick() + CC.R);
         else return CC.translate(getCurrentColor() + getName() + CC.R);
-    }
-
-    public Map<String, ServerContext> getAllNegatedPermissions() {
-        Map<String, ServerContext> permissions = new HashMap<>();
-        List<Grant> currentGrants = new ArrayList<>(this.grants);
-        Iterator<Grant> grantIterator = currentGrants.iterator();
-        while (grantIterator.hasNext()) {
-            Grant grant = grantIterator.next();
-            if (grant.hasExpired()) continue;
-            Rank rankData = grant.getRank();
-            if (rankData != null) {
-                permissions.putAll(rankData.getNegatedPermissions());
-                List<UUID> inheritances = new ArrayList<>(rankData.getInheritedRanks());
-                inheritances.forEach(inheritance -> {
-                    Rank rankInheritance = RankManager.getInstance().getRankById(inheritance);
-                    if (rankInheritance != null) permissions.putAll(rankInheritance.getNegatedPermissions());
-                });
-            }
-        }
-        Rank defaultRank = RankManager.getInstance().getDefaultRank();
-        if (defaultRank != null) {
-            permissions.putAll(defaultRank.getNegatedPermissions());
-            defaultRank.getInheritedRanks().forEach(i -> {
-                Rank inherited = RankManager.getInstance().getRankById(i);
-                if (inherited != null) permissions.putAll(inherited.getNegatedPermissions());
-            });
-        }
-        permissions.putAll(getAllSetNegatedPermissions());
-        return permissions;
-    }
-
-    public Map<String, ServerContext> getAllSetEffectivePermissions() {
-        Map<String, ServerContext> a = new HashMap<>();
-        nodes.forEach(node -> {
-            if (hasPermission(node.getPermission())) a.put(node.getPermission(), node.getServer());
-        });
-        return a;
-    }
-
-    public Map<String, ServerContext> getAllSetNegatedPermissions() {
-        Map<String, ServerContext> a = new HashMap<>();
-        nodes.forEach(node -> {
-            if (node.isNegated()) a.put(node.getPermission(), node.getServer());
-        });
-        return a;
-    }
-
-    public void clearPermCache() {
-        cachedPermissions.clear();
-        if (Bukkit.getPlayer(uuid) != null) {
-            ByteArrayOutputStream b = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(b);
-            try {
-                out.writeUTF(PluginMsgChannels.SubChannels.PERMISSIONS);
-                out.writeUTF(PermUpdateType.CLEAR_CACHE.name());
-                out.writeUTF(getName());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Bukkit.getPlayer(uuid).sendPluginMessage(OctoCore.getInstance(), PluginMsgChannels.PLUGIN_MSG, b.toByteArray());
-        }
     }
 
     public String getLastSeenAgo() {

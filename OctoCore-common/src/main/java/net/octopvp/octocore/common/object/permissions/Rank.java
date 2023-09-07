@@ -6,18 +6,15 @@ import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.interfaces.manager.IRankManager;
-import net.octopvp.octocore.common.interfaces.util.PairMap;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.object.enums.RankType;
-import net.octopvp.octocore.common.object.maps.HashPairMap;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.ChatColor;
-import net.octopvp.octocore.common.util.permissions.Node;
-import net.octopvp.octocore.common.util.permissions.PermissionCalculator;
-import net.octopvp.octocore.common.util.permissions.PermissionResult;
-import org.javatuples.Pair;
+import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.PermissionCheckResult;
+import net.octopvp.octocore.common.util.perms.PermissionManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,7 +31,7 @@ public class Rank implements Cloneable {
     private RankType rankType = RankType.DEFAULT;
     //private Map<String, ServerContext> permissions = new ConcurrentHashMap<>();
     //private Map<String, ServerContext> negatedPermissions = new ConcurrentHashMap<>();
-    private Set<Node> nodes = new HashSet<>();
+    private Map<String, Node> nodes = new HashMap<>();
     private Set<UUID> inheritedRanks = new HashSet<>();
     private String prefix = ""/*, color = CC.GRAY, chatColor = CC.GRAY*/;
     private ChatColor color = ChatColor.GREEN, chatColor = ChatColor.WHITE;
@@ -68,34 +65,20 @@ public class Rank implements Cloneable {
     }
 
     public Node getNode(String perm) {
-        return nodes.stream().filter(node -> node.getPermission().equalsIgnoreCase(perm)).findFirst().orElse(null);
+        // return nodes.stream().filter(node -> node.getPermission().equalsIgnoreCase(perm)).findFirst().orElse(null);
+        return PermissionManager.getInstance().findNode(perm, nodes);
     }
 
     public boolean nodeExists(String perm) {
         return getNode(perm) != null;
     }
 
-    public Set<Node> getFinalNodes() {
-        PairMap<String, Node, Boolean> map = new HashPairMap<>();
-        Set<Node> nodes = new HashSet<>();
-        for (Node node : this.getNodes()) {
-            if (node.getScope().isThisServer())
-                nodes.add(node);
-        }
+    public Map<String, Node> getFinalNodes() {
+        Map<String, Node> nodeMap = new HashMap<>(nodes);
         for (Rank rank : getOrderedInheritance(OrderedInheritance.SMALL_TO_LARGE)) {
-            for (Node finalNode : rank.getFinalNodes()) {
-                if (map.containsKey(finalNode.getPermission().toLowerCase())) {
-                    if (map.get(finalNode.getPermission().toLowerCase()).getValue0().getWeight() < finalNode.getWeight()) { //priorities
-                        map.remove(finalNode.getPermission().toLowerCase());
-                        map.put(finalNode.getPermission().toLowerCase(), finalNode, finalNode.isAllowed());
-                    }
-                    continue;
-                }
-                map.put(finalNode.getPermission().toLowerCase(), finalNode, finalNode.isAllowed());
-            }
+            PermissionManager.getInstance().mergeNodeTrees(nodeMap, rank.getNodes());
         }
-        map.forEach((s, node, b) -> nodes.add(node));
-        return nodes;
+        return nodeMap;
     }
 
     public List<Rank> getOrderedInheritance(OrderedInheritance orderedInheritance) {
@@ -115,32 +98,25 @@ public class Rank implements Cloneable {
         return ranks;
     }
 
-    public PermissionResult calculatePermission(String permission) {
-        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes());
+    public PermissionCheckResult calculatePermission(String permission) {
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes());
     }
+
     public boolean hasPermission(String permission) {
-        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes()).allowed();
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes()).allowed();
     }
 
     public boolean hasPermission(String permission, String server) {
-        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes(), server).allowed();
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes(), server).allowed();
     }
 
-    public PermissionResult getPermissionResult(String permission, String server) {
-        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes(), server);
+    public PermissionCheckResult getPermissionResult(String permission, String server) {
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes(), server);
     }
 
-    public PermissionResult getPermissionResult(String permission) {
-        return PermissionCalculator.hasPermissionResult(permission, getFinalNodes());
+    public PermissionCheckResult getPermissionResult(String permission) {
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes());
     }
-
-    public boolean permissionNegated(String permission, String server) {
-        if (nodeExists(permission)) {
-            return getNode(permission).getScope().getServer().equalsIgnoreCase(server) && getNode(permission).isNegated();
-        }
-        return false;
-    }
-
     public String getDisplayName() {
         if (this.isItalic() && this.isBold()) {
             return this.getColor() + String.valueOf(ChatColor.BOLD) + ChatColor.ITALIC + this.getName();
@@ -187,46 +163,27 @@ public class Rank implements Cloneable {
 
     public Map<String, ServerContext> getAllEffectivePermissions() {
         Map<String, ServerContext> a = new HashMap<>();
-        nodes.forEach(node -> {
-            if (!permissionNegated(node.getPermission(), "global"))
-                a.put(node.getPermission(), node.getScope());
+        nodes.forEach((key, node) -> {
+            if (!node.isNegated("*") && node.getServerContext().isPresent())
+                a.put(node.getPermissionString(), node.getServerContext().get());
         });
         return ImmutableMap.copyOf(a);
     }
 
-    public Collection<Node> getEffectiveBungeePermissions() {
-        Set<Node> a = new HashSet<>();
-        getFinalNodes().forEach(node -> {
-            if (node.getScope().isBungee() || node.getScope().isGlobal())
-                a.add(node);
-        });
-        return a;
-    }
-
-    public Map<String, Pair<ServerContext, Boolean>> getAllPermissionsPair() {
-        Map<String, Pair<ServerContext, Boolean>> map = new HashMap<>();
-        nodes.forEach(node -> {
-            if (hasPermission(node.getPermission()))
-                map.put(node.getPermission(), new Pair<>(node.getScope(), true));
-            else map.put(node.getPermission(), new Pair<>(node.getScope(), false));
+    public Map<String, Node> getNegatedPermissions() {
+        Map<String, Node> map = new HashMap<>();
+        nodes.forEach((key, node) -> {
+            if (node.getNegated().isPresent() && node.getNegated().get())
+                map.put(key, node);
         });
         return ImmutableMap.copyOf(map);
     }
 
-    public Map<String, ServerContext> getNegatedPermissions() {
-        Map<String, ServerContext> map = new HashMap<>();
-        nodes.forEach(node -> {
-            if (node.isNegated())
-                map.put(node.getPermission(), node.getScope());
-        });
-        return ImmutableMap.copyOf(map);
-    }
-
-    public Map<String, ServerContext> getAllowedPermissions() {
-        Map<String, ServerContext> map = new HashMap<>();
-        nodes.forEach(node -> {
+    public Map<String, Node> getAllowedPermissions() {
+        Map<String, Node> map = new HashMap<>();
+        nodes.forEach((key, node) -> {
             if (node.isAllowed())
-                map.put(node.getPermission(), node.getServer());
+                map.put(key, node);
         });
         return ImmutableMap.copyOf(map);
     }
