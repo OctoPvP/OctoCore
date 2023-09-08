@@ -81,7 +81,7 @@ public class ServerContext {
             }
             return ctx.get().isServer(in);
         }
-        return false;
+        return true; // if the server context is not present, it applies to all servers
     }
 
     public static String getServerName() {
