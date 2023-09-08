@@ -39,7 +39,7 @@ public class OctoPermissible extends PermissibleBase {
             return oldPermissibleBase.hasPermission(inName);
         }
         PermissionCheckResult result = data.calculatePermissionResult(inName);
-        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET) isOp(); // return oldPermissibleBase.hasPermission(inName);
+        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET) return isOp(); // return oldPermissibleBase.hasPermission(inName);
         return result.allowed();
     }
 
