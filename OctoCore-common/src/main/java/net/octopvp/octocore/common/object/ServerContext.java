@@ -68,15 +68,15 @@ public class ServerContext {
     }
 
     public static boolean checkIsServer(Optional<ServerContext> ctx, String... in) {
-        System.out.println("  - Checking if " + ctx + " is server " + Arrays.toString(in));
+        // System.out.println("  - Checking if " + ctx + " is server " + Arrays.toString(in));
         if (ctx.isPresent()) {
-            System.out.println("  - ctx is present");
+            // System.out.println("  - ctx is present");
             if (ctx.get().isGlobal()) {
-                System.out.println("  - ctx is global");
+                // System.out.println("  - ctx is global");
                 return true;
             }
             if (in == null || in.length == 0) {
-                System.out.println("  - in is null or empty");
+                // System.out.println("  - in is null or empty");
                 return false;
             }
             return ctx.get().isServer(in);
