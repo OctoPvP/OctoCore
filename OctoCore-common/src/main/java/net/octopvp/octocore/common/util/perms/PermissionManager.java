@@ -9,6 +9,9 @@ import java.util.*;
 public class PermissionManager {
     @Getter
     private static final PermissionManager instance = new PermissionManager();
+    private PermissionManager() {
+        if (instance != null) throw new IllegalStateException("Already initialized");
+    }
 
     public Node nodeFromPermission(String perm, boolean negated, String... serverContexts) {
         if (perm == null || perm.isEmpty()) return null;
@@ -99,19 +102,21 @@ public class PermissionManager {
             lastWildCard = null;
         }
         if (last != null) { // explicitly set
-            return new PermissionCheckResult(permission, false, last.getNegated(), last.getServerContext(), PermissionCheckResult.Reason.EXPLICIT_SET);
+            return new PermissionCheckResult(permission, false, last.getNegated(), last.getServerContext(), PermissionCheckResult.Reason.EXPLICIT_SET, last);
         }
         if (lastWildCard != null) { // wildcard somewhere in the path we took
-            return new PermissionCheckResult(permission, true, lastWildCard.getNegated(), lastWildCard.getServerContext(), PermissionCheckResult.Reason.WILDCARD);
+            return new PermissionCheckResult(permission, true, lastWildCard.getNegated(), lastWildCard.getServerContext(), PermissionCheckResult.Reason.WILDCARD, lastWildCard);
         }
-        return new PermissionCheckResult(permission, false, Optional.empty(), Optional.empty(), PermissionCheckResult.Reason.NOT_SET);
+        return new PermissionCheckResult(permission, false, Optional.empty(), Optional.empty(), PermissionCheckResult.Reason.NOT_SET, null);
     }
 
     private Map.Entry<Node, Node> findNodeInternal(String permission, Map<String, Node> nodes) {
         String[] parts = StringUtils.split(permission.toLowerCase(), ".");
         Node last = null;
         Node lastWildCard = nodes.get("*");
+        int i = 0;
         for (String key : parts) {
+            i++;
             Node node;
             if (last == null) {
                 node = nodes.get(key);
@@ -120,9 +125,16 @@ public class PermissionManager {
                 if (node != null) {
                     Node wildCard = node.findWildCard();
                     if (wildCard != null) lastWildCard = wildCard;
+                } else {
+                    i--; // we didn't find the node, so we don't want to increment i
                 }
             }
             last = node;
+        }
+
+        if (i < parts.length) { // we didn't find the full path
+            // System.out.println("i < parts.length (" + i + " < " + parts.length + ")");
+            last = null;
         }
         return new AbstractMap.SimpleEntry<>(last, lastWildCard);
     }

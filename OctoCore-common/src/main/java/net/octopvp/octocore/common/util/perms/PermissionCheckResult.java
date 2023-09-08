@@ -14,6 +14,7 @@ public class PermissionCheckResult {
     private final Optional<Boolean> negated;
     private final Optional<ServerContext> serverContext;
     private final Reason reason;
+    private final Node node;
 
     private long expire = -1; // cache expire time
 
@@ -33,6 +34,7 @@ public class PermissionCheckResult {
                 ", negated=" + negated +
                 ", serverContext=" + serverContext +
                 ", reason=" + reason +
+                ", node=" + node +
                 '}';
     }
 

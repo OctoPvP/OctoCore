@@ -6,7 +6,8 @@ import java.util.Map;
 public class PermTest {
 
     public static void main(String[] args) {
-        PermissionManager permissionManager = new PermissionManager();
+        PermissionManager permissionManager = PermissionManager.getInstance();
+        /*
         Object[] nodes = {
                 //  perm   negated server
                 "a.b.c", false, "*",
@@ -36,17 +37,29 @@ public class PermTest {
 
         checkPerms(permissionManager, nodeMap);
         checkPerms(permissionManager, nodeMap1);
+
+         */
+        Object[] nodes = {
+                "*", false, "*",
+                "a.b.c", true, "*",
+        };
+        Map<String, Node> nodeMap = nodeTreeFromNodes(nodes);
+        permissionManager.printNodeMap(nodeMap);
+        checkPerms(permissionManager, nodeMap);
     }
 
     public static void checkPerms(PermissionManager permissionManager, Map<String, Node> nodeMap) {
         System.out.println("------------------");
         // System.out.println(permissionManager.checkPermission("a.b.c", nodeMap, "lobby"));
-        System.out.println(permissionManager.checkPermission("a.e.b.c", nodeMap, "lobby"));
+        System.out.println(permissionManager.checkPermission("a.b.c", nodeMap, "lobby"));
+        System.out.println(permissionManager.checkPermission("a.a.a", nodeMap, "lb1"));
+        System.out.println(permissionManager.checkPermission("d.e.f", nodeMap, "lb1"));
+        System.out.println(permissionManager.checkPermission("essentials.test.command", nodeMap, "lb1"));
     }
 
     public static Map<String, Node> nodeTreeFromNodes(Object[] nodes) {
         Map<String, Node> nodeMap = new HashMap<>();
-        PermissionManager permissionManager = new PermissionManager();
+        PermissionManager permissionManager = PermissionManager.getInstance();
         for (int i = 0; i < nodes.length; i += 3) {
             String perm = (String) nodes[i];
             boolean negated = (boolean) nodes[i + 1];

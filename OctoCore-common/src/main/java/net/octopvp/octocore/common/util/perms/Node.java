@@ -128,6 +128,8 @@ public class Node {
                 "key='" + key + '\'' +
                 ", negated=" + negated +
                 ", serverContext=" + serverContext +
+                ", childrenLen=" + children.size() +
+                ", parentKey=" + (parent != null ? parent.getKey() : "null") +
                 '}';
     }
 
