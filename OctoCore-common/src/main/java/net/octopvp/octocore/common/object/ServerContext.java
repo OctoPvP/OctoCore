@@ -13,11 +13,13 @@ public class ServerContext {
     private String serversString;
 
     public String getServersString() {
+        if (serversString == null || serversString.isEmpty())
+            return "*";
         return serversString;
     }
 
     public String[] getServers() {
-        return serversString.split(",");
+        return getServersString().split(",");
     }
 
     public static ServerContext global() {
@@ -26,14 +28,14 @@ public class ServerContext {
 
     public ServerContext(String server) {
         this.serversString = server;
-        if (this.serversString.isEmpty()) {
+        if (this.serversString == null || this.serversString.isEmpty()) {
             this.serversString = "*";
         }
     }
 
     public boolean isThisServer() {
         if (isGlobal()) return true;
-        return Arrays.stream(serversString.split(",")).anyMatch(s1 -> {
+        return Arrays.stream(getServersString().split(",")).anyMatch(s1 -> {
             String s = s1.trim().toLowerCase();
             return s.equalsIgnoreCase(OctoCoreCommon.getInstance().getServerName());
         });
@@ -41,7 +43,7 @@ public class ServerContext {
 
     public boolean isGlobal() {
         // return Arrays.stream(server.split(",")).anyMatch(s -> s.equalsIgnoreCase("global") || s.equals("*"));
-        return Arrays.stream(serversString.split(",")).anyMatch(s1 -> {
+        return Arrays.stream(getServersString().split(",")).anyMatch(s1 -> {
             String s = s1.toLowerCase().trim();
             return s.equals("*") || s.equalsIgnoreCase("global");
         });
@@ -52,7 +54,7 @@ public class ServerContext {
         if (in == null || in.length == 0) {
             return false;
         }
-        return Arrays.stream(serversString.split(",")).anyMatch(s1 -> {  // TODO make sure global and * are handled properly
+        return Arrays.stream(getServersString().split(",")).anyMatch(s1 -> {  // TODO make sure global and * are handled properly
             String s = s1.toLowerCase().trim();
             if (s.equalsIgnoreCase("global"))
                 s = "*";
@@ -89,7 +91,7 @@ public class ServerContext {
     @Override
     public String toString() {
         return "ServerContext{" +
-                "server='" + serversString + '\'' +
+                "server='" + getServersString() + '\'' +
                 '}';
     }
 }
