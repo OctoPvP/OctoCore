@@ -10,13 +10,13 @@ import java.util.Optional;
 public class NodeBuilder implements Cloneable {
     private String permission = "Not Set";
     private Optional<ServerContext> scope = Optional.empty();
-    private boolean allowed = true;
+    private boolean negated = false;
     private int weight = 0;
 
     public NodeBuilder(Node node) {
         permission = node.getPermissionString();
         scope = node.getServerContext();
-        allowed = !node.getNegated().orElse(false);
+        negated = node.getNegated().orElse(false);
     }
 
     public NodeBuilder() {
@@ -42,8 +42,8 @@ public class NodeBuilder implements Cloneable {
         return this;
     }
 
-    public NodeBuilder setAllowed(boolean a) {
-        this.allowed = a;
+    public NodeBuilder setNegated(boolean negated) {
+        this.negated = negated;
         return this;
     }
 
@@ -53,7 +53,7 @@ public class NodeBuilder implements Cloneable {
         }
         return Node.create(
                 permission,
-                allowed,
+                negated,
                 scope.map(ServerContext::getServersString).orElse("*")
         );
     }

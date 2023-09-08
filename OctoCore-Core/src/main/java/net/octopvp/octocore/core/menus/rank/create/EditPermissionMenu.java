@@ -30,7 +30,7 @@ public class EditPermissionMenu extends Menu<Gui> {
     private final Menu<?> instance = this;
 
     @SneakyThrows
-    public EditPermissionMenu(NodeBuilder nodeBuilder, boolean create, Menu previous, Consumer<NodeBuilder> callback) {
+    public EditPermissionMenu(NodeBuilder nodeBuilder, boolean create, Menu<?> previous, Consumer<NodeBuilder> callback) {
         this.nodeBuilder = nodeBuilder.clone();
         this.create = create;
         this.callback = callback;
@@ -70,15 +70,15 @@ public class EditPermissionMenu extends Menu<Gui> {
     }
 
     public GuiItem allowedButton() {
-        return ItemBuilder.from((nodeBuilder.isAllowed()) ? Material.EMERALD : Material.REDSTONE)
+        return ItemBuilder.from((nodeBuilder.isNegated()) ? Material.EMERALD : Material.REDSTONE)
                 .name(CC.AQUA + "Permission allowed")
                 .lore(CC.SEPARATOR,
-                        CC.AQUA + "Permission Allowed: " + (nodeBuilder.isAllowed() ? CC.GREEN + "Yes" : CC.RED + "No (Negated)"),
+                        CC.AQUA + "Permission Allowed: " + (nodeBuilder.isNegated() ? CC.GREEN + "Yes" : CC.RED + "No (Negated)"),
                         CC.SEPARATOR,
-                        CC.YELLOW + "Click to set to " + ((nodeBuilder.isAllowed()) ? "No" : "Yes"))
+                        CC.YELLOW + "Click to set to " + ((nodeBuilder.isNegated()) ? "No" : "Yes"))
                 .asGuiItem(event -> {
-                    nodeBuilder.setAllowed(!nodeBuilder.isAllowed());
-                    event.getWhoClicked().sendMessage(Lang.EDIT_PERMISSION_SET_ALLOWED.getMsg(nodeBuilder.isAllowed() ? CC.GREEN + "True" : CC.RED + "False"));
+                    nodeBuilder.setNegated(!nodeBuilder.isNegated());
+                    event.getWhoClicked().sendMessage(Lang.EDIT_PERMISSION_SET_ALLOWED.getMsg(nodeBuilder.isNegated() ? CC.GREEN + "True" : CC.RED + "False"));
                     update((Player) event.getWhoClicked());
                     SoundUtil.playPing((Player) event.getWhoClicked());
                 });
@@ -121,8 +121,8 @@ public class EditPermissionMenu extends Menu<Gui> {
 
     public GuiItem permissionInfoButton() {
         return ItemBuilder.from(Material.LEVER)
-                .name((nodeBuilder.isAllowed() ? CC.GREEN : CC.RED) + nodeBuilder.getPermission())
-                .lore(CC.AQUA + "Allowed: " + (nodeBuilder.isAllowed() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                .name((nodeBuilder.isNegated() ? CC.GREEN : CC.RED) + nodeBuilder.getPermission())
+                .lore(CC.AQUA + "Allowed: " + (nodeBuilder.isNegated() ? CC.GREEN + "Yes" : CC.RED + "No"),
                         CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().orElse(new ServerContext("Global")).getServersString(),
                         CC.AQUA + "Permission: " + CC.YELLOW + nodeBuilder.getPermission())
                 .asGuiItem(event -> {
