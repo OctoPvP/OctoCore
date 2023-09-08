@@ -32,7 +32,7 @@ public class Node {
     }
 
     public boolean isSignificant() { // this node is actually set
-        return negated.isPresent() || serverContext.isPresent() || children.size() == 0;
+        return negated.isPresent() || serverContext.isPresent() || children.isEmpty();
     }
 
     public boolean hasChildren() {
@@ -96,7 +96,8 @@ public class Node {
                     child.merge(n);
                 }
             });
-        } else { // TODO figure this crap out
+        }
+        if (anotherNode.isSignificant()) {
             copyUnsetSettingsFrom(anotherNode);
         }
         return this;
