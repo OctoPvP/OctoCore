@@ -32,7 +32,7 @@ public class Node {
     }
 
     public boolean isSignificant() { // this node is actually set
-        return negated.isPresent() || serverContext.isPresent();
+        return negated.isPresent() || serverContext.isPresent() || children.size() == 0;
     }
 
     public boolean hasChildren() {
