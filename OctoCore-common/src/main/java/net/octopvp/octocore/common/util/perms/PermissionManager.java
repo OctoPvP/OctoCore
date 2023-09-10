@@ -56,6 +56,44 @@ public class PermissionManager {
         return nodes;
     }
 
+    public void removePermission(String permission, Map<String, Node> nodeMap) {
+        String[] parts = StringUtils.split(permission.toLowerCase(), ".");
+        Node parent = null;
+        Node last = null;
+        // find the last node and remove it
+        int i = 0;
+        for (String key : parts) {
+            if (last == null) {
+                last = nodeMap.get(key);
+                if (last == null) {
+                    break;
+                }
+            } else {
+                parent = last;
+                last = last.findChild(key);
+                if (last == null) {
+                    break;
+                }
+            }
+            i++;
+        }
+        if (i < parts.length) { // we didn't find the full path
+            return;
+        }
+        if (last != null) {
+            if (parent != null) {
+                parent.getChildren().remove(last.getKey());
+            } else {
+                nodeMap.remove(last.getKey());
+            }
+        }
+    }
+
+    public void removeNode(Node node, Map<String, Node> nodeMap) {
+        String perm = node.getPermissionString();
+        removePermission(perm, nodeMap);
+    }
+
     public void printNode(Node node, int recursion) {
         System.out.print("|");
         for (int i = 0; i < recursion * 4; i++) {

@@ -46,6 +46,8 @@ public class PermTest {
         Map<String, Node> nodeMap = nodeTreeFromNodes(nodes);
         permissionManager.printNodeMap(nodeMap);
         checkPerms(permissionManager, nodeMap);
+        permissionManager.removePermission("a.b.c.d.e", nodeMap);
+        permissionManager.printNodeMap(nodeMap);
     }
 
     public static void checkPerms(PermissionManager permissionManager, Map<String, Node> nodeMap) {

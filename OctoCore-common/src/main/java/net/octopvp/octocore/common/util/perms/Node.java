@@ -1,5 +1,6 @@
 package net.octopvp.octocore.common.util.perms;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.object.ServerContext;
@@ -17,6 +18,7 @@ public class Node {
     private Optional<Boolean> negated;
     private Optional<ServerContext> serverContext;
 
+    @Getter(AccessLevel.NONE)
     private transient String cachedPermissionString;
 
     public Node(String key, Node parent, Map<String, Node> children, Optional<Boolean> negated, Optional<ServerContext> serverContext) {

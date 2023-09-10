@@ -126,13 +126,12 @@ public class RankBuilder implements Cloneable {
     }
 
     public RankBuilder unsetPermission(String perm) {
-        if (rank.nodeExists(perm))
-            rank.getNodes().remove(rank.getNode(perm));
+        PermissionManager.getInstance().removePermission(perm, rank.getNodes());
         return this;
     }
 
     public RankBuilder unsetPermission(Node node) {
-        rank.getNodes().remove(node);
+        PermissionManager.getInstance().removePermission(node.getPermissionString(), rank.getNodes());
         return this;
     }
 
