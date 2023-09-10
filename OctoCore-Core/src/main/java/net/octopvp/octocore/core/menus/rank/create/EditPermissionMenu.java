@@ -70,10 +70,10 @@ public class EditPermissionMenu extends Menu<Gui> {
     }
 
     public GuiItem allowedButton() {
-        return ItemBuilder.from((nodeBuilder.isNegated()) ? Material.EMERALD : Material.REDSTONE)
-                .name(CC.AQUA + "Permission allowed")
+        return ItemBuilder.from((nodeBuilder.isNegated()) ? Material.REDSTONE : Material.EMERALD)
+                .name(CC.AQUA + "Permission negated")
                 .lore(CC.SEPARATOR,
-                        CC.AQUA + "Permission Allowed: " + (nodeBuilder.isNegated() ? CC.GREEN + "Yes" : CC.RED + "No (Negated)"),
+                        CC.AQUA + "Permission Negated: " + (nodeBuilder.isNegated() ? CC.GREEN + "Yes" : CC.RED + "No"),
                         CC.SEPARATOR,
                         CC.YELLOW + "Click to set to " + ((nodeBuilder.isNegated()) ? "No" : "Yes"))
                 .asGuiItem(event -> {
@@ -122,7 +122,7 @@ public class EditPermissionMenu extends Menu<Gui> {
     public GuiItem permissionInfoButton() {
         return ItemBuilder.from(Material.LEVER)
                 .name((nodeBuilder.isNegated() ? CC.GREEN : CC.RED) + nodeBuilder.getPermission())
-                .lore(CC.AQUA + "Allowed: " + (nodeBuilder.isNegated() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                .lore(CC.AQUA + "Negated: " + (nodeBuilder.isNegated() ? CC.RED + "Yes" : CC.GREEN + "No"),
                         CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().orElse(new ServerContext("Global")).getServersString(),
                         CC.AQUA + "Permission: " + CC.YELLOW + nodeBuilder.getPermission())
                 .asGuiItem(event -> {

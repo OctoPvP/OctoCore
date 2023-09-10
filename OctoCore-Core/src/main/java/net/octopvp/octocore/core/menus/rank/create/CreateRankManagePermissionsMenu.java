@@ -16,6 +16,7 @@ import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.callback.ReturnableTypeCallback;
 import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.PermissionManager;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.utils.SoundUtil;
@@ -71,12 +72,13 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
     }
 
     public GuiItem permissionButton(Node node, Consumer<NodeBuilder> callback) {
-        return ItemBuilder.from(!node.isNegated("*") ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
+        return ItemBuilder.from(!node.isNegatedIgnoreScope() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
                 .name(
-                        (node.isAllowed() ? CC.GREEN : CC.RED) + node.getPermissionString()
+                        (node.isNegatedIgnoreScope() ? CC.RED : CC.GREEN) + node.getPermissionString()
                 ).lore(
                         CC.SEPARATOR,
-                        CC.AQUA + "Allowed: " + (node.isAllowed() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                        CC.AQUA + "Negated: " + (node.isNegatedIgnoreScope() ? CC.RED + "Yes" : CC.GREEN + "No"),
+                        CC.AQUA + "Scope: " + (node.getServerContext().isPresent() ? CC.YELLOW + node.getServerContext().get().getServersString() : CC.GRAY + "Global"),
                         CC.SEPARATOR,
                         CC.YELLOW + "Left-Click to edit!",
                         CC.RED + "Shift-Right Click to Remove!"
@@ -95,7 +97,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
     @Override
     public List<GuiItem> getItems(Player player) {
         List<GuiItem> items = new ArrayList<>();
-        builder.getRank().getNodes().forEach((key, node) -> {
+        for (Node node : PermissionManager.getInstance().findSignificantNodes(builder.getRank().getNodes())) {
             if (filterOptions.test(node)) {
                 items.add(permissionButton(node, (nodeBuilder) -> {
                     // set the node to the new node
@@ -106,7 +108,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
                     open(player);
                 }));
             }
-        });
+        }
         return items;
     }
 
