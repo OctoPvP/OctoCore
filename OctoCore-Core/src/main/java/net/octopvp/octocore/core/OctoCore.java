@@ -2,7 +2,6 @@ package net.octopvp.octocore.core;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
@@ -19,8 +18,6 @@ import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.Utilities;
-import net.octopvp.octocore.common.util.perms.Node;
-import net.octopvp.octocore.common.util.perms.NodeAdapter;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.command.providers.*;
 import net.octopvp.octocore.core.database.DatabaseManager;
@@ -54,10 +51,7 @@ public abstract class OctoCore extends JavaPlugin {
     private static final Settings settings = new Settings();
     private static final SetupModules setupModules = new SetupModules();
     @Getter
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting()
-            .serializeNulls()
-            .registerTypeAdapter(Node.class, new NodeAdapter())
-            .enableComplexMapKeySerialization().create();    // https://stackoverflow.com/a/44800004/11588583
+    private static final Gson gson = OctoCoreCommon.getGsonBuilder().create();    // https://stackoverflow.com/a/44800004/11588583
     public static String prefix = "[OctoCore] ";
     private static Chat chat;
     private static OctoCore instance;

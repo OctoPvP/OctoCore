@@ -1,10 +1,10 @@
 package net.octopvp.octocore.common.object.redis;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 public class JedisSettings {
 
     private String address;

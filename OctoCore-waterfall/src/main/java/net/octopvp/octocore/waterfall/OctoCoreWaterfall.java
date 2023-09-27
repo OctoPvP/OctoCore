@@ -1,7 +1,6 @@
 package net.octopvp.octocore.waterfall;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
@@ -18,8 +17,6 @@ import net.octopvp.octocore.common.interfaces.manager.*;
 import net.octopvp.octocore.common.manager.DefaultServerManagerImpl;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.Logger;
-import net.octopvp.octocore.common.util.perms.Node;
-import net.octopvp.octocore.common.util.perms.NodeAdapter;
 import net.octopvp.octocore.waterfall.commands.BungeeDataCommand;
 import net.octopvp.octocore.waterfall.commands.BungeeHasPermissionCommand;
 import net.octopvp.octocore.waterfall.commands.LobbyCommand;
@@ -37,10 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 public final class OctoCoreWaterfall extends Plugin {
     @Getter
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting()
-            .serializeNulls()
-            .registerTypeAdapter(Node.class, new NodeAdapter())
-            .enableComplexMapKeySerialization().create();
+    private static final Gson gson = OctoCoreCommon.getGsonBuilder().create();
     @Getter
     private static OctoCoreWaterfall instance;
     private static Configuration config;
@@ -64,7 +58,7 @@ public final class OctoCoreWaterfall extends Plugin {
 
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
-        OctoCoreCommon.getInstance().setBungee(true);
+        OctoCoreCommon.getInstance().setProxy(true);
         OctoCoreCommon.getInstance().init(gson, new ServerImplementation() {
             @Override
             public void sendMessage(UUID uuid, String message) {

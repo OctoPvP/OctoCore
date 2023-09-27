@@ -20,24 +20,22 @@ public class RedisManager {
     private static RedisManager instance;
     private final JedisSettings settings;
     private final RedisListenerManager listenerManager;
-    private JedisSettings devBridgeSettings;
-    private JedisPool pool, devBridgePool;
-    private boolean connected = true, devBridgeConnected = true;
-    private JedisSubscriber subscriber, devBridgeSubscriber;
-    private RedisListenerManager devBridgeListenerManager;
+    private JedisPool pool;
+    private boolean connected = true;
+    private JedisSubscriber subscriber;
     private long lastConnect = -1;
 
     public RedisManager(String hostname, int port, String password, String packetsPackage, Object packetsClass) {
+        this(new JedisSettings(hostname, port, password, password != null && !password.isEmpty()),
+                packetsPackage, packetsClass);
+    }
+    public RedisManager(JedisSettings settings, String packetsPackage, Object packetsClass) {
         instance = this;
         listenerManager = new RedisListenerManager();
         listenerManager.init(packetsPackage, packetsClass);
-        settings = new JedisSettings();
-        settings.setAddress(hostname);
-        settings.setAuth(password != null && !password.isEmpty());
-        settings.setPassword(password);
-        settings.setPort(port);
+        this.settings = settings;
         try {
-            this.pool = new JedisPool(hostname, port);
+            this.pool = new JedisPool(settings.getAddress(), settings.getPort());
             try {
                 getJedis();
                 OctoCoreCommon.getInstance().getServerImplementation().logDebug("Registering Pub/Sub");
@@ -63,31 +61,6 @@ public class RedisManager {
         long start = System.currentTimeMillis();
         getJedis().ping();
         return System.currentTimeMillis() - start;
-    }
-
-    public void setupDevBridge(String host, int port, String password, String listenersPackage, Object packetsClass) {
-        devBridgeListenerManager = new RedisListenerManager();
-        devBridgeListenerManager.init(listenersPackage, packetsClass);
-        devBridgeSettings = new JedisSettings();
-        devBridgeSettings.setAddress(host);
-        devBridgeSettings.setAuth(password != null && !password.isEmpty());
-        devBridgeSettings.setPassword(password);
-        devBridgeSettings.setPort(port);
-        try {
-            this.devBridgePool = new JedisPool(host, port);
-            Jedis jedis = this.devBridgePool.getResource();
-            try {
-                if (this.devBridgeSettings.isAuth())
-                    jedis.auth(this.devBridgeSettings.getPassword());
-                OctoCoreCommon.getInstance().getServerImplementation().logDebug("Registering Pub/Sub [Dev Bridge]");
-                this.devBridgeSubscriber = new JedisSubscriber(DEV_BRIDGE_CHANNEL, devBridgeSettings, devBridgeListenerManager);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            devBridgeConnected = false;
-        }
     }
 
     public void write(RedisPacket data) {
@@ -124,23 +97,6 @@ public class RedisManager {
             jedis.publish(CHANNEL, data);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public void writeBridge(RedisPacket data) {
-        if (!devBridgeConnected) {
-            return;
-        }
-        writeBridge(data.serialize());
-    }
-
-    private void writeBridge(JsonObject object) {
-        if (devBridgePool == null || !devBridgeConnected || devBridgeSettings == null)
-            return;
-        try (Jedis jedis = devBridgePool.getResource()) {
-            if (getSettings().isAuth())
-                jedis.auth(devBridgeSettings.getPassword());
-            jedis.publish(DEV_BRIDGE_CHANNEL, object.toString());
         }
     }
 

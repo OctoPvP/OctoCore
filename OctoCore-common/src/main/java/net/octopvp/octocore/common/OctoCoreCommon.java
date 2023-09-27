@@ -1,6 +1,7 @@
 package net.octopvp.octocore.common;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mongodb.client.MongoClient;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,8 @@ import net.octopvp.octocore.common.interfaces.manager.IPunishModule;
 import net.octopvp.octocore.common.interfaces.manager.IRankManager;
 import net.octopvp.octocore.common.interfaces.manager.IServerManager;
 import net.octopvp.octocore.common.redis.RedisManager;
+import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.NodeAdapter;
 
 import java.text.SimpleDateFormat;
 
@@ -21,7 +24,7 @@ public class OctoCoreCommon {
     private MongoClient mongoClient;
     private ServerImplementation serverImplementation;
     private Gson gson;
-    private boolean bungee = false;
+    private boolean proxy = false;
 
     public void init(Gson gson, ServerImplementation serverImplementation) {
         this.gson = gson;
@@ -47,5 +50,13 @@ public class OctoCoreCommon {
 
     public RedisManager getRedisManager() {
         return serverImplementation.getDatabaseManager().getRedisManager();
+    }
+
+
+    public static GsonBuilder getGsonBuilder() {
+        return new GsonBuilder().setPrettyPrinting()
+                .serializeNulls()
+                .enableComplexMapKeySerialization()
+                .registerTypeAdapter(Node.class, new NodeAdapter());
     }
 }

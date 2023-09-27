@@ -16,7 +16,7 @@ public class PlayerMessagePacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        if (OctoCoreCommon.getInstance().isBungee()) {
+        if (OctoCoreCommon.getInstance().isProxy()) {
             OctoCoreCommon.getInstance().getServerImplementation().sendMessage(uuid, message);
         }
     }
