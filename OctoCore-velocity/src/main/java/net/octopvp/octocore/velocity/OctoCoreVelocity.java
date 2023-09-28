@@ -11,6 +11,8 @@ import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.redis.RedisManager;
+import net.octopvp.octocore.velocity.listeners.PingListener;
+import net.octopvp.octocore.velocity.listeners.PlayerListener;
 import net.octopvp.octocore.velocity.objects.VelocityConfiguration;
 import org.slf4j.Logger;
 
@@ -70,6 +72,13 @@ public class OctoCoreVelocity {
         }
         redisManager = new RedisManager(config.getRedis(), "net.octopvp.octocore.velocity.redis", null);
         OctoCoreCommon.getInstance().init(gson, new VelocityServerImpl(proxyServer, velocityLogger, redisManager));
+        Object[] listeners = {
+                new PingListener(this),
+                new PlayerListener()
+        };
+        for (Object listener : listeners) {
+            proxyServer.getEventManager().register(this, listener);
+        }
         velocityLogger.info("OctoCore Velocity has been enabled in " + (System.currentTimeMillis() - start) + "ms.");
     }
 }
