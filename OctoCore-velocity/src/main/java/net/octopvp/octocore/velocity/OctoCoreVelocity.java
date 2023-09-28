@@ -2,6 +2,7 @@ package net.octopvp.octocore.velocity;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
@@ -11,6 +12,7 @@ import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.redis.RedisManager;
+import net.octopvp.octocore.velocity.commands.HasPermCommand;
 import net.octopvp.octocore.velocity.listeners.PingListener;
 import net.octopvp.octocore.velocity.listeners.PlayerListener;
 import net.octopvp.octocore.velocity.objects.VelocityConfiguration;
@@ -81,6 +83,8 @@ public class OctoCoreVelocity {
         for (Object listener : listeners) {
             proxyServer.getEventManager().register(this, listener);
         }
+        BrigadierCommand hasPermCommand = HasPermCommand.createCommand(proxyServer);
+        proxyServer.getCommandManager().register(hasPermCommand);
         velocityLogger.info("OctoCore Velocity has been enabled in " + (System.currentTimeMillis() - start) + "ms.");
     }
 }
