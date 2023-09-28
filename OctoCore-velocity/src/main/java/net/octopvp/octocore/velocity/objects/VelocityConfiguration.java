@@ -18,17 +18,19 @@ import java.util.HashMap;
 @Getter
 @Data
 public class VelocityConfiguration {
-    private JedisSettings redis;
-    private HashMap<String, PingConfig> motds;
-    private String defaultMotd;
-    private boolean randomMotd;
+    private JedisSettings redis = new JedisSettings("localhost", 6379, "password", false);
+    private HashMap<String, PingConfig> motds = new HashMap<>() {{
+        put("default", new PingConfig());
+    }};
+    private String defaultMotd = "default";
+    private boolean randomMotd = false;
 
     @Data
     public static class PingConfig {
-        private String[] motd;
-        private Protocol protocol;
-        private ServerPing.Players players;
-        private String favicon;
+        private String[] motd = {"<green>Line 1", "<red>Line 2"};
+        private Protocol protocol = null;
+        private ServerPing.Players players = null;
+        private String favicon = "server-icon.png";
 
         @Data
         public static class Protocol {

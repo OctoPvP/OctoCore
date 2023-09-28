@@ -13,7 +13,7 @@ import redis.clients.jedis.JedisPool;
 @Getter
 public class RedisManager {
 
-    private static final String CHANNEL = "octo", DEV_BRIDGE_CHANNEL = "octo:dev_bridge";
+    private static final String CHANNEL = "octo";
     private static final JsonParser jsonParser = new JsonParser();
     @Getter
     @Setter

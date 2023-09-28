@@ -31,7 +31,12 @@ tasks.withType<JavaCompile>().configureEach {
         options.release.set(Integer.parseInt(targetCompatibility))
     }
 }
-
+val relocateBase = "net.octopvp.octocore.velocity.relocate."
+tasks.shadowJar {
+    archiveFileName.set("OctoCore-velocity.jar")
+    relocate("com.mongodb", relocateBase + "mongodb")
+    relocate("redis.clients.jedis", relocateBase + "redis")
+}
 sourceSets {
     main {
         blossom {
