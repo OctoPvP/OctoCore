@@ -11,6 +11,7 @@ import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.objects.PlayerData;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -71,7 +72,9 @@ public class DataUpdateThread extends Thread {
                             .append(Component.text(VanishManager.getInstance().getVanishPriority(playerData)).color(NamedTextColor.YELLOW));
                     OctoCore.getInstance().getServerImplementation().sendActionBar(player, actionBar);
                 }
-                new DataCache(playerData.getUuid()).update(playerData.getData());
+                Document document = playerData.getData();
+                document.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(playerData.getFinalNodes()));
+                new DataCache(playerData.getUuid()).update(document);
             }
             double[] tps = Bukkit.getTPS();
             new ServerDataPacket(OctoCore.getServerName(), onlinePlayers, Bukkit.getMaxPlayers(), System.currentTimeMillis(), Bukkit.hasWhitelist(), tps[0], tps[1], tps[2], false).send();

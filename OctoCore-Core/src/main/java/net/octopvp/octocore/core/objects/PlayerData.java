@@ -95,7 +95,9 @@ public class PlayerData extends SimplePlayerData {
         this.lastDataSave = 0;
         Document document = super.getData();
         PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
-        new DataCache(this.uuid).update(document);
+        Document copy = new Document(document);
+        copy.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(getFinalNodes()));
+        new DataCache(this.uuid).update(copy);
         return document;
     }
 

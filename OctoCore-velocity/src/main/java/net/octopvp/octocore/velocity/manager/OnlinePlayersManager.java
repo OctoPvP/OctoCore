@@ -10,12 +10,12 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
-public class OnlinePlayersManager {
+public class OnlinePlayersManager implements Runnable {
     @Getter
     @Setter
     private static Map<UUID, OnlinePlayerData> dataMap = new ConcurrentHashMap<>();
-
-    public static void update() {
+    @Override
+    public void run() {
         dataMap.forEach((uuid, data) -> {
             //Logger.debug("Updating player data for " + uuid.toString());
             data.update();
