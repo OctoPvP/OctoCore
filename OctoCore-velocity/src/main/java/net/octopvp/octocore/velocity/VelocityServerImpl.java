@@ -20,7 +20,7 @@ import java.util.UUID;
 public class VelocityServerImpl implements ServerImplementation {
     private final ProxyServer proxyServer;
     private final Logger velocityLogger;
-    private final RedisManager redisManager;
+    private OctoCoreVelocity octoCoreVelocity;
     private final IServerManager serverManager = new DefaultServerManagerImpl();
     @Override
     public void sendMessage(UUID uuid, String message) {
@@ -96,7 +96,7 @@ public class VelocityServerImpl implements ServerImplementation {
 
             @Override
             public RedisManager getRedisManager() {
-                return redisManager;
+                return octoCoreVelocity.getRedisManager();
             }
 
             @Override

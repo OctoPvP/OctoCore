@@ -134,6 +134,7 @@ public abstract class OctoCore extends JavaPlugin {
         if (instance != null)
             throw new IllegalStateException("OctoCore is already initialized");
         instance = this;
+        /*
         if (Bukkit.getOnlineMode()) {
             System.err.println("fucking idiot, you have online mode on, OctoCore can't work alone");
             System.exit(-69);
@@ -143,6 +144,7 @@ public abstract class OctoCore extends JavaPlugin {
                 System.exit(69);
             }
         }
+         */
         PacketUtil.setProtocolManager(ProtocolLibrary.getProtocolManager());
         getServerImplementation().onLoad();
     }

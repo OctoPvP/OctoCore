@@ -31,14 +31,16 @@ public class OctoCoreVelocity {
     @Getter
     private static final Gson gson = OctoCoreCommon.getGsonBuilder().create();
 
-    @Inject
     private Logger velocityLogger;
+    private ProxyServer proxyServer;
+    private Path dataDirectory;
 
     @Inject
-    private ProxyServer proxyServer;
-
-    @DataDirectory
-    private Path dataDirectory;
+    public OctoCoreVelocity(Logger velocityLogger, ProxyServer proxyServer, @DataDirectory Path dataDirectory) {
+        this.velocityLogger = velocityLogger;
+        this.proxyServer = proxyServer;
+        this.dataDirectory = dataDirectory;
+    }
 
     private RedisManager redisManager;
     private VelocityConfiguration config;
@@ -70,8 +72,8 @@ public class OctoCoreVelocity {
                 e.printStackTrace();
             }
         }
+        OctoCoreCommon.getInstance().init(gson, new VelocityServerImpl(proxyServer, velocityLogger, this));
         redisManager = new RedisManager(config.getRedis(), "net.octopvp.octocore.velocity.redis", null);
-        OctoCoreCommon.getInstance().init(gson, new VelocityServerImpl(proxyServer, velocityLogger, redisManager));
         Object[] listeners = {
                 new PingListener(this),
                 new PlayerListener()

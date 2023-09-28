@@ -17,15 +17,14 @@ public class RedisManager extends Manager {
     @Override
     public void init(OctoCore plugin) {
         Logger.debug("Connecting to Redis");
-        JedisSettings jedisSettings = new JedisSettings();
-        jedisSettings.setAddress(getConfig().getString("database.redis.host"));
-        jedisSettings.setPort(getConfig().getInt("database.redis.port"));
-        if (getConfig().getBoolean("database.redis.auth.enabled")) {
-            jedisSettings.setAuth(true);
-            jedisSettings.setPassword(getConfig().getString("database.redis.auth.password"));
-        }
+        JedisSettings jedisSettings = new JedisSettings(
+                getConfig().getString("database.redis.host"),
+                getConfig().getInt("database.redis.port"),
+                getConfig().getString("database.redis.auth.password"),
+                getConfig().getBoolean("database.redis.auth.enabled")
+        );
         OctoCore.getInstance().setActualRedisManager(new net.octopvp.octocore.common.redis.RedisManager(
-                jedisSettings.getAddress(), jedisSettings.getPort(), jedisSettings.getPassword(), /*"net.octopvp.octocore.paper.database.redis.packets"*/
+                jedisSettings, /*"net.octopvp.octocore.paper.database.redis.packets"*/
                 DatabaseManager.class.getPackage().getName() + ".redis.packets"
                 , null
         ));

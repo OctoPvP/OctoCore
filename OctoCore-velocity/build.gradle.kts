@@ -37,6 +37,7 @@ tasks.shadowJar {
     relocate("com.mongodb", relocateBase + "mongodb")
     relocate("redis.clients.jedis", relocateBase + "redis")
 }
+tasks.getByName("build").dependsOn("shadowJar")
 sourceSets {
     main {
         blossom {
