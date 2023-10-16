@@ -20,12 +20,7 @@ repositories {
 
 dependencies {
     implementation(project(":OctoCore-Core"))
-    paperweightDevBundle("net.octopvp.octospigot", "1.20.1-R0.1-SNAPSHOT")
-    //compileOnly("net.octopvp:octospigot-server:1.19.3-R0.1-SNAPSHOT")
-    //val homeDir = System.getenv("HOMEDRIVE") + System.getenv("HOMEPATH");
-    //val s = homeDir + "\\.m2\\repository\\net\\octopvp\\OctoSpigot-Server\\1.19.3-R0.1-SNAPSHOT\\octospigot-server-1.19.3-R0.1-SNAPSHOT-mojang-mapped.jar";
-    //compileOnly(files(s))
-    // compileOnly("com.mojang:authlib:1.5.25")
+    paperweightDevBundle("net.octopvp.octospigot", "1.20.2-R0.1-SNAPSHOT")
 }
 tasks {
     assemble {
