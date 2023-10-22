@@ -15,13 +15,13 @@ public class BungeeRedisManager {
 
     public BungeeRedisManager() {
         Logger.debug("Starting redis");
-        JedisSettings settings = new JedisSettings();
         Configuration config = OctoCoreWaterfall.getInstance().getConfig();
-        settings.setAddress(config.getString("redis.host"));
-        settings.setPort(config.getInt("redis.port"));
-        if (config.getBoolean("redis.auth.enabled")) {
-            settings.setPassword(config.getString("redis.auth.password"));
-        }
+        JedisSettings settings = new JedisSettings(
+                config.getString("redis.host"),
+                config.getInt("redis.port"),
+                config.getString("redis.auth.password"),
+                config.getBoolean("redis.auth.enabled")
+        );
         /*
         OctoCoreWaterfall.getInstance().setRedisManager(new RedisManager("net.octopvp.octocore.waterfall.redis.packet.impl", settings, (runnable) -> {
             ProxyServer.getInstance().getScheduler().runAsync(OctoCoreWaterfall.getInstance(), runnable);
