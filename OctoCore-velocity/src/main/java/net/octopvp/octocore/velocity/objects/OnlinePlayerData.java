@@ -1,5 +1,6 @@
 package net.octopvp.octocore.velocity.objects;
 
+import com.velocitypowered.api.permission.Tristate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -8,12 +9,14 @@ import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.perms.Node;
+import net.octopvp.octocore.common.util.perms.PermissionCheckResult;
 import net.octopvp.octocore.common.util.perms.PermissionManager;
 import org.bson.Document;
 import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -22,20 +25,20 @@ import java.util.UUID;
 public class OnlinePlayerData {
     private final UUID uuid;
     private Map<String, Node> nodes = new HashMap<>();
-    private Map<String, Boolean> cachedPermResults = new HashMap<>();
+    private Map<String, PermissionCheckResult> cachedPermResults = new HashMap<>();
     private boolean frozen = false, vanished = false;
 
-    public boolean hasPermission(String perm) {
+    public Optional<Boolean> hasPermission(String perm) {
         //Logger.debug("Checking permission for " + uuid + ": " + perm);
-        boolean result = false;
+        PermissionCheckResult result;
         if (cachedPermResults.containsKey(perm.toLowerCase())) {
             //Logger.debug(" - Cached: " + cachedPermResults.get(perm.toLowerCase()));
-            return cachedPermResults.get(perm);
+            return cachedPermResults.get(perm).getAsTristate();
         }
-        result = PermissionManager.getInstance().checkPermission(perm, nodes).allowed();
+        result = PermissionManager.getInstance().checkPermission(perm, nodes);
         //Logger.debug(" - Result: " + result);
         cachedPermResults.put(perm.toLowerCase(), result);
-        return result;
+        return result.getAsTristate();
     }
 
     public Node getNode(String perm) {
@@ -44,6 +47,10 @@ public class OnlinePlayerData {
 
     public boolean isPermSet(String perm) {
         return getNode(perm) != null;
+    }
+    public Tristate getTristate(String perm) {
+        Optional<Boolean> optional = hasPermission(perm);
+        return Tristate.fromNullableBoolean(optional.orElse(null));
     }
 
 

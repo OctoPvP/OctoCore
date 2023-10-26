@@ -25,6 +25,10 @@ public class PermissionCheckResult {
     public boolean allowed() {
         return getResult();
     }
+    public Optional<Boolean> getAsTristate() {
+        if (reason == Reason.NOT_SET) return Optional.empty();
+        return Optional.of(getResult());
+    }
 
     @Override
     public String toString() {
