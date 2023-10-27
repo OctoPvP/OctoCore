@@ -78,7 +78,7 @@ public class EditPermissionMenu extends Menu<Gui> {
                         CC.YELLOW + "Click to set to " + ((nodeBuilder.isNegated()) ? "No" : "Yes"))
                 .asGuiItem(event -> {
                     nodeBuilder.setNegated(!nodeBuilder.isNegated());
-                    event.getWhoClicked().sendMessage(Lang.EDIT_PERMISSION_SET_ALLOWED.getMsg(nodeBuilder.isNegated() ? CC.GREEN + "True" : CC.RED + "False"));
+                    event.getWhoClicked().sendMessage(Lang.EDIT_PERMISSION_SET_NEGATED.getMsg(nodeBuilder.isNegated() ? CC.GREEN + "True" : CC.RED + "False"));
                     update((Player) event.getWhoClicked());
                     SoundUtil.playPing((Player) event.getWhoClicked());
                 });
