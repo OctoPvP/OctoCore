@@ -7,15 +7,17 @@ import com.velocitypowered.api.permission.PermissionSubject;
 import com.velocitypowered.api.permission.Tristate;
 import com.velocitypowered.api.proxy.Player;
 import lombok.RequiredArgsConstructor;
+import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
 
 @RequiredArgsConstructor
 public class OctoCorePermissionsProvider implements PermissionProvider, PermissionFunction {
 
     private final Player player;
-    private final OnlinePlayerData data;
 
     @Override
     public Tristate getPermissionValue(String permission) {
+        OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
+        if (data == null) return Tristate.UNDEFINED;
         return Tristate.fromOptionalBoolean(data.hasPermission(permission));
     }
 

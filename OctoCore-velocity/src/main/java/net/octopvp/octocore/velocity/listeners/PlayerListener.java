@@ -1,15 +1,23 @@
 package net.octopvp.octocore.velocity.listeners;
 
+import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
+import com.velocitypowered.api.event.permission.PermissionsSetupEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
+import net.octopvp.octocore.velocity.OctoCoreVelocity;
 import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
+import net.octopvp.octocore.velocity.objects.OctoCorePermissionsProvider;
 import net.octopvp.octocore.velocity.objects.OnlinePlayerData;
 
+@AllArgsConstructor
 public class PlayerListener {
+    private OctoCoreVelocity plugin;
     @Subscribe
     public void onJoin(LoginEvent event) {
         OnlinePlayersManager.getDataMap().put(
@@ -45,5 +53,21 @@ public class PlayerListener {
             data.getNodes().clear();
             data.getCachedPermResults().clear();
         }
+    }
+
+    // see https://github.com/LuckPerms/LuckPerms/blob/master/velocity/src/main/java/me/lucko/luckperms/velocity/listeners/VelocityConnectionListener.java#L61
+    @Subscribe
+    public void onPermissionSetup(PermissionsSetupEvent e, Continuation continuation) {
+        if (!(e.getSubject() instanceof Player)) {
+            continuation.resume();
+            return;
+        }
+        final Player player = (Player) e.getSubject();
+        plugin.getProxyServer().getScheduler()
+                .buildTask(plugin, () -> {
+                    // TODO load player data if needed. Need to implement mongodb first
+                    e.setProvider(new OctoCorePermissionsProvider(player));
+                    continuation.resume();
+                }).schedule();
     }
 }

@@ -80,7 +80,7 @@ public class OctoCoreVelocity {
         redisManager = new RedisManager(config.getRedis(), "net.octopvp.octocore.velocity.redis", null);
         Object[] listeners = {
                 new PingListener(this),
-                new PlayerListener()
+                new PlayerListener(this)
         };
         for (Object listener : listeners) {
             proxyServer.getEventManager().register(this, listener);
