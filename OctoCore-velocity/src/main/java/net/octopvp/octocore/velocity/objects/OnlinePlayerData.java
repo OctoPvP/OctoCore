@@ -29,14 +29,14 @@ public class OnlinePlayerData {
     private boolean frozen = false, vanished = false;
 
     public Optional<Boolean> hasPermission(String perm) {
-        //Logger.debug("Checking permission for " + uuid + ": " + perm);
+        Logger.debug("Checking permission for " + uuid + ": " + perm);
         PermissionCheckResult result;
         if (cachedPermResults.containsKey(perm.toLowerCase())) {
-            //Logger.debug(" - Cached: " + cachedPermResults.get(perm.toLowerCase()));
+            Logger.debug(" - Cached: " + cachedPermResults.get(perm.toLowerCase()));
             return cachedPermResults.get(perm).getAsTristate();
         }
         result = PermissionManager.getInstance().checkPermission(perm, nodes);
-        //Logger.debug(" - Result: " + result);
+        Logger.debug(" - Result: " + result);
         cachedPermResults.put(perm.toLowerCase(), result);
         return result.getAsTristate();
     }
@@ -63,10 +63,12 @@ public class OnlinePlayerData {
 
         try (Jedis jedis = RedisManager.getJedis()) {
             String json = jedis.hget("player-data", uuid.toString());
-            //Logger.debug(json);
             if (json == null) return;
             Document document = Document.parse(json);
-            this.nodes = OctoCoreCommon.getInstance().getGson().fromJson(document.getString("nodes"), GsonType.NODE_MAP);
+            // Logger.debug(" - Document: " + json);
+            this.nodes = OctoCoreCommon.getInstance().getGson().fromJson(document.getString("calculated-nodes"), GsonType.NODE_MAP);
+            // Logger.debug(" - Nodes: ");
+            // PermissionManager.getInstance().printNodeMap(nodes);
             this.vanished = document.getBoolean("joinVanished"); // used to be vanished but we've removed that from playerdata
         }
     }

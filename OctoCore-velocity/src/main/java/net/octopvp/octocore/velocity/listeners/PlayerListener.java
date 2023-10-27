@@ -10,6 +10,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.velocity.OctoCoreVelocity;
 import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
 import net.octopvp.octocore.velocity.objects.OctoCorePermissionsProvider;
@@ -20,6 +21,7 @@ public class PlayerListener {
     private OctoCoreVelocity plugin;
     @Subscribe
     public void onJoin(LoginEvent event) {
+        Logger.debug("Player " + event.getPlayer().getUsername() + " joined");
         OnlinePlayersManager.getDataMap().put(
                 event.getPlayer().getUniqueId(),
                 new OnlinePlayerData(
@@ -30,6 +32,7 @@ public class PlayerListener {
 
     @Subscribe
     public void onLeave(DisconnectEvent event) {
+        Logger.debug("Player " + event.getPlayer().getUsername() + " left");
         OnlinePlayersManager.getDataMap().remove(event.getPlayer().getUniqueId());
     }
 
@@ -63,9 +66,11 @@ public class PlayerListener {
             return;
         }
         final Player player = (Player) e.getSubject();
+        Logger.debug("Setting up permissions for " + player.getUsername());
         plugin.getProxyServer().getScheduler()
                 .buildTask(plugin, () -> {
                     // TODO load player data if needed. Need to implement mongodb first
+                    Logger.debug(" - Setting provider");
                     e.setProvider(new OctoCorePermissionsProvider(player));
                     continuation.resume();
                 }).schedule();

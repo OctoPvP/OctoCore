@@ -17,7 +17,8 @@ public class HasPermCommand {
                         .executes(context -> {
                             context.getSource().sendMessage(
                                     Component.text(
-                                            context.getSource().hasPermission(context.getArgument("permission", String.class))
+                                            context.getSource().getPermissionValue(context.getArgument("permission", String.class))
+                                                    .name()
                                     )
                             );
                             return 1;
