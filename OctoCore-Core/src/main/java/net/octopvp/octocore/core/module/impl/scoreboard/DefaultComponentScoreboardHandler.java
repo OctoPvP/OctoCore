@@ -17,44 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Component> {
-    /*
-    {
-    boolean a = false;
-    int i = 0;
-
-    @Override
-    public String getTitle(Player player) {
-        return CC.AQUA + CC.B + "OctoPvP " + CC.GRAY + CC.SPLITTER + CC.WHITE + " " + OctoCore.getServerType();
-    }
-
-    @Override
-    public List<Entry> getEntries(Player player) {
-        i++;
-        if (i == 2) {
-            i = 0;
-            a = !a;
-        }
-        PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-        if (playerData == null)
-            return new EntryBuilder().blank().build();
-        String name = playerData.getCurrentColor() + CC.strip(player.getDisplayName());
-        if (name.endsWith("\u00A7"))
-            name = name.substring(0, name.length() - 1);
-        //Logger.debug("Name: " + name);
-        return new EntryBuilder()
-                .next(CC.SCOREBOARD_SEPARATOR)
-                .blank()
-                .next(CC.AQUA + "Your Name" + CC.GRAY + ": " + CC.GREEN + name) //Note - this somehow sets the player's nametag -> .next(CC.AQUA + "Your Name: " + CC.GREEN + player.getName())
-                .next(CC.AQUA + "Rank" + CC.GRAY + ": " + CC.GREEN + playerData.getCurrentPrefix())
-                .next(CC.AQUA + "Online" + CC.GRAY + ": " + CC.GREEN + OctoCore.getInstance().getServerManager().getGlobalPlayers().size())
-                .blank()
-                .next(CC.SCOREBOARD_SEPARATOR)
-                .next(CC.SCOREBOARD_IP_SEPARATOR + (a ? CC.AQUA : CC.GREEN) + " " + OctoCore.getInstance().getConfig().getString("server-ip") + " " + CC.SCOREBOARD_IP_SEPARATOR)
-                .build();
-    }
-}
-
-     */
     private static final Component SCOREBOARD_SEPERATOR = Component.text("--------------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
             SCOREBOARD_IP_SEPERATOR = Component.text("---", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH);
     private static final String serverIp = OctoCore.getInstance().getConfig().getString("server-ip");
