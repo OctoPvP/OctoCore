@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 public class UnBlacklistCommand {
     @Command(name = "unblacklist", aliases = {"unbl", "unblplayer", "unblacklistplayer"})
     @Permission(Permissions.PUNISHMENT_UNBLACKLIST)
-    @PlayerOnly
     public CommandResult execute(CommandSender sender, String player, @JoinStrings @Optional @Name("reason") String r) {
         Tasks.runAsync(() -> {
             OfflinePunishData data = new OfflinePunishData(player);
