@@ -13,6 +13,6 @@ public class DisconnectReason {
 
     @Override
     public String toString() {
-        return CC.AQUA + CC.B + "OctoPvP\n\n" + CC.YELLOW + reason; //TODO: Center reason
+        return CC.AQUA + CC.B + "OctoMC\n\n" + CC.YELLOW + reason; //TODO: Center reason
     }
 }
