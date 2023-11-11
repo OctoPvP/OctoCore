@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
+import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 
 @AllArgsConstructor
@@ -13,6 +14,6 @@ public class GlobalCommandPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        Tasks.run(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
     }
 }
