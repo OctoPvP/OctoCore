@@ -21,6 +21,7 @@ import net.octopvp.octocore.common.util.Utilities;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.command.providers.*;
 import net.octopvp.octocore.core.database.DatabaseManager;
+import net.octopvp.octocore.core.database.redis.packets.server.ServerOnlinePacket;
 import net.octopvp.octocore.core.manager.impl.*;
 import net.octopvp.octocore.core.objects.BukkitServerImpl;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
@@ -252,7 +253,10 @@ public abstract class OctoCore extends JavaPlugin {
         Logger.info("Done!");
         dataUpdateThread.start();
         getServerImplementation().onEnable();
-        Tasks.runLater(() -> loading = false, 20L);
+        Tasks.runLater(() -> {
+            loading = false;
+            new ServerOnlinePacket(serverName).send();
+        }, 20L);
         Logger.info("OctoCore took " + (System.currentTimeMillis() - start) + "ms to load.");
     }
 
