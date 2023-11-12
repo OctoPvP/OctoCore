@@ -41,4 +41,9 @@ public class BukkitServerImpl1_20 implements BukkitServerImplementation {
     public void sendActionBar(Player player, Component message) {
         player.sendActionBar(message);
     }
+
+    @Override
+    public void updatePlayerCommands(Player player) {
+        player.updateCommands();
+    }
 }

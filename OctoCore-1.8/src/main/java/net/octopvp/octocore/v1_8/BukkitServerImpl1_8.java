@@ -42,4 +42,9 @@ public class BukkitServerImpl1_8 implements BukkitServerImplementation {
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
+    @Override
+    public void updatePlayerCommands(Player player) {
+        // TODO: figure out how to do this in 1.8
+    }
+
 }

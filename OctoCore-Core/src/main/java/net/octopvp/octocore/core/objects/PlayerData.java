@@ -120,6 +120,7 @@ public class PlayerData extends SimplePlayerData {
             socialSpy = false;
         }
         player.setPlayerListName(getDisplayName());
+        OctoCore.getInstance().getServerImplementation().updatePlayerCommands(player);
     }
 
     public void loadAlts(UUID uuid) {

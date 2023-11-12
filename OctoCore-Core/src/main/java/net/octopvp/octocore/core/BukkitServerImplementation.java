@@ -16,4 +16,6 @@ public interface BukkitServerImplementation {
     void setTabHeaderFooter(Player player, Component header, Component footer); // TODO: figure out how to use either String or Component w/ generics
 
     void sendActionBar(Player player, Component message);
+
+    void updatePlayerCommands(Player player);
 }
