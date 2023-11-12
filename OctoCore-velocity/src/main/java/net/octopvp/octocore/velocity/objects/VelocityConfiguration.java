@@ -60,7 +60,7 @@ public class VelocityConfiguration {
                                     protocol.protocol,
                                     protocol.version
                             ),
-                    players,
+                    players == null ? fallback.getPlayers().orElse(null) : players,
                     generateMotd(),
                     Files.exists(faviconPath) ? Favicon.create(faviconPath) : null
             );
