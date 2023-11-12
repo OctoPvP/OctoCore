@@ -10,11 +10,11 @@ import net.octopvp.octocore.common.interfaces.manager.IPunishModule;
 import net.octopvp.octocore.common.interfaces.manager.IRankManager;
 import net.octopvp.octocore.common.interfaces.manager.IServerManager;
 import net.octopvp.octocore.common.redis.RedisManager;
+import net.octopvp.octocore.common.util.json.OptionalTypeAdapter;
 import net.octopvp.octocore.common.util.perms.Node;
 import net.octopvp.octocore.common.util.perms.NodeAdapter;
 
 import java.text.SimpleDateFormat;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -58,6 +58,7 @@ public class OctoCoreCommon {
         return new GsonBuilder().setPrettyPrinting()
                 .serializeNulls()
                 .enableComplexMapKeySerialization()
-                .registerTypeAdapter(Node.class, new NodeAdapter());
+                .registerTypeAdapter(Node.class, new NodeAdapter())
+                .registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY);
     }
 }
