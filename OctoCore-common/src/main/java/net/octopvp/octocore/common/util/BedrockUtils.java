@@ -9,6 +9,7 @@ import lombok.Setter;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.checkerframework.checker.i18nformatter.qual.I18nFormat;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -38,6 +39,7 @@ public class BedrockUtils {
     public static Function<UUID, Boolean> isBedrockPlayer = uuid -> uuid.getMostSignificantBits() == 0 && uuid.getLeastSignificantBits() != 0; // 0-0 is console
 
     public static boolean isBedrockPlayer(UUID uuid) {
+        if (uuid == null) return false;
         return isBedrockPlayer.apply(uuid);
     }
 
