@@ -26,8 +26,7 @@ import java.util.UUID;
 public class RankManager implements IRankManager {
     @Autowired
     private DatabaseManager databaseManager;
-    @Autowired
-    private Gson gson;
+    private Gson gson = OctoCoreMaster.getGson();
     @Getter
     private MongoCollection<Document> ranksCollection;
     @Getter

@@ -15,6 +15,7 @@ import net.octopvp.octocore.common.util.perms.Node;
 import net.octopvp.octocore.common.util.perms.NodeAdapter;
 
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -59,6 +60,6 @@ public class OctoCoreCommon {
                 .serializeNulls()
                 .enableComplexMapKeySerialization()
                 .registerTypeAdapter(Node.class, new NodeAdapter())
-                .registerTypeAdapterFactory(OptionalTypeAdapter.FACTORY);
+                .registerTypeAdapter(Optional.class, new OptionalTypeAdapter());
     }
 }
