@@ -16,6 +16,7 @@ import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.perms.Node;
 import net.octopvp.octocore.common.util.perms.PermissionCheckResult;
 import net.octopvp.octocore.common.util.perms.PermissionManager;
@@ -137,6 +138,7 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public void loadAlts(String address) {
+        Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ")");
         this.alts.clear();
 
         try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("address", address)).iterator()) {
