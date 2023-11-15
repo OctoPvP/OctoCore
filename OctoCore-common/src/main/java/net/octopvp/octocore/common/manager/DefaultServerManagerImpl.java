@@ -5,7 +5,6 @@ import net.octopvp.octocore.common.interfaces.manager.IServerManager;
 import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.common.object.ServerData;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -18,7 +17,7 @@ public class DefaultServerManagerImpl implements IServerManager {
 
     @Override
     public boolean isOnline(UUID player) {
-        return connectedServers.stream().anyMatch(serverData -> serverData.getOnlinePlayers().contains(player));
+        return connectedServers.stream().anyMatch(serverData -> serverData.getOnlinePlayers().stream().anyMatch(op -> op.getUuid().equals(player)));
     }
 
     @Override
