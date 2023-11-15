@@ -138,7 +138,7 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public void loadAlts(String address) {
-        Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ")");
+        Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ") IP: " + address);
         this.alts.clear();
 
         try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("address", address)).iterator()) {
