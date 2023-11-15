@@ -121,7 +121,7 @@ public class JoinLeaveListener implements Listener {
             VanishManager.getInstance().vanish(event.getPlayer(), -1, true);
         } else {
             Logger.info("Not vanishing " + playerData.getName() + " on join.");
-            String joinMessage = CC.GRAY + "[" + CC.GREEN + "+" + CC.GRAY + "] " + playerData.getFormattedName(true, event.getPlayer(), false);
+            String joinMessage = CC.GRAY + "[" + CC.GREEN + "+" + CC.GRAY + "] " + playerData.getFormattedName(true, event.getPlayer(), true);
             event.setJoinMessage(joinMessage);
             VanishManager.getInstance().update(event.getPlayer());
         }
