@@ -6,19 +6,36 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.database.redis.packets.staff.chat.AdminChatPacket;
+import net.octopvp.octocore.core.database.redis.packets.staff.chat.StaffChatPacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.entity.Player;
 
-public class AdminChatCommand {
-    @Command(name = "adminchat", aliases = {"ac"})
-    @Permission(Permissions.ADMINCHAT)
+public class ChatCommands {
+    @Command(name = "staffchat", aliases = {"sc"})
+    @Permission(Permissions.STAFFCHAT)
     @PlayerOnly
-    public CommandResult execute(@Sender Player sender, @Optional @JoinStrings String message) {
+    public void sc(@Sender Player sender, @Optional @JoinStrings String message) {
         PlayerData playerData = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
         if (message == null) {
             playerData.setStaffChat(!playerData.isStaffChat());
+            sender.sendMessage(String.valueOf(playerData.isStaffChat() ? Lang.STAFF_CHAT_ENABLED : Lang.STAFF_CHAT_DISABLED));
+            if (playerData.isAdminChat()) {
+                playerData.setAdminChat(false);
+                sender.sendMessage(Lang.ADMIN_CHAT_DISABLED.toString());
+            }
+        } else {
+            new StaffChatPacket(sender.getPlayer().getName(), playerData.getFormattedName(false, sender, false), OctoCore.getServerName(), message, sender.getPlayer().getUniqueId()).send();
+        }
+    }
+    @Command(name = "adminchat", aliases = {"ac"})
+    @Permission(Permissions.ADMINCHAT)
+    @PlayerOnly
+    public void ac(@Sender Player sender, @Optional @JoinStrings String message) {
+        PlayerData playerData = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
+        if (message == null) {
+            playerData.setAdminChat(!playerData.isAdminChat());
             sender.sendMessage(String.valueOf(playerData.isStaffChat() ? Lang.ADMIN_CHAT_ENABLED : Lang.ADMIN_CHAT_DISABLED));
             if (playerData.isStaffChat()) {
                 playerData.setStaffChat(false);
@@ -27,6 +44,5 @@ public class AdminChatCommand {
         } else {
             new AdminChatPacket(sender.getPlayer().getName(), playerData.getFormattedName(false, sender, false), OctoCore.getServerName(), message, sender.getPlayer().getUniqueId()).send();
         }
-        return CommandResult.SUCCESS;
     }
 }
