@@ -63,7 +63,7 @@ public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
                     }
                     // clear();
                     // update(player);
-                    gui.updateItem(event.getSlot(), tagsButton(player, data, tag));
+                    gui.update();
                     // gui.update();
                 });
     }
