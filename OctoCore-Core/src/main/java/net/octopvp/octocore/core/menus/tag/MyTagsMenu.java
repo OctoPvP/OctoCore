@@ -55,10 +55,10 @@ public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
                     SoundUtil.playPing(player);
                     if (playerTag[0]) {
                         playerTag[0] = false;
-                        PlayerManager.getInstance().getData(player.getUniqueId()).setTag(null);
+                        PlayerManager.getInstance().getData(player.getUniqueId()).setTag(null).save();
                         player.sendMessage(CC.GREEN + "Unequipped your tag!");
                     } else {
-                        PlayerManager.getInstance().getData(player.getUniqueId()).setTag(tag);
+                        PlayerManager.getInstance().getData(player.getUniqueId()).setTag(tag).save();
                         player.sendMessage(CC.GREEN + "Equipped your tag!");
                     }
                     // clear();

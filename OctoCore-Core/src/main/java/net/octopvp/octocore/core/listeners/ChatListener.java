@@ -30,26 +30,20 @@ public class ChatListener implements Listener {
             if (e.getPlayer().hasPermission(Permissions.STAFFCHAT)) {
                 new StaffChatPacket(e.getPlayer().getName(), playerData.getFormattedName(false, e.getPlayer(), false), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId()).send();
                 e.setCancelled(true);
-                return;
             } else {
                 e.getPlayer().sendMessage(Lang.STAFF_CHAT_DISABLED.getMsg());
                 playerData.setStaffChat(false);
-                return;
             }
+            return;
         } else if (playerData.isAdminChat()) {
-            if (playerData.isStaffChat()) {
-                playerData.setStaffChat(false);
-                e.getPlayer().sendMessage(Lang.STAFF_CHAT_DISABLED.toString());
-            }
             if (e.getPlayer().hasPermission(Permissions.ADMINCHAT)) {
                 new AdminChatPacket(e.getPlayer().getName(), playerData.getFormattedName(false, e.getPlayer(), false), OctoCore.getServerName(), e.getMessage(), e.getPlayer().getUniqueId()).send();
                 e.setCancelled(true);
-                return;
             } else {
                 e.getPlayer().sendMessage(Lang.ADMIN_CHAT_DISABLED.getMsg());
                 playerData.setAdminChat(false);
-                return;
             }
+            return;
         }
 
         //spam prot

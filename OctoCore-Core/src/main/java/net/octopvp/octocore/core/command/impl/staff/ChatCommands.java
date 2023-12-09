@@ -36,7 +36,7 @@ public class ChatCommands {
         PlayerData playerData = PlayerManager.getInstance().getData(sender.getPlayer().getUniqueId());
         if (message == null) {
             playerData.setAdminChat(!playerData.isAdminChat());
-            sender.sendMessage(String.valueOf(playerData.isStaffChat() ? Lang.ADMIN_CHAT_ENABLED : Lang.ADMIN_CHAT_DISABLED));
+            sender.sendMessage(String.valueOf(playerData.isAdminChat() ? Lang.ADMIN_CHAT_ENABLED : Lang.ADMIN_CHAT_DISABLED));
             if (playerData.isStaffChat()) {
                 playerData.setStaffChat(false);
                 sender.sendMessage(Lang.STAFF_CHAT_DISABLED.toString());

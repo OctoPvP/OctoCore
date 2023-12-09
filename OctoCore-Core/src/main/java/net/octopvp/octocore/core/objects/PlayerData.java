@@ -29,6 +29,7 @@ import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
+import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -120,11 +121,13 @@ public class PlayerData extends SimplePlayerData {
         if (socialSpy && !hasPermission(Permissions.SOCIAL_SPY)) {
             socialSpy = false;
         }
-        try {
-            player.setPlayerListName(getDisplayName());
-        } catch (Exception e) {
-            e.printStackTrace(); // bugged?
-        }
+        Tasks.runLater(() -> {
+            try {
+                player.setPlayerListName(getDisplayName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 20);
         OctoCore.getInstance().getServerImplementation().updatePlayerCommands(player);
     }
 
@@ -394,9 +397,10 @@ public class PlayerData extends SimplePlayerData {
         return TagManager.getTag(tagID);
     }
 
-    public void setTag(PlayerTag tag) {
+    public PlayerData setTag(PlayerTag tag) {
         this.tagID = tag != null ? tag.getId() : null;
         this.allowedTags = null;
+        return this;
     }
 
     public PlayerTag getNickTag() {

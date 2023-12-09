@@ -65,7 +65,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
         if (data != null) {
             return data;
         }
-        Document document = pdataCollection.find(Filters.eq("lowerCaseName", name.toLowerCase())).first();
+        Document document = pdataCollection.find(Filters.eq("lowerName", name.toLowerCase())).first();
         if (document == null) {
             return null;
         }
@@ -134,7 +134,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
     }
 
     public String getFixedName(String name) {
-        Document document = pdataCollection.find(Filters.eq("lowerCaseName", name.toLowerCase())).first();
+        Document document = pdataCollection.find(Filters.eq("lowerName", name.toLowerCase())).first();
         if (document == null) {
             return name;
         }
@@ -159,7 +159,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
     }
 
     public String getFormattedName(String playerName) {
-        Document document = pdataCollection.find(Filters.eq("lowerCaseName", playerName.toLowerCase())).first();
+        Document document = pdataCollection.find(Filters.eq("lowerName", playerName.toLowerCase())).first();
         if (document == null) {
             return CC.translate("&a" + playerName);
         }
@@ -185,7 +185,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
     }
 
     public Document getDocument(String name) {
-        return pdataCollection.find(Filters.eq("lowerCaseName", name.toLowerCase())).first();
+        return pdataCollection.find(Filters.eq("lowerName", name.toLowerCase())).first();
     }
 
 

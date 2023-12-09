@@ -19,6 +19,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class VanishManager extends Manager implements Listener {
         return vanished.containsKey(uuid);
     }
 
-    public int getVanishPriority(SimplePlayerData playerData, boolean... skipVanished) { // gets their current vanish priority
+    public int getVanishPriority(@NotNull SimplePlayerData playerData, boolean... skipVanished) { // gets their current vanish priority
         if ((skipVanished.length == 0 || !skipVanished[0]) && vanished.containsKey(playerData.getUuid()))
             return vanished.get(playerData.getUuid());
         Rank rank = playerData.getHighestRank();
@@ -101,10 +102,8 @@ public class VanishManager extends Manager implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent event) {
-        if (event.isCancelled())
-            return;
         if (isVanished(event.getPlayer())) {
             if (event.getMessage().endsWith("\\")) {
                 //remove the \
