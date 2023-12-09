@@ -16,7 +16,7 @@ public class ListServersCommand {
         Set<ServerData> servers = OctoCore.getInstance().getServerManager().getConnectedServers();
         sender.sendMessage("Connected servers: " + servers.size());
         for (ServerData server : servers) {
-            sender.sendMessage(" - " + server.getServerName());
+            sender.sendMessage(" - " + server.getServerName() + " (" + server.getOnlinePlayers().size() + "/" + server.getMaxPlayers() + ")");
             for (String name : server.getNames()) {
                 sender.sendMessage("   - " + name);
             }
