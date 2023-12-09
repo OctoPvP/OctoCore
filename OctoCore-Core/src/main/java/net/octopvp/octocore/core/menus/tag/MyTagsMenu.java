@@ -62,8 +62,7 @@ public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
                         player.sendMessage(CC.GREEN + "Equipped your tag!");
                     }
                     // clear();
-                    // update(player);
-                    gui.update();
+                    update(player);
                     // gui.update();
                 });
     }
