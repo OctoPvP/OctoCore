@@ -91,6 +91,11 @@ public class ConfirmDeleteMenu extends Menu<Gui> {
         @Override
         public void count(int current) {
             counter = current;
+            if (current <= 0) {
+                gui.setItem(11, confirmButton());
+            } else {
+                gui.setItem(11, waitButton());
+            }
         }
     }
 }
