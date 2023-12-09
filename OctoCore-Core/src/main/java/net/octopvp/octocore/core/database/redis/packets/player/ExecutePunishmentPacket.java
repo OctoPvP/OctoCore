@@ -329,7 +329,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                 }
             }
 
-            if (type == PunishmentType.MUTE || type == PunishmentType.WARN) {
+            if (type == PunishmentType.MUTE || type == PunishmentType.WARN) { // player stays online
                 if (OctoCore.getServerName().equalsIgnoreCase(server)) {
                     PlayerData pdata = PlayerManager.getInstance().getData(uuid);
                     if (pdata == null) {

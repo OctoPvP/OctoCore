@@ -20,7 +20,7 @@ public class PunishmentCommands {
         punishment.setAddedAt(System.currentTimeMillis());
         punishment.setReason(finalReason);
 
-        punishment.execute(sender);
         punishment.save();
+        punishment.execute(sender);
     }
 }
