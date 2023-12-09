@@ -59,21 +59,21 @@ public class InheritedRanksMenu extends PaginatedMenu<PaginatedGui> {
                         ))
 
                 ).asGuiItem(event -> {
-                    if (wouldBeCircular) {
-                        List<Rank> circular = Rank.findCircularInheritancePre(builder.getRank(), rankData);
-                        SoundUtil.playError((Player) event.getWhoClicked());
-                        StringBuilder circularBuilder = new StringBuilder();
-                        for (Rank rank : circular) {
-                            circularBuilder.append(rank.getDisplayName()).append(CC.RED).append(" -> ");
-                        }
-                        circularBuilder.append(rankData.getDisplayName());
-                        event.getWhoClicked().sendMessage(CC.RED + "You cannot add " + rankData.getDisplayName() + CC.RED + " as an inherited rank, as it would create a circular inheritance. (Circular inheritance: " + circularBuilder + CC.RED + ")");
-                        return;
-                    }
                     if (builder.getRank().getInheritedRanks().contains(rankData.getRankId())) {
                         Logger.debug("Removing inherited rank " + rankData.getRankId() + " from " + builder.getRank().getRankId());
                         builder.removeInheritedRank(rankData.getRankId());
                     } else {
+                        if (wouldBeCircular) {
+                            List<Rank> circular = Rank.findCircularInheritancePre(builder.getRank(), rankData);
+                            SoundUtil.playError((Player) event.getWhoClicked());
+                            StringBuilder circularBuilder = new StringBuilder();
+                            for (Rank rank : circular) {
+                                circularBuilder.append(rank.getDisplayName()).append(CC.RED).append(" -> ");
+                            }
+                            circularBuilder.append(rankData.getDisplayName());
+                            event.getWhoClicked().sendMessage(CC.RED + "You cannot add " + rankData.getDisplayName() + CC.RED + " as an inherited rank, as it would create a circular inheritance. (Circular inheritance: " + circularBuilder + CC.RED + ")");
+                            return;
+                        }
                         Logger.debug("Adding inherited rank " + rankData.getRankId() + " to " + builder.getRank().getRankId());
                         builder.addInheritedRank(rankData.getRankId());
                     }
