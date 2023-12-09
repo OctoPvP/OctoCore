@@ -29,6 +29,7 @@ public class UndoPunishmentPacket extends RedisPacket {
 
     @Override
     public void onReceive(JsonObject data) {
+        String reason = this.reason.trim();
         String t;
         if (this.type == PunishmentType.BAN) {
             t = "banned";
@@ -54,16 +55,10 @@ public class UndoPunishmentPacket extends RedisPacket {
         if (silent) {
             for (Player player : Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission(Permissions.PUNISHMENT_SEE_SILENT)).collect(Collectors.toList())) {
                 String currentMessage = clickable.getText();
-                Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason.trim()), null);
+                Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason), null);
                 click.sendToPlayer(player);
             }
         } else {
-            String reason = this.reason
-                    .replace("--s", "")
-                    .replace("--silent", "")
-                    .replace("-s", "")
-                    .replace("-silent", "")
-                    .trim();
             String currentMessage = clickable.getText();
             Clickable click = new Clickable(currentMessage, CC.translate("&aReason&7: &f" + reason), null);
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -86,7 +81,7 @@ public class UndoPunishmentPacket extends RedisPacket {
                     punishType = "unwarned";
                     break;
             }
-            target.sendMessage(CC.translate("&bYou have been &a" + punishType + "&b."));
+            target.sendMessage(CC.translate("&aYou have been " + punishType + "&b."));
         }
     }
 }
