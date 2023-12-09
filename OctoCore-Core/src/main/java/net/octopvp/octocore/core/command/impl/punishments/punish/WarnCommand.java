@@ -22,7 +22,7 @@ public class WarnCommand {
 
             Punishment punishment = new Punishment(data, PunishmentType.WARN);
             punishment.setSilent(silent);
-            if (duration != -5L) {
+            if (duration != -1L) {
                 punishment.setPermanent(false);
                 punishment.setDurationTime(duration);
             } else {

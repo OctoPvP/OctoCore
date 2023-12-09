@@ -121,6 +121,14 @@ public class Debugger {
         OctoCoreCommon.getInstance().getServerManager().getOnlinePlayers().forEach((player) -> print(player.getName()));
     }
 
+    public void amIMuted() {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            PlayerData playerData = PlayerManager.getInstance().getData(player);
+            print(playerData.isMuted());
+        }
+    }
+
     public void isPermissibleInjected() {
         if (sender instanceof Player) {
             Player player = (Player) sender;

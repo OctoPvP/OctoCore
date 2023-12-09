@@ -27,7 +27,7 @@ public class BanIPCommand {
 
             Punishment punishment = new Punishment(data, PunishmentType.BAN);
             punishment.setSilent(silent);
-            if (duration != -5L) {
+            if (duration != -1L) {
                 punishment.setPermanent(false);
                 punishment.setDurationTime(duration);
             } else {

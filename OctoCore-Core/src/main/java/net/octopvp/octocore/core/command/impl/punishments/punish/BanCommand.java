@@ -44,21 +44,7 @@ public class BanCommand {
                 punishment.setPermanent(true);
             }
             punishment.setEnteredDuration(durationString);
-            punishment.setLast(true);
-            if (sender instanceof Player) {
-                UUID uuid = ((Player) sender).getUniqueId();
-                punishment.setAddedBy(uuid);
-            } else {
-                punishment.setAddedBy(new UUID(0, 0));
-            }
-            punishment.setAddedByName(sender.getName());
-            punishment.setAddedAt(System.currentTimeMillis());
-            punishment.setReason(reason);
-            punishment.setTargetAddress(data.getAddress());
-
-            punishment.execute(sender);
-            Logger.debug("Saving punishment: %1", punishment);
-            punishment.save();
+            PunishmentCommands.handlePunishmentMeta(sender, reason, punishment);
         });
         return CommandResult.SUCCESS;
     }

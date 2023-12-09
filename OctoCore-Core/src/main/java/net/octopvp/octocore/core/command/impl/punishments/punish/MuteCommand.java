@@ -9,9 +9,6 @@ import net.octopvp.octocore.core.objects.OfflinePunishData;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 public class MuteCommand {
     @Command(name = "mute", aliases = "tempmute", usage = "<player> [duration] <reason> [-s]")
@@ -27,26 +24,14 @@ public class MuteCommand {
 
             Punishment punishment = new Punishment(data, PunishmentType.MUTE);
             punishment.setSilent(silent);
-            if (duration != -5L) {
+            if (duration != -1L) {
                 punishment.setPermanent(false);
                 punishment.setDurationTime(duration);
             } else {
                 punishment.setPermanent(true);
             }
             punishment.setEnteredDuration(durationString);
-            punishment.setLast(true);
-            if (sender instanceof Player) {
-                UUID uuid = ((Player) sender).getUniqueId();
-                punishment.setAddedBy(uuid);
-            } else {
-                punishment.setAddedBy(new UUID(0, 0));
-            }
-            punishment.setAddedByName(sender.getName());
-            punishment.setAddedAt(System.currentTimeMillis());
-            punishment.setReason(reason);
-
-            punishment.execute(sender);
-            punishment.save();
+            PunishmentCommands.handlePunishmentMeta(sender, reason, punishment);
         });
         return CommandResult.SUCCESS;
     }

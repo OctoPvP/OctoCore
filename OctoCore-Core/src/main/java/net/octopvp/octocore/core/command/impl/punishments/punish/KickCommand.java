@@ -10,10 +10,8 @@ import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.Random;
-import java.util.UUID;
 
 public class KickCommand {
 
@@ -40,19 +38,8 @@ public class KickCommand {
             punishment.setSilent(silent);
             punishment.setPermanent(false);
             punishment.setIPRelative(false);
-            punishment.setLast(true);
-            punishment.setAddedByName(sender.getName());
-            if (sender instanceof Player) {
-                UUID uuid = ((Player) sender).getUniqueId();
-                punishment.setAddedBy(uuid);
-            } else {
-                punishment.setAddedBy(new UUID(0, 0));
-            }
-            punishment.setAddedAt(System.currentTimeMillis());
-            punishment.setReason(finalReason);
-
-            punishment.execute(sender);
-            punishment.save();
+            PunishmentCommands.handlePunishmentMeta(sender, finalReason, punishment);
         });
     }
+
 }

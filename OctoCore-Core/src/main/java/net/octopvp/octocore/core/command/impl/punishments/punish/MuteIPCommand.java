@@ -2,6 +2,7 @@ package net.octopvp.octocore.core.command.impl.punishments.punish;
 
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Permission;
+import net.octopvp.octocore.common.object.Disable;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 public class MuteIPCommand {
     @Command(name = "muteip", aliases = {"tempipmute", "ipmute", "tempmuteip"}, usage = "<player> [duration] <reason> [-s]")
+    @Disable
     @Permission(Permissions.PUNISHMENT_MUTE)
     public CommandResult execute(CommandSender sender, String[] args) {
         if (true) {
