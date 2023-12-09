@@ -120,7 +120,11 @@ public class PlayerData extends SimplePlayerData {
         if (socialSpy && !hasPermission(Permissions.SOCIAL_SPY)) {
             socialSpy = false;
         }
-        player.setPlayerListName(getDisplayName());
+        try {
+            player.setPlayerListName(getDisplayName());
+        } catch (Exception e) {
+            e.printStackTrace(); // bugged?
+        }
         OctoCore.getInstance().getServerImplementation().updatePlayerCommands(player);
     }
 
