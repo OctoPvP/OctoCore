@@ -4,6 +4,7 @@ import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.commander.annotation.Sender;
 import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.database.redis.packets.staff.StaffAlertPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,7 +26,7 @@ public class ClearChatCommand {
                 }
             }
         }
-        String senderName = sender instanceof Player ? ((Player) sender).getName() : "Console";
-        new StaffAlertPacket(senderName + " has cleared the chat").send();
+        String senderName = sender instanceof Player ? ((Player) sender).getDisplayName() : "Console";
+        new StaffAlertPacket(senderName + CC.GREEN + " has cleared the chat").send();
     }
 }

@@ -79,7 +79,9 @@ public class JoinLeaveListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent e) {
         PlayerData data = PlayerManager.getInstance().getData(e.getPlayer());
-        e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
+        if (data == null) {
+            e.setQuitMessage(null);
+        } else e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
         PlayerManager.getInstance().leave(e.getPlayer());
         MainRedisHandler.getSaving().remove(e.getPlayer().getUniqueId());
         unfreezePlayer(e.getPlayer());
