@@ -17,6 +17,7 @@ public class LobbyCommand extends Command {
         if (!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(new TextComponent(CC.RED + "You must be a player to do this!"));
         }
+        sender.sendMessage(new TextComponent(CC.GREEN + "Sending you to a random lobby..."));
         LobbyManager.sendToRandomLobby((ProxiedPlayer) sender);
     }
 }

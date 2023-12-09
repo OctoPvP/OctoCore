@@ -26,7 +26,7 @@ public final class ScoreboardModule implements Module, Listener {
     @Getter
     private static ScoreboardModule instance;
     private static final Map<UUID, FastBoardWrapper<?>> scoreboardMap = new ConcurrentHashMap<>();
-    private static boolean enableDefault = OctoCore.getInstance().getConfig().getBoolean("scoreboard.enable-default", true);
+    private static boolean enableDefault = true;
     @Getter
     @Setter
     private Consumer<Player> joinHandler = player -> {
@@ -45,6 +45,7 @@ public final class ScoreboardModule implements Module, Listener {
     @Override
     public void onEnable(OctoCore plugin) {
         instance = this;
+        enableDefault = plugin.getConfig().getBoolean("scoreboard.enable-default", true);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         Tasks.runTimer(() -> {
             for (FastBoardWrapper<?> wrapper : scoreboardMap.values()) {
