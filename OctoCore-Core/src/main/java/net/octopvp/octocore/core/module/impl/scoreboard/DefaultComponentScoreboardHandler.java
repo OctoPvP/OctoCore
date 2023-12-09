@@ -59,7 +59,7 @@ public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Comp
         componentList.add(Component.empty());
         componentList.add(Component.text("Your Name", NamedTextColor.AQUA).append(Component.text(": ", NamedTextColor.GRAY)).append(nameComponent));
         componentList.add(Component.text("Rank", NamedTextColor.AQUA).append(Component.text(": ", NamedTextColor.GRAY)).append(Component.text(playerData.getCurrentPrefix(), NamedTextColor.GREEN)));
-        componentList.add(Component.text("Online", NamedTextColor.AQUA).append(Component.text(": ", NamedTextColor.GRAY)).append(Component.text(OctoCore.getInstance().getServerManager().getOnlinePlayers().size(), NamedTextColor.GREEN)));
+        componentList.add(Component.text("Online", NamedTextColor.AQUA).append(Component.text(": ", NamedTextColor.GRAY)).append(Component.text(OctoCore.getInstance().getServerManager().getOnlinePlayers().stream().filter(p -> !p.isVanished()).count(), NamedTextColor.GREEN)));
         componentList.add(Component.empty());
         componentList.add(SCOREBOARD_SEPERATOR);
         Component ip = Component.empty()
