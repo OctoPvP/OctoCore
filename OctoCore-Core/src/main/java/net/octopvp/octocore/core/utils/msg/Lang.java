@@ -22,8 +22,6 @@ public enum Lang {
 
     MUTE_ALREADY_MUTED("&cThis user is already muted!"), MUTE_NOT_MUTED("&cThis user isn't muted!"),
 
-    MUTE_BEEN_PERM_MUTED("&cYou have been &4permanently&r&c muted &cby &3%1 &bfor &3%4&b."), MUTE_BEEN_TEMP_MUTED("&cYou have been &4temporarily&r&c muted &cby &3%1 &bfor &3%3 &bfor &3%5&b."),
-
     MUTE_CANT_TALK_TEMP("&cYou are currently muted for another &e%1&b."), MUTE_CANT_TALK_PERM("&cYou are currently muted forever."),
 
     WARN_BEEN_PERM_WARNED("&bYou have been &epermanently warned &bby &3%1 &bfor &3%1&b."), WARN_BEEN_TEMP_WARNED("&bYou have been &etemporarily warned &bby &3%1 &bfor &3%1 &bfor &3%2&b."),

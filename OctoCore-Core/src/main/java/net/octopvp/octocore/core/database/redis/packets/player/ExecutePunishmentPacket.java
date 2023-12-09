@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -303,21 +304,19 @@ public class ExecutePunishmentPacket extends RedisPacket {
                 });
             }
             if (type == PunishmentType.MUTE) {
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) {
-                    String message = Lang.MUTE_MESSAGE.getMsg(
-                            (permanent ? Lang.PERM : Lang.TEMP), reason,
-                            (!permanent ? Lang.TEMP_MUTE_ENTRY_MESSAGE.getMsg(niceExpire) : ""));
-                    player.sendMessage(CC.translate(message));
-                }
-                playerData.getAltsSafely().forEach(alt -> {
-                    Player p = Bukkit.getPlayer(uuid);
+                Consumer<Player> pConsumer = (p) -> {
                     if (p != null) {
                         String message = Lang.MUTE_MESSAGE.getMsg(
                                 (permanent ? Lang.PERM : Lang.TEMP), reason,
                                 (!permanent ? Lang.TEMP_MUTE_ENTRY_MESSAGE.getMsg(niceExpire) : ""));
                         p.sendMessage(CC.translate(message));
                     }
+                };
+                pConsumer.accept(Bukkit.getPlayer(uuid));
+                playerData.getAltsSafely().forEach(alt -> {
+                    Logger.debug(" - Sending to alt: " + alt.getName());
+                    if (alt.getUuid().equals(uuid)) return;
+                    pConsumer.accept(Bukkit.getPlayer(uuid));
                 });
             }
             if (type == PunishmentType.WARN) {
