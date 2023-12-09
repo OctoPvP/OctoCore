@@ -82,7 +82,7 @@ public class ChatListener implements Listener {
         e.setFormat(format);
 
         Iterator<Player> iterator = e.getRecipients().iterator();
-        while (iterator.hasNext()) {
+        while (iterator.hasNext()) { // Concurrency shit
             Player player = iterator.next();
             PlayerData data = PlayerManager.getInstance().getData(player.getUniqueId());
             if (!data.getMessageSettings().isGlobalChat())

@@ -21,6 +21,9 @@ database:
 tab:
   header: '&b&lOctoMC&r\n'
   footer: '\n&aOctoMC.net\n'
+scoreboard:
+  enable-default: true
+  title: '<aqua><bold>OctoMC'
 update-tab-interval: 45
 update-pdata-interval: 100
 default-tab: true

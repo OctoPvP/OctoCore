@@ -16,10 +16,6 @@ public class ChatManager extends Manager {
         emojis.put("<3", "❤");
     }
 
-    public static void sendMessage(Player p) {
-
-    }
-
     public static String formatChat(Player player, String message, boolean translateColor) {
         PlayerData profile = PlayerManager.getInstance().getData(player);
         if (profile == null)

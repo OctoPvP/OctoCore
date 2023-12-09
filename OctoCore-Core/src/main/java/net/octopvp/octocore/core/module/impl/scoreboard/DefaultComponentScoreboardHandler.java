@@ -6,6 +6,7 @@ import fr.mrmicky.fastboard.adventure.FastBoard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
@@ -23,7 +24,8 @@ public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Comp
 
     @Override
     public Component getTitle(Player player, FastBoardBase<Component> board) {
-        return Component.text("OctoMC", NamedTextColor.AQUA, TextDecoration.BOLD)
+        Component base = MiniMessage.miniMessage().deserialize(OctoCore.getInstance().getConfig().getString("scoreboard.title"));
+        return base
                 .append(Component.text(" | ", NamedTextColor.GRAY).decoration(TextDecoration.BOLD, false))
                 .append(Component.text(OctoCore.getServerType().getName(), NamedTextColor.WHITE));
     }
@@ -64,7 +66,7 @@ public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Comp
                 .append(SCOREBOARD_IP_SEPERATOR)
                 .append(Component.space())
                 .append(state ?
-                        Component.text(serverIp, NamedTextColor.AQUA) :
+                        Component.text(serverIp , NamedTextColor.AQUA) :
                         Component.text(serverIp, NamedTextColor.GREEN))
                 .append(Component.space())
                 .append(SCOREBOARD_IP_SEPERATOR);

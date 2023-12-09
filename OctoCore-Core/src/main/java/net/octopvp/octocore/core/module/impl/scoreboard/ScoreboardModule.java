@@ -26,10 +26,11 @@ public final class ScoreboardModule implements Module, Listener {
     @Getter
     private static ScoreboardModule instance;
     private static final Map<UUID, FastBoardWrapper<?>> scoreboardMap = new ConcurrentHashMap<>();
+    private static boolean enableDefault = OctoCore.getInstance().getConfig().getBoolean("scoreboard.enable-default", true);
     @Getter
     @Setter
     private Consumer<Player> joinHandler = player -> {
-        setPlayerScoreboard(player, OctoCore.getInstance().getServerImplementation().getScoreboardHandler());
+        if (enableDefault) setPlayerScoreboard(player, OctoCore.getInstance().getServerImplementation().getScoreboardHandler());
     };
 
     public void setPlayerScoreboard(Player player, ScoreboardHandler<?> handler) {
