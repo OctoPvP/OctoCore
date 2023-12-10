@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Component> {
-    private static final Component SCOREBOARD_SEPERATOR = Component.text("--------------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
+    public static final Component SCOREBOARD_SEPERATOR = Component.text("--------------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
             SCOREBOARD_IP_SEPERATOR = Component.text("---", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH);
     private static final String serverIp = OctoCore.getInstance().getConfig().getString("server-ip");
 
