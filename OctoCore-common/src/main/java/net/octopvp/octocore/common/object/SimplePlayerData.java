@@ -50,7 +50,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected boolean reportAlerts = true, staffChat = false, adminChat = false, build = false;
     protected boolean frozen, nicked = false, authEnabled = false, joinVanished = false;
     protected boolean customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false;
-    protected boolean joinAlert = false, socialSpy = false;
+    protected boolean joinAlert = false, socialSpy = false, altsLoaded = false; // TODO: move altsLoaded to IPunishData
     protected Collection<Alt> alts = new ArrayList<>();
     protected List<String> addresses = new ArrayList<>();
     protected List<UUID> ignoredPlayers = new ArrayList<>();

@@ -14,6 +14,8 @@ public class AltsCommand {
     @Command(name = "alts", description = "View a player's alts")
     @Permission(Permissions.VIEW_HISTORY)
     public void execute(@Sender Player sender, PlayerData target) {
+        if (!target.isAltsLoaded())
+            target.loadAlts(target.getLastSeenIp());
         new PotentialAltsMenu(target, null).open(sender);
     }
 }

@@ -36,13 +36,7 @@ public class HistoryMenu extends Menu<Gui> {
                 CC.GRAY + "Potential Alts"
         ));
         if (playerData.getAlts().isEmpty()) {
-            lore.add(CC.VALUE + "- " + CC.RED + "None found!");
-        } else {
-            playerData.getAlts().stream().limit(5).forEach(alt -> lore.add(CC.VALUE + "- " + alt.getNameColor() + alt.getName()));
-        }
-        lore.add(CC.GRAY + "Alts on last ip");
-        if (playerData.getAlts().isEmpty()) {
-            lore.add(CC.VALUE + "- " + CC.RED + "None found!");
+            lore.add(CC.VALUE + "- " + CC.RED + "None!");
         } else {
             playerData.getAlts().stream().limit(5).forEach(alt -> lore.add(CC.VALUE + "- " + alt.getNameColor() + alt.getName()));
         }
@@ -54,9 +48,7 @@ public class HistoryMenu extends Menu<Gui> {
                 .name(CC.MAIN + "Alts " + CC.GRAY + "(" + CC.SECONDARY + playerData.getAlts().size() + CC.GRAY + ")")
                 .setLore(lore)
                 .owner(Bukkit.getOfflinePlayer(playerData.getUniqueId()))
-                .asGuiItem(event -> {
-                    new PotentialAltsMenu(playerData, this).open((Player) event.getWhoClicked());
-                });
+                .asGuiItem(event -> new PotentialAltsMenu(playerData, this).open((Player) event.getWhoClicked()));
     }
 
     @SuppressWarnings("deprecation")
@@ -120,7 +112,7 @@ public class HistoryMenu extends Menu<Gui> {
     public GuiItem blacklistsButton(IPunishData playerData) {
         List<IPunishment> blacklists = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.BLACKLIST).collect(Collectors.toList());
         List<String> lore = Arrays.asList(
-                CC.GRAY + "Currently blacklisted&7: " + (playerData.isBlacklisted() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GRAY + "Currently blacklisted: " + (playerData.isBlacklisted() ? CC.GREEN + "Yes" : CC.RED + "No"),
                 CC.GRAY + "User was blacklisted " + CC.YELLOW + blacklists.size() + CC.GRAY + " times.",
                 " ",
                 CC.YELLOW + "Click to view all blacklists."

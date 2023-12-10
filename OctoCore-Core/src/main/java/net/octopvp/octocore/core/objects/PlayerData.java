@@ -182,6 +182,7 @@ public class PlayerData extends SimplePlayerData {
         List<Alt> nAlts = new ArrayList<>(this.alts);
         this.alts.clear();
         this.alts.addAll(Alt.removeDuplicates(nAlts, this));
+        altsLoaded = true;
         Logger.debug("Loaded " + this.alts.size() + " alts for " + this.name + " in " + (System.currentTimeMillis() - start) + "ms");
     }
 

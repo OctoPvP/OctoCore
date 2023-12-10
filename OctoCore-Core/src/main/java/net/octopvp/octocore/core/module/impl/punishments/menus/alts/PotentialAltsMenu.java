@@ -28,8 +28,7 @@ public class PotentialAltsMenu extends PaginatedMenu<PaginatedGui> {
                 .name(CC.MAIN + "About")
                 .lore(
                         " ",
-                        CC.GRAY + "All alts of " + playerData.getName() +
-                                " ",
+                        CC.GRAY + "All alts of " + playerData.getName() + ":",
                         CC.VALUE + "Alts amount" + CC.GRAY + ": " + CC.YELLOW + playerData.getAlts().size(),
                         CC.VALUE + "Banned alts" + CC.GRAY + ": " + CC.YELLOW + playerData.getAlts().stream().filter(Alt::isBanned).collect(Collectors.toList()).size(),
                         " "
