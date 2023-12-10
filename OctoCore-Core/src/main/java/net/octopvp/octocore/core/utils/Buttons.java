@@ -18,6 +18,7 @@ public class Buttons {
         if (playerData == null) {
             return ItemBuilder.skull()
                     .name(CC.GRAY + "Loading...")
+                    .owner(Bukkit.getOfflinePlayer(UUID.randomUUID()))
                     .asGuiItem();
         }
         // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerData.getUuid());
