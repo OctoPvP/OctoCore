@@ -8,6 +8,7 @@ import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
 import net.octopvp.octocore.core.utils.chat.Clickable;
 import net.octopvp.octocore.core.utils.msg.Lang;
@@ -82,6 +83,10 @@ public class UndoPunishmentPacket extends RedisPacket {
                     break;
             }
             target.sendMessage(CC.translate("&aYou have been " + punishType + "&b."));
+            PlayerData playerData = PlayerManager.getInstance().getData(target.getUniqueId());
+            if (playerData != null) {
+                playerData.getPunishData().load();
+            }
         }
     }
 }

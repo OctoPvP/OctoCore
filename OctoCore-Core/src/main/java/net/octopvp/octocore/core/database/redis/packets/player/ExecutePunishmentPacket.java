@@ -306,20 +306,13 @@ public class ExecutePunishmentPacket extends RedisPacket {
                 });
             }
             if (type == PunishmentType.MUTE) {
-                Consumer<Player> pConsumer = (p) -> {
-                    if (p != null) {
-                        String message = Lang.MUTE_MESSAGE.getMsg(
-                                (permanent ? Lang.PERM : Lang.TEMP), reason,
-                                (!permanent ? Lang.TEMP_MUTE_ENTRY_MESSAGE.getMsg(niceExpire) : ""));
-                        p.sendMessage(CC.translate(message));
-                    }
-                };
-                pConsumer.accept(Bukkit.getPlayer(uuid));
-                playerData.getAltsSafely().forEach(alt -> {
-                    Logger.debug(" - Sending to alt: " + alt.getName() + " | " + alt.getUuid());
-                    if (alt.getUuid().equals(uuid)) return;
-                    pConsumer.accept(Bukkit.getPlayer(uuid));
-                });
+                Player p = Bukkit.getPlayer(uuid);
+                if (p != null) {
+                    String message = Lang.MUTE_MESSAGE.getMsg(
+                            (permanent ? Lang.PERM : Lang.TEMP), reason,
+                            (!permanent ? Lang.TEMP_MUTE_ENTRY_MESSAGE.getMsg(niceExpire) : ""));
+                    p.sendMessage(CC.translate(message));
+                }
             }
             if (type == PunishmentType.WARN) {
                 Player player = Bukkit.getPlayer(uuid);
