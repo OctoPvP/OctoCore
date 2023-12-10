@@ -1,6 +1,7 @@
 package net.octopvp.octocore.core.listeners;
 
 import net.octopvp.octocore.common.object.DisconnectReason;
+import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.Logger;
@@ -23,6 +24,8 @@ import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class JoinLeaveListener implements Listener {
@@ -60,8 +63,10 @@ public class JoinLeaveListener implements Listener {
             MojangAPIUtil.INSTANCE.getNameCache().put(uuid, name); // Bukkit#getOfflinePlayer may be incomplete on servers w/o a player cache as getting via uuid doesnt do mojang lookups
             PlayerData playerData = PlayerManager.getInstance().createProfile(uuid, name);
 
+            Map<UUID, PunishData> punishDataCache = new HashMap<>();
+
             playerData.getPunishData().forceLoadActiveBansAndBlacklists();
-            playerData.loadAlts(event.getAddress().getHostAddress());
+            playerData.loadAlts(event.getAddress().getHostAddress(), punishDataCache);
 
             Logger.info("Checking " + event.getName() + "'s punishments...");
             long startPunish = System.currentTimeMillis();

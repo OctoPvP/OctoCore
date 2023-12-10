@@ -12,6 +12,7 @@ import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.punish.Alt;
+import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
@@ -145,6 +146,9 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public void loadAlts(String address) {
+        loadAlts(address, new HashMap<>());
+    }
+    public void loadAlts(String address, Map<UUID, PunishData> cache) {
         Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ") IP: " + address);
         long start = System.currentTimeMillis();
         this.alts.clear();
@@ -152,10 +156,16 @@ public class PlayerData extends SimplePlayerData {
         try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("address", address)).iterator()) {
             while (cursor.hasNext()) {
                 Document document = cursor.next();
-
-                PlayerData playerData = new PlayerData(UUID.fromString(document.getString("uuid")), document.getString("name"));
+                UUID pUuid = UUID.fromString(document.getString("uuid"));
+                String pName = document.getString("name");
+                if (cache.containsKey(pUuid)) {
+                    this.alts.add(new Alt(pUuid, pName, cache.get(pUuid)).updateDisplayName());
+                    continue;
+                }
+                PlayerData playerData = new PlayerData(pUuid, pName);
 
                 playerData.getPunishData().forceLoadActiveBansAndBlacklists();
+                cache.put(pUuid, playerData.getPunishData());
 
                 if (!playerData.getUuid().toString().equals(this.uuid.toString()) && this.getAlt(playerData.getUuid()) == null) {
                     this.alts.add(new Alt(playerData.getUuid(), playerData.getName(), playerData.getPunishData()).updateDisplayName());
@@ -172,7 +182,7 @@ public class PlayerData extends SimplePlayerData {
         List<Alt> nAlts = new ArrayList<>(this.alts);
         this.alts.clear();
         this.alts.addAll(Alt.removeDuplicates(nAlts, this));
-        Logger.debug("Loaded " + this.alts.size() + " alts for " + this.name + "in " + (System.currentTimeMillis() - start) + "ms");
+        Logger.debug("Loaded " + this.alts.size() + " alts for " + this.name + " in " + (System.currentTimeMillis() - start) + "ms");
     }
 
     public void updateTime(Player player) {
