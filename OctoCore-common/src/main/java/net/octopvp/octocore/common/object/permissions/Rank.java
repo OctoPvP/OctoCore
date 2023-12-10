@@ -10,6 +10,7 @@ import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.object.enums.RankType;
+import net.octopvp.octocore.common.redis.packets.ReloadRanksPacket;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.ChatColor;
 import net.octopvp.octocore.common.util.perms.Node;
@@ -39,6 +40,7 @@ public class Rank implements Cloneable {
     private ServerContext scope = ServerContext.global();
 
     public void save(IRankManager... rankManager) {
+        new ReloadRanksPacket().send();
         if (rankManager.length == 0)
             OctoCoreCommon.getInstance().getServerImplementation().getRankManager().save(this);
         else

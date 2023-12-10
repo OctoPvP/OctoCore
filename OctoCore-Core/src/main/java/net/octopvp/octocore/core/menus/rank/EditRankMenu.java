@@ -46,8 +46,7 @@ public class EditRankMenu extends Menu<Gui> {
                 .name(CC.GREEN + CC.B + (edit ? "Save" : "Create"))
                 .lore(CC.YELLOW + "Click to " + (edit ? "save" : "create"))
                 .asGuiItem(event -> {
-                    if (!edit)
-                        RankManager.getInstance().createNewRank(builder);
+                    if (!edit) RankManager.getInstance().createNewRank(builder);
                     else builder.build().save();
                     event.getWhoClicked().closeInventory();
                     event.getWhoClicked().sendMessage(CC.GREEN + "Success!");
