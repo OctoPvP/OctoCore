@@ -24,7 +24,10 @@ public class UnBanCommand {
             data.load();
 
             if (!data.isBanned()) {
-                sender.sendMessage(Lang.NOT_BANNED.getMsg(data.getName()));
+                if (data.isBlacklisted())
+                    sender.sendMessage(Lang.NOT_BANNED_IS_BLACKLSITED.getMsg(data.getName()));
+                else
+                    sender.sendMessage(Lang.NOT_BANNED.getMsg(data.getName()));
                 return;
             }
 

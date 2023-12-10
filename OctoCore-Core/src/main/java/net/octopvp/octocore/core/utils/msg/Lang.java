@@ -16,7 +16,7 @@ public enum Lang {
     GRANT_DATA_COULD_NOT_BE_LOADED(CC.RED + "Could not load the data for %1!"), CREATE_RANK_SET_WEIGHT(CC.GREEN + "Please type in the rank weight (integer). Type \"cancel\" to cancel."), CREATE_RANK_SET_NAME(CC.GREEN + "Please type in the rank name. Type \"cancel\" to cancel."),
     CREATE_RANK_SET_PREFIX(CC.GREEN + "Please type in the rank prefix, use & color codes, and %1 for changeable rank colors. Type in \"cancel\" to cancel."), CUSTOM_SERVER_SCOPE("Please enter your custom server scope in chat. Type \"Cancel\" to cancel."), EDIT_PERMISSION_PERMISSION_SET_SUCCESS(CC.GREEN + "Successfully set permission %1!"), EDIT_PERMISSION_SET_PERMISSION(CC.GREEN + "Please enter the permission in chat. Type \"Cancel\" to cancel."), EDIT_PERMISSION_SET_NEGATED(CC.GREEN + "Set permission negated to: %1"), WRONG_DATE_FORMAT("&bYou have entered wrong date format. &3Example &7(&b1d&7, &b1h&7, &b1m&7)&b."),
 
-    ALREADY_BANNED("&cThis player is already banned!"), NOT_BANNED("&c%1 isn't banned!"),
+    ALREADY_BANNED("&cThis player is already banned!"), NOT_BANNED("&c%1 isn't banned!"), NOT_BANNED_IS_BLACKLSITED("&c%1 isn't banned, but is blacklisted! Use /unblacklist %1 to unblacklist them."),
 
     BLACKLIST_ALREADY_BLACKLISTED("&cThis player is already blacklisted!"), BLACKLIST_NOT_BLACKLISTED("&cThis player isn't blacklisted!"),
 

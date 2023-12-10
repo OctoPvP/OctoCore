@@ -56,6 +56,7 @@ tasks {
     compileJava {
         sourceCompatibility = targetJavaVersion
         targetCompatibility = targetJavaVersion
+        options.compilerArgs.add("-parameters")
     }
 }
 
