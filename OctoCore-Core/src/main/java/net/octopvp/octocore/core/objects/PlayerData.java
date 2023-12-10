@@ -146,6 +146,7 @@ public class PlayerData extends SimplePlayerData {
 
     public void loadAlts(String address) {
         Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ") IP: " + address);
+        long start = System.currentTimeMillis();
         this.alts.clear();
 
         try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("address", address)).iterator()) {
@@ -171,6 +172,7 @@ public class PlayerData extends SimplePlayerData {
         List<Alt> nAlts = new ArrayList<>(this.alts);
         this.alts.clear();
         this.alts.addAll(Alt.removeDuplicates(nAlts, this));
+        Logger.debug("Loaded " + this.alts.size() + " alts for " + this.name + "in " + (System.currentTimeMillis() - start) + "ms");
     }
 
     public void updateTime(Player player) {

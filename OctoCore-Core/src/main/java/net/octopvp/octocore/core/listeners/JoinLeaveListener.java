@@ -53,6 +53,8 @@ public class JoinLeaveListener implements Listener {
         boolean kicked = event.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED;
         if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) {
             if (kicked) return;
+            long start = System.currentTimeMillis();
+            Logger.info("Loading " + event.getName() + "'s data...");
             String name = event.getName();
             UUID uuid = event.getUniqueId();
             MojangAPIUtil.INSTANCE.getNameCache().put(uuid, name); // Bukkit#getOfflinePlayer may be incomplete on servers w/o a player cache as getting via uuid doesnt do mojang lookups
@@ -61,18 +63,25 @@ public class JoinLeaveListener implements Listener {
             playerData.getPunishData().forceLoadActiveBansAndBlacklists();
             playerData.loadAlts(event.getAddress().getHostAddress());
 
+            Logger.info("Checking " + event.getName() + "'s punishments...");
+            long startPunish = System.currentTimeMillis();
             if (PunishModule.checkPunishments(event, playerData, name, uuid)) {
+                Logger.info("Kicked " + event.getName() + " for having an active punishment. (" + (System.currentTimeMillis() - startPunish) + "ms)");
                 PlayerManager.getInstance().getPlayerProfiles().remove(uuid);
                 return;
             }
 
+            Logger.info("Caching " + event.getName() + "'s data...");
+            long startCache = System.currentTimeMillis();
             DataCache cache = new DataCache(uuid);
             Document cached = cache.getData();
             playerData.load(cached);
+            Logger.info("Cached " + event.getName() + "'s data in " + (System.currentTimeMillis() - startCache) + "ms");
 
             if (PlayerManager.getInstance().getData(event.getUniqueId()) == null) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
             }
+            Logger.info("Loaded " + event.getName() + "'s data in " + (System.currentTimeMillis() - start) + "ms");
         }
     }
 

@@ -100,6 +100,8 @@ public class PunishData implements IPunishData {
     }
 
     public void forceLoadActiveBansAndBlacklists() {
+        long start = System.currentTimeMillis();
+        Logger.debug("Loading active punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
         this.punishments.removeIf(punishment -> punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST);
 
         List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find(Filters.and(
@@ -110,6 +112,7 @@ public class PunishData implements IPunishData {
             IPunishment punishment = OctoCoreCommon.getInstance().getPunishModule().createPunishment(document);
             this.punishments.add(punishment);
         });
+        Logger.debug("Loaded " + punishments.size() + " active punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ") in " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @Override
