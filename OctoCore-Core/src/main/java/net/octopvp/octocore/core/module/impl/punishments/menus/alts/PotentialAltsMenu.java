@@ -47,7 +47,8 @@ public class PotentialAltsMenu extends PaginatedMenu<PaginatedGui> {
     @Override
     public List<GuiItem> getItems(Player player) {
         List<GuiItem> items = new ArrayList<>();
-        playerData.getAlts().forEach(AltsMenu::altButton);
+        // playerData.getAlts().forEach(AltsMenu::altButton);
+        playerData.getAlts().forEach(alt -> items.add(AltsMenu.altButton(alt)));
         return items;
     }
 

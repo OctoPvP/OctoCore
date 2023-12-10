@@ -35,13 +35,13 @@ public class HistoryMenu extends Menu<Gui> {
                 " ",
                 CC.GRAY + "Potential Alts"
         ));
-        if (playerData.getAlts().size() == 0) {
+        if (playerData.getAlts().isEmpty()) {
             lore.add(CC.VALUE + "- " + CC.RED + "None found!");
         } else {
             playerData.getAlts().stream().limit(5).forEach(alt -> lore.add(CC.VALUE + "- " + alt.getNameColor() + alt.getName()));
         }
-        lore.add(CC.GRAY + "Alts on last ip " + CC.GRAY + "(More secured)");
-        if (playerData.getAlts().size() == 0) {
+        lore.add(CC.GRAY + "Alts on last ip");
+        if (playerData.getAlts().isEmpty()) {
             lore.add(CC.VALUE + "- " + CC.RED + "None found!");
         } else {
             playerData.getAlts().stream().limit(5).forEach(alt -> lore.add(CC.VALUE + "- " + alt.getNameColor() + alt.getName()));

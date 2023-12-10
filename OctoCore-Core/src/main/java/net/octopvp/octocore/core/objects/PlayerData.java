@@ -149,7 +149,7 @@ public class PlayerData extends SimplePlayerData {
         loadAlts(address, new HashMap<>());
     }
     public void loadAlts(String address, Map<UUID, PunishData> cache) {
-        Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ") IP: " + address);
+        Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ")");
         long start = System.currentTimeMillis();
         this.alts.clear();
 
