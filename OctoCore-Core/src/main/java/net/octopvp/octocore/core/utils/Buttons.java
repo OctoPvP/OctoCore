@@ -5,7 +5,9 @@ import net.octopvp.agile.components.util.Legacy;
 import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
+import net.octopvp.octocore.core.manager.impl.ServerManager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,13 +35,15 @@ public class Buttons {
                 )
         );
         Player onlinePlayer = Bukkit.getPlayer(playerData.getName());
-        if (onlinePlayer != null) { // TODO: revamp last seen to work across servers
-            lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.AQUA + "Now (On this server)");
+        if (onlinePlayer != null) {
+            lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.GREEN + "Now (On this server)");
         } else {
-            if (playerData.getLastSeen() > 0) {
+            if (OctoCore.getInstance().getServerManager().isOnline(playerData.getUuid())) {
+                lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.GREEN + "Now (On " + OctoCore.getInstance().getServerManager().getOnlinePlayer(playerData.getUuid()).getServer() + ")");
+            } else if (playerData.getLastSeen() > 0) {
                 lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.AQUA + new Date(playerData.getLastSeen()));
             } else {
-                lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.AQUA + "Never played before!");
+                lore.add(CC.AQUA + "Last seen" + CC.GRAY + ": " + CC.RED + "Never played before!");
             }
         }
         lore.add(CC.AQUA + "First Joined" + CC.GRAY + ": " + CC.AQUA + (playerData.getFirstJoin() != 0 ? DateUtils.getDate(playerData.getFirstJoin()) : "Never played before!"));
