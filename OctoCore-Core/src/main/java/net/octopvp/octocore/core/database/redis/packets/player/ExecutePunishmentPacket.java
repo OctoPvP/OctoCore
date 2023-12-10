@@ -251,6 +251,8 @@ public class ExecutePunishmentPacket extends RedisPacket {
             if (playerData == null) {
                 playerData = new PlayerData(uuid, name);
                 playerData.loadAlts(uuid);
+            } else {
+                playerData.getPunishData().getPunishments().add(punishment);
             }
             Logger.debug("Type: %1\nPermanent: %2\nSilent: %3\nIPRelative: %4", type, permanent, silent, ipRelative);
             if (type == PunishmentType.BAN) {
