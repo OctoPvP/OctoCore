@@ -316,7 +316,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                 };
                 pConsumer.accept(Bukkit.getPlayer(uuid));
                 playerData.getAltsSafely().forEach(alt -> {
-                    Logger.debug(" - Sending to alt: " + alt.getName());
+                    Logger.debug(" - Sending to alt: " + alt.getName() + " | " + alt.getUuid());
                     if (alt.getUuid().equals(uuid)) return;
                     pConsumer.accept(Bukkit.getPlayer(uuid));
                 });
