@@ -71,7 +71,8 @@ public class AltsMenu extends PaginatedMenu<PaginatedGui> {
     public static GuiItem altButton(final Alt alt) {
         return ItemBuilder.skull()
                 .owner(Bukkit.getOfflinePlayer(alt.getUniqueId()))
-                .name(CC.MAIN + alt.getName() + "&7(" + (alt.isBanned() ? "&cBanned" : Bukkit.getPlayer(alt.getName()) == null ? "&eOffline" : "&aOnline") + "&7)")
+                // .name(CC.MAIN + alt.getName() + "&7(" + (alt.isBanned() ? "&cBanned" : Bukkit.getPlayer(alt.getName()) == null ? "&eOffline" : "&aOnline") + "&7)")
+                .name(CC.MAIN + alt.getName() + CC.GRAY + " (" + (alt.isBanned() ? CC.RED + "Banned" : Bukkit.getPlayer(alt.getName()) == null ? CC.YELLOW + "Offline" : CC.GREEN + "Online") + CC.GRAY + ")")
                 .asGuiItem();
     }
 
