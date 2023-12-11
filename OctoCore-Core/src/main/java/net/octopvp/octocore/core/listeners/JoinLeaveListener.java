@@ -96,9 +96,13 @@ public class JoinLeaveListener implements Listener {
         if (data == null) {
             e.setQuitMessage(null);
         } else e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
+        unfreezePlayer(e.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR) // lowest priority so that we can unload data LAST
+    public void onLeaveLast(PlayerQuitEvent e) {
         PlayerManager.getInstance().leave(e.getPlayer());
         MainRedisHandler.getSaving().remove(e.getPlayer().getUniqueId());
-        unfreezePlayer(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
