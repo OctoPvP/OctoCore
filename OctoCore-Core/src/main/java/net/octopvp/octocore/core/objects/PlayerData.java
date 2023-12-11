@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.Permissions;
+import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.object.permissions.Grant;
@@ -187,6 +188,10 @@ public class PlayerData extends SimplePlayerData {
     }
 
     public void updateTime(Player player) {
+        if (!OctoCore.getServerType().allowCustomTime()) {
+            player.resetPlayerTime();
+            return;
+        }
         switch (worldTime) {
             case DEFAULT:
                 player.resetPlayerTime();

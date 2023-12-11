@@ -8,12 +8,16 @@ import net.octopvp.agile.guis.GuiItem;
 import net.octopvp.agile.menu.Menu;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.Skulls;
 import net.octopvp.octocore.core.utils.SoundUtil;
 import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 public class SettingsMenu extends Menu<Gui> {
@@ -49,6 +53,8 @@ public class SettingsMenu extends Menu<Gui> {
                         "",
                         CC.YELLOW + "Left Click to cycle forward!",
                         CC.YELLOW + "Right Click to cycle backwards!"
+                ).addLore(
+                        (OctoCore.getServerType().allowCustomTime() ? Collections.emptyList() : Collections.singletonList(CC.RED + "Custom time is disabled on this server type!"))
                 )
                 .asGuiItem(event -> {
                     Player player = (Player) event.getWhoClicked();
