@@ -121,10 +121,5 @@ public class Alt implements IPunishData {
         });
         return newAlts;
     }
-
-    @Override
-    public UUID getUuid() {
-        return uniqueId;
-    }
 }
 

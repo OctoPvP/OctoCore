@@ -407,4 +407,8 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         return punishData.getPunishments();
     }
 
+    @Override
+    public PermissionCheckResult calculatePermissionResult(String permission) {
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes());
+    }
 }

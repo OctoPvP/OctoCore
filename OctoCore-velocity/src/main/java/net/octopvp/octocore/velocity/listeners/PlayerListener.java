@@ -19,13 +19,15 @@ import net.octopvp.octocore.velocity.objects.OnlinePlayerData;
 @AllArgsConstructor
 public class PlayerListener {
     private OctoCoreVelocity plugin;
+
     @Subscribe
     public void onJoin(LoginEvent event) {
         Logger.debug("Player " + event.getPlayer().getUsername() + " joined");
         OnlinePlayersManager.getDataMap().put(
                 event.getPlayer().getUniqueId(),
                 new OnlinePlayerData(
-                        event.getPlayer().getUniqueId()
+                        event.getPlayer().getUniqueId(),
+                        event.getPlayer().getUsername()
                 )
         );
     }
@@ -49,7 +51,8 @@ public class PlayerListener {
                 OnlinePlayersManager.getDataMap().put(
                         event.getPlayer().getUniqueId(),
                         new OnlinePlayerData(
-                                event.getPlayer().getUniqueId()
+                                event.getPlayer().getUniqueId(),
+                                event.getPlayer().getUsername()
                         )
                 );
             }

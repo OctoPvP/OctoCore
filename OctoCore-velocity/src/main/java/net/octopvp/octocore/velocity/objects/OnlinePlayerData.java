@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.interfaces.IPlayerData;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.common.util.Logger;
@@ -22,23 +23,15 @@ import java.util.UUID;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class OnlinePlayerData {
+public class OnlinePlayerData implements IPlayerData {
     private final UUID uuid;
+    private final String name;
     private Map<String, Node> nodes = new HashMap<>();
     private Map<String, PermissionCheckResult> cachedPermResults = new HashMap<>();
     private boolean frozen = false, vanished = false;
 
     public Optional<Boolean> hasPermission(String perm) {
-        Logger.debug("Checking permission for " + uuid + ": " + perm);
-        PermissionCheckResult result;
-        if (cachedPermResults.containsKey(perm.toLowerCase())) {
-            Logger.debug(" - Cached: " + cachedPermResults.get(perm.toLowerCase()));
-            return cachedPermResults.get(perm).getAsTristate();
-        }
-        result = PermissionManager.getInstance().checkPermission(perm, nodes);
-        Logger.debug(" - Result: " + result);
-        cachedPermResults.put(perm.toLowerCase(), result);
-        return result.getAsTristate();
+        return calculatePermissionResult(perm).getAsTristate();
     }
 
     public Node getNode(String perm) {
@@ -80,5 +73,29 @@ public class OnlinePlayerData {
                 ", nodes=" + OctoCoreCommon.getInstance().getGson().toJson(nodes) +
                 ", cachedPermResults=" + cachedPermResults +
                 '}';
+    }
+
+    @Override
+    public PermissionCheckResult calculatePermissionResult(String perm) {
+        Logger.debug("Checking permission for " + uuid + ": " + perm);
+        PermissionCheckResult result;
+        if (cachedPermResults.containsKey(perm.toLowerCase())) {
+            Logger.debug(" - Cached: " + cachedPermResults.get(perm.toLowerCase()));
+            return cachedPermResults.get(perm);
+        }
+        result = PermissionManager.getInstance().checkPermission(perm, nodes);
+        Logger.debug(" - Result: " + result);
+        cachedPermResults.put(perm.toLowerCase(), result);
+        return result;
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return uuid;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

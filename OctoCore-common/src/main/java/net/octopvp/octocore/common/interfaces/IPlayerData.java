@@ -1,12 +1,4 @@
 package net.octopvp.octocore.common.interfaces;
 
-import java.util.UUID;
-
-public interface IPlayerData {
-    String getName();
-
-    UUID getUniqueId();
-
-    UUID getUuid();
-
+public interface IPlayerData extends IPermissible, IPlayerBase {
 }

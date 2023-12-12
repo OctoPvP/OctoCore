@@ -6,7 +6,7 @@ import net.octopvp.octocore.common.object.punish.PunishmentType;
 import java.util.Collection;
 import java.util.List;
 
-public interface IPunishData extends IPlayerData {
+public interface IPunishData extends IPlayerBase {
     Collection<IPunishment> getPunishments();
 
     Collection<Alt> getAlts();
