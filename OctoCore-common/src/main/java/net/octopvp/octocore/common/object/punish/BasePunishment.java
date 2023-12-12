@@ -5,7 +5,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Data;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.interfaces.IPlayerData;
+import net.octopvp.octocore.common.interfaces.IPlayerBase;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.util.DocumentUtils;
 import net.octopvp.octocore.common.util.Logger;
@@ -30,7 +30,7 @@ public class BasePunishment implements IPunishment {
         this.name = document.getString("name");
     }
 
-    public BasePunishment(IPlayerData data, PunishmentType type) {
+    public BasePunishment(IPlayerBase data, PunishmentType type) {
         this.punishmentType = type;
         this.id = UUID.randomUUID();
         this.name = data.getName();
