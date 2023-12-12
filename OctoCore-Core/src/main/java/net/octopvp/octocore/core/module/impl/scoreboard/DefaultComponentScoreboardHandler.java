@@ -21,6 +21,7 @@ public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Comp
     public static final Component SCOREBOARD_SEPERATOR = Component.text("--------------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
             SCOREBOARD_IP_SEPERATOR = Component.text("---", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH);
     private static final String serverIp = OctoCore.getInstance().getConfig().getString("server-ip");
+    boolean state = false;
 
     @Override
     public Component getTitle(Player player, FastBoardBase<Component> board) {
@@ -29,8 +30,6 @@ public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Comp
                 .append(Component.text(" | ", NamedTextColor.GRAY).decoration(TextDecoration.BOLD, false))
                 .append(Component.text(OctoCore.getServerType().getName(), NamedTextColor.WHITE));
     }
-
-    boolean state = false;
 
     @Override
     public List<Component> getEntries(Player player, FastBoardBase<Component> board) {
@@ -66,7 +65,7 @@ public class DefaultComponentScoreboardHandler implements ScoreboardHandler<Comp
                 .append(SCOREBOARD_IP_SEPERATOR)
                 .append(Component.space())
                 .append(state ?
-                        Component.text(serverIp , NamedTextColor.AQUA) :
+                        Component.text(serverIp, NamedTextColor.AQUA) :
                         Component.text(serverIp, NamedTextColor.GREEN))
                 .append(Component.space())
                 .append(SCOREBOARD_IP_SEPERATOR);

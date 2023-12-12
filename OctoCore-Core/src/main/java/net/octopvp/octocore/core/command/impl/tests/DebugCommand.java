@@ -37,7 +37,7 @@ public class DebugCommand {
     }
 
     @ConsoleOnly
-    @Command(name ="logdebug")
+    @Command(name = "logdebug")
     public CommandResult executeLog(@Sender CommandSender sender) {
         // set octocore.debug to true or false
         boolean debug = Boolean.getBoolean("octocore.debug");

@@ -1,7 +1,6 @@
 package net.octopvp.octocore.core.command.impl.punishments.undo;
 
 import net.octopvp.commander.annotation.*;
-import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.punish.PunishmentType;

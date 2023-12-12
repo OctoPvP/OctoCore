@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.Permissions;
-import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.object.permissions.Grant;
@@ -149,6 +148,7 @@ public class PlayerData extends SimplePlayerData {
     public void loadAlts(String address) {
         loadAlts(address, new HashMap<>());
     }
+
     public void loadAlts(String address, Map<UUID, PunishData> cache) {
         Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ")");
         long start = System.currentTimeMillis();
@@ -310,7 +310,8 @@ public class PlayerData extends SimplePlayerData {
         else result.setExpire(nextGrantExpire);
 
         cachedPermissions.put(perm, result);
-        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET) return getHighestRank().calculatePermission(perm);
+        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET)
+            return getHighestRank().calculatePermission(perm);
         return result;
     }
 

@@ -23,14 +23,15 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
 public final class ScoreboardModule implements Module, Listener {
+    private static final Map<UUID, FastBoardWrapper<?>> scoreboardMap = new ConcurrentHashMap<>();
     @Getter
     private static ScoreboardModule instance;
-    private static final Map<UUID, FastBoardWrapper<?>> scoreboardMap = new ConcurrentHashMap<>();
     private static boolean enableDefault = true;
     @Getter
     @Setter
     private Consumer<Player> joinHandler = player -> {
-        if (enableDefault) setPlayerScoreboard(player, OctoCore.getInstance().getServerImplementation().getScoreboardHandler());
+        if (enableDefault)
+            setPlayerScoreboard(player, OctoCore.getInstance().getServerImplementation().getScoreboardHandler());
     };
 
     public void setPlayerScoreboard(Player player, ScoreboardHandler<?> handler) {

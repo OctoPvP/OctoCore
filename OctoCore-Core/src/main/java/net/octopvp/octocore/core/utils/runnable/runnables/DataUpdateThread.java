@@ -18,9 +18,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 
 public class DataUpdateThread extends Thread {
-    private final OctoCore plugin;
     private static final long SLEEP_INTERVAL = 1000; // 1s
     private static long DATA_SAVE_INTERVAL = SLEEP_INTERVAL * 60 * 2; // 2m
+    private final OctoCore plugin;
 
     public DataUpdateThread(OctoCore plugin) {
         super("OctoCore Data Update Thread");

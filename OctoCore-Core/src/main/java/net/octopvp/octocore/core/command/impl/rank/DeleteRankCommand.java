@@ -1,6 +1,9 @@
 package net.octopvp.octocore.core.command.impl.rank;
 
-import net.octopvp.commander.annotation.*;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.Required;
+import net.octopvp.commander.annotation.Switch;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;

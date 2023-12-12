@@ -11,34 +11,6 @@ import org.bukkit.OfflinePlayer;
 import java.util.UUID;
 
 public class OfflineHelpers {
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class OfflineInfo {
-        private String name;
-        private UUID uuid;
-
-        public static OfflineInfo from(BedrockUtils.BedrockInfo bedrockInfo) {
-            return new OfflineInfo(bedrockInfo.getGamertag(), bedrockInfo.getUUID());
-        }
-
-        public boolean isBedrock() {
-            return uuid.getMostSignificantBits() == 0;
-        }
-
-        public String getDisplayName() {
-            return isBedrock() ? BedrockUtils.bedrockPrefix + name : name;
-        }
-
-        public String getName() {
-            return getDisplayName(); // bedrock players should __always__ have * in front of their name
-        }
-
-        public UUID getUniqueId() {
-            return uuid;
-        }
-    }
-
     @SneakyThrows
     public static UUID getOfflinePlayerUUID(String name) {
         if (name == null) {
@@ -83,5 +55,33 @@ public class OfflineHelpers {
             return null;
         }
         return new OfflineInfo(player.getName(), player.getUniqueId());
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class OfflineInfo {
+        private String name;
+        private UUID uuid;
+
+        public static OfflineInfo from(BedrockUtils.BedrockInfo bedrockInfo) {
+            return new OfflineInfo(bedrockInfo.getGamertag(), bedrockInfo.getUUID());
+        }
+
+        public boolean isBedrock() {
+            return uuid.getMostSignificantBits() == 0;
+        }
+
+        public String getDisplayName() {
+            return isBedrock() ? BedrockUtils.bedrockPrefix + name : name;
+        }
+
+        public String getName() {
+            return getDisplayName(); // bedrock players should __always__ have * in front of their name
+        }
+
+        public UUID getUniqueId() {
+            return uuid;
+        }
     }
 }

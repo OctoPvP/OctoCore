@@ -14,7 +14,6 @@ import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -23,6 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Duration;
 
 public class QueueRestartCommand {
+    private BukkitTask task;
+    private int count;
+
     public static NamedTextColor getColor(int i) {
         if (i <= 2) {
             return NamedTextColor.RED;
@@ -33,8 +35,37 @@ public class QueueRestartCommand {
         }
     }
 
-    private BukkitTask task;
-    private int count;
+    @NotNull
+    private static Title getTitle(String reasonStr, int left) {
+        Title title;
+        if (reasonStr.isEmpty()) {
+            // player.sendTitle(CC.translate("&cServer Restart"), CC.translate("&cThis server is restarting in " + getColor(left) + left + "&c seconds!"), 2, 60, 10);
+            title = Title.title(
+                    Component.text("Server Restart", NamedTextColor.GREEN),
+                    Component.text("This server is restarting in ", NamedTextColor.RED)
+                            .append(Component.text(left, getColor(left)))
+                            .append(Component.text(" seconds!", NamedTextColor.RED))
+                    , Title.Times.times(
+                            Duration.ofMillis(100),
+                            Duration.ofSeconds(3),
+                            Duration.ofSeconds(10)
+                    ));
+        } else {
+            // player.sendTitle(CC.translate("&cServer Restart In " + getColor(left) + left + "&c Seconds"), CC.translate(CC.GOLD + "Restarting for: " + CC.GREEN + reasonStr), 2, 60, 10);
+            title = Title.title(
+                    Component.text("Server Restart In ", NamedTextColor.GREEN)
+                            .append(Component.text(left, getColor(left)))
+                            .append(Component.text(" seconds!", NamedTextColor.GREEN)),
+                    Component.text("Restarting for: ", NamedTextColor.GOLD)
+                            .append(Component.text(reasonStr, NamedTextColor.GREEN))
+                    , Title.Times.times(
+                            Duration.ofMillis(100),
+                            Duration.ofSeconds(3),
+                            Duration.ofSeconds(10)
+                    ));
+        }
+        return title;
+    }
 
     @Command(name = "queuerestart", aliases = "restart")
     @Permission(Permissions.ADMIN)
@@ -100,37 +131,5 @@ public class QueueRestartCommand {
                 }
             }
         }, 20, 20);
-    }
-
-    @NotNull
-    private static Title getTitle(String reasonStr, int left) {
-        Title title;
-        if (reasonStr.isEmpty()) {
-            // player.sendTitle(CC.translate("&cServer Restart"), CC.translate("&cThis server is restarting in " + getColor(left) + left + "&c seconds!"), 2, 60, 10);
-            title = Title.title(
-                    Component.text("Server Restart", NamedTextColor.GREEN),
-                    Component.text("This server is restarting in ", NamedTextColor.RED)
-                            .append(Component.text(left, getColor(left)))
-                            .append(Component.text(" seconds!", NamedTextColor.RED))
-                    , Title.Times.times(
-                            Duration.ofMillis(100),
-                            Duration.ofSeconds(3),
-                            Duration.ofSeconds(10)
-                    ));
-        } else {
-            // player.sendTitle(CC.translate("&cServer Restart In " + getColor(left) + left + "&c Seconds"), CC.translate(CC.GOLD + "Restarting for: " + CC.GREEN + reasonStr), 2, 60, 10);
-            title = Title.title(
-                    Component.text("Server Restart In ", NamedTextColor.GREEN)
-                            .append(Component.text(left, getColor(left)))
-                            .append(Component.text(" seconds!", NamedTextColor.GREEN)),
-                    Component.text("Restarting for: ", NamedTextColor.GOLD)
-                            .append(Component.text(reasonStr, NamedTextColor.GREEN))
-                    , Title.Times.times(
-                            Duration.ofMillis(100),
-                            Duration.ofSeconds(3),
-                            Duration.ofSeconds(10)
-                    ));
-        }
-        return title;
     }
 }

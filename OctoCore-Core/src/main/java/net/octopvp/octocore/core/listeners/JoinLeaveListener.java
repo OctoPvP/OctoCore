@@ -95,7 +95,8 @@ public class JoinLeaveListener implements Listener {
         PlayerData data = PlayerManager.getInstance().getData(e.getPlayer());
         if (data == null) {
             e.setQuitMessage(null);
-        } else e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
+        } else
+            e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
         unfreezePlayer(e.getPlayer());
     }
 
