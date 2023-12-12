@@ -1,7 +1,7 @@
 package net.octopvp.octocore.master.master.object;
 
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.interfaces.IPlayerData;
+import net.octopvp.octocore.common.interfaces.IPlayerBase;
 import net.octopvp.octocore.common.object.punish.BasePunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.master.master.OctoCoreMaster;
@@ -16,7 +16,7 @@ public class MasterPunishment extends BasePunishment {
         super(document);
     }
 
-    public MasterPunishment(IPlayerData data, PunishmentType type) {
+    public MasterPunishment(IPlayerBase data, PunishmentType type) {
         super(data, type);
     }
 
