@@ -59,6 +59,7 @@ public class ChatListener implements Listener {
 
         if (!playerData.getMessageSettings().isGlobalChat()) {
             e.getPlayer().sendMessage(Lang.GLOBAL_CHAT_IS_DISABLED.getMsg());
+            return;
         }
 
         if (FilterManager.containsUnicode(e.getMessage()) && !e.getPlayer().hasPermission(Permissions.USE_UNICODE_CHAT)) {
