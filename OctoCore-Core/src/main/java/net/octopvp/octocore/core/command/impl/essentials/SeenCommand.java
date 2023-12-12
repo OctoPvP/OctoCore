@@ -5,11 +5,13 @@ import net.octopvp.commander.annotation.Permission;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
 import org.bukkit.command.CommandSender;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class SeenCommand {
@@ -31,12 +33,7 @@ public class SeenCommand {
         if (lastSeen == -1) {
             return CommandResult.INVALID_PLAYER;
         }
-        long diff = now - lastSeen;
-        long days = diff / 86400000;
-        long hours = (diff % 86400000) / 3600000;
-        long minutes = (diff % 3600000) / 60000;
-
-        sender.sendMessage(CC.translate(StringUtils.replacePlaceholders("&a%1 was last seen &6%2 day(s), %3 hours, %4 minutes ago.", offlineInfo.getName(), days, hours, minutes)));
+        sender.sendMessage(CC.translate(StringUtils.replacePlaceholders("&a%1 was last seen &6%2", offlineInfo.getName(), DateUtils.formatDateDiff(lastSeen))));
         return CommandResult.SUCCESS;
     }
 }
