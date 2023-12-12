@@ -1,6 +1,7 @@
 package net.octopvp.octocore.v1_20;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import net.octopvp.octocore.core.BukkitServerImplementation;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.module.impl.scoreboard.DefaultComponentScoreboardHandler;
@@ -45,5 +46,10 @@ public class BukkitServerImpl1_20 implements BukkitServerImplementation {
     @Override
     public void updatePlayerCommands(Player player) {
         player.updateCommands();
+    }
+
+    @Override
+    public void sendTitle(Player player, Title title) {
+        player.showTitle(title);
     }
 }

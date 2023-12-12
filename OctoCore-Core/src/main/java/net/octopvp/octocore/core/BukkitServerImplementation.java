@@ -1,6 +1,7 @@
 package net.octopvp.octocore.core;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import net.octopvp.octocore.core.module.impl.scoreboard.ScoreboardHandler;
 import org.bukkit.entity.Player;
 
@@ -18,4 +19,6 @@ public interface BukkitServerImplementation {
     void sendActionBar(Player player, Component message);
 
     void updatePlayerCommands(Player player);
+
+    void sendTitle(Player player, Title title);
 }
