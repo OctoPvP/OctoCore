@@ -40,7 +40,7 @@ public class QueueRestartCommand {
     @Permission(Permissions.ADMIN)
     public void execute(@Sender CommandSender sender, @Switch(value = "cancel", aliases = "c") boolean cancel, @Switch("now") boolean now, @Flag("time") @DefaultNumber(30) int time, @Optional @JoinStrings String reason) {
         if (now) {
-            Bukkit.restart();
+            Bukkit.spigot().restart();
             return;
         }
         String reasonStr;
@@ -91,7 +91,10 @@ public class QueueRestartCommand {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 Title title = getTitle(reasonStr, left);
                 OctoCore.getInstance().getServerImplementation().sendTitle(player, title);
-                player.sendMessage(CC.RED + CC.translate("This server is restarting in " + getColor(left) + left + "&c seconds!"));
+                // player.sendMessage(CC.RED + CC.translate("This server is restarting in " + getColor(left) + left + "&c seconds!"));
+                player.sendMessage(Component.text("This server is restarting in ", NamedTextColor.RED)
+                        .append(Component.text(left, getColor(left)))
+                        .append(Component.text(" seconds!", NamedTextColor.RED)));
                 if (left <= 3) {
                     player.playSound(player.getLocation(), XSound.ENTITY_EXPERIENCE_ORB_PICKUP.parseSound(), 1, 1);
                 }
