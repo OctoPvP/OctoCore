@@ -102,19 +102,6 @@ public class VanishManager extends Manager implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onChat(AsyncPlayerChatEvent event) {
-        if (isVanished(event.getPlayer())) {
-            if (event.getMessage().endsWith("\\")) {
-                //remove the \
-                event.setMessage(event.getMessage().substring(0, event.getMessage().length() - 1));
-                return;
-            }
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.RED + "Your chat message has been blocked because you are vanished. add a '\\' at the end of your message to bypass this.");
-        }
-    }
-
     public void vanish(Player player, int priority, boolean silent) {
         PlayerData data = PlayerManager.getInstance().getData(player);
         if (data == null) return;
