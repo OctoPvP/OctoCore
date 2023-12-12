@@ -84,7 +84,7 @@ public class QueueRestartCommand {
                     player.sendMessage(strReason);
                     player.sendPluginMessage(OctoCore.getInstance(), "BungeeCord", arr);
                 }
-                Tasks.runLater(Bukkit::restart, 40L);
+                Tasks.runLater(() -> Bukkit.spigot().restart(), 40L);
                 return;
             }
             int left = 10 - count;
