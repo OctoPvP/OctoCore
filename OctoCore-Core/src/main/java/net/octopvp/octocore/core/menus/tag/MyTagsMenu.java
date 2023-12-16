@@ -61,9 +61,8 @@ public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
                         PlayerManager.getInstance().getData(player.getUniqueId()).setTag(tag).save();
                         player.sendMessage(CC.GREEN + "Equipped your tag!");
                     }
-                    // clear();
-                    update(player);
-                    // gui.update();
+                    gui.clearPageItems(false);
+                    populateGui(gui, player);
                 });
     }
 }
