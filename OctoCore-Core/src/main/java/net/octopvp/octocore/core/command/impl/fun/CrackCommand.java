@@ -21,6 +21,10 @@ public class CrackCommand {
                     .create();
             gui.setItem(3, ItemBuilder.from(Material.PRISMARINE_CRYSTALS).name(CC.R + "Raw Crack").asGuiItem());
             gui.getFiller().fill(ItemBuilder.from(Material.SUGAR).name(CC.R + "Processed Crack").asGuiItem());
+            gui.setDefaultClickAction(event -> {
+                event.setCancelled(true);
+                player.sendMessage(CC.RED + "No crack 4 u :)");
+            });
             gui.open(player);
             player.sendMessage("Let there be crack!");
         } catch (Exception e) {
