@@ -8,8 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -68,4 +72,17 @@ public class OctoPermissible extends PermissibleBase {
         data.getCachedPermissions().clear();
     }
 
+    @Override
+    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+        PlayerData data = PlayerManager.getInstance().getData(this.uuid);
+        Set<PermissionAttachmentInfo> effectivePermissions = new HashSet<>();
+        if (data == null) {
+            Logger.error("PlayerData is null!");
+            return effectivePermissions;
+        }
+        data.getFinalNodes().forEach(
+                (name, node) -> effectivePermissions.add(new PermissionAttachmentInfo(this, node.getPermissionString(), null, node.isAllowed()))
+        );
+        return effectivePermissions;
+    }
 }
