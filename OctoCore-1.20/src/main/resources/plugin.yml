@@ -7,7 +7,6 @@ description: OctoCore
 load: STARTUP
 depend:
   - ProtocolLib
-  - LunarClient-API
   - Citizens
 softdepend:
   - Vault
