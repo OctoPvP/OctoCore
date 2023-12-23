@@ -23,7 +23,7 @@ public class PunishmentMenuCommons {
                 CC.GREEN + "Silent" + CC.GRAY + ": " + (punishment.isSilent() ? CC.GREEN + "Yes" : CC.RED + "No")
         ));
         if (punishment.isManuallyRemoved()) {
-            if (!punishment.getRemovedBy().equals("")) {
+            if (!punishment.getRemovedBy().isEmpty()) {
                 lore.addAll(Arrays.asList(
                         "",
                         CC.GREEN + "Removed by" + CC.GRAY + ": " + CC.YELLOW + punishment.getRemovedBy(),

@@ -28,6 +28,8 @@ dependencies {
     compileOnly("com.google.code.gson:gson:2.8.9")
 
     implementation("com.warrenstrange:googleauth:1.4.0")
+    implementation("net.kyori:adventure-api:4.14.0")
+    implementation("net.kyori:adventure-text-serializer-legacy:4.14.0")
     // implementation("com.yubico:webauthn-server-core:2.4.0")
 }
 

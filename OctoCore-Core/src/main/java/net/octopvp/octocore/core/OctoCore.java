@@ -197,6 +197,7 @@ public abstract class OctoCore extends JavaPlugin {
                 getConfig().getDouble("settings.spawn.y"),
                 getConfig().getDouble("settings.spawn.z"));
         Utilities.init();
+        getServerImplementation().onEnable();
 
         this.dataUpdateThread = new DataUpdateThread(this);
 
@@ -252,7 +253,6 @@ public abstract class OctoCore extends JavaPlugin {
         new SetupOther().setup(this);
         Logger.info("Done!");
         dataUpdateThread.start();
-        getServerImplementation().onEnable();
         Tasks.runLater(() -> {
             loading = false;
             new ServerOnlinePacket(serverName).send();

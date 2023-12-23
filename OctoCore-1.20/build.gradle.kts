@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     implementation(project(":OctoCore-Core"))
+    implementation(project(":OctoCore-common"))
     paperweightDevBundle("net.octopvp.octospigot", "1.20.2-R0.1-SNAPSHOT")
 }
 tasks {

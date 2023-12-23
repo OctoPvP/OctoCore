@@ -21,4 +21,6 @@ public interface BukkitServerImplementation {
     void updatePlayerCommands(Player player);
 
     void sendTitle(Player player, Title title);
+
+    Component getPlayerDisplayName(Player player);
 }

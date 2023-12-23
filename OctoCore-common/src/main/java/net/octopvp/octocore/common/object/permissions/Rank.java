@@ -3,6 +3,8 @@ package net.octopvp.octocore.common.object.permissions;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.interfaces.manager.IRankManager;
@@ -147,6 +149,10 @@ public class Rank implements Cloneable {
 
     public String getPrefix() {
         return CC.translate(StringUtils.replacePlaceholders(prefix, color.toString()));
+    }
+
+    public Component getPrefixComponent() {
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(getPrefix());
     }
 
     public String getDefaultPrefix() {

@@ -6,6 +6,7 @@ import net.octopvp.octocore.core.BukkitServerImplementation;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.module.impl.scoreboard.DefaultComponentScoreboardHandler;
 import net.octopvp.octocore.core.module.impl.scoreboard.ScoreboardHandler;
+import net.octopvp.octocore.v1_20.listener.ChatListener;
 import net.octopvp.octocore.v1_20.listener.VanishListener_1_20;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,12 +16,13 @@ public class BukkitServerImpl1_20 implements BukkitServerImplementation {
 
     @Override
     public void onLoad() {
-
+        System.setProperty("octocore.newChatFormatting", "true");
     }
 
     @Override
     public void onEnable() {
         Bukkit.getServer().getPluginManager().registerEvents(new VanishListener_1_20(), OctoCore.getInstance());
+        Bukkit.getServer().getPluginManager().registerEvents(new ChatListener(), OctoCore.getInstance());
     }
 
     @Override
@@ -51,5 +53,10 @@ public class BukkitServerImpl1_20 implements BukkitServerImplementation {
     @Override
     public void sendTitle(Player player, Title title) {
         player.showTitle(title);
+    }
+
+    @Override
+    public Component getPlayerDisplayName(Player player) {
+        return player.displayName();
     }
 }

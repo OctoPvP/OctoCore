@@ -18,6 +18,7 @@ repositories {
 }
 dependencies {
     implementation(project(":OctoCore-Core"))
+    implementation(project(":OctoCore-common"))
 
     compileOnly("net.octopvp.octospigot:octospigot-api:1.8.8-R0.1-SNAPSHOT")
     compileOnly("net.octopvp.octospigot:octospigot-server:1.8.8-R0.1-SNAPSHOT")

@@ -6,9 +6,11 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.Permissions;
-import net.octopvp.octocore.common.object.ServerType;
 import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.object.permissions.Grant;
@@ -35,6 +37,7 @@ import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -149,6 +152,7 @@ public class PlayerData extends SimplePlayerData {
     public void loadAlts(String address) {
         loadAlts(address, new HashMap<>());
     }
+
     public void loadAlts(String address, Map<UUID, PunishData> cache) {
         Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ")");
         long start = System.currentTimeMillis();
@@ -237,12 +241,18 @@ public class PlayerData extends SimplePlayerData {
         boolean shouldShowTag = showtag.length == 0 || showtag[0];
         if (nicked)
             return CC.translate(prefix + (CC.strip(prefix).isEmpty() ? displayName : " " + displayName)) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
-        return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).equals("") ? name : " " + name)) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
-        /*
-        if (nicked)
-            return CC.translate((this.isNicked() ? nickPrefix : getHighestRank().getPrefix()) + (this.isNicked() ? nickColor : getCurrentColor()) + " " + (this.isNicked() ? nick : lastKnownName)) + (tag != null ? " " + getTagString() : "");
-        return CC.translate(getHighestRank().getPrefix() + getNameColor() + " " + lastKnownName) + (tag != null ? " " + getTagString() : "");
-         */
+        return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).isEmpty() ? name : " " + name)) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
+    }
+
+
+    public Component getFormattedNameComponent(boolean nicked, Player player, boolean... showtag) {
+        Component prefix = getHighestRank().getPrefixComponent();
+        Component displayName = OctoCore.getInstance().getServerImplementation().getPlayerDisplayName(player);
+        boolean shouldShowTag = showtag.length == 0 || showtag[0];
+
+        TextComponent.Builder builder = Component.text().append(prefix).append(Component.text(" ")).append(displayName);
+        if (getTag() != null && shouldShowTag) return builder.append(Component.text(" ")).append(getTagComponent()).build();
+        return builder.build();
     }
 
     public String getCurrentPrefix() {
@@ -272,10 +282,12 @@ public class PlayerData extends SimplePlayerData {
 
     public String getTagString() {
         if (getTag() == null) return "";
-        if (isNicked()) {
-            return CC.GRAY + CC.ARROW_LEFT + getNickTag().getTag() + CC.GRAY + CC.ARROW_RIGHT;
-        }
-        return CC.GRAY + CC.ARROW_LEFT + getTag().getTag() + CC.GRAY + CC.ARROW_RIGHT;
+        return CC.GRAY + CC.ARROW_LEFT + (isNicked() ? getNickTag() : getTag()).getTag() + CC.GRAY + CC.ARROW_RIGHT;
+    }
+
+    public Component getTagComponent() {
+        if (getTag() == null) return Component.empty();
+        return Component.text().append(Component.text(CC.ARROW_LEFT, NamedTextColor.GRAY)).append((isNicked() ? getNickTag() : getTag()).getTagComponent()).append(Component.text(CC.ARROW_RIGHT, NamedTextColor.GRAY)).build();
     }
 
     public boolean hasTag(String tagName) {
@@ -310,7 +322,8 @@ public class PlayerData extends SimplePlayerData {
         else result.setExpire(nextGrantExpire);
 
         cachedPermissions.put(perm, result);
-        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET) return getHighestRank().calculatePermission(perm);
+        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET)
+            return getHighestRank().calculatePermission(perm);
         return result;
     }
 

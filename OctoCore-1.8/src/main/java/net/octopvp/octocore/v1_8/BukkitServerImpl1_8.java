@@ -68,4 +68,9 @@ public class BukkitServerImpl1_8 implements BukkitServerImplementation {
         }
     }
 
+    @Override
+    public Component getPlayerDisplayName(Player player) {
+        return LegacyComponentSerializer.legacySection().deserialize(player.getDisplayName());
+    }
+
 }

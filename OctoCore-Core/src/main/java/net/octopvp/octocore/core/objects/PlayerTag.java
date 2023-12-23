@@ -2,6 +2,8 @@ package net.octopvp.octocore.core.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.TagManager;
 import org.bukkit.Material;
@@ -38,5 +40,9 @@ public class PlayerTag {
     @Override
     public String toString() {
         return OctoCore.getGson().toJson(this);
+    }
+
+    public Component getTagComponent() {
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(tag);
     }
 }

@@ -22,6 +22,7 @@ import java.util.Iterator;
 public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void messageListener(AsyncPlayerChatEvent e) {
+        // https://discord.com/channels/289587909051416579/555462289851940864/1188010602770210887
         PlayerData playerData = PlayerManager.getInstance().getData(e.getPlayer().getUniqueId());
 
         if (playerData.isStaffChat()) {
@@ -79,6 +80,7 @@ public class ChatListener implements Listener {
             e.getPlayer().sendMessage(ChatColor.RED + "Your chat message has been blocked because you are vanished. add a '\\' at the end of your message to bypass this.");
             return;
         }
+        if (Boolean.getBoolean("octocore.newChatFormatting")) return;
         //String format = ChatManager.formatChat(e.getPlayer().getUniqueId(),e.getPlayer().getDisplayName(),FilterManager.process(e.getMessage(),e.getPlayer()),e.getPlayer().hasPermission(Permission.USE_COLOR_CHAT));
         String format = ChatManager.formatChat(e.getPlayer(), FilterManager.process(e.getMessage(), e.getPlayer()), e.getPlayer().hasPermission(Permissions.USE_COLOR_CHAT));
         if (format == null) {
