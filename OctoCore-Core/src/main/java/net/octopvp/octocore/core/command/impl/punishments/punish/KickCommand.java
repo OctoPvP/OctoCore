@@ -1,9 +1,6 @@
 package net.octopvp.octocore.core.command.impl.punishments.punish;
 
-import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.JoinStrings;
-import net.octopvp.commander.annotation.Permission;
-import net.octopvp.commander.annotation.Switch;
+import net.octopvp.commander.annotation.*;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
@@ -24,22 +21,21 @@ public class KickCommand {
 
     @Command(name = "kick", aliases = {"kickplayer"}, usage = "<player> <reason> [-s]")
     @Permission(Permissions.PUNISHMENT_KICK)
+    @Async
     public void execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent, OfflinePunishData data, @JoinStrings String reason) {
-        Tasks.runAsync(() -> {
-            data.load();
+        data.load();
 
-            String finalReason = reason;
-            if (finalReason.contains("<error>")) {
-                Random random = new Random();
-                finalReason = finalReason.replace("<error>", errorMessages[random.nextInt(errorMessages.length)]);
-            }
+        String finalReason = reason;
+        if (finalReason.contains("<error>")) {
+            Random random = new Random();
+            finalReason = finalReason.replace("<error>", errorMessages[random.nextInt(errorMessages.length)]);
+        }
 
-            Punishment punishment = new Punishment(data, PunishmentType.KICK);
-            punishment.setSilent(silent);
-            punishment.setPermanent(false);
-            punishment.setIPRelative(false);
-            PunishmentCommands.handlePunishmentMeta(sender, finalReason, punishment);
-        });
+        Punishment punishment = new Punishment(data, PunishmentType.KICK);
+        punishment.setSilent(silent);
+        punishment.setPermanent(false);
+        punishment.setIPRelative(false);
+        PunishmentCommands.handlePunishmentMeta(sender, finalReason, punishment);
     }
 
 }
