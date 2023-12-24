@@ -66,6 +66,10 @@ public class QueueRestartCommand {
                 return;
             }
         }
+        if (task != null) {
+            sender.sendMessage(CC.RED + "Restart already scheduled.");
+            return;
+        }
         count = 0;
 
         task = Bukkit.getScheduler().runTaskTimer(OctoCore.getInstance(), () -> {
