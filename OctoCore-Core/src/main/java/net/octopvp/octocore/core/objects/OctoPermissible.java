@@ -43,7 +43,13 @@ public class OctoPermissible extends PermissibleBase {
             return oldPermissibleBase.hasPermission(inName);
         }
         PermissionCheckResult result = data.calculatePermissionResult(inName);
-        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET) return isOp(); // return oldPermissibleBase.hasPermission(inName);
+        if (result.getReason() == PermissionCheckResult.Reason.NOT_SET) {
+            Permission perm = Bukkit.getPluginManager().getPermission(inName);
+            if (perm == null) {
+                return isOp();
+            }
+            return perm.getDefault().getValue(isOp()); // return oldPermissibleBase.hasPermission(inName);
+        }
         return result.allowed();
     }
 
@@ -84,5 +90,20 @@ public class OctoPermissible extends PermissibleBase {
                 (name, node) -> effectivePermissions.add(new PermissionAttachmentInfo(this, node.getPermissionString(), null, node.isAllowed()))
         );
         return effectivePermissions;
+    }
+
+    @Override
+    public boolean isPermissionSet(String name) {
+        PlayerData data = PlayerManager.getInstance().getData(this.uuid);
+        if (data == null) {
+            Logger.error("PlayerData is null!");
+            return false;
+        }
+        return data.calculatePermissionResult(name).getReason() != PermissionCheckResult.Reason.NOT_SET;
+    }
+
+    @Override
+    public boolean isPermissionSet(Permission perm) {
+        return isPermissionSet(perm.getName());
     }
 }
