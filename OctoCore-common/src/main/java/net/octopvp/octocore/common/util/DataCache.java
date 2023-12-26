@@ -17,7 +17,7 @@ public class DataCache {
     private final UUID uuid;
 
     public Document getData() {
-        if (!OctoCoreCommon.getInstance().getRedisManager().isConnected()) return null;
+        if (!OctoCoreCommon.getInstance().getRedisManager().isConnected() || Boolean.getBoolean("octocore.disablecache")) return null;
         try (Jedis jedis = RedisManager.getJedis()) {
             String json = jedis.hget("player-data", this.uuid.toString());
             if (json == null) return null;
@@ -28,7 +28,7 @@ public class DataCache {
     }
 
     public void update(Document document) {
-        if (!OctoCoreCommon.getInstance().getRedisManager().isConnected()) return;
+        if (!OctoCoreCommon.getInstance().getRedisManager().isConnected() || Boolean.getBoolean("octocore.disablecache")) return;
 
         try (Jedis jedis = RedisManager.getJedis()) {
             jedis.hset("player-data", this.uuid.toString(), document.toJson());
