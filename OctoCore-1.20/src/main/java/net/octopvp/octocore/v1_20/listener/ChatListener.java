@@ -1,12 +1,16 @@
 package net.octopvp.octocore.v1_20.listener;
 
+import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.manager.impl.ChatManager;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 
 public class ChatListener implements Listener {
@@ -16,6 +20,11 @@ public class ChatListener implements Listener {
                 e.message(),
                 e.getPlayer().hasPermission(Permissions.USE_COLOR_CHAT)
         );
-        e.message(component == null ? Component.empty() : component);
+        e.renderer(new ChatRenderer() {
+            @Override
+            public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
+                return component == null ? Component.empty() : component;
+            }
+        });
     }
 }
