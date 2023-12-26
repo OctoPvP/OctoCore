@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 public class DebugCommand {
     @Command(name = "debugexp")
     @Permission(Permissions.ADMIN)
-    @PlayerOnly
     public CommandResult execute(CommandSender sender, String[] args) {
         String expression = StringUtils.arrayToString(args);
         new Debugger(sender).execute(expression);

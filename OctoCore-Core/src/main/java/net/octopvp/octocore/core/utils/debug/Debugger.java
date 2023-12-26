@@ -154,6 +154,15 @@ public class Debugger {
         }
     }
 
+    public void createDefaultRank() {
+        Rank rank = OctoCore.getInstance().getRankManager().getDefaultRank();
+        if (rank != null) {
+            print("Rank already exists!");
+            return;
+        }
+        OctoCore.getInstance().getRankManager().createDefaultRank();
+    }
+
     public void testPacket() {
         PlayerMessagePacket packet = new PlayerMessagePacket(((Player) sender).getUniqueId(), "test");
         packet.send();
