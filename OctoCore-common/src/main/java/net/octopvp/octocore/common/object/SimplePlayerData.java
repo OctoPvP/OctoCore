@@ -278,10 +278,14 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         return nodes1;
     }
      */
-    public Map<String, Node> getFinalNodes() {
+    public Map<String, Node> getFinalNodeTree() {
         Map<String, Node> nodeMap = new HashMap<>(nodes);
-        PermissionManager.getInstance().mergeNodeTrees(nodeMap, getHighestRank().getFinalNodes());
+        PermissionManager.getInstance().mergeNodeTrees(nodeMap, getHighestRank().getFinalNodeTree());
         return nodeMap;
+    }
+
+    public List<Node> getSignificantNodes() {
+        return PermissionManager.getInstance().findSignificantNodes(getFinalNodeTree());
     }
 
     public List<Grant> getActiveGrants() {
@@ -338,18 +342,18 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     }
 
     public boolean hasPermission(String perm) {
-        PermissionCheckResult result = PermissionManager.getInstance().checkPermission(perm, getFinalNodes());
+        PermissionCheckResult result = PermissionManager.getInstance().checkPermission(perm, getFinalNodeTree());
         if (result.getReason() == PermissionCheckResult.Reason.NOT_SET)
             return getHighestRank().hasPermission(perm); // Delegate to highest rank
         else return result.allowed();
     }
 
     public PermissionCheckResult getPermissionResult(String permission, String server) {
-        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes(), server);
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodeTree(), server);
     }
 
     public PermissionCheckResult getPermissionResult(String permission) {
-        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes());
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodeTree());
     }
 
     @Override

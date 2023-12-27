@@ -37,7 +37,6 @@ import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -103,7 +102,7 @@ public class PlayerData extends SimplePlayerData {
         Document document = super.getData();
         PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
         Document copy = new Document(document);
-        copy.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(getFinalNodes()));
+        copy.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(getFinalNodeTree()));
         new DataCache(this.uuid).update(copy);
         return document;
     }
@@ -314,7 +313,7 @@ public class PlayerData extends SimplePlayerData {
                 cachedPermissions.remove(perm);
             } else return cachedResult;
         }
-        PermissionCheckResult result = PermissionManager.getInstance().checkPermission(perm, getFinalNodes(), OctoCoreCommon.getInstance().getServerName());
+        PermissionCheckResult result = PermissionManager.getInstance().checkPermission(perm, getFinalNodeTree(), OctoCoreCommon.getInstance().getServerName());
         long nextGrantExpire = this.getLowestGrantExpire();
         if (nextGrantExpire != -1 || System.currentTimeMillis() - nextGrantExpire > 1200000)
             result.setExpire(System.currentTimeMillis() + 600000); // expire in 10 minutes

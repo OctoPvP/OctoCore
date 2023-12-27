@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.Arrays;
@@ -88,7 +87,7 @@ public class OctoPermissible extends PermissibleBase {
             Logger.error("PlayerData is null!");
             return effectivePermissions;
         }
-        PermissionManager.getInstance().findSignificantNodes(data.getFinalNodes()).forEach(
+        PermissionManager.getInstance().findSignificantNodes(data.getFinalNodeTree()).forEach(
                 (node) -> effectivePermissions.add(new PermissionAttachmentInfo(this, node.getPermissionString(), null, node.isAllowed(OctoCore.getServerName())))
         );
         return effectivePermissions;

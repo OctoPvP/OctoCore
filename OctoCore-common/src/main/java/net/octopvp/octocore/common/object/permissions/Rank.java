@@ -77,7 +77,7 @@ public class Rank implements Cloneable {
         return getNode(perm) != null;
     }
 
-    public Map<String, Node> getFinalNodes() {
+    public Map<String, Node> getFinalNodeTree() {
         Map<String, Node> nodeMap = new HashMap<>(nodes);
         for (Rank rank : getOrderedInheritance(OrderedInheritance.SMALL_TO_LARGE)) {
             PermissionManager.getInstance().mergeNodeTrees(nodeMap, rank.getNodes());
@@ -103,23 +103,23 @@ public class Rank implements Cloneable {
     }
 
     public PermissionCheckResult calculatePermission(String permission) {
-        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes());
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodeTree());
     }
 
     public boolean hasPermission(String permission) {
-        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes()).allowed();
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodeTree()).allowed();
     }
 
     public boolean hasPermission(String permission, String server) {
-        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes(), server).allowed();
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodeTree(), server).allowed();
     }
 
     public PermissionCheckResult getPermissionResult(String permission, String server) {
-        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes(), server);
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodeTree(), server);
     }
 
     public PermissionCheckResult getPermissionResult(String permission) {
-        return PermissionManager.getInstance().checkPermission(permission, getFinalNodes());
+        return PermissionManager.getInstance().checkPermission(permission, getFinalNodeTree());
     }
     public String getDisplayName() {
         if (this.isItalic() && this.isBold()) {

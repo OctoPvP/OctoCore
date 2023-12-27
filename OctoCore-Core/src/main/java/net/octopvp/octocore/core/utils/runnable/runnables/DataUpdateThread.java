@@ -73,7 +73,7 @@ public class DataUpdateThread extends Thread {
                     OctoCore.getInstance().getServerImplementation().sendActionBar(player, actionBar);
                 }
                 Document document = playerData.getData();
-                document.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(playerData.getFinalNodes()));
+                document.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(playerData.getFinalNodeTree()));
                 new DataCache(playerData.getUuid()).update(document);
             }
             double[] tps = Bukkit.getTPS();

@@ -17,10 +17,10 @@ public class PermissionInfoCommand {
         if (printNodes) {
             System.out.println("----------------------------");
             System.out.println("Final Nodes: ");
-            PermissionManager.getInstance().printNodeMap(target.getFinalNodes());
+            PermissionManager.getInstance().printNodeMap(target.getFinalNodeTree());
             System.out.println("----------------------------");
             System.out.println("Rank Nodes: ");
-            PermissionManager.getInstance().printNodeMap(target.getHighestRank().getFinalNodes());
+            PermissionManager.getInstance().printNodeMap(target.getHighestRank().getFinalNodeTree());
             System.out.println("----------------------------");
         }
         PermissionCheckResult result = target.getPermissionResult(permission);
