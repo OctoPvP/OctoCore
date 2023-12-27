@@ -3,6 +3,8 @@ package net.octopvp.octocore.core.objects;
 import lombok.Getter;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.perms.PermissionCheckResult;
+import net.octopvp.octocore.common.util.perms.PermissionManager;
+import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -86,8 +88,8 @@ public class OctoPermissible extends PermissibleBase {
             Logger.error("PlayerData is null!");
             return effectivePermissions;
         }
-        data.getFinalNodes().forEach(
-                (name, node) -> effectivePermissions.add(new PermissionAttachmentInfo(this, node.getPermissionString(), null, node.isAllowed()))
+        PermissionManager.getInstance().findSignificantNodes(data.getFinalNodes()).forEach(
+                (node) -> effectivePermissions.add(new PermissionAttachmentInfo(this, node.getPermissionString(), null, node.isAllowed(OctoCore.getServerName())))
         );
         return effectivePermissions;
     }

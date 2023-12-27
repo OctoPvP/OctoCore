@@ -60,9 +60,8 @@ public class Node {
     }
 
     public boolean isNegated(String... serverContext) {
-        String first = serverContext.length > 0 ? serverContext[0] : null;
-        if (Objects.equals(first, "*") || (first != null && first.equalsIgnoreCase("global"))
-                || appliesTo(serverContext)) {
+        String first = serverContext.length > 0 ? serverContext[0] : ServerContext.getServerName();
+        if (first.equals("*") || first.equalsIgnoreCase("global") || appliesTo(serverContext)) {
             return negated.orElse(false);
         }
         return false; // not this server
@@ -136,7 +135,7 @@ public class Node {
                 '}';
     }
 
-    public boolean isAllowed() {
-        return isNegatedIgnoreScope();
+    public boolean isAllowed(String... scope) {
+        return !isNegated(scope);
     }
 }
