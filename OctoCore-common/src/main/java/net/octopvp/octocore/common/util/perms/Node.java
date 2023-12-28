@@ -34,7 +34,8 @@ public class Node {
     }
 
     public boolean isSignificant() { // this node is actually set
-        return negated.isPresent() || serverContext.isPresent() || children.isEmpty();
+        // if negated isn't present, there isn't any point in this permission being here at all, we can just ignore it
+        return negated.isPresent()/* || serverContext.isPresent() || children.isEmpty()*/;
     }
 
     public boolean hasChildren() {
@@ -137,5 +138,10 @@ public class Node {
 
     public boolean isAllowed(String... scope) {
         return !isNegated(scope);
+    }
+
+    public void makeInsignificant() {
+        negated = Optional.empty();
+        serverContext = Optional.empty();
     }
 }

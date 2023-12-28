@@ -26,7 +26,7 @@ public class PermissionManager {
             Node node = new Node(
                     parts[i], last, new HashMap<>(),
                     isFinalNode ? Optional.of(negated) : Optional.empty(),
-                    isFinalNode && serverContext != null && !serverContext.isEmpty() && !serverContext.equals("*") && !serverContext.equalsIgnoreCase("global")
+                    isFinalNode && serverContext != null && !serverContext.isEmpty() && !ServerContext.isGlobal(serverContext)
                             ? Optional.of(new ServerContext(serverContext)) : Optional.empty()
             );
             if (root == null) root = node;
@@ -65,15 +65,12 @@ public class PermissionManager {
         for (String key : parts) {
             if (last == null) {
                 last = nodeMap.get(key);
-                if (last == null) {
-                    break;
-                }
             } else {
                 parent = last;
                 last = last.findChild(key);
-                if (last == null) {
-                    break;
-                }
+            }
+            if (last == null) {
+                break;
             }
             i++;
         }
@@ -81,10 +78,27 @@ public class PermissionManager {
             return;
         }
         if (last != null) {
-            if (parent != null) {
-                parent.getChildren().remove(last.getKey());
+            if (last.hasChildren()) {
+                last.makeInsignificant();
             } else {
-                nodeMap.remove(last.getKey());
+                if (parent != null) {
+                    parent.getChildren().remove(last.getKey());
+                } else {
+                    nodeMap.remove(last.getKey());
+                }
+
+                // remove insignificant parents
+                if (parent != null) {
+                    while (parent != null && !parent.isSignificant() && !parent.hasChildren()) {
+                        Node finalParent = parent;
+                        parent = parent.getParent();
+                        if (parent != null) {
+                            parent.getChildren().remove(finalParent.getKey());
+                        } else {
+                            nodeMap.remove(finalParent.getKey());
+                        }
+                    }
+                }
             }
         }
     }

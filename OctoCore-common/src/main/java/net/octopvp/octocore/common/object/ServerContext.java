@@ -49,6 +49,10 @@ public class ServerContext {
         });
     }
 
+    public static boolean isGlobal(String context) {
+        return new ServerContext(context).isGlobal();
+    }
+
     public boolean isServer(String... in) {
         if (isGlobal()) return true;
         if (in == null || in.length == 0) {
