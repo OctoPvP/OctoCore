@@ -1,18 +1,7 @@
 package net.octopvp.octocore.core.command.impl.essentials;
 
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.commander.annotation.Command;
-import net.octopvp.commander.annotation.Permission;
-import net.octopvp.commander.annotation.Sender;
-import net.octopvp.commander.bukkit.annotation.PlayerOnly;
-import net.octopvp.octocore.common.object.Permissions;
-import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.core.command.CommandResult;
-import net.octopvp.octocore.core.utils.item.ItemUtils;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-
 public class GiveCommand {
+    /*
     @Command(name = "give", aliases = {"i", "g", "item"})
     @Permission(Permissions.GIVE)
     @PlayerOnly
@@ -47,4 +36,5 @@ public class GiveCommand {
         } else sender.sendMessage(CC.RED + "Usage: /i <item> [amount]");
         return CommandResult.SUCCESS;
     }
+     */
 }
