@@ -70,10 +70,8 @@ public abstract class OctoCore extends JavaPlugin {
     //Setup Start
     @Getter
     SetupManager setupManager = new SetupManager();
-    @Getter
     private DataUpdateThread dataUpdateThread;
 
-    @Getter
     @Setter
     private net.octopvp.octocore.common.redis.RedisManager actualRedisManager;
     //they init from up to down
