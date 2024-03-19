@@ -16,6 +16,7 @@ import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.Manager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
+import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -179,9 +180,11 @@ public class PlayerManager extends Manager implements IPlayerManager {
         PlayerData data = getData(player);
         if (data == null) return;
         data.setSavingOnQuit(true);
-        playerProfiles.remove(player.getUniqueId());
-        data.setLastSeen(System.currentTimeMillis());
-        data.save();
+        Tasks.runLater(() -> {
+            playerProfiles.remove(player.getUniqueId());
+            data.setLastSeen(System.currentTimeMillis());
+            data.save();
+        }, 10);
     }
 
     public Document getDocument(String name) {

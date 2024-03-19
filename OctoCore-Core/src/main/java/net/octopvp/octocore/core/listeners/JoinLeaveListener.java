@@ -93,6 +93,7 @@ public class JoinLeaveListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent e) {
         PlayerData data = PlayerManager.getInstance().getData(e.getPlayer());
+        MainRedisHandler.getSaving().add(e.getPlayer().getUniqueId());
         if (data == null) {
             e.setQuitMessage(null);
         } else e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
