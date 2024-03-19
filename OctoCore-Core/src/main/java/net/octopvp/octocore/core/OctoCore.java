@@ -46,6 +46,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Objects;
 import java.util.UUID;
 
+@Getter
 @SuppressWarnings("unused")
 public abstract class OctoCore extends JavaPlugin {
     @Getter
@@ -69,44 +70,27 @@ public abstract class OctoCore extends JavaPlugin {
     //Setup Start
     @Getter
     SetupManager setupManager = new SetupManager();
-    @Getter
     private DataUpdateThread dataUpdateThread;
 
-    @Getter
     @Setter
     private net.octopvp.octocore.common.redis.RedisManager actualRedisManager;
     //they init from up to down
-    @Getter
     private PlayerManager playerManager;
-    @Getter
     private DatabaseManager databaseManager;
-    @Getter
     private ServerManager serverManager;
-    @Getter
     private AuthManager authManager;
-    @Getter
     private FilterManager filterManager;
-    @Getter
     private RankManager rankManager;
-    @Getter
     private SettingsManager settingsManager;
-    @Getter
     private TabManager tabManager;
-    @Getter
     private VaultManager vaultManager;
-    @Getter
     private PluginMsgManager pluginMsgManager;
-    @Getter
     private PlaceholderManager placeholderManager;
-    @Getter
     private RedisManager redisManager; // TODO managers not registered
-    @Getter
     private TagManager tagManager;
-    @Getter
     private VanishManager vanishManager;
     //Setup End
 
-    @Getter
     private Commander commander;
 
     public static Chat getChat() {
