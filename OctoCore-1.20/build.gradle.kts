@@ -21,7 +21,7 @@ repositories {
 dependencies {
     implementation(project(":OctoCore-Core"))
     implementation(project(":OctoCore-common"))
-    paperweightDevBundle("net.octopvp.octospigot", "1.20.2-R0.1-SNAPSHOT")
+    paperweightDevBundle("net.octopvp.octospigot", "1.20.4-R0.1-SNAPSHOT")
 }
 tasks {
     assemble {
