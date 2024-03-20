@@ -53,6 +53,10 @@ public class JoinLeaveListener implements Listener {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("The server hasn't started yet!").toString());
             return;
         }
+        if (MainRedisHandler.getSaving().contains(event.getUniqueId())) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("Please wait a moment while we save your data from your previous session.").toString());
+            return;
+        }
         boolean kicked = event.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED;
         if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) {
             if (kicked) return;
@@ -103,7 +107,6 @@ public class JoinLeaveListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR) // lowest priority so that we can unload data LAST
     public void onLeaveLast(PlayerQuitEvent e) {
         PlayerManager.getInstance().leave(e.getPlayer());
-        MainRedisHandler.getSaving().remove(e.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

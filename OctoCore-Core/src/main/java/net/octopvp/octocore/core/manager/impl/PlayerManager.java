@@ -13,6 +13,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.core.OctoCore;
+import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.core.manager.Manager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
@@ -184,6 +185,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
             playerProfiles.remove(player.getUniqueId());
             data.setLastSeen(System.currentTimeMillis());
             data.save();
+            MainRedisHandler.getSaving().remove(player.getUniqueId());
         }, 10);
     }
 
