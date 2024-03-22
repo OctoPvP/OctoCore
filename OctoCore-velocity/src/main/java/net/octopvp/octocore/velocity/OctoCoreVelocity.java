@@ -15,6 +15,7 @@ import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.velocity.commands.HasPermCommand;
+import net.octopvp.octocore.velocity.commands.IPBanCommand;
 import net.octopvp.octocore.velocity.listeners.PingListener;
 import net.octopvp.octocore.velocity.listeners.PlayerListener;
 import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
@@ -86,12 +87,14 @@ public class OctoCoreVelocity {
             proxyServer.getEventManager().register(this, listener);
         }
         BrigadierCommand hasPermCommand = HasPermCommand.createCommand(proxyServer);
+        BrigadierCommand ipBanCommand = IPBanCommand.createCommand(proxyServer);
+        proxyServer.getCommandManager().register(ipBanCommand);
         proxyServer.getCommandManager().register(hasPermCommand);
         // getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1,
         // TimeUnit.MINUTES);
         getProxyServer().getScheduler().buildTask(this, new OnlinePlayersManager())
                 .repeat(15, TimeUnit.SECONDS)
                 .schedule();
-        velocityLogger.info("OctoCore Velocity has been enabled in " + (System.currentTimeMillis() - start) + "ms.");
+        velocityLogger.info("OctoCore Velocity has loaded in " + (System.currentTimeMillis() - start) + "ms.");
     }
 }
