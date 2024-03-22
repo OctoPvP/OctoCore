@@ -12,7 +12,7 @@ import net.kyori.adventure.text.Component;
 public class IPBanCommand {
         public static BrigadierCommand createCommand(final ProxyServer server) {
                 LiteralCommandNode<CommandSource> helloNode = LiteralArgumentBuilder
-                                .<CommandSource>literal("ipban")
+                                .<CommandSource>literal("proxyipban")
                                 .then(RequiredArgumentBuilder
                                                 .<CommandSource, String>argument("player", StringArgumentType.word())
                                                 .executes(context -> {
