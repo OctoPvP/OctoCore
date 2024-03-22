@@ -23,7 +23,8 @@ import java.util.UUID;
 
 public class RankManager extends Manager implements IRankManager {
     @Getter
-    private static final MongoCollection<Document> ranksCollection = DatabaseManager.getMongoDatabase().getCollection("ranks");
+    private static final MongoCollection<Document> ranksCollection = DatabaseManager.getMongoDatabase()
+            .getCollection("ranks");
     @Getter
     private static final Set<Rank> ranks = new HashSet<>();
     @Getter
@@ -34,16 +35,39 @@ public class RankManager extends Manager implements IRankManager {
         Logger.info("Loading ranks...");
         loadingRanks = true;
         for (Document document : ranksCollection.find()) {
-            Rank rank = OctoCore.getGson().fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()), Rank.class);
-            if (rank == null)
-                continue;
-            if (ranks.contains(rank))
-                continue;
-            ranks.add(rank);
+            try {
+                Rank rank = OctoCore.getGson().fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()),
+                        Rank.class);
+                if (rank == null)
+                    continue;
+                if (ranks.contains(rank))
+                    continue;
+                ranks.add(rank);
+            } catch (JsonSyntaxException e) {
+                Logger.error("Failed to parse rank: " + document.toJson(), e);
+            }
         }
         loadingRanks = false;
         Logger.info("Loaded (%1) ranks.", ranks.size());
     }
+
+    /*
+     * public void loadRanks() {
+     * Logger.info("Loading ranks...");
+     * loadingRanks = true;
+     * for (Document document : ranksCollection.find()) {
+     * Rank rank = OctoCore.getGson().fromJson(document.toJson(DatabaseManager.
+     * getJsonWriterSettings()), Rank.class);
+     * if (rank == null)
+     * continue;
+     * if (ranks.contains(rank))
+     * continue;
+     * ranks.add(rank);
+     * }
+     * loadingRanks = false;
+     * Logger.info("Loaded (%1) ranks.", ranks.size());
+     * }
+     */
 
     @Override
     public void reloadRanks() {
@@ -69,8 +93,10 @@ public class RankManager extends Manager implements IRankManager {
     @Override
     public void save(Rank rank) {
         if (ranksCollection.find(Filters.eq("rankId", rank.getRankId().toString())).first() != null)
-            ranksCollection.replaceOne(Filters.eq("rankId", rank.getRankId().toString()), Document.parse(OctoCore.getGson().toJson(rank)), new ReplaceOptions().upsert(true));
-        else ranksCollection.insertOne(Document.parse(OctoCore.getGson().toJson(rank)));
+            ranksCollection.replaceOne(Filters.eq("rankId", rank.getRankId().toString()),
+                    Document.parse(OctoCore.getGson().toJson(rank)), new ReplaceOptions().upsert(true));
+        else
+            ranksCollection.insertOne(Document.parse(OctoCore.getGson().toJson(rank)));
         if (!OctoCore.isLoading())
             broadcastReload();
     }
@@ -104,10 +130,10 @@ public class RankManager extends Manager implements IRankManager {
         instance = this;
         loadRanks();
         /*
-        if (OctoCore.isMaster()) {
-            if (getDefaultRank() == null)
-                createDefaultRank();
-        }
+         * if (OctoCore.isMaster()) {
+         * if (getDefaultRank() == null)
+         * createDefaultRank();
+         * }
          */
     }
 
@@ -125,7 +151,8 @@ public class RankManager extends Manager implements IRankManager {
         if (defaultRank == null) {
             if (!createIfNotExist)
                 return null;
-            RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true).setColor(ChatColor.GREEN.toString()).setWeight(0).setRankType(RankType.DEFAULT);
+            RankBuilder rank = new RankBuilder("Default").setPrefix("&a").setDefaultRank(true)
+                    .setColor(ChatColor.GREEN.toString()).setWeight(0).setRankType(RankType.DEFAULT);
             Rank r = rank.build();
             ranks.add(r);
             r.save();
