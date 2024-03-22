@@ -35,38 +35,33 @@ public class RankManager extends Manager implements IRankManager {
         Logger.info("Loading ranks...");
         loadingRanks = true;
         for (Document document : ranksCollection.find()) {
-            try {
-                Rank rank = OctoCore.getGson().fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()),
-                        Rank.class);
-                if (rank == null)
-                    continue;
-                if (ranks.contains(rank))
-                    continue;
-                ranks.add(rank);
-            } catch (JsonSyntaxException e) {
-                Logger.error("Failed to parse rank: " + document.toJson(), e);
-            }
+            Rank rank = OctoCore.getGson().fromJson(document.toJson(DatabaseManager.getJsonWriterSettings()),
+                    Rank.class);
+            if (rank == null)
+                continue;
+            if (ranks.contains(rank))
+                continue;
+            ranks.add(rank);
         }
         loadingRanks = false;
         Logger.info("Loaded (%1) ranks.", ranks.size());
     }
-
     /*
-     * public void loadRanks() {
-     * Logger.info("Loading ranks...");
-     * loadingRanks = true;
      * for (Document document : ranksCollection.find()) {
+     * try {
      * Rank rank = OctoCore.getGson().fromJson(document.toJson(DatabaseManager.
-     * getJsonWriterSettings()), Rank.class);
+     * getJsonWriterSettings()),
+     * Rank.class);
      * if (rank == null)
      * continue;
      * if (ranks.contains(rank))
      * continue;
      * ranks.add(rank);
+     * } catch (JsonSyntaxException e) {
+     * Logger.error("Failed to parse rank: " + document.toJson(), e);
      * }
-     * loadingRanks = false;
-     * Logger.info("Loaded (%1) ranks.", ranks.size());
      * }
+     * 
      */
 
     @Override
