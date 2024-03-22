@@ -2,6 +2,7 @@ package net.octopvp.octocore.velocity;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.mongodb.client.MongoClient;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -11,6 +12,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.velocity.commands.HasPermCommand;
 import net.octopvp.octocore.velocity.listeners.PingListener;
@@ -26,11 +28,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Getter
-@Plugin(
-        id = "octocore-velocity",
-        name = "OctoCore-velocity",
-        version = BuildConstants.VERSION
-)
+@Plugin(id = "octocore-velocity", name = "OctoCore-velocity", version = BuildConstants.VERSION)
 public class OctoCoreVelocity {
     @Getter
     private static final Gson gson = OctoCoreCommon.getGsonBuilder().create();
@@ -38,6 +36,9 @@ public class OctoCoreVelocity {
     private Logger velocityLogger;
     private ProxyServer proxyServer;
     private Path dataDirectory;
+    private MongoClient mongoClient;
+    private ServerImplementation serverImplementation;
+    private OctoCoreVelocity octoCoreVelocity = this;
 
     @Inject
     public OctoCoreVelocity(Logger velocityLogger, ProxyServer proxyServer, @DataDirectory Path dataDirectory) {
@@ -54,12 +55,11 @@ public class OctoCoreVelocity {
         long start = System.currentTimeMillis();
         new net.octopvp.octocore.common.util.Logger(null, // null so we fallback to the server impl callback
                 "[OctoCore] ", (message, players) -> {
-            for (UUID player : players) {
-                proxyServer.getPlayer(player).ifPresent(p -> p.sendMessage(
-                        LegacyComponentSerializer.legacySection().deserialize(message)
-                ));
-            }
-        });
+                    for (UUID player : players) {
+                        proxyServer.getPlayer(player).ifPresent(p -> p.sendMessage(
+                                LegacyComponentSerializer.legacySection().deserialize(message)));
+                    }
+                });
         OctoCoreCommon.getInstance().setProxy(true);
         File dataDirectory = this.dataDirectory.toFile();
         if (!dataDirectory.exists())
@@ -76,7 +76,14 @@ public class OctoCoreVelocity {
                 e.printStackTrace();
             }
         }
-        OctoCoreCommon.getInstance().init(gson, new VelocityServerImpl(proxyServer, velocityLogger, this));
+        OctoCoreCommon.getInstance().init(
+                gson,
+                new VelocityServerImpl(
+                        proxyServer,
+                        velocityLogger,
+                        mongoClient,
+                        serverImplementation,
+                        octoCoreVelocity));
         redisManager = new RedisManager(config.getRedis(), "net.octopvp.octocore.velocity.redis", null);
         Object[] listeners = {
                 new PingListener(this),
@@ -87,9 +94,9 @@ public class OctoCoreVelocity {
         }
         BrigadierCommand hasPermCommand = HasPermCommand.createCommand(proxyServer);
         proxyServer.getCommandManager().register(hasPermCommand);
-        //         getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1, TimeUnit.MINUTES);
-        getProxyServer().getScheduler().
-                buildTask(this, new OnlinePlayersManager())
+        // getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1,
+        // TimeUnit.MINUTES);
+        getProxyServer().getScheduler().buildTask(this, new OnlinePlayersManager())
                 .repeat(15, TimeUnit.SECONDS)
                 .schedule();
         velocityLogger.info("OctoCore Velocity has been enabled in " + (System.currentTimeMillis() - start) + "ms.");
