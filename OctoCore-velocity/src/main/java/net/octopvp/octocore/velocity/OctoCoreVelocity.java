@@ -76,14 +76,7 @@ public class OctoCoreVelocity {
                 e.printStackTrace();
             }
         }
-        OctoCoreCommon.getInstance().init(
-                gson,
-                new VelocityServerImpl(
-                        proxyServer,
-                        velocityLogger,
-                        mongoClient,
-                        serverImplementation,
-                        octoCoreVelocity));
+        OctoCoreCommon.getInstance().init(gson, new VelocityServerImpl(proxyServer, velocityLogger, mongoClient, serverImplementation, octoCoreVelocity));
         redisManager = new RedisManager(config.getRedis(), "net.octopvp.octocore.velocity.redis", null);
         Object[] listeners = {
                 new PingListener(this),
