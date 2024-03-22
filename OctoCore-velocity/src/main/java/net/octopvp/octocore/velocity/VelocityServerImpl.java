@@ -67,8 +67,12 @@ public class VelocityServerImpl implements ServerImplementation {
 
     @Override
     public String getServerName() {
-        //return "Velocity";
-        return serverImplementation.getServerName();
+        if (this.serverImplementation != null) {
+            return serverImplementation.getServerName();
+        } else {
+            // Handle the case where serverImplementation is null
+            return "Velocity";
+        }
     }
 
     @Override
@@ -79,19 +83,19 @@ public class VelocityServerImpl implements ServerImplementation {
     @Override
     public IRankManager getRankManager() {
         return serverImplementation.getRankManager();
-        //throw new UnsupportedOperationException("Not implemented");
+        // throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
     public IPunishModule getPunishModule() {
-        //throw new UnsupportedOperationException("Not implemented");
+        // throw new UnsupportedOperationException("Not implemented");
         return serverImplementation.getPunishModule();
     }
 
     @Override
     public IPlayerManager getPlayerManager() {
         return serverImplementation.getPlayerManager();
-        //throw new UnsupportedOperationException("Not implemented");
+        // throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
@@ -100,7 +104,7 @@ public class VelocityServerImpl implements ServerImplementation {
             @Override
             public MongoClient getMongoClient() {
                 return mongoClient;
-                //throw new UnsupportedOperationException("Not implemented");
+                // throw new UnsupportedOperationException("Not implemented");
             }
 
             @Override
@@ -111,7 +115,7 @@ public class VelocityServerImpl implements ServerImplementation {
             @Override
             public MongoDatabase getDatabase() {
                 return mongoClient.getDatabase("octocore");
-                //throw new UnsupportedOperationException("Not implemented");
+                // throw new UnsupportedOperationException("Not implemented");
             }
         };
     }
