@@ -39,7 +39,7 @@ public class OfflinePunishData implements IPunishData {
         this.name = name;
     }
 
-    public OfflinePunishData(String name, String ipaddress){
+    public OfflinePunishData(String name, String ipaddress) {
         this.name = name;
         this.ipaddress = ipaddress;
     }
@@ -49,72 +49,50 @@ public class OfflinePunishData implements IPunishData {
     }
 
     public OfflinePunishData load(boolean activeOnly) {
-        try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection()
-                .find(Filters.eq("address", address)).iterator()) {
-            while (cursor.hasNext()) {
-                Document document = cursor.next();
+        Logger.debug("Loading punish data for " + this.name);
+        this.punishments.clear();
 
-                PlayerData playerData = new PlayerData(UUID.fromString(document.getString("uuid")),
-                        document.getString("name"));
+        Player player = Bukkit.getPlayer(name);
 
-                playerData.getPunishData().forceLoadActiveBansAndBlacklists();
+        if (player == null) {
+            // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
+            UUID uuid = OfflineHelpers.getOfflinePlayerUUID(this.name);
+            List<Document> punishments = PunishModule.getPunishments().find().filter(Filters.and(
+                    Filters.eq("uuid", uuid.toString()),
+                    activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", uuid.toString())))
+                    .into(new ArrayList<>());
 
-                if (!playerData.getUuid().toString().equals(this.uniqueId.toString())
-                        && this.getAlt(playerData.getUuid()) == null) {
-                    this.name = playerData.getName();
-                }
+            for (Document document : punishments) {
+                Logger.debug(document.getString("name"));
             }
-        } catch (Exception e) {
-            // set the name of the player to a default name lets say "Unknown"
-            this.name = "Unknown";
-        }
-        try {
 
-            Logger.debug("Loading punish data for " + this.name);
-            this.punishments.clear();
-
-            Player player = Bukkit.getPlayer(name);
-
-            if (player == null) {
-                // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
-                UUID uuid = OfflineHelpers.getOfflinePlayerUUID(this.name);
-                List<Document> punishments = PunishModule.getPunishments().find().filter(Filters.and(
-                        Filters.eq("uuid", uuid.toString()),
-                        activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", uuid.toString())))
-                        .into(new ArrayList<>());
-
-                for (Document document : punishments) {
-                    Logger.debug(document.getString("name"));
-                }
-
-                if (punishments.size() > 0) {
-                    this.name = punishments.get(0).getString("name");
-                    this.uniqueId = UUID.fromString(punishments.get(0).getString("uuid"));
-                    this.address = punishments.get(0).getString("BannedIP");
-                } else {
-                    this.uniqueId = uuid;
-                    this.address = PlayerManager.getInstance().getAddress(this.uniqueId);
-                }
-                punishments.forEach(document -> {
-                    Punishment punishment = new Punishment(document);
-
-                    this.punishments.add(punishment);
-                });
+            if (punishments.size() > 0) {
+                this.name = punishments.get(0).getString("name");
+                this.uniqueId = UUID.fromString(punishments.get(0).getString("uuid"));
+                this.address = punishments.get(0).getString("BannedIP");
             } else {
-                this.name = player.getName();
-                this.uniqueId = player.getUniqueId();
-
-                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-
-                this.address = playerData.getAddress();
-                this.punishments.addAll(playerData.getPunishData().loadIfNot().getPunishments());
+                this.uniqueId = uuid;
+                this.address = PlayerManager.getInstance().getAddress(this.uniqueId);
             }
-            return this;
-        } catch (Exception e) {
-            Logger.error("Error loading punish data for " + this.name);
-            e.printStackTrace();
-            return this;
+            punishments.forEach(document -> {
+                Punishment punishment = new Punishment(document);
+
+                this.punishments.add(punishment);
+            });
+        } else {
+            this.name = player.getName();
+            this.uniqueId = player.getUniqueId();
+
+            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
+
+            if (this.ipaddress == null) {
+                this.address = playerData.getAddress();
+            } else {
+                this.address = this.ipaddress;
+            }
+            this.punishments.addAll(playerData.getPunishData().loadIfNot().getPunishments());
         }
+        return this;
     }
 
     public Alt getAlt(UUID uuid) {

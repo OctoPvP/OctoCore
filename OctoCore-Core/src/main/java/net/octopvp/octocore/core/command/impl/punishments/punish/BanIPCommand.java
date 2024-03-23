@@ -20,11 +20,16 @@ public class BanIPCommand {
     public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent,
             // instead of player use a raw ip address as an argument
             @Name("ipAddress") @Optional String ipAddress,
-            @Name("player") @Optional String name,
+            @Name("player") @Optional String name, 
             @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason,
             @GetArgumentFor(1) String durationString) {
+            if (name == null) { // do an if check if name is null, if so set name to "Unknown"
+                name = "Unknown";
+            }
+        final String finalName = name;
         Tasks.runAsync(() -> {
-            OfflinePunishData data = new OfflinePunishData(name, ipAddress);
+            
+            OfflinePunishData data = new OfflinePunishData(finalName, ipAddress);
             data.load();
 
             if (data.isBanned()) {
@@ -41,12 +46,7 @@ public class BanIPCommand {
                 punishment.setPermanent(true);
             }
             punishment.setIPRelative(true);
-            // if user is using only ipaddress argument then set target address to ipaddress
-            if (data.getName() == null) {
-                punishment.setTargetAddress(ipAddress);
-            } else {
-                punishment.setTargetAddress(data.getAddress());
-            }
+            punishment.setTargetAddress(data.getAddress());
             // punishment.setTargetAddress(String.valueOf(data.getAddress()));
             punishment.setEnteredDuration(durationString);
             punishment.setLast(true);
