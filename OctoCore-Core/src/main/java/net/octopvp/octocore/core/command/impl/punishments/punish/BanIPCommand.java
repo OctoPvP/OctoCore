@@ -19,17 +19,14 @@ public class BanIPCommand {
     @Permission(Permissions.PUNISHMENT_IPBAN)
     public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent,
             // instead of player use a raw ip address as an argument
-            @Name("ipAddress") @Optional String ipAddress,
-            @Name("player") @Optional String name, 
+            @Name("ipAddress") @Required String ipAddress,
+            //@Name("player") @Optional String name, 
             @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason,
             @GetArgumentFor(1) String durationString) {
-            if (name == null) { // do an if check if name is null, if so set name to "Unknown"
-                name = "Unknown";
-            }
-        final String finalName = name;
         Tasks.runAsync(() -> {
+            String name = "Unknown";
             
-            OfflinePunishData data = new OfflinePunishData(finalName, ipAddress);
+            OfflinePunishData data = new OfflinePunishData(name, ipAddress);
             data.load();
 
             if (data.isBanned()) {
