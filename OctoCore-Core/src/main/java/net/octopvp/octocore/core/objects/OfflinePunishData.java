@@ -53,6 +53,9 @@ public class OfflinePunishData implements IPunishData {
         this.punishments.clear();
 
         Player player = Bukkit.getPlayer(name);
+        if (name == "Unknown") {
+            this.address = this.ipaddress;
+        }
 
         if (player == null) {
             // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
@@ -90,7 +93,7 @@ public class OfflinePunishData implements IPunishData {
             } else {
                 this.address = this.ipaddress;
             }
-            
+
             this.punishments.addAll(playerData.getPunishData().loadIfNot().getPunishments());
         }
         return this;
