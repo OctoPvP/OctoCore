@@ -106,7 +106,7 @@ public class SettingsMenu extends Menu<Gui> {
 
     public GuiItem toggleMessages() {
         return ItemBuilder.from(XMaterial.REPEATER)
-                .name(data.getMessageSettings().isMessagesOff() ? CC.GREEN + "Private messages: OFF" : CC.GREEN + "Private messages: ON")
+                .name(data.getMessageSettings().isMessagesOff() ? CC.GREEN + "Private messages: OFF" : CC.RED + "Private messages: ON")
                 .lore(data.getMessageSettings().isMessagesOff() ? CC.YELLOW + "Click to toggle messages on" : CC.YELLOW + "Click to toggle messages OFF")
                 .asGuiItem(event -> {
                     Player player = (Player) event.getWhoClicked();

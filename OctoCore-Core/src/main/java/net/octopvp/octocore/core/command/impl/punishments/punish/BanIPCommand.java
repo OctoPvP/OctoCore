@@ -37,6 +37,7 @@ public class BanIPCommand {
                 punishment.setPermanent(true);
             }
             punishment.setIPRelative(true);
+            punishment.setTargetAddress(String.valueOf(data.getAddress()));
             punishment.setEnteredDuration(durationString);
             punishment.setLast(true);
             punishment.setAddedByName(sender.getName());
