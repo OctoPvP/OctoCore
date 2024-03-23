@@ -87,9 +87,6 @@ public class OctoCoreVelocity {
             proxyServer.getEventManager().register(this, listener);
         }
         BrigadierCommand hasPermCommand = HasPermCommand.createCommand(proxyServer);
-        BrigadierCommand ipBanCommand = IPBanCommand.createCommand(proxyServer);
-
-        proxyServer.getCommandManager().register(ipBanCommand);
         proxyServer.getCommandManager().register(hasPermCommand);
         // getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1,
         // TimeUnit.MINUTES);
