@@ -39,7 +39,8 @@ public class OfflinePunishData implements IPunishData {
         this.name = name;
     }
 
-    public OfflinePunishData(String name, String ipaddress) {
+    public OfflinePunishData(String name, String ipaddress){
+        this.name = name;
         this.ipaddress = ipaddress;
     }
 
@@ -48,46 +49,72 @@ public class OfflinePunishData implements IPunishData {
     }
 
     public OfflinePunishData load(boolean activeOnly) {
-        Logger.debug("Loading punish data for " + this.name);
-        this.punishments.clear();
+        try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection()
+                .find(Filters.eq("address", address)).iterator()) {
+            while (cursor.hasNext()) {
+                Document document = cursor.next();
 
-        Player player = Bukkit.getPlayer(name);
+                PlayerData playerData = new PlayerData(UUID.fromString(document.getString("uuid")),
+                        document.getString("name"));
 
-        if (player == null) {
-            // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
-            UUID uuid = OfflineHelpers.getOfflinePlayerUUID(this.name);
-            List<Document> punishments = PunishModule.getPunishments().find().filter(Filters.and(
-                            Filters.eq("uuid", uuid.toString()),
-                            activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", uuid.toString())))
-                    .into(new ArrayList<>());
+                playerData.getPunishData().forceLoadActiveBansAndBlacklists();
 
-            for (Document document : punishments) {
-                Logger.debug(document.getString("name"));
+                if (!playerData.getUuid().toString().equals(this.uniqueId.toString())
+                        && this.getAlt(playerData.getUuid()) == null) {
+                    this.name = playerData.getName();
+                }
             }
-
-            if (punishments.size() > 0) {
-                this.name = punishments.get(0).getString("name");
-                this.uniqueId = UUID.fromString(punishments.get(0).getString("uuid"));
-                this.address = punishments.get(0).getString("BannedIP");
-            } else {
-                this.uniqueId = uuid;
-                this.address = PlayerManager.getInstance().getAddress(this.uniqueId);
-            }
-            punishments.forEach(document -> {
-                Punishment punishment = new Punishment(document);
-
-                this.punishments.add(punishment);
-            });
-        } else {
-            this.name = player.getName();
-            this.uniqueId = player.getUniqueId();
-
-            PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-
-            this.address = playerData.getAddress();
-            this.punishments.addAll(playerData.getPunishData().loadIfNot().getPunishments());
+        } catch (Exception e) {
+            // set the name of the player to a default name lets say "Unknown"
+            this.name = "Unknown";
         }
-        return this;
+        try {
+
+            Logger.debug("Loading punish data for " + this.name);
+            this.punishments.clear();
+
+            Player player = Bukkit.getPlayer(name);
+
+            if (player == null) {
+                // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
+                UUID uuid = OfflineHelpers.getOfflinePlayerUUID(this.name);
+                List<Document> punishments = PunishModule.getPunishments().find().filter(Filters.and(
+                        Filters.eq("uuid", uuid.toString()),
+                        activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", uuid.toString())))
+                        .into(new ArrayList<>());
+
+                for (Document document : punishments) {
+                    Logger.debug(document.getString("name"));
+                }
+
+                if (punishments.size() > 0) {
+                    this.name = punishments.get(0).getString("name");
+                    this.uniqueId = UUID.fromString(punishments.get(0).getString("uuid"));
+                    this.address = punishments.get(0).getString("BannedIP");
+                } else {
+                    this.uniqueId = uuid;
+                    this.address = PlayerManager.getInstance().getAddress(this.uniqueId);
+                }
+                punishments.forEach(document -> {
+                    Punishment punishment = new Punishment(document);
+
+                    this.punishments.add(punishment);
+                });
+            } else {
+                this.name = player.getName();
+                this.uniqueId = player.getUniqueId();
+
+                PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
+
+                this.address = playerData.getAddress();
+                this.punishments.addAll(playerData.getPunishData().loadIfNot().getPunishments());
+            }
+            return this;
+        } catch (Exception e) {
+            Logger.error("Error loading punish data for " + this.name);
+            e.printStackTrace();
+            return this;
+        }
     }
 
     public Alt getAlt(UUID uuid) {
@@ -95,27 +122,33 @@ public class OfflinePunishData implements IPunishData {
     }
 
     public OfflinePunishData loadAlts(Document doc) {
-        if (doc == null) return this;
+        if (doc == null)
+            return this;
         this.uniqueId = UUID.fromString(doc.getString("uuid"));
         this.address = doc.getString("address");
         this.alts.clear();
 
-        try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("address", address)).iterator()) {
+        try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection()
+                .find(Filters.eq("address", address)).iterator()) {
             while (cursor.hasNext()) {
                 Document document = cursor.next();
 
-                PlayerData playerData = new PlayerData(UUID.fromString(document.getString("uuid")), document.getString("name"));
+                PlayerData playerData = new PlayerData(UUID.fromString(document.getString("uuid")),
+                        document.getString("name"));
 
                 playerData.getPunishData().forceLoadActiveBansAndBlacklists();
 
-                if (!playerData.getUuid().toString().equals(this.uniqueId.toString()) && this.getAlt(playerData.getUuid()) == null) {
-                    this.alts.add(new Alt(playerData.getUuid(), playerData.getName(), playerData.getPunishData()).updateDisplayName());
+                if (!playerData.getUuid().toString().equals(this.uniqueId.toString())
+                        && this.getAlt(playerData.getUuid()) == null) {
+                    this.alts.add(new Alt(playerData.getUuid(), playerData.getName(), playerData.getPunishData())
+                            .updateDisplayName());
                 }
             }
         }
 
         OctoCoreCommon.getInstance().getServerManager().getOnlinePlayers().forEach(onlinePlayer -> {
-            if (!onlinePlayer.getUuid().equals(this.uniqueId) && onlinePlayer.getAddress().equalsIgnoreCase(address) && this.getAlt(onlinePlayer.getUuid()) == null) {
+            if (!onlinePlayer.getUuid().equals(this.uniqueId) && onlinePlayer.getAddress().equalsIgnoreCase(address)
+                    && this.getAlt(onlinePlayer.getUuid()) == null) {
                 new AltUpdatePacket(this.uniqueId, this.name, onlinePlayer.getUuid(), onlinePlayer.getName());
             }
         });
@@ -128,47 +161,64 @@ public class OfflinePunishData implements IPunishData {
 
     @Override
     public boolean isBanned() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
+        return this.punishments.stream()
+                .filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN)
+                .findFirst().orElse(null) != null;
     }
 
     @Override
     public boolean isIPBanned() {
-        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
+        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired()
+                && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
     }
 
     @Override
     public boolean isBlacklisted() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).findFirst().orElse(null) != null;
+        return this.punishments.stream()
+                .filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST)
+                .findFirst().orElse(null) != null;
     }
 
     @Override
     public boolean isWarned() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.WARN).findFirst().orElse(null) != null;
+        return this.punishments.stream()
+                .filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.WARN)
+                .findFirst().orElse(null) != null;
     }
 
     @Override
     public boolean isMuted() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE).findFirst().orElse(null) != null;
+        return this.punishments.stream()
+                .filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE)
+                .findFirst().orElse(null) != null;
     }
 
     @Override
     public boolean isIPMuted() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE && punishment.isIPRelative()).findFirst().orElse(null) != null;
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired()
+                && punishment.getType() == PunishmentType.MUTE && punishment.isIPRelative()).findFirst()
+                .orElse(null) != null;
     }
 
     @Override
     public IPunishment getActiveBan() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null);
+        return this.punishments.stream()
+                .filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN)
+                .findFirst().orElse(null);
     }
 
     @Override
     public IPunishment getActiveMute() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE).findFirst().orElse(null);
+        return this.punishments.stream()
+                .filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE)
+                .findFirst().orElse(null);
     }
 
     @Override
     public IPunishment getActiveBlacklist() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST).findFirst().orElse(null);
+        return this.punishments.stream()
+                .filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BLACKLIST)
+                .findFirst().orElse(null);
     }
 
     @Override

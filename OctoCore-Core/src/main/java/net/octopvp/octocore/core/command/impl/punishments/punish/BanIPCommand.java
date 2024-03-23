@@ -25,20 +25,7 @@ public class BanIPCommand {
             @GetArgumentFor(1) String durationString) {
         Tasks.runAsync(() -> {
             OfflinePunishData data = new OfflinePunishData(name, ipAddress);
-            if (data != null) {
-                // Handle the case where a player name was provided
-                data.load();
-            } else if (ipAddress != null) {
-                // Handle the case where an IP address was provided
-                // You might need to create a new OfflinePunishData instance with the IP address
-                data = new OfflinePunishData(ipAddress);
-            } else {
-                // Neither a player name nor an IP address was provided
-                // You might want to send an error message to the sender
-                sender.sendMessage("You must provide either a player name or an IP address.");
-                return;
-            }
-            //data.load();
+            data.load();
 
             if (data.isBanned()) {
                 sender.sendMessage(Lang.ALREADY_BANNED.toString().replace("%name%", data.getName()));
@@ -60,7 +47,7 @@ public class BanIPCommand {
             } else {
                 punishment.setTargetAddress(data.getAddress());
             }
-            //punishment.setTargetAddress(String.valueOf(data.getAddress()));
+            // punishment.setTargetAddress(String.valueOf(data.getAddress()));
             punishment.setEnteredDuration(durationString);
             punishment.setLast(true);
             punishment.setAddedByName(sender.getName());
