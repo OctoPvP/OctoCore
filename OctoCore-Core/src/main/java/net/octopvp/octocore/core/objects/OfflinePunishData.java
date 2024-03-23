@@ -90,6 +90,7 @@ public class OfflinePunishData implements IPunishData {
             } else {
                 this.address = this.ipaddress;
             }
+            
             this.punishments.addAll(playerData.getPunishData().loadIfNot().getPunishments());
         }
         return this;
