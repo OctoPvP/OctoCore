@@ -29,7 +29,7 @@ public class BanIPCommand {
             OfflinePunishData data = new OfflinePunishData(name, ipAddress);
             data.load();
 
-            if (data.isBanned()) {
+            if (data.isIPBanned()) {
                 sender.sendMessage(Lang.ALREADY_BANNED.toString().replace("%name%", data.getName()));
                 return;
             }
