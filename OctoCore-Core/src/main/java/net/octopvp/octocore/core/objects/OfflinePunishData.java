@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Setter
 public class OfflinePunishData implements IPunishData {
 
-    private String name, address;
+    private String name, address, ipaddress;
     private UUID uniqueId;
 
     private Collection<Alt> alts = new ArrayList<>();
@@ -37,6 +37,10 @@ public class OfflinePunishData implements IPunishData {
 
     public OfflinePunishData(String name) {
         this.name = name;
+    }
+
+    public OfflinePunishData(String name, String ipaddress) {
+        this.ipaddress = ipaddress;
     }
 
     public OfflinePunishData load() {

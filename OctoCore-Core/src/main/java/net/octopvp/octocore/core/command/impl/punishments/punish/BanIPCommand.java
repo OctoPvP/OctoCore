@@ -14,16 +14,31 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class BanIPCommand {
+    @SuppressWarnings("unused")
     @Command(name = "banip", aliases = { "tempbanip", "ipban", "iptempban" })
     @Permission(Permissions.PUNISHMENT_IPBAN)
     public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent,
             // instead of player use a raw ip address as an argument
-            @Name("ipAddress") String ipAddress,
-            @Name("player") @Optional OfflinePunishData data,
+            @Name("ipAddress") @Optional String ipAddress,
+            @Name("player") @Optional String name,
             @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason,
             @GetArgumentFor(1) String durationString) {
         Tasks.runAsync(() -> {
-            data.load();
+            OfflinePunishData data = new OfflinePunishData(name, ipAddress);
+            if (data != null) {
+                // Handle the case where a player name was provided
+                data.load();
+            } else if (ipAddress != null) {
+                // Handle the case where an IP address was provided
+                // You might need to create a new OfflinePunishData instance with the IP address
+                data = new OfflinePunishData(ipAddress);
+            } else {
+                // Neither a player name nor an IP address was provided
+                // You might want to send an error message to the sender
+                sender.sendMessage("You must provide either a player name or an IP address.");
+                return;
+            }
+            //data.load();
 
             if (data.isBanned()) {
                 sender.sendMessage(Lang.ALREADY_BANNED.toString().replace("%name%", data.getName()));
