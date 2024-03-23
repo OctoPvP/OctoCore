@@ -17,7 +17,9 @@ public class BanIPCommand {
     @Command(name = "banip", aliases = { "tempbanip", "ipban", "iptempban" })
     @Permission(Permissions.PUNISHMENT_IPBAN)
     public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent,
-            @Name("player") OfflinePunishData data,
+            // instead of player use a raw ip address as an argument
+            @Name("ipAddress") OfflinePunishData address,
+            @Name("player") @Optional OfflinePunishData data,
             @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason,
             @GetArgumentFor(1) String durationString) {
         Tasks.runAsync(() -> {
