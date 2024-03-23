@@ -81,13 +81,14 @@ public class OctoCoreVelocity {
         redisManager = new RedisManager(config.getRedis(), "net.octopvp.octocore.velocity.redis", null);
         Object[] listeners = {
                 new PingListener(this),
-                new PlayerListener(this)
+                new PlayerListener(this, null)
         };
         for (Object listener : listeners) {
             proxyServer.getEventManager().register(this, listener);
         }
         BrigadierCommand hasPermCommand = HasPermCommand.createCommand(proxyServer);
         BrigadierCommand ipBanCommand = IPBanCommand.createCommand(proxyServer);
+
         proxyServer.getCommandManager().register(ipBanCommand);
         proxyServer.getCommandManager().register(hasPermCommand);
         // getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1,
