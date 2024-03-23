@@ -18,7 +18,7 @@ public class BanIPCommand {
     @Permission(Permissions.PUNISHMENT_IPBAN)
     public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent,
             // instead of player use a raw ip address as an argument
-            @Name("ipAddress") OfflinePunishData address,
+            @Name("ipAddress") String ipAddress,
             @Name("player") @Optional OfflinePunishData data,
             @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason,
             @GetArgumentFor(1) String durationString) {
@@ -39,7 +39,13 @@ public class BanIPCommand {
                 punishment.setPermanent(true);
             }
             punishment.setIPRelative(true);
-            punishment.setTargetAddress(String.valueOf(data.getAddress()));
+            // if user is using only ipaddress argument then set target address to ipaddress
+            if (data.getName() == null) {
+                punishment.setTargetAddress(ipAddress);
+            } else {
+                punishment.setTargetAddress(data.getAddress());
+            }
+            //punishment.setTargetAddress(String.valueOf(data.getAddress()));
             punishment.setEnteredDuration(durationString);
             punishment.setLast(true);
             punishment.setAddedByName(sender.getName());
