@@ -99,7 +99,7 @@ public class BasePunishment implements IPunishment {
             document.put("whenRemoved", this.whenRemoved);
             document.put("last", this.last);
             document.put("IPRelative", this.IPRelative);
-            document.put("IPAddress", targetAddress);
+            document.put("IPAddress", this.targetAddress);
             document.put("addedByName", this.addedByName);
             document.put("id", this.id.toString());
             document.put("type", this.punishmentType.name());

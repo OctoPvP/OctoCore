@@ -14,9 +14,12 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class BanIPCommand {
-    @Command(name = "banip", aliases = {"tempbanip", "ipban", "iptempban"})
+    @Command(name = "banip", aliases = { "tempbanip", "ipban", "iptempban" })
     @Permission(Permissions.PUNISHMENT_IPBAN)
-    public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent, @Name("player") OfflinePunishData data, @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason, @GetArgumentFor(1) String durationString) {
+    public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent,
+            @Name("player") OfflinePunishData data,
+            @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason,
+            @GetArgumentFor(1) String durationString) {
         Tasks.runAsync(() -> {
             data.load();
 
