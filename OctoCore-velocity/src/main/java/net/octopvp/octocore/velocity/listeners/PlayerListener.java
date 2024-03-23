@@ -88,9 +88,9 @@ public class PlayerListener {
                         // get the username and password / host and port from the config
                         // ...
                         // use the getMongoClient() from VelocityServerImpl.java
-                        //MongoClient mongoClient = plugin.getMongoClient();
+                        // MongoClient mongoClient = plugin.getMongoClient();
 
-                        //MongoClient mongoClient = MongoClients.create("");
+                        // MongoClient mongoClient = MongoClients.create("");
                         IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
 
                         // Get the database and collection

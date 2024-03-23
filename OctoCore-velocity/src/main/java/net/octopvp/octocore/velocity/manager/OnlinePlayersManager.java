@@ -15,6 +15,7 @@ public class OnlinePlayersManager implements Runnable {
     @Getter
     @Setter
     private static Map<UUID, OnlinePlayerData> dataMap = new ConcurrentHashMap<>();
+
     @Override
     public void run() {
         dataMap.forEach((uuid, data) -> {

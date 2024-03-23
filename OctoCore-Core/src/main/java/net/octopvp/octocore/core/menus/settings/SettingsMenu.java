@@ -93,7 +93,7 @@ public class SettingsMenu extends Menu<Gui> {
 
     public GuiItem toggleGlobalChat() {
         return ItemBuilder.skull().texture(Skulls.GLOBE_BASE_64)
-                .name(data.getMessageSettings().isGlobalChat() ? CC.GREEN + "Global chat: ON" : CC.GREEN + "Global chat: OFF")
+                .name(data.getMessageSettings().isGlobalChat() ? CC.GREEN + "Global chat: ON" : CC.RED + "Global chat: OFF")
                 .lore(data.getMessageSettings().isGlobalChat() ? CC.YELLOW + "Click to toggle global chat OFF" : CC.YELLOW + "Click to toggle global chat ON")
                 .asGuiItem(event -> {
                     Player player = (Player) event.getWhoClicked();

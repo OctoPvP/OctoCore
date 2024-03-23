@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
+//import net.octopvp.octocore.common.interfaces.manager.IDatabaseManager;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -19,15 +20,18 @@ import java.util.HashMap;
 @Data
 public class VelocityConfiguration {
     private JedisSettings redis = new JedisSettings("localhost", 6379, "password", false);
-    private HashMap<String, PingConfig> motds = new HashMap<>() {{
-        put("default", new PingConfig());
-    }};
+    
+    private HashMap<String, PingConfig> motds = new HashMap<>() {
+        {
+            put("default", new PingConfig());
+        }
+    };
     private String defaultMotd = "default";
     private boolean randomMotd = false;
 
     @Data
     public static class PingConfig {
-        private String[] motd = {"<green>Line 1", "<red>Line 2"};
+        private String[] motd = { "<green>Line 1", "<red>Line 2" };
         private Protocol protocol = null;
         private ServerPing.Players players = null;
         private String favicon = "server-icon.png";
@@ -55,22 +59,19 @@ public class VelocityConfiguration {
             Protocol protocol = getProtocol();
             Path faviconPath = new File(favicon).toPath();
             return new ServerPing(
-                    protocol == null ? fallback.getVersion() :
-                            new ServerPing.Version(
+                    protocol == null ? fallback.getVersion()
+                            : new ServerPing.Version(
                                     protocol.protocol,
-                                    protocol.version
-                            ),
+                                    protocol.version),
                     players == null ? fallback.getPlayers().orElse(null) : players,
                     generateMotd(),
-                    Files.exists(faviconPath) ? Favicon.create(faviconPath) : null
-            );
+                    Files.exists(faviconPath) ? Favicon.create(faviconPath) : null);
         }
 
         private Component generateMotd() {
             return MiniMessage.miniMessage().deserialize(String.join("\n", motd));
         }
     }
-
 
     @SneakyThrows
     public static VelocityConfiguration load(Gson gson, File configFile) {
