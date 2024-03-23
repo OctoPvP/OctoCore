@@ -15,7 +15,6 @@ import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.velocity.commands.HasPermCommand;
-import net.octopvp.octocore.velocity.commands.IPBanCommand;
 import net.octopvp.octocore.velocity.listeners.PingListener;
 import net.octopvp.octocore.velocity.listeners.PlayerListener;
 import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
