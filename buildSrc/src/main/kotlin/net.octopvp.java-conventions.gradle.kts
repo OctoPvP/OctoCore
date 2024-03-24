@@ -59,7 +59,7 @@ dependencies {
     implementation("io.sentry:sentry:5.6.0")
     implementation("com.google.guava:guava:31.1-jre")
     implementation("com.github.oshi:oshi-core:5.6.0")
-    implementation("com.github.SparklingComet:java-mojang-api:-SNAPSHOT")
+    implementation("com.github.SparklingComet:java-mojang-api:master-SNAPSHOT")
 }
 
 group = "net.octopvp"

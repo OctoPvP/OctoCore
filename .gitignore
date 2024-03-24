@@ -114,3 +114,6 @@ buildNumber.properties
 
 # Common working directory
 run/
+OctoCore-master/package-lock.json
+OctoCore-master/vite.generated.ts
+.vscode/*

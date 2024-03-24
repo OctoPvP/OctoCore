@@ -55,7 +55,7 @@ public class HistoryMenu extends Menu<Gui> {
     public GuiItem warnsButton(IPunishData playerData) { // slot 31
         List<IPunishment> warns = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.WARN).collect(Collectors.toList());
         List<String> lore = Arrays.asList(
-                CC.GRAY + "Currently warned&7: " + (playerData.isWarned() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GRAY + "Currently warned: " + (playerData.isWarned() ? CC.GREEN + "Yes" : CC.RED + "No"),
                 CC.GRAY + "User was warned " + CC.YELLOW + warns.size() + CC.GRAY + " times.",
                 " ",
                 CC.YELLOW + "Click to view all warns."
@@ -93,7 +93,7 @@ public class HistoryMenu extends Menu<Gui> {
     public GuiItem mutesButton(IPunishData playerData) {
         List<IPunishment> mutes = playerData.getPunishments().stream().filter(punishment -> punishment.getPunishmentType() == PunishmentType.MUTE).collect(Collectors.toList());
         List<String> lore = Arrays.asList(
-                CC.GRAY + "Currently muted&7: " + (playerData.isMuted() ? CC.GREEN + "Yes" : CC.RED + "No"),
+                CC.GRAY + "Currently muted: " + (playerData.isMuted() ? CC.GREEN + "Yes" : CC.RED + "No"),
                 CC.GRAY + "User was muted " + CC.YELLOW + mutes.size() + CC.GRAY + " times.",
                 " ",
                 CC.YELLOW + "Click to view all mutes."

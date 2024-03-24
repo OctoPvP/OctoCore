@@ -20,8 +20,11 @@ import java.util.UUID;
 public class VelocityServerImpl implements ServerImplementation {
     private final ProxyServer proxyServer;
     private final Logger velocityLogger;
+    private MongoClient mongoClient;
+    private ServerImplementation serverImplementation;
     private OctoCoreVelocity octoCoreVelocity;
     private final IServerManager serverManager = new DefaultServerManagerImpl();
+
     @Override
     public void sendMessage(UUID uuid, String message) {
         proxyServer.getPlayer(uuid).ifPresent(p -> p.sendMessage(Component.text(message)));
@@ -64,7 +67,12 @@ public class VelocityServerImpl implements ServerImplementation {
 
     @Override
     public String getServerName() {
-        return "Velocity";
+        if (this.serverImplementation != null) {
+            return serverImplementation.getServerName();
+        } else {
+            // Handle the case where serverImplementation is null
+            return "Velocity";
+        }
     }
 
     @Override
@@ -74,16 +82,20 @@ public class VelocityServerImpl implements ServerImplementation {
 
     @Override
     public IRankManager getRankManager() {
-        throw new UnsupportedOperationException("Not implemented");
+        return serverImplementation.getRankManager();
+        // throw new UnsupportedOperationException("Not implemented");
     }
+
     @Override
     public IPunishModule getPunishModule() {
-        throw new UnsupportedOperationException("Not implemented");
+        // throw new UnsupportedOperationException("Not implemented");
+        return serverImplementation.getPunishModule();
     }
 
     @Override
     public IPlayerManager getPlayerManager() {
-        throw new UnsupportedOperationException("Not implemented");
+        return serverImplementation.getPlayerManager();
+        // throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
@@ -91,7 +103,8 @@ public class VelocityServerImpl implements ServerImplementation {
         return new IDatabaseManager() {
             @Override
             public MongoClient getMongoClient() {
-                throw new UnsupportedOperationException("Not implemented");
+                return mongoClient;
+                // throw new UnsupportedOperationException("Not implemented");
             }
 
             @Override
@@ -101,7 +114,8 @@ public class VelocityServerImpl implements ServerImplementation {
 
             @Override
             public MongoDatabase getDatabase() {
-                throw new UnsupportedOperationException("Not implemented");
+                return mongoClient.getDatabase("octocore");
+                // throw new UnsupportedOperationException("Not implemented");
             }
         };
     }

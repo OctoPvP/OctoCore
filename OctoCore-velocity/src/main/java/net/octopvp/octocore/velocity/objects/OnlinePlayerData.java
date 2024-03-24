@@ -48,28 +48,33 @@ public class OnlinePlayerData {
     public boolean isPermSet(String perm) {
         return getNode(perm) != null;
     }
+
     public Tristate getTristate(String perm) {
         Optional<Boolean> optional = hasPermission(perm);
         return Tristate.fromNullableBoolean(optional.orElse(null));
     }
-
 
     public void update() {
         Logger.debug("Updating for " + uuid);
         cachedPermResults.clear();
         nodes.clear();
 
-        if (!OctoCoreCommon.getInstance().getRedisManager().isConnected()) return;
+        if (!OctoCoreCommon.getInstance().getRedisManager().isConnected())
+            return;
 
         try (Jedis jedis = RedisManager.getJedis()) {
             String json = jedis.hget("player-data", uuid.toString());
-            if (json == null) return;
+            if (json == null)
+                return;
             Document document = Document.parse(json);
             // Logger.debug(" - Document: " + json);
-            this.nodes = OctoCoreCommon.getInstance().getGson().fromJson(document.getString("calculated-nodes"), GsonType.NODE_MAP);
+            this.nodes = OctoCoreCommon.getInstance().getGson().fromJson(document.getString("calculated-nodes"),
+                    GsonType.NODE_MAP);
             // Logger.debug(" - Nodes: ");
             // PermissionManager.getInstance().printNodeMap(nodes);
-            this.vanished = document.getBoolean("joinVanished"); // used to be vanished but we've removed that from playerdata
+            this.vanished = document.getBoolean("joinVanished"); // used to be vanished but we've removed that from
+                                                                 // playerdata
+
         }
     }
 

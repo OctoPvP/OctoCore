@@ -14,13 +14,22 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class BanIPCommand {
-    @Command(name = "banip", aliases = {"tempbanip", "ipban", "iptempban"})
+    @SuppressWarnings("unused")
+    @Command(name = "banip", aliases = { "tempbanip", "ipban", "iptempban" })
     @Permission(Permissions.PUNISHMENT_IPBAN)
-    public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent, @Name("player") OfflinePunishData data, @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason, @GetArgumentFor(1) String durationString) {
+    public CommandResult execute(CommandSender sender, @Switch(value = "s", aliases = "silent") boolean silent,
+            // instead of player use a raw ip address as an argument
+            @Name("ipAddress") @Required String ipAddress,
+            //@Name("player") @Optional String name, 
+            @Duration(allowPermanent = true, defaultValue = "perm") @Optional long duration, @JoinStrings String reason,
+            @GetArgumentFor(1) String durationString) {
         Tasks.runAsync(() -> {
+            String name = "Unknown";
+            
+            OfflinePunishData data = new OfflinePunishData(name, ipAddress);
             data.load();
 
-            if (data.isBanned()) {
+            if (data.isIPBanned()) {
                 sender.sendMessage(Lang.ALREADY_BANNED.toString().replace("%name%", data.getName()));
                 return;
             }
@@ -34,6 +43,8 @@ public class BanIPCommand {
                 punishment.setPermanent(true);
             }
             punishment.setIPRelative(true);
+            punishment.setTargetAddress(ipAddress);//data.getAddress());
+            // punishment.setTargetAddress(String.valueOf(data.getAddress()));
             punishment.setEnteredDuration(durationString);
             punishment.setLast(true);
             punishment.setAddedByName(sender.getName());
