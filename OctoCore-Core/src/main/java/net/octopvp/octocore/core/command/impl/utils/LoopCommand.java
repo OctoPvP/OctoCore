@@ -24,7 +24,7 @@ public class LoopCommand {
             return CommandResult.SUCCESS;
         }
 
-        Bukkit.getScheduler().runTaskTimer(OctoCore.getInstance(), new LoopScheduler(times, sender, cmd), 0L, delay);
+        new LoopScheduler(times, sender, cmd).runTaskTimer(OctoCore.getInstance(), 0L, delay);
         return CommandResult.SUCCESS;
     }
 
