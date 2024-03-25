@@ -57,7 +57,7 @@ public class JoinLeaveListener implements Listener {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("Please wait a moment while we save your data from your previous session.").toString());
             return;
         }
-        if (Bukkit.isOnline(event.getUniqueId())) {
+        if (Bukkit.getPlayer(event.getUniqueId()) != null) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("You are already online!").toString());
             return;
         }
