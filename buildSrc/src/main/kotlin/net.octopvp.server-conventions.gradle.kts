@@ -1,11 +1,11 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("com.github.johnrengelman.shadow")
+	id("com.github.johnrengelman.shadow")
 }
-tasks.withType<ShadowJar>() {
-    archiveClassifier.set("")
-    archiveVersion.set("")
+tasks.withType<ShadowJar> {
+	archiveClassifier = ""
+	archiveVersion = ""
 
-    relocate("org.reflections", "net.octopvp.octocore.shadow.reflections")
+	relocate("org.reflections", "net.octopvp.octocore.shadow.reflections")
 }

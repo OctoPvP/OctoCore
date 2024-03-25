@@ -1,8 +1,8 @@
 pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven("https://repo.papermc.io/repository/maven-public/")
-    }
+	repositories {
+		gradlePluginPortal()
+		maven("https://repo.papermc.io/repository/maven-public/")
+	}
 }
 
 rootProject.name = "OctoCore"
