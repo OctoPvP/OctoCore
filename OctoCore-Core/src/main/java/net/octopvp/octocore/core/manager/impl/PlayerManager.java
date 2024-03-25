@@ -13,7 +13,6 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.core.manager.Manager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
@@ -31,6 +30,8 @@ public class PlayerManager extends Manager implements IPlayerManager {
     private static PlayerManager instance;
     @Getter
     private final Map<UUID, PlayerData> playerProfiles = new ConcurrentHashMap<>();
+    @Getter
+    private static final Set<UUID> saving = new HashSet<>();
     @Getter
     private MongoCollection<Document> pdataCollection = null;
 
@@ -185,7 +186,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
             playerProfiles.remove(player.getUniqueId());
             data.setLastSeen(System.currentTimeMillis());
             data.save();
-            MainRedisHandler.getSaving().remove(player.getUniqueId());
+            PlayerManager.getSaving().remove(player.getUniqueId());
         }, 10);
     }
 

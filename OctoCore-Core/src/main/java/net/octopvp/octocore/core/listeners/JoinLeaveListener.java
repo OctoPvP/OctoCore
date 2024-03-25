@@ -7,7 +7,6 @@ import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.MojangAPIUtil;
 import net.octopvp.octocore.core.OctoCore;
-import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.VanishManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
@@ -15,6 +14,7 @@ import net.octopvp.octocore.core.objects.OctoPermissible;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -53,8 +53,12 @@ public class JoinLeaveListener implements Listener {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("The server hasn't started yet!").toString());
             return;
         }
-        if (MainRedisHandler.getSaving().contains(event.getUniqueId())) {
+        if (PlayerManager.getSaving().contains(event.getUniqueId())) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("Please wait a moment while we save your data from your previous session.").toString());
+            return;
+        }
+        if (Bukkit.isOnline(event.getUniqueId())) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("You are already online!").toString());
             return;
         }
         boolean kicked = event.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED;
@@ -94,10 +98,14 @@ public class JoinLeaveListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onQuitHighest(PlayerQuitEvent event) {
+        PlayerManager.getSaving().add(event.getPlayer().getUniqueId());
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeave(PlayerQuitEvent e) {
         PlayerData data = PlayerManager.getInstance().getData(e.getPlayer());
-        MainRedisHandler.getSaving().add(e.getPlayer().getUniqueId());
         if (data == null) {
             e.setQuitMessage(null);
         } else e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
@@ -173,14 +181,14 @@ public class JoinLeaveListener implements Listener {
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        if (MainRedisHandler.getSaving().contains(event.getPlayer().getUniqueId())) {
+        if (PlayerManager.getSaving().contains(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        if (MainRedisHandler.getSaving().contains(event.getPlayer().getUniqueId())) {
+        if (PlayerManager.getSaving().contains(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
         }
     }

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.core.listeners.redis.MainRedisHandler;
+import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,7 +21,7 @@ public class SaveRequestSwitchPacket extends RedisPacket {
     public void onReceive(JsonObject data) {
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
-            MainRedisHandler.getSaving().add(player.getUniqueId());
+            PlayerManager.getSaving().add(player.getUniqueId());
             //JoinLeaveListener.freezePlayer(player);
             Tasks.runAsyncLater(() -> {
                 if (Bukkit.getPlayer(uuid) != null) {
