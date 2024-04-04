@@ -18,7 +18,6 @@ import java.util.UUID;
 @Setter
 @RequiredArgsConstructor
 public class Alt implements IPunishData {
-
     private final UUID uniqueId;
     private final String name;
     private final transient IPunishData punishData;
@@ -56,8 +55,8 @@ public class Alt implements IPunishData {
     }
 
     @Override
-    public String getAddress() {
-        return punishData.getAddress();
+    public String getLastKnownAddress() {
+        return punishData.getLastKnownAddress();
     }
 
     @Override

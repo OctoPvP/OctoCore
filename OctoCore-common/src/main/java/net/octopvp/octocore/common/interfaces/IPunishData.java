@@ -11,7 +11,7 @@ public interface IPunishData extends IPlayerData {
 
     Collection<Alt> getAlts();
 
-    String getAddress();
+    String getLastKnownAddress();
 
     boolean isBanned();
 

@@ -42,7 +42,7 @@ public class BanIPCommand {
             } else {
                 punishment.setPermanent(true);
             }
-            punishment.setIPRelative(true);
+            punishment.setIpRelative(true);
             punishment.setTargetAddress(ipAddress);//data.getAddress());
             // punishment.setTargetAddress(String.valueOf(data.getAddress()));
             punishment.setEnteredDuration(durationString);

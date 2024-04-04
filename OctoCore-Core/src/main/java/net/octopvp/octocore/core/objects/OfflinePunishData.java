@@ -89,7 +89,7 @@ public class OfflinePunishData implements IPunishData {
             PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
 
             if (this.ipaddress == null) {
-                this.address = playerData.getAddress();
+                this.address = playerData.getLastKnownAddress();
             } else {
                 this.address = this.ipaddress;
             }
@@ -142,6 +142,11 @@ public class OfflinePunishData implements IPunishData {
     }
 
     @Override
+    public String getLastKnownAddress() {
+        return address;
+    }
+
+    @Override
     public boolean isBanned() {
         return this.punishments.stream()
                 .filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN)
@@ -150,7 +155,7 @@ public class OfflinePunishData implements IPunishData {
 
     @Override
     public boolean isIPBanned() {
-        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired()
+        return this.punishments.stream().filter(punishment -> punishment.isIpRelative() && !punishment.hasExpired()
                 && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
     }
 
@@ -178,7 +183,7 @@ public class OfflinePunishData implements IPunishData {
     @Override
     public boolean isIPMuted() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired()
-                && punishment.getType() == PunishmentType.MUTE && punishment.isIPRelative()).findFirst()
+                && punishment.getType() == PunishmentType.MUTE && punishment.isIpRelative()).findFirst()
                 .orElse(null) != null;
     }
 

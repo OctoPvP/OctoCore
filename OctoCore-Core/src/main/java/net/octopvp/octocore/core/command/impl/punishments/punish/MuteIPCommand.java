@@ -90,7 +90,7 @@ public class MuteIPCommand {
                 punishment.setAddedBy(new UUID(0, 0));
             }
             punishment.setAddedByName(sender.getName());
-            punishment.setIPRelative(true);
+            punishment.setIpRelative(true);
             punishment.setAddedAt(System.currentTimeMillis());
             punishment.setReason(reason);
 

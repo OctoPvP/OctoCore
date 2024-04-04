@@ -28,7 +28,7 @@ public class BlacklistCommand {
             Punishment punishment = new Punishment(data, PunishmentType.BLACKLIST);
             punishment.setSilent(silent);
             punishment.setPermanent(true);
-            punishment.setIPRelative(true);
+            punishment.setIpRelative(true);
             PunishmentCommands.handlePunishmentMeta(sender, reason, punishment);
         });
         return CommandResult.SUCCESS;

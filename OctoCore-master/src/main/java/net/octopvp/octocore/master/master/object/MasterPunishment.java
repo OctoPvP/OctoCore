@@ -34,7 +34,7 @@ public class MasterPunishment extends BasePunishment {
 
         new ExecutePunishmentPacket(senderStr, "", user == null ? "Master" : user.getMinecraftName(), name, getReason(), getDurationTime(), getNiceDuration(), getNiceExpire(),
                 isPermanent(), targetId, isSilent(), addedByName, OctoCoreCommon.getInstance().getServerImplementation().getServerName(), punishmentType,
-                IPRelative, OctoCoreMaster.getGson().toJson(this)
+                ipRelative, OctoCoreMaster.getGson().toJson(this)
         ).send();
     }
 }

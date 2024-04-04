@@ -61,6 +61,11 @@ public class JoinLeaveListener implements Listener {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("You are already online!").toString());
             return;
         }
+        // check geyser issue
+        if (event.getName().startsWith("Unable to find user in our cache.")) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("Could not resolve your bedrock name! Please join test.geysermc.org before joining this server again.").toString());
+            return;
+        }
         boolean kicked = event.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED;
         if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) {
             if (kicked) return;
@@ -108,7 +113,13 @@ public class JoinLeaveListener implements Listener {
         PlayerData data = PlayerManager.getInstance().getData(e.getPlayer());
         if (data == null) {
             e.setQuitMessage(null);
-        } else e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
+        } else {
+            if (data.isVanished()) {
+                e.setQuitMessage(null);
+            } else {
+                e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
+            }
+        }
         unfreezePlayer(e.getPlayer());
     }
 

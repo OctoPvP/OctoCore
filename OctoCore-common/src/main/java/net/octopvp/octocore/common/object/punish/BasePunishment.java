@@ -17,7 +17,7 @@ import java.util.UUID;
 public class BasePunishment implements IPunishment {
     protected PunishmentType punishmentType;
 
-    protected boolean active = true, permanent = true, silent = false, removedSilent = false, last = false, IPRelative = false, addedOnWebPanel = false, removedOnWebPanel = false;
+    protected boolean active = true, permanent = true, silent = false, removedSilent = false, last = false, ipRelative = false, addedOnWebPanel = false, removedOnWebPanel = false;
     protected long addedAt = -5L, durationTime = -5L, whenRemoved;
     protected String reason = "", removedBy = "", enteredDuration = "", removedFor = "", addedByName = "", name = "", targetAddress;
     protected UUID addedBy, id, targetId, removedById;
@@ -57,7 +57,8 @@ public class BasePunishment implements IPunishment {
         this.whenRemoved = DocumentUtils.getLong(document, "whenRemoved", -1L);
         this.enteredDuration = document.getString("enteredDuration");
         this.last = document.getBoolean("last");
-        this.IPRelative = document.getBoolean("IPRelative");
+        this.ipRelative = document.getBoolean("ipRelative");
+        this.targetAddress = document.getString("targetAddress");
         this.name = document.getString("name");
         this.addedByName = document.getString("addedByName");
         this.addedBy = UUID.fromString(document.getString("addedBy"));
@@ -98,8 +99,8 @@ public class BasePunishment implements IPunishment {
             document.put("removedSilent", this.removedSilent);
             document.put("whenRemoved", this.whenRemoved);
             document.put("last", this.last);
-            document.put("IPRelative", this.IPRelative);
-            document.put("IPAddress", this.targetAddress);
+            document.put("ipRelative", this.ipRelative);
+            document.put("targetAddress", this.targetAddress);
             document.put("addedByName", this.addedByName);
             document.put("id", this.id.toString());
             document.put("type", this.punishmentType.name());
@@ -144,11 +145,6 @@ public class BasePunishment implements IPunishment {
     @Override
     public void setType(PunishmentType type) {
         this.punishmentType = type;
-    }
-
-    public boolean isActive() {
-        //return !hasExpired() || !active;
-        return active;
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Data;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.interfaces.IPlayerData;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
@@ -39,7 +38,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
     protected String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName;
     protected String lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default";
-    protected String lastAuthedIp = "", lastSeenIp = "", address, lastServerOn = "Unknown";
+    protected String lastAuthedIp = "", lastSeenIp = "", lastKnownAddress, lastServerOn = "Unknown";
     protected List<String> metaDataList = new ArrayList<>();
     protected Map<String, String> metaData = new ConcurrentHashMap<>();
     protected UUID tagID = null, nickTagID = null, nickUUID;
@@ -52,8 +51,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected boolean customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false;
     protected boolean joinAlert = false, socialSpy = false, altsLoaded = false; // TODO: move altsLoaded to IPunishData
     protected Collection<Alt> alts = new ArrayList<>();
-    protected List<String> addresses = new ArrayList<>();
-    protected List<UUID> ignoredPlayers = new ArrayList<>();
+    protected Set<String> addresses = new HashSet<>();
     protected MessageSettings messageSettings = new MessageSettings();
     protected Map<String, Node> nodes = new HashMap<>(); // a tree of permission nodes
     protected ArrayList<Grant> grants = new ArrayList<>();
@@ -84,56 +82,68 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
             Logger.error("Failed to load player data for " + uuid + " because the name was null.");
             Logger.info("Name: " + OctoCoreCommon.getInstance().getServerImplementation().getName(uuid));
         }
-        this.lowerName = name.toLowerCase();
-        this.lastLoaded = System.currentTimeMillis();
-        loadGrants(document);
-        this.dataVersion = getDouble(document, "dataVersion");
-        this.frozen = document.getBoolean("frozen");
-        this.nicked = document.getBoolean("nicked");
-        this.authEnabled = document.getBoolean("authEnabled");
-        this.joinVanished = document.getBoolean("joinVanished");
-        this.customColorEnabled = document.getBoolean("customColorEnabled");
-        this.customColor = document.getString("customColor");
-        this.coins = getInt(document, "coins");
-        this.lastLoaded = getLong(document, "lastLoaded");
-        this.lastLogin = getLong(document, "lastLogin");
-        this.xp = getLong(document, "xp");
-        this.firstJoin = getLong(document, "firstJoin");
-        this.lastSave = getLong(document, "lastSave");
-        this.nick = document.getString("nick");
-        this.lastKnownName = document.getString("lastKnownName");
-        this.nickPrefix = document.getString("nickPrefix");
-        this.nickColor = document.getString("nickColor");
-        this.server = document.getString("server");
-        this.authSecret = document.getString("authSecret");
-        this.lastSeenServer = document.getString("lastSeenServer");
-        this.rankName = document.getString("rankName");
-        this.lastSeen = getLong(document, "lastSeen");
-        this.lastAuthedIp = document.getString("lastAuthedIp");
-        this.lastSeenIp = document.getString("lastSeenIp");
-        this.metaDataList = gson.fromJson(document.getString("metaDataList"), GsonType.STRING_LIST);
-        this.metaDataList.removeIf(Objects::isNull);
-        this.metaData = gson.fromJson(document.getString("metaData"), GsonType.STRING_STRING_MAP);
-        this.worldTime = WorldTime.valueOf(document.getString("worldTime"));
-        if (document.containsKey("nickTagID")) this.nickTagID = UUID.fromString(document.getString("nickTagID"));
-        if (document.containsKey("nickUUID")) this.nickUUID = UUID.fromString(document.getString("nickUUID"));
-        if (document.containsKey("tagID")) this.tagID = UUID.fromString(document.getString("tagID"));
-        this.playTime = getInt(document, "playTime");
-        this.allowedTagsID = gson.fromJson(document.getString("allowedTagsID"), GsonType.UUID_SET);
-        if (document.containsKey("nameColor")) this.nameColor = ChatColor.valueOf(document.getString("nameColor"));
-        this.nameColorBold = document.getBoolean("nameColorBold");
-        this.nameColorItalic = document.getBoolean("nameColorItalic");
-        this.staffChatAlerts = document.getBoolean("staffChatAlerts");
-        this.adminChatAlerts = document.getBoolean("adminChatAlerts");
-        this.reportAlerts = document.getBoolean("reportAlerts");
-        this.staffChat = document.getBoolean("staffChat");
-        this.adminChat = document.getBoolean("adminChat");
-        this.build = document.getBoolean("build");
-        this.nodes = gson.fromJson(document.getString("nodes"), GsonType.NODE_MAP);
-        this.nodes.entrySet().removeIf(e -> e.getKey() == null || e.getValue() == null);
-        this.address = document.getString("address");
-        this.socialSpy = document.getBoolean("socialSpy");
+        {
+            this.lowerName = name.toLowerCase();
+            this.lastLoaded = System.currentTimeMillis();
+            loadGrants(document);
+            this.dataVersion = getDouble(document, "dataVersion");
+            this.frozen = document.getBoolean("frozen");
+            this.nicked = document.getBoolean("nicked");
+            this.authEnabled = document.getBoolean("authEnabled");
+            this.joinVanished = document.getBoolean("joinVanished");
+            this.customColorEnabled = document.getBoolean("customColorEnabled");
+            this.customColor = document.getString("customColor");
+            this.coins = getInt(document, "coins");
+            this.lastLoaded = getLong(document, "lastLoaded");
+            this.lastLogin = getLong(document, "lastLogin");
+            this.xp = getLong(document, "xp");
+            this.firstJoin = getLong(document, "firstJoin");
+            this.lastSave = getLong(document, "lastSave");
+            this.nick = document.getString("nick");
+            this.lastKnownName = document.getString("lastKnownName");
+            this.nickPrefix = document.getString("nickPrefix");
+            this.nickColor = document.getString("nickColor");
+            this.server = document.getString("server");
+            this.authSecret = document.getString("authSecret");
+            this.lastSeenServer = document.getString("lastSeenServer");
+            this.rankName = document.getString("rankName");
+            this.lastSeen = getLong(document, "lastSeen");
+            this.lastAuthedIp = document.getString("lastAuthedIp");
+            this.lastSeenIp = document.getString("lastSeenIp");
+            this.metaDataList = gson.fromJson(document.getString("metaDataList"), GsonType.STRING_LIST);
+            this.metaDataList.removeIf(Objects::isNull);
+            this.metaData = gson.fromJson(document.getString("metaData"), GsonType.STRING_STRING_MAP);
+            this.worldTime = WorldTime.valueOf(document.getString("worldTime"));
+            if (document.containsKey("nickTagID")) this.nickTagID = UUID.fromString(document.getString("nickTagID"));
+            if (document.containsKey("nickUUID")) this.nickUUID = UUID.fromString(document.getString("nickUUID"));
+            if (document.containsKey("tagID")) this.tagID = UUID.fromString(document.getString("tagID"));
+            this.playTime = getInt(document, "playTime");
+            this.allowedTagsID = gson.fromJson(document.getString("allowedTagsID"), GsonType.UUID_SET);
+            if (document.containsKey("nameColor")) this.nameColor = ChatColor.valueOf(document.getString("nameColor"));
+            this.nameColorBold = document.getBoolean("nameColorBold");
+            this.nameColorItalic = document.getBoolean("nameColorItalic");
+            this.staffChatAlerts = document.getBoolean("staffChatAlerts");
+            this.adminChatAlerts = document.getBoolean("adminChatAlerts");
+            this.reportAlerts = document.getBoolean("reportAlerts");
+            this.staffChat = document.getBoolean("staffChat");
+            this.adminChat = document.getBoolean("adminChat");
+            this.build = document.getBoolean("build");
+            this.nodes = gson.fromJson(document.getString("nodes"), GsonType.NODE_MAP);
+            this.nodes.entrySet().removeIf(e -> e.getKey() == null || e.getValue() == null);
+            this.lastKnownAddress = document.getString("address");
+        }
 
+        Object addressesObj = document.get("addresses");
+        if (addressesObj instanceof String) {
+            String addressesStr = (String) addressesObj;
+            if (addressesStr.equals("Empty")) this.addresses = new HashSet<>();
+            else this.addresses = new HashSet<>(gson.fromJson(addressesStr, GsonType.STRING_LIST));
+        } else {
+            this.addresses = new HashSet<>();
+            this.addresses.addAll(document.getList("addresses", String.class));
+        }
+
+        this.socialSpy = document.getBoolean("socialSpy");
         this.messageSettings.setMessagesOff(document.getBoolean("messagesOff"));
         this.messageSettings.getIgnoreList().clear();
         this.messageSettings.setSoundsEnabled(document.getBoolean("sounds"));
@@ -164,61 +174,63 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
 
     public Document getData() {
         Document document = new Document();
-        document.put("uuid", uuid.toString());
-        document.put("name", name);
-        document.put("lowerName", lowerName);
-        document.put("grants", OctoCoreCommon.getInstance().getGson().toJson(grants.clone()));
-        document.put("dataVersion", dataVersion);
-        document.put("frozen", frozen);
-        document.put("nicked", nicked);
-        document.put("authEnabled", authEnabled);
-        document.put("joinVanished", joinVanished);
-        document.put("customColorEnabled", customColorEnabled);
-        document.put("customColor", customColor);
-        document.put("coins", coins);
-        document.put("lastLoaded", lastLoaded);
-        document.put("lastLogin", lastLogin);
-        document.put("xp", xp);
-        document.put("firstJoin", firstJoin);
-        document.put("lastSave", lastSave);
-        document.put("nick", nick);
-        document.put("lastKnownName", lastKnownName);
-        document.put("nickPrefix", nickPrefix);
-        document.put("nickColor", nickColor);
-        document.put("server", server);
-        document.put("authSecret", authSecret);
-        document.put("lastSeenServer", lastSeenServer);
-        document.put("rankName", rankName);
-        document.put("lastSeen", lastSeen);
-        document.put("lastAuthedIp", lastAuthedIp);
-        document.put("lastSeenIp", lastSeenIp);
-        document.put("metaDataList", OctoCoreCommon.getInstance().getGson().toJson(metaDataList));
-        document.put("metaData", OctoCoreCommon.getInstance().getGson().toJson(metaData));
-        document.put("worldTime", worldTime.name());
-        if (nickTagID != null) document.put("nickTagID", nickTagID.toString());
-        if (nickUUID != null) document.put("nickUUID", nickUUID.toString());
-        if (tagID != null) document.put("tagID", tagID.toString());
-        document.put("playTime", playTime);
-        document.put("allowedTagsID", OctoCoreCommon.getInstance().getGson().toJson(allowedTagsID));
-        if (nameColor != null) document.put("nameColor", nameColor.name().toUpperCase());
-        document.put("nameColorBold", nameColorBold);
-        document.put("nameColorItalic", nameColorItalic);
-        document.put("staffChatAlerts", staffChatAlerts);
-        document.put("adminChatAlerts", adminChatAlerts);
-        document.put("reportAlerts", reportAlerts);
-        document.put("staffChat", staffChat);
-        document.put("adminChat", adminChat);
-        document.put("build", build);
-        document.put("nodes", OctoCoreCommon.getInstance().getGson().toJson(nodes));
-        document.put("address", address);
-        document.put("addresses", StringUtils.getStringFromList(this.addresses));
-        document.put("socialSpy", socialSpy);
+        {
+            document.put("uuid", uuid.toString());
+            document.put("name", name);
+            document.put("lowerName", lowerName);
+            document.put("grants", OctoCoreCommon.getInstance().getGson().toJson(grants.clone()));
+            document.put("dataVersion", dataVersion);
+            document.put("frozen", frozen);
+            document.put("nicked", nicked);
+            document.put("authEnabled", authEnabled);
+            document.put("joinVanished", joinVanished);
+            document.put("customColorEnabled", customColorEnabled);
+            document.put("customColor", customColor);
+            document.put("coins", coins);
+            document.put("lastLoaded", lastLoaded);
+            document.put("lastLogin", lastLogin);
+            document.put("xp", xp);
+            document.put("firstJoin", firstJoin);
+            document.put("lastSave", lastSave);
+            document.put("nick", nick);
+            document.put("lastKnownName", lastKnownName);
+            document.put("nickPrefix", nickPrefix);
+            document.put("nickColor", nickColor);
+            document.put("server", server);
+            document.put("authSecret", authSecret);
+            document.put("lastSeenServer", lastSeenServer);
+            document.put("rankName", rankName);
+            document.put("lastSeen", lastSeen);
+            document.put("lastAuthedIp", lastAuthedIp);
+            document.put("lastSeenIp", lastSeenIp);
+            document.put("metaDataList", OctoCoreCommon.getInstance().getGson().toJson(metaDataList));
+            document.put("metaData", OctoCoreCommon.getInstance().getGson().toJson(metaData));
+            document.put("worldTime", worldTime.name());
+            if (nickTagID != null) document.put("nickTagID", nickTagID.toString());
+            if (nickUUID != null) document.put("nickUUID", nickUUID.toString());
+            if (tagID != null) document.put("tagID", tagID.toString());
+            document.put("playTime", playTime);
+            document.put("allowedTagsID", OctoCoreCommon.getInstance().getGson().toJson(allowedTagsID));
+            if (nameColor != null) document.put("nameColor", nameColor.name().toUpperCase());
+            document.put("nameColorBold", nameColorBold);
+            document.put("nameColorItalic", nameColorItalic);
+            document.put("staffChatAlerts", staffChatAlerts);
+            document.put("adminChatAlerts", adminChatAlerts);
+            document.put("reportAlerts", reportAlerts);
+            document.put("staffChat", staffChat);
+            document.put("adminChat", adminChat);
+            document.put("build", build);
+            document.put("nodes", OctoCoreCommon.getInstance().getGson().toJson(nodes));
+            document.put("address", lastKnownAddress);
+            document.put("addresses", this.addresses);
+            document.put("socialSpy", socialSpy);
 
-        document.put("ignoreList", OctoCoreCommon.getInstance().getGson().toJson(this.messageSettings.getIgnoreList(), GsonType.STRING_UUID_MAP));
+            document.put("ignoreList", OctoCoreCommon.getInstance().getGson().toJson(this.messageSettings.getIgnoreList(), GsonType.STRING_UUID_MAP));
 
-        document.put("globalChat", messageSettings.isGlobalChat());
-        document.put("sounds", messageSettings.isSoundsEnabled());
-        document.put("messagesOff", messageSettings.isMessagesOff());
+            document.put("globalChat", messageSettings.isGlobalChat());
+            document.put("sounds", messageSettings.isSoundsEnabled());
+            document.put("messagesOff", messageSettings.isMessagesOff());
+        }
 
         if (mfaData != null && !mfaData.isEmpty()) {
             JsonObject mfaDataJson = new JsonObject();
@@ -267,6 +279,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     public long getLowestGrantExpire() {
         return this.getActiveGrants().stream().mapToLong(Grant::getExpireTime).min().orElse(-1);
     }
+
     /*
     public Set<Node> getFinalNodes() {
         Set<Node> nodes1 = new HashSet<>(nodes);

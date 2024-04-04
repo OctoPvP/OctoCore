@@ -36,9 +36,9 @@ public interface IPunishment {
 
     void setLast(boolean last);
 
-    boolean isIPRelative();
+    boolean isIpRelative();
 
-    void setIPRelative(boolean ipRelative);
+    void setIpRelative(boolean ipRelative);
 
     boolean isTemporary();
 

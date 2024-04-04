@@ -525,7 +525,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 punishment.setAddedByName(user.getMinecraftName());
                 punishment.setLast(true);
                 punishment.setAddedAt(System.currentTimeMillis());
-                punishment.setIPRelative(ip.getValue());
+                punishment.setIpRelative(ip.getValue());
                 if (end != null) {
                     punishment.setPermanent(false);
                     long durationMillis = end.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();

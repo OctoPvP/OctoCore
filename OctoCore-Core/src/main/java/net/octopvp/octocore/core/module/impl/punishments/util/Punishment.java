@@ -47,7 +47,7 @@ public class Punishment extends BasePunishment {
 
         new ExecutePunishmentPacket(senderStr, coloredName, sender.getName(), name, getReason(), getDurationTime(), getNiceDuration(), getNiceExpire(),
                 isPermanent(), targetId, isSilent(), addedByName, OctoCoreCommon.getInstance().getServerImplementation().getServerName(), punishmentType,
-                IPRelative, OctoCore.getGson().toJson(this)
+                ipRelative, OctoCore.getGson().toJson(this)
         ).send();
     }
 

@@ -6,9 +6,11 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.SimplePlayerData;
@@ -17,10 +19,7 @@ import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
-import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.common.util.DataCache;
-import net.octopvp.octocore.common.util.DateUtils;
-import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.common.util.*;
 import net.octopvp.octocore.common.util.perms.Node;
 import net.octopvp.octocore.common.util.perms.PermissionCheckResult;
 import net.octopvp.octocore.common.util.perms.PermissionManager;
@@ -97,13 +96,21 @@ public class PlayerData extends SimplePlayerData {
         return super.loadGrants(PlayerManager.getInstance().getProfileDocument(uuid));
     }
 
-    public Document save() {
-        this.lastDataSave = 0;
-        Document document = super.getData();
-        PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
-        Document copy = new Document(document);
+    public void cache(Document data) {
+        Document copy = new Document(data == null ? getData() : data);
         copy.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(getFinalNodeTree()));
         new DataCache(this.uuid).update(copy);
+    }
+
+    public Document save() {
+        return save(true);
+    }
+
+    public Document save(boolean cache) {
+        this.lastDataSave = 0;
+        Document document = getData();
+        PlayerManager.getInstance().getPdataCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
+        if (cache) cache(document);
         return document;
     }
 
@@ -113,7 +120,8 @@ public class PlayerData extends SimplePlayerData {
         name = player.getName();
         lowerName = name.toLowerCase();
         lastKnownName = name;
-        this.address = player.getAddress().getAddress().getHostAddress();
+        this.lastKnownAddress = player.getAddress().getAddress().getHostAddress();
+        this.addresses.add(lastKnownAddress);
 
         if (hasPermission(Permissions.SEND_JOIN_MESSAGE) && joinAlert)
             new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName(), VanishManager.getInstance().getVanishPriority(this), joinVanished).send();
@@ -157,7 +165,12 @@ public class PlayerData extends SimplePlayerData {
         long start = System.currentTimeMillis();
         this.alts.clear();
 
-        try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection().find(Filters.eq("address", address)).iterator()) {
+        try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection().find(
+                Filters.or(
+                        Filters.eq("address", address),
+                        Filters.eq("addresses", address)
+                )
+        ).iterator()) {
             while (cursor.hasNext()) {
                 Document document = cursor.next();
                 UUID pUuid = UUID.fromString(document.getString("uuid"));
@@ -236,21 +249,28 @@ public class PlayerData extends SimplePlayerData {
 
     public String getFormattedName(boolean nicked, Player player, boolean... showtag) {
         String prefix = getHighestRank().getPrefix();
-        String displayName = player != null ? player.getDisplayName() : getDisplayName();
         boolean shouldShowTag = showtag.length == 0 || showtag[0];
-        if (nicked)
-            return CC.translate(prefix + (CC.strip(prefix).isEmpty() ? displayName : " " + displayName)) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
-        return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).isEmpty() ? name : " " + name)) + (getTag() != null && shouldShowTag ? " " + getTagString() : "");
+        if (nicked) {
+            String displayName = player != null ? player.getDisplayName() : getDisplayName();
+            return CC.translate(prefix + (CC.strip(prefix).isEmpty() ? displayName : " " + displayName)) +
+                    (getTag() != null && shouldShowTag ? " " + getTagString() : "");
+        }
+        return CC.translate(prefix + getCurrentColor() + (CC.strip(prefix).isEmpty() ? name : " " + name)) +
+                (getTag() != null && shouldShowTag ? " " + getTagString() : "");
     }
 
 
     public Component getFormattedNameComponent(boolean nicked, Player player, boolean... showtag) {
         Component prefix = getHighestRank().getPrefixComponent();
-        Component displayName = OctoCore.getInstance().getServerImplementation().getPlayerDisplayName(player);
+
+        String legacyName = getDisplayName(nicked);
+        Component displayName = player == null ? LegacyComponentSerializer.legacySection().deserialize(legacyName)
+                : OctoCore.getInstance().getServerImplementation().getPlayerDisplayName(player);
         boolean shouldShowTag = showtag.length == 0 || showtag[0];
 
         TextComponent.Builder builder = Component.text().append(prefix).append(Component.text(" ")).append(displayName);
-        if (getTag() != null && shouldShowTag) return builder.append(Component.text(" ")).append(getTagComponent()).build();
+        if (getTag() != null && shouldShowTag)
+            return builder.append(Component.text(" ")).append(getTagComponent()).build();
         return builder.build();
     }
 
@@ -348,8 +368,9 @@ public class PlayerData extends SimplePlayerData {
         postPermissionLoad(player);
     }
 
-    public String getDisplayName() {
-        if (nicked) return CC.translate(getCurrentColor() + getNick() + CC.R);
+    public String getDisplayName(boolean... allowNicked) { // default to true
+        boolean allowNicked0 = allowNicked.length == 0 || allowNicked[0];
+        if (nicked && allowNicked0) return CC.translate(getCurrentColor() + getNick() + CC.R);
         else return CC.translate(getCurrentColor() + getName() + CC.R);
     }
 

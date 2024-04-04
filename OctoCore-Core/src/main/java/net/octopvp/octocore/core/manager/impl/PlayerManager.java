@@ -182,10 +182,11 @@ public class PlayerManager extends Manager implements IPlayerManager {
         PlayerData data = getData(player);
         if (data == null) return;
         data.setSavingOnQuit(true);
+        data.cache(null);
         Tasks.runLater(() -> {
             playerProfiles.remove(player.getUniqueId());
             data.setLastSeen(System.currentTimeMillis());
-            data.save();
+            data.save(false);
             PlayerManager.getSaving().remove(player.getUniqueId());
         }, 10);
     }

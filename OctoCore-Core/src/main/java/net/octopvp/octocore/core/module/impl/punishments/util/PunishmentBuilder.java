@@ -55,7 +55,7 @@ public class PunishmentBuilder {
     }
 
     public PunishmentBuilder setIPRelative(boolean ip) {
-        this.punishment.setIPRelative(ip);
+        this.punishment.setIpRelative(ip);
         return this;
     }
 

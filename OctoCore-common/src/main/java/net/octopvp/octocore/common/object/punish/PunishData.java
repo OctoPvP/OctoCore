@@ -30,7 +30,7 @@ public class PunishData implements IPunishData {
 
     @Override
     public boolean isIPBanned() {
-        return this.punishments.stream().filter(punishment -> punishment.isIPRelative() && !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
+        return this.punishments.stream().filter(punishment -> punishment.isIpRelative() && !punishment.hasExpired() && punishment.getType() == PunishmentType.BAN).findFirst().orElse(null) != null;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PunishData implements IPunishData {
 
     @Override
     public boolean isIPMuted() {
-        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE && punishment.isIPRelative()).findFirst().orElse(null) != null;
+        return this.punishments.stream().filter(punishment -> !punishment.hasExpired() && punishment.getType() == PunishmentType.MUTE && punishment.isIpRelative()).findFirst().orElse(null) != null;
     }
 
     @Override
@@ -136,7 +136,7 @@ public class PunishData implements IPunishData {
     }
 
     @Override
-    public String getAddress() {
-        return playerData.getAddress();
+    public String getLastKnownAddress() {
+        return playerData.getLastKnownAddress();
     }
 }

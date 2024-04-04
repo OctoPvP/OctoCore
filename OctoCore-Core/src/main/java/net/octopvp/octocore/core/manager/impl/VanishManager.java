@@ -5,6 +5,7 @@ import net.octopvp.octocore.common.object.SimplePlayerData;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.ChatColor;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.Manager;
 import net.octopvp.octocore.core.objects.PlayerData;
@@ -16,9 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -65,15 +64,23 @@ public class VanishManager extends Manager implements Listener {
         return vanished.getOrDefault(uuid, 0);
     }
 
-    @EventHandler
+    /*
+    @EventHandler(priority = EventPriority.LOW)
     public void onQuit(PlayerQuitEvent event) {
         PlayerData playerData = PlayerManager.getInstance().getData(event.getPlayer());
-        if (playerData == null) return;
+        if (playerData == null) {
+            Logger.debug("Pdata is null");
+            return;
+        }
         if (isVanished(event.getPlayer())) {
+            Logger.debug("Player is vanished");
             event.setQuitMessage(null);
             vanished.remove(event.getPlayer().getUniqueId());
+        } else {
+            Logger.debug("Player is not vanished");
         }
     }
+     */
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
@@ -92,6 +99,20 @@ public class VanishManager extends Manager implements Listener {
             if (isVanished(player)) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onPickupArrow(PlayerPickupArrowEvent event) {
+        if (isVanished(event.getPlayer())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPickup(PlayerPickupItemEvent event) {
+        if (isVanished(event.getPlayer())) {
+            event.setCancelled(true);
         }
     }
 

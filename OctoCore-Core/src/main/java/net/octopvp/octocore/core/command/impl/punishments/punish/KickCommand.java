@@ -5,7 +5,6 @@ import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.core.module.impl.punishments.util.Punishment;
 import net.octopvp.octocore.core.objects.OfflinePunishData;
-import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.command.CommandSender;
 
 import java.util.Random;
@@ -34,7 +33,7 @@ public class KickCommand {
         Punishment punishment = new Punishment(data, PunishmentType.KICK);
         punishment.setSilent(silent);
         punishment.setPermanent(false);
-        punishment.setIPRelative(false);
+        punishment.setIpRelative(false);
         PunishmentCommands.handlePunishmentMeta(sender, finalReason, punishment);
     }
 
