@@ -153,7 +153,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
         updatePunishments(data);
         PunishmentFilter filter = new PunishmentFilter(punishmentDataView);
 
-        punishmentGrid.addColumn(punish -> StringUtils.capatalizeFirstDeep(punish.getType().name())).setHeader(createDropdownFilter("Type", Utilities.addAllNewList(PunishmentType.getNames(), "All"), filter::setType, (select) -> {
+        punishmentGrid.addColumn(punish -> StringUtils.capitalizeFirstDeep(punish.getType().name())).setHeader(createDropdownFilter("Type", Utilities.addAllNewList(PunishmentType.getNames(), "All"), filter::setType, (select) -> {
             select.addComponents(PunishmentType.getNames().get(PunishmentType.getNames().size() - 1), new Hr());
         }));
         punishmentGrid.addColumn(IPunishment::getReason).setHeader(createFilterType("Reason", filter::setReason));
@@ -239,7 +239,7 @@ public class PlayerInfoPage extends Page implements HasUrlParameter<String> {
                 punishment.setRemovedFor(reasonText);
                 punishment.setWhenRemoved(System.currentTimeMillis());
                 punishment.setRemovedSilent(silentBool);
-                punishment.save(true);
+                punishment.save();
                 new UndoPunishmentPacket(punishment.getType(), user.getMinecraftName() + " (WEB)", data.getName(), reasonText.trim(), silentBool).send();
                 dialog.close();
                 NotificationUtils.create("Punishment revoked.", NotificationVariant.LUMO_SUCCESS).open();

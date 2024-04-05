@@ -51,7 +51,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected boolean customColorEnabled = false, savingOnQuit = false, loaded = false, fullJoined = false;
     protected boolean joinAlert = false, socialSpy = false, altsLoaded = false; // TODO: move altsLoaded to IPunishData
     protected Collection<Alt> alts = new ArrayList<>();
-    protected Set<String> addresses = new HashSet<>();
+    protected List<String> addresses = new ArrayList<>();
     protected MessageSettings messageSettings = new MessageSettings();
     protected Map<String, Node> nodes = new HashMap<>(); // a tree of permission nodes
     protected ArrayList<Grant> grants = new ArrayList<>();
@@ -136,10 +136,10 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
         Object addressesObj = document.get("addresses");
         if (addressesObj instanceof String) {
             String addressesStr = (String) addressesObj;
-            if (addressesStr.equals("Empty")) this.addresses = new HashSet<>();
-            else this.addresses = new HashSet<>(gson.fromJson(addressesStr, GsonType.STRING_LIST));
+            if (addressesStr.equals("Empty")) this.addresses = new ArrayList<>();
+            else this.addresses = new ArrayList<>(gson.fromJson(addressesStr, GsonType.STRING_LIST));
         } else {
-            this.addresses = new HashSet<>();
+            this.addresses = new ArrayList<>();
             this.addresses.addAll(document.getList("addresses", String.class));
         }
 

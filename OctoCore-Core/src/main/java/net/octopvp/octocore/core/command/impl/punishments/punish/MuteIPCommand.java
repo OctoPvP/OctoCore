@@ -75,7 +75,7 @@ public class MuteIPCommand {
 
             Punishment punishment = new Punishment(data, PunishmentType.MUTE);
             punishment.setSilent(silent);
-            if (duration != -5L) {
+            if (duration > 0) {
                 punishment.setPermanent(false);
                 punishment.setDurationTime(duration);
             } else {

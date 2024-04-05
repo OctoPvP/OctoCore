@@ -7,15 +7,10 @@ import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.master.master.OctoCoreMaster;
 import net.octopvp.octocore.master.master.redis.impl.ExecutePunishmentPacket;
 import net.octopvp.octocore.master.models.User;
-import org.bson.Document;
 
 import java.util.UUID;
 
 public class MasterPunishment extends BasePunishment {
-    public MasterPunishment(Document document) {
-        super(document);
-    }
-
     public MasterPunishment(IPlayerData data, PunishmentType type) {
         super(data, type);
     }
@@ -33,7 +28,7 @@ public class MasterPunishment extends BasePunishment {
         }
 
         new ExecutePunishmentPacket(senderStr, "", user == null ? "Master" : user.getMinecraftName(), name, getReason(), getDurationTime(), getNiceDuration(), getNiceExpire(),
-                isPermanent(), targetId, isSilent(), addedByName, OctoCoreCommon.getInstance().getServerImplementation().getServerName(), punishmentType,
+                isPermanent(), targetId, isSilent(), addedByName, OctoCoreCommon.getInstance().getServerImplementation().getServerName(), type,
                 ipRelative, OctoCoreMaster.getGson().toJson(this)
         ).send();
     }

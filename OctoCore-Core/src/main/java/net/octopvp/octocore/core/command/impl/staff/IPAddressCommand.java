@@ -2,16 +2,16 @@ package net.octopvp.octocore.core.command.impl.staff;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.octopvp.commander.annotation.*;
+import net.octopvp.commander.annotation.Command;
+import net.octopvp.commander.annotation.DefaultNumber;
+import net.octopvp.commander.annotation.Permission;
+import net.octopvp.commander.annotation.Required;
 import net.octopvp.octocore.common.object.Permissions;
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.command.CommandSender;
 
-public class IpAddressCommand {
+public class IPAddressCommand {
     @Command(name = "ipaddress", description = "Get the IP address of a player")
     @Permission(Permissions.ADMIN)
     public void ipaddress(CommandSender sender, @Required PlayerData player, @DefaultNumber(20) int limit) {

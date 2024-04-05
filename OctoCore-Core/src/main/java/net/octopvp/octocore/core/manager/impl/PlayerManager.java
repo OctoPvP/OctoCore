@@ -1,5 +1,7 @@
 package net.octopvp.octocore.core.manager.impl;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -54,7 +56,7 @@ public class PlayerManager extends Manager implements IPlayerManager {
         if (data != null) {
             return data;
         }
-        Document document = new DataCache(uuid).getData();
+        Document document = DataCache.getData(uuid);
         if (document == null)
             document = pdataCollection.find(Filters.eq("uuid", uuid.toString())).first();
         if (document == null) return null;
@@ -152,13 +154,21 @@ public class PlayerManager extends Manager implements IPlayerManager {
         return getData(uuid);
     }
 
-    public String getAddress(UUID uuid) {
+    public String getLastSeenAddress(UUID uuid) {
         Document document = pdataCollection.find(Filters.eq("uuid", uuid.toString())).first();
 
         if (document == null) {
             return "";
         }
         return document.getString("address");
+    }
+
+    public ImmutableList<String> getAddresses(UUID uuid) {
+        Document document = pdataCollection.find(Filters.eq("uuid", uuid.toString())).first();
+        if (document == null) {
+            return ImmutableList.of();
+        }
+        return ImmutableList.copyOf(document.getList("addresses", String.class));
     }
 
     public String getFormattedName(String playerName) {

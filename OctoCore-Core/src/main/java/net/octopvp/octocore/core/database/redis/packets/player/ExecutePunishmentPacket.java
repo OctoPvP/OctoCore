@@ -21,7 +21,6 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -331,7 +330,7 @@ public class ExecutePunishmentPacket extends RedisPacket {
                         pdata = new PlayerData(uuid, name);
                         pdata.getPunishData().load();
                     }
-                    punishment.setTargetAddress(PlayerManager.getInstance().getAddress(uuid));
+                    punishment.setTargetAddress(PlayerManager.getInstance().getLastSeenAddress(uuid));
                 }
             }
 

@@ -380,14 +380,14 @@ public class StringUtils {
         return String.valueOf(month);
     }
 
-    public static String capatalizeFirst(String in) {
+    public static String capitalizeFirst(String in) {
         return in.substring(0, 1).toUpperCase() + in.substring(1).toLowerCase();
     }
 
-    public static String capatalizeFirstDeep(String in) {
+    public static String capitalizeFirstDeep(String in) {
         StringBuilder sb = new StringBuilder();
         for (String s : in.split(" ")) {
-            sb.append(capatalizeFirst(s)).append(" ");
+            sb.append(capitalizeFirst(s)).append(" ");
         }
         return sb.toString().trim();
     }

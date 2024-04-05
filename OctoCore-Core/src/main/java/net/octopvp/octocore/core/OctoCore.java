@@ -15,6 +15,7 @@ import net.octopvp.octocore.common.PluginMsgChannels;
 import net.octopvp.octocore.common.SentryManager;
 import net.octopvp.octocore.common.object.*;
 import net.octopvp.octocore.common.object.permissions.Rank;
+import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.Utilities;
@@ -208,6 +209,7 @@ public abstract class OctoCore extends JavaPlugin {
                 .registerProvider(OnlinePlayer.class, new OnlinePlayerProvider())
                 .registerProvider(Enchantment.class, new EnchantmentProvider())
                 .registerProvider(OfflineHelpers.OfflineInfo.class, new OfflineInfoProvider())
+                .registerProvider(PunishmentType.class, new PunishTypeProvider())
                 .registerCommandPostProcessor((ctx, obj) -> {
                     if (obj instanceof CommandResult) {
                         CommandResult result = (CommandResult) obj;

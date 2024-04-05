@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PunishModule implements IPunishModule {
     private static MongoCollection<Document>
-            punishments,
-            punishHistory,
-            notes;
-
+            punishments;
     @Autowired
     private DatabaseManager databaseManager;
 
@@ -24,18 +21,11 @@ public class PunishModule implements IPunishModule {
     public void init() {
         MongoDatabase database = databaseManager.getDatabase();
 
-        punishHistory = database.getCollection("punishHistory");
-        notes = database.getCollection("notes");
         punishments = database.getCollection("punishments");
     }
 
     @Override
     public MongoCollection<Document> getPunishmentsCollection() {
         return punishments;
-    }
-
-    @Override
-    public IPunishment createPunishment(Document doc) {
-        return new BasePunishment(doc);
     }
 }

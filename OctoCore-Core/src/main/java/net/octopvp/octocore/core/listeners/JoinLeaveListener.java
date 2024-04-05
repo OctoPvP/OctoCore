@@ -91,8 +91,7 @@ public class JoinLeaveListener implements Listener {
 
             Logger.info("Caching " + event.getName() + "'s data...");
             long startCache = System.currentTimeMillis();
-            DataCache cache = new DataCache(uuid);
-            Document cached = cache.getData();
+            Document cached = DataCache.getData(uuid);
             playerData.load(cached);
             Logger.info("Cached " + event.getName() + "'s data in " + (System.currentTimeMillis() - startCache) + "ms");
 

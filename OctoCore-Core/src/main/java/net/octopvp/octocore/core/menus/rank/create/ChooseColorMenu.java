@@ -26,7 +26,7 @@ public class ChooseColorMenu extends PaginatedMenu<PaginatedGui> {
 
     public GuiItem colorButton(ChatColor chatColor) {
         return ItemBuilder.from(WoolUtils.convertChatColorToWoolMaterial(chatColor))
-                .name(chatColor + StringUtils.capatalizeFirstDeep(chatColor.name().replace("_", " ")))
+                .name(chatColor + StringUtils.capitalizeFirstDeep(chatColor.name().replace("_", " ")))
                 .lore(CC.AQUA + "Click to select this as the color.").asGuiItem(event -> {
                     builder.setColor(chatColor);
                     SoundUtil.playPing((Player) event.getWhoClicked());

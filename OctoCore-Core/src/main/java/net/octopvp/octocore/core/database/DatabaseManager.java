@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.database;
 
+import com.mongodb.Function;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
@@ -8,12 +9,15 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import net.octopvp.octocore.common.interfaces.manager.IDatabaseManager;
+import net.octopvp.octocore.common.mongo.codec.UUIDCodec;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.Manager;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.RedisManager;
 import net.octopvp.octocore.core.module.impl.punishments.PunishModule;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.json.JsonWriterSettings;
 import redis.clients.jedis.Jedis;
 
@@ -40,27 +44,29 @@ public class DatabaseManager extends Manager implements IDatabaseManager {
         MongoCredential credentials;
         Logger.info("Connecting to mongo");
         String authBase = "database.mongo.auth.";
+        Function<MongoClientSettings.Builder, MongoClientSettings.Builder> mutator = b -> {
+            CodecRegistry registry = CodecRegistries.fromCodecs(new UUIDCodec());
+            CodecRegistry defaultRegistry = MongoClientSettings.getDefaultCodecRegistry();
+            return b.codecRegistry(CodecRegistries.fromRegistries(registry, defaultRegistry));
+        };
         if (plugin.getConfig().getBoolean(authBase + "enabled")) {
             credentials = MongoCredential.createCredential(plugin.getConfig().getString(authBase + "username"), plugin.getConfig().getString(authBase + "db"), plugin.getConfig().getString(authBase + "password").toCharArray());
             mongoClient = MongoClients.create(
-                    MongoClientSettings.builder()
-                            .applyToClusterSettings(builder ->
-                                    builder.hosts(Collections.singletonList(new ServerAddress(plugin.getConfig().getString("database.mongo.host"), plugin.getConfig().getInt("database.mongo.port")))))
-                            .credential(credentials)
+                    mutator.apply(MongoClientSettings.builder()
+                                    .applyToClusterSettings(builder ->
+                                            builder.hosts(Collections.singletonList(new ServerAddress(plugin.getConfig().getString("database.mongo.host"), plugin.getConfig().getInt("database.mongo.port")))))
+                                    .credential(credentials))
                             .build());
         } else {
             mongoClient = MongoClients.create(
-                    MongoClientSettings.builder()
+                    mutator.apply(MongoClientSettings.builder()
                             .applyToClusterSettings(builder ->
                                     builder.hosts(Collections.singletonList(new ServerAddress(plugin.getConfig().getString("database.mongo.host"), plugin.getConfig().getInt("database.mongo.port")))))
-                            .build());
+                    ).build());
         }
         mongoDatabase = mongoClient.getDatabase("OctoCore");
-        Logger.info(mongoDatabase == null ? "Could not connect to mongo!" : "Connected to mongo!");
         //redisManager = new RedisManager();
-        if (mongoDatabase == null) {
-            return;
-        }
+        Logger.info("Connected to mongo!");
         PlayerManager.getInstance().postDBInit(mongoDatabase);
         PunishModule.postDbInit(mongoDatabase);
     }

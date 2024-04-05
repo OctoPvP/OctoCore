@@ -6,7 +6,6 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -19,7 +18,10 @@ import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.punish.Alt;
 import net.octopvp.octocore.common.object.punish.PunishData;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
-import net.octopvp.octocore.common.util.*;
+import net.octopvp.octocore.common.util.CC;
+import net.octopvp.octocore.common.util.DataCache;
+import net.octopvp.octocore.common.util.DateUtils;
+import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.perms.Node;
 import net.octopvp.octocore.common.util.perms.PermissionCheckResult;
 import net.octopvp.octocore.common.util.perms.PermissionManager;
@@ -99,7 +101,7 @@ public class PlayerData extends SimplePlayerData {
     public void cache(Document data) {
         Document copy = new Document(data == null ? getData() : data);
         copy.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(getFinalNodeTree()));
-        new DataCache(this.uuid).update(copy);
+        DataCache.update(copy, uuid);
     }
 
     public Document save() {
@@ -121,11 +123,18 @@ public class PlayerData extends SimplePlayerData {
         lowerName = name.toLowerCase();
         lastKnownName = name;
         this.lastKnownAddress = player.getAddress().getAddress().getHostAddress();
-        this.addresses.add(lastKnownAddress);
+        // move to top
+        addresses.remove(lastKnownAddress);
+        addresses.add(lastKnownAddress);
 
-        if (hasPermission(Permissions.SEND_JOIN_MESSAGE) && joinAlert)
+        // we track last 50 ips, remove the oldest one if we have more than 50
+        if (addresses.size() > 50) {
+            addresses.remove(addresses.iterator().next());
+        }
+
+        if (hasPermission(Permissions.SEND_JOIN_MESSAGE) && joinAlert) {
             new StaffConnectPacket(getFormattedName(false, player, false), OctoCore.getServerName(), VanishManager.getInstance().getVanishPriority(this), joinVanished).send();
-
+        }
         updateTime(player);
     }
 
@@ -163,8 +172,7 @@ public class PlayerData extends SimplePlayerData {
     public void loadAlts(String address, Map<UUID, PunishData> cache) {
         Logger.debug("Loading alts for " + this.name + " (" + this.uuid + ")");
         long start = System.currentTimeMillis();
-        this.alts.clear();
-
+        List<Alt> a = new ArrayList<>();
         try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection().find(
                 Filters.or(
                         Filters.eq("address", address),
@@ -176,7 +184,7 @@ public class PlayerData extends SimplePlayerData {
                 UUID pUuid = UUID.fromString(document.getString("uuid"));
                 String pName = document.getString("name");
                 if (cache.containsKey(pUuid)) {
-                    this.alts.add(new Alt(pUuid, pName, cache.get(pUuid)).updateDisplayName());
+                    a.add(new Alt(pUuid, pName, cache.get(pUuid)).updateDisplayName());
                     continue;
                 }
                 PlayerData playerData = new PlayerData(pUuid, pName);
@@ -185,18 +193,18 @@ public class PlayerData extends SimplePlayerData {
                 cache.put(pUuid, playerData.getPunishData());
 
                 if (!playerData.getUuid().toString().equals(this.uuid.toString()) && this.getAlt(playerData.getUuid()) == null) {
-                    this.alts.add(new Alt(playerData.getUuid(), playerData.getName(), playerData.getPunishData()).updateDisplayName());
+                    a.add(new Alt(playerData.getUuid(), playerData.getName(), playerData.getPunishData()).updateDisplayName());
                 }
             }
         }
 
         OctoCoreCommon.getInstance().getServerManager().getOnlinePlayers().forEach(player -> {
-            if (!player.getUuid().equals(this.uuid) && player.getAddress().equalsIgnoreCase(address) && this.getAlt(player.getUuid()) == null) {
+            if (!player.getUuid().equals(this.uuid) && player.getAddress().equals(address) && this.getAlt(player.getUuid()) == null) {
                 new AltUpdatePacket(this.uuid, this.name, player.getUuid(), player.getName());
             }
         });
 
-        List<Alt> nAlts = new ArrayList<>(this.alts);
+        List<Alt> nAlts = new ArrayList<>(a);
         this.alts.clear();
         this.alts.addAll(Alt.removeDuplicates(nAlts, this));
         altsLoaded = true;
@@ -397,7 +405,7 @@ public class PlayerData extends SimplePlayerData {
         try (MongoCursor<Document> cursor = PunishModule.getPunishments().find(Filters.eq("addedBy", uuid.toString())).iterator()) {
             while (cursor.hasNext()) {
                 Document document = cursor.next();
-                punishmentsExecuted.add(new Punishment(document));
+                punishmentsExecuted.add(Punishment.fromDocument(document));
             }
         }
     }

@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.objects;
 
+import com.google.common.collect.ImmutableList;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import lombok.Getter;
@@ -29,11 +30,12 @@ import java.util.stream.Collectors;
 @Setter
 public class OfflinePunishData implements IPunishData {
 
-    private String name, address, ipaddress;
+    private String name, ipaddress;
     private UUID uniqueId;
 
     private Collection<Alt> alts = new ArrayList<>();
     private Collection<IPunishment> punishments = new ArrayList<>();
+    private List<String> addresses = ImmutableList.of();
 
     public OfflinePunishData(String name) {
         this.name = name;
@@ -53,33 +55,24 @@ public class OfflinePunishData implements IPunishData {
         this.punishments.clear();
 
         Player player = Bukkit.getPlayer(name);
-        if (name == "Unknown") {
-            this.address = this.ipaddress;
-        }
 
         if (player == null) {
             // OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.name);
-            UUID uuid = OfflineHelpers.getOfflinePlayerUUID(this.name);
-            List<Document> punishments = PunishModule.getPunishments().find().filter(Filters.and(
-                    Filters.eq("uuid", uuid.toString()),
-                    activeOnly ? Filters.eq("active", true) : Filters.eq("uuid", uuid.toString())))
+            OfflineHelpers.OfflineInfo offlineInfo = OfflineHelpers.getOfflineInfo(this.name);
+            List<Document> punishments = PunishModule.getPunishments().find().filter(Filters.eq("targetId", offlineInfo.getUuid().toString()))
                     .into(new ArrayList<>());
 
             for (Document document : punishments) {
                 Logger.debug(document.getString("name"));
             }
 
-            if (punishments.size() > 0) {
-                this.name = punishments.get(0).getString("name");
-                this.uniqueId = UUID.fromString(punishments.get(0).getString("uuid"));
-                this.address = punishments.get(0).getString("BannedIP");
-            } else {
-                this.uniqueId = uuid;
-                this.address = PlayerManager.getInstance().getAddress(this.uniqueId);
-            }
+            this.uniqueId = offlineInfo.getUniqueId();
+            this.name = offlineInfo.getName();
+            this.addresses = PlayerManager.getInstance().getAddresses(this.uniqueId);
             punishments.forEach(document -> {
-                Punishment punishment = new Punishment(document);
-
+                Punishment punishment = Punishment.fromDocument(document);
+                if (punishment.hasExpired() && activeOnly)
+                    return;
                 this.punishments.add(punishment);
             });
         } else {
@@ -87,14 +80,11 @@ public class OfflinePunishData implements IPunishData {
             this.uniqueId = player.getUniqueId();
 
             PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
+            this.addresses = playerData.getAddresses();
 
-            if (this.ipaddress == null) {
-                this.address = playerData.getLastKnownAddress();
-            } else {
-                this.address = this.ipaddress;
-            }
-
-            this.punishments.addAll(playerData.getPunishData().loadIfNot().getPunishments());
+            this.punishments.addAll(playerData.getPunishData().loadIfNot().getPunishments().stream().filter(
+                    punishment -> !activeOnly || !punishment.hasExpired()).collect(Collectors.toList()
+            ));
         }
         return this;
     }
@@ -106,12 +96,9 @@ public class OfflinePunishData implements IPunishData {
     public OfflinePunishData loadAlts(Document doc) {
         if (doc == null)
             return this;
-        this.uniqueId = UUID.fromString(doc.getString("uuid"));
-        this.address = doc.getString("address");
-        this.alts.clear();
-
+        List<Alt> a = new ArrayList<>();
         try (MongoCursor<Document> cursor = PlayerManager.getInstance().getPdataCollection()
-                .find(Filters.eq("address", address)).iterator()) {
+                .find(Filters.eq("address", addresses)).iterator()) {
             while (cursor.hasNext()) {
                 Document document = cursor.next();
 
@@ -122,19 +109,19 @@ public class OfflinePunishData implements IPunishData {
 
                 if (!playerData.getUuid().toString().equals(this.uniqueId.toString())
                         && this.getAlt(playerData.getUuid()) == null) {
-                    this.alts.add(new Alt(playerData.getUuid(), playerData.getName(), playerData.getPunishData())
+                    a.add(new Alt(playerData.getUuid(), playerData.getName(), playerData.getPunishData())
                             .updateDisplayName());
                 }
             }
         }
 
         OctoCoreCommon.getInstance().getServerManager().getOnlinePlayers().forEach(onlinePlayer -> {
-            if (!onlinePlayer.getUuid().equals(this.uniqueId) && onlinePlayer.getAddress().equalsIgnoreCase(address)
+            if (!onlinePlayer.getUuid().equals(this.uniqueId) && onlinePlayer.getAddress().equals(getLastKnownAddress()) // TODO find some non O(n^2) way to find alts by matching their addresses array
                     && this.getAlt(onlinePlayer.getUuid()) == null) {
-                new AltUpdatePacket(this.uniqueId, this.name, onlinePlayer.getUuid(), onlinePlayer.getName());
+                new AltUpdatePacket(this.uniqueId, this.name, onlinePlayer.getUuid(), onlinePlayer.getName()).send();
             }
         });
-        List<Alt> nAlts = new ArrayList<>(this.alts);
+        List<Alt> nAlts = new ArrayList<>(a);
         this.alts.clear();
         this.alts.addAll(Alt.removeDuplicates(nAlts, this));
 
@@ -143,7 +130,7 @@ public class OfflinePunishData implements IPunishData {
 
     @Override
     public String getLastKnownAddress() {
-        return address;
+        return addresses.get(0);
     }
 
     @Override
@@ -183,7 +170,7 @@ public class OfflinePunishData implements IPunishData {
     @Override
     public boolean isIPMuted() {
         return this.punishments.stream().filter(punishment -> !punishment.hasExpired()
-                && punishment.getType() == PunishmentType.MUTE && punishment.isIpRelative()).findFirst()
+                        && punishment.getType() == PunishmentType.MUTE && punishment.isIpRelative()).findFirst()
                 .orElse(null) != null;
     }
 

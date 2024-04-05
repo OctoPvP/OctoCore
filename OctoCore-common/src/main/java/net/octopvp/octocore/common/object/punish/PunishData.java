@@ -79,9 +79,9 @@ public class PunishData implements IPunishData {
             this.punishments.clear();
 
             List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find().filter(
-                    Filters.eq("uuid", this.playerData.getUuid().toString())).into(new ArrayList<>());
+                    Filters.eq("targetId", this.playerData.getUuid().toString())).into(new ArrayList<>());
             punishments.forEach(document -> {
-                IPunishment punishment = OctoCoreCommon.getInstance().getPunishModule().createPunishment(document);
+                IPunishment punishment = BasePunishment.fromDocument(document);
 
                 this.punishments.add(punishment);
             });
@@ -102,16 +102,23 @@ public class PunishData implements IPunishData {
     public void forceLoadActiveBansAndBlacklists() {
         long start = System.currentTimeMillis();
         Logger.debug("Loading active punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ")");
+        // remove existing bans and blacklists
         this.punishments.removeIf(punishment -> punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST);
 
-        List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find(Filters.and(
-                Filters.eq("uuid", this.playerData.getUuid().toString()),
-                Filters.eq("active", true))).into(new ArrayList<>());
+        List<Document> punishments = OctoCoreCommon.getInstance().getPunishModule().getPunishmentsCollection().find(
+                Filters.and(Filters.eq("targetId", this.playerData.getUuid().toString()), Filters.eq("active", true)))
+                .into(new ArrayList<>());
 
         punishments.forEach(document -> {
-            IPunishment punishment = OctoCoreCommon.getInstance().getPunishModule().createPunishment(document);
+            Logger.debug("Found active punishment: " + document.toJson());
+            IPunishment punishment = BasePunishment.fromDocument(document);
+            if (punishment.hasExpired()) {
+                Logger.debug("Punishment has expired, skipping");
+                return;
+            }
             this.punishments.add(punishment);
         });
+        // this.punishments.addAll(punishments.stream().map(BasePunishment::fromDocument).filter(punishment -> !punishment.hasExpired()).collect(Collectors.toList()));
         Logger.debug("Loaded " + punishments.size() + " active punishments for " + this.playerData.getName() + " (" + this.playerData.getUuid() + ") in " + (System.currentTimeMillis() - start) + "ms");
     }
 

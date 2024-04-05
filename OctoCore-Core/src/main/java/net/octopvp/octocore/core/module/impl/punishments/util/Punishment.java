@@ -21,9 +21,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Punishment extends BasePunishment {
-    public Punishment(Document document) {
-        super(document);
-    }
 
     public Punishment(IPlayerData data, PunishmentType type) {
         super(data, type);
@@ -46,9 +43,12 @@ public class Punishment extends BasePunishment {
         }
 
         new ExecutePunishmentPacket(senderStr, coloredName, sender.getName(), name, getReason(), getDurationTime(), getNiceDuration(), getNiceExpire(),
-                isPermanent(), targetId, isSilent(), addedByName, OctoCoreCommon.getInstance().getServerImplementation().getServerName(), punishmentType,
+                isPermanent(), targetId, isSilent(), addedByName, OctoCoreCommon.getInstance().getServerImplementation().getServerName(), type,
                 ipRelative, OctoCore.getGson().toJson(this)
         ).send();
     }
 
+    public static Punishment fromDocument(Document document) {
+        return OctoCoreCommon.getInstance().getGson().fromJson(document.toJson(), Punishment.class);
+    }
 }

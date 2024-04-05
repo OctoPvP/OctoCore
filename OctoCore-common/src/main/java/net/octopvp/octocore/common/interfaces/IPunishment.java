@@ -125,9 +125,7 @@ public interface IPunishment {
 
     void setTargetId(UUID targetId);
 
-    void save(boolean replace); //Other servers calling this may need to get server with player to reload punishments
-
-    void save();
+    void save(); //Other servers calling this may need to get server with player to reload punishments
 
     default String getNiceDuration() {
         if (isPermanent() || getDurationTime() <= 0L) return "Permanent";
@@ -141,7 +139,7 @@ public interface IPunishment {
     default String getNiceExpire() {
         if (isPermanent()) return "Never";
         if (hasExpired()) return "Expired";
-        if (getDurationTime() == -5L) return "";
+        if (getDurationTime() < 0) return "";
 
         return DateUtils.formatDateDiff(this.getDurationTime());
     }
@@ -151,10 +149,9 @@ public interface IPunishment {
     String getStatusText();
 
     default boolean isManuallyRemoved() {
-        boolean a = (getRemovedBy() != null && !getRemovedBy().isEmpty());
-        boolean b = isRemovedOnWebPanel();
-        boolean c = getRemovedById() != null;
-        Logger.debug("a: " + a + ", b: " + b + ", c: " + c);
-        return a || b || c;
+        boolean removed = (getRemovedBy() != null && !getRemovedBy().isEmpty());
+        boolean removedOnWebPanel = isRemovedOnWebPanel();
+        boolean removedById = getRemovedById() != null;
+        return removed || removedOnWebPanel || removedById;
     }
 }

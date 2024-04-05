@@ -56,7 +56,7 @@ public class StaffHistoryPunishmentMenu extends PaginatedMenu<PaginatedGui> {
         List<String> lore = new ArrayList<>();
         lore.add(CC.SEPARATOR);
         lore.add(CC.MAIN + "Target&7: " + CC.SECONDARY + punishment.getName());
-        if (punishment.getPunishmentType() != PunishmentType.KICK) {
+        if (punishment.getType() != PunishmentType.KICK) {
             lore.add(CC.MAIN + "Duration&7: " + CC.SECONDARY + punishment.getNiceDuration());
             lore.add(CC.MAIN + "Expire&7: " + CC.SECONDARY + punishment.getNiceExpire());
         }

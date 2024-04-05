@@ -149,7 +149,7 @@ public class EditRankMenu extends Menu<Gui> {
     public GuiItem colorButton() {
         return ItemBuilder.from(Material.EMERALD)
                 .name(CC.AQUA + "Color")
-                .lore(CC.SEPARATOR, CC.AQUA + "Color: " + builder.getRank().getColor() + StringUtils.capatalizeFirstDeep(builder.getRank().getColor().name().toLowerCase().replace("_", " ")), CC.SEPARATOR)
+                .lore(CC.SEPARATOR, CC.AQUA + "Color: " + builder.getRank().getColor() + StringUtils.capitalizeFirstDeep(builder.getRank().getColor().name().toLowerCase().replace("_", " ")), CC.SEPARATOR)
                 .asGuiItem(event -> {
                     new ChooseColorMenu(builder, (b) -> {
                         builder = b;

@@ -26,7 +26,7 @@ public enum PunishmentType {
     }
 
     public String getFriendlyName() {
-        return StringUtils.capatalizeFirst(name().toLowerCase());
+        return StringUtils.capitalizeFirst(name().toLowerCase());
     }
 
     public boolean hasDuration() {

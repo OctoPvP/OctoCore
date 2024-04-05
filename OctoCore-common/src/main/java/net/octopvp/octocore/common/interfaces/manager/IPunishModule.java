@@ -6,6 +6,4 @@ import org.bson.Document;
 
 public interface IPunishModule {
     MongoCollection<Document> getPunishmentsCollection();
-
-    IPunishment createPunishment(Document doc);
 }

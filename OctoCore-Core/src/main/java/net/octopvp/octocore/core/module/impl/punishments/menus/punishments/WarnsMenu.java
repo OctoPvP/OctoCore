@@ -73,9 +73,7 @@ public class WarnsMenu extends PaginatedMenu<PaginatedGui> {
 
                     open((Player) event.getWhoClicked());
 
-                    Tasks.runAsync(() -> {
-                        punishment.save(true);
-                    });
+                    Tasks.runAsync(punishment::save);
                 });
     }
 

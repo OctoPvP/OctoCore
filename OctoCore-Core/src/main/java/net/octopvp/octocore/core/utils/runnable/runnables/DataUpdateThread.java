@@ -74,7 +74,7 @@ public class DataUpdateThread extends Thread {
                 }
                 Document document = playerData.getData();
                 document.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(playerData.getFinalNodeTree()));
-                new DataCache(playerData.getUuid()).update(document);
+                DataCache.update(document, playerData.getUuid());
             }
             double[] tps = Bukkit.getTPS();
             new ServerDataPacket(OctoCore.getServerName(), onlinePlayers, Bukkit.getMaxPlayers(), System.currentTimeMillis(), Bukkit.hasWhitelist(), tps[0], tps[1], tps[2], false).send();

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import net.octopvp.octocore.common.util.BedrockUtils;
+import net.octopvp.octocore.common.util.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -60,6 +61,9 @@ public class OfflineHelpers {
     public static OfflineInfo getOfflineInfo(String name) {
         if (name == null) {
             return null;
+        }
+        if (Utilities.isUUID(name)) {
+            return getOfflineInfo(UUID.fromString(name));
         }
         if (name.startsWith(BedrockUtils.bedrockPrefix)) {
             // return new OfflineInfo(name, BedrockUtils.getXUIDAsUUID(name).get());

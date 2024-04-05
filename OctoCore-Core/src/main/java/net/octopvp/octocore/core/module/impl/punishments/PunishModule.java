@@ -155,9 +155,4 @@ public class PunishModule implements Module, IPunishModule {
     public MongoCollection<Document> getPunishmentsCollection() {
         return punishments;
     }
-
-    @Override
-    public IPunishment createPunishment(Document doc) {
-        return new Punishment(doc);
-    }
 }

@@ -48,14 +48,12 @@ public class AltUpdatePacket extends RedisPacket {
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
             PlayerData playerData = PlayerManager.getInstance().getData(player.getUniqueId());
-            if (playerData != null) {
-                if (playerData.getAlt(altId) == null) {
-                    PlayerData targetData = PlayerManager.getInstance().getData(altId);
-                    if (targetData != null) {
-                        playerData.getAlts().add(new Alt(altId, altName, targetData.getPunishData()).updateDisplayName());
-                    } else {
-                        playerData.getAlts().add(new Alt(altId, altName, new PlayerData(altId, altName).getPunishData()).updateDisplayName());
-                    }
+            if (playerData != null && playerData.getAlt(altId) == null) {
+                PlayerData targetData = PlayerManager.getInstance().getData(altId);
+                if (targetData != null) {
+                    playerData.getAlts().add(new Alt(altId, altName, targetData.getPunishData()).updateDisplayName());
+                } else {
+                    playerData.getAlts().add(new Alt(altId, altName, new PlayerData(altId, altName).getPunishData()).updateDisplayName());
                 }
             }
         }

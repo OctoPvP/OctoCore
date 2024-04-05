@@ -69,7 +69,7 @@ public class UsersPage extends Page {
         dataView = grid.setItems(userRepository.findAll());
         grid.addColumn(userCardRenderer).setHeader("User");
         grid.addColumn(user -> user.getEmail() == null || user.getEmail().isEmpty() ? "No email" : user.getEmail()).setHeader("Email").setAutoWidth(true);
-        grid.addColumn(user -> user.getActualRoles().stream().map(role -> StringUtils.capatalizeFirst(role.getName().replace("ROLE_", ""))).collect(Collectors.joining(", "))) // getActualRoles() only returns roles that the user has, not the roles that the user inherits from other roles
+        grid.addColumn(user -> user.getActualRoles().stream().map(role -> StringUtils.capitalizeFirst(role.getName().replace("ROLE_", ""))).collect(Collectors.joining(", "))) // getActualRoles() only returns roles that the user has, not the roles that the user inherits from other roles
                 .setHeader("Roles"); // TODO order roles by priority
         grid.addColumn(user -> user.getTimeZone().getDisplayName()).setHeader("Timezone").setAutoWidth(true);
         grid.addColumn(new ComponentRenderer<>(Div::new, (div, user) -> {
@@ -218,7 +218,7 @@ public class UsersPage extends Page {
         List<Role> roleList = roleRepository.findAll();
         roles.setItems(roleList.toArray(new Role[0]));
         roles.setPlaceholder("Select roles");
-        roles.setItemLabelGenerator(role -> StringUtils.capatalizeFirst(role.getName().replace("ROLE_", "")));
+        roles.setItemLabelGenerator(role -> StringUtils.capitalizeFirst(role.getName().replace("ROLE_", "")));
 
         VerticalLayout dialogLayout = new VerticalLayout(usernameField,
                 emailField, roles);
