@@ -33,7 +33,7 @@ public class BansMenu extends PaginatedMenu<PaginatedGui> {
     @SuppressWarnings("deprecation")
     public static GuiItem punishmentButton(IPunishment punishment, int order) {
         List<String> lore = PunishmentMenuCommons.addPunishmentLore(punishment);
-        return ItemBuilder.from(punishment.isActive() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
+        return ItemBuilder.from(!punishment.hasExpired() ? XMaterial.LIME_WOOL : (punishment.isManuallyRemoved() ? XMaterial.ORANGE_WOOL : XMaterial.RED_WOOL))
                 .name(CC.GREEN + "#" + order + " " + CC.GRAY + "(" + CC.YELLOW + OctoCoreCommon.DATE_FORMAT.format(new Date(punishment.getAddedAt())) + CC.GRAY + ")")
                 .setLore(lore)
                 .asGuiItem();

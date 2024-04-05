@@ -31,7 +31,7 @@ public class KicksMenu extends PaginatedMenu<PaginatedGui> {
     public GuiItem punishmentButton(IPunishment punishment, int order) {
         // return ItemBuilder.from(Material.WOOL)
         //        .durability(punishment.isActive() ? WoolUtils.convertChatColorToWoolData(ChatColor.GREEN) : WoolUtils.convertChatColorToWoolData(ChatColor.RED))
-        return ItemBuilder.from(punishment.isActive() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
+        return ItemBuilder.from(!punishment.hasExpired() ? XMaterial.LIME_WOOL : (punishment.isManuallyRemoved() ? XMaterial.ORANGE_WOOL : XMaterial.RED_WOOL))
                 .name(CC.GREEN + "#" + order + " " + CC.GRAY + "(" + CC.YELLOW + DateUtils.getDate(punishment.getAddedAt()) + CC.GRAY + ")")
                 .lore(CC.SEPARATOR,
                         CC.GREEN + "Added by" + CC.GRAY + ": " + CC.YELLOW + punishment.getAddedByName(),
