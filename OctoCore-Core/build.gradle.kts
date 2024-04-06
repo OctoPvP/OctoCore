@@ -7,16 +7,16 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven {
+        url = uri("https://repo.octopvp.net/public")
+        name = "octomc-public"
+    }
+    maven {
         url = uri("https://repo.octopvp.net/repo")
         name = "octomc"
         credentials {
             username = findProperty("octomcUsername") as String
             password = findProperty("octomcPassword") as String
         }
-    }
-    maven {
-        url = uri("https://repo.octopvp.net/public")
-        name = "octomc-public"
     }
 }
 description = "OctoCore Core"
