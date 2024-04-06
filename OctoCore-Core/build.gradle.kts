@@ -14,6 +14,10 @@ repositories {
             password = findProperty("octomcPassword") as String
         }
     }
+    maven {
+        url = uri("https://repo.octopvp.net/public")
+        name = "octomc-public"
+    }
 }
 description = "OctoCore Core"
 var targetJavaVersion = "1.8" // We're using 1.8 to support 1.8.9 for the core, and so does the 1_8 module, but the 1_19 module uses java 17
