@@ -19,7 +19,7 @@ description = "OctoCore Core"
 var targetJavaVersion = "1.8" // We're using 1.8 to support 1.8.9 for the core, and so does the 1_8 module, but the 1_19 module uses java 17
 dependencies {
     implementation(project(":OctoCore-common"))
-    implementation("net.octopvp:Commander-Bukkit:0.0.9-REL") {
+    implementation("net.octopvp:Commander-Bukkit:0.0.10-REL") {
         exclude(group = "org.reflections")
     }
     implementation("dev.samstevens.totp:totp:1.7.1")

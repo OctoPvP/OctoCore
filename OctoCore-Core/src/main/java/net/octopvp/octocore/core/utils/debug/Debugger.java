@@ -167,4 +167,14 @@ public class Debugger {
         PlayerMessagePacket packet = new PlayerMessagePacket(((Player) sender).getUniqueId(), "test");
         packet.send();
     }
+
+    public void canSee(String target) {
+        Player player = (Player) sender;
+        Player targetPlayer = Bukkit.getPlayer(target);
+        if (targetPlayer == null) {
+            print("Player not found!");
+            return;
+        }
+        print(player.canSee(targetPlayer));
+    }
 }
