@@ -2,6 +2,7 @@ package net.octopvp.octocore.core.command.providers;
 
 import net.octopvp.commander.bukkit.BukkitCommandSender;
 import net.octopvp.commander.bukkit.annotation.DefaultSelf;
+import net.octopvp.commander.bukkit.providers.PlayerProvider;
 import net.octopvp.commander.command.CommandContext;
 import net.octopvp.commander.command.CommandInfo;
 import net.octopvp.commander.command.ParameterInfo;
@@ -67,7 +68,7 @@ public class PlayerDataProvider implements Provider<PlayerData> {
 
     @Override
     public List<String> provideSuggestions(String input, String lastArg, CoreCommandSender sender) {
-        return OctoCore.getInstance().getCommander().getArgumentProviders().get(Player.class).provideSuggestions(input, lastArg, sender);
+        return PlayerProvider.suggest(sender);
     }
 
     @Override
