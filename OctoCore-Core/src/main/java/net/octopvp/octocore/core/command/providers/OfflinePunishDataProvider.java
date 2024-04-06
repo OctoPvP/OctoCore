@@ -1,5 +1,6 @@
 package net.octopvp.octocore.core.command.providers;
 
+import net.octopvp.commander.bukkit.providers.PlayerProvider;
 import net.octopvp.commander.command.CommandContext;
 import net.octopvp.commander.command.CommandInfo;
 import net.octopvp.commander.command.ParameterInfo;
@@ -20,6 +21,6 @@ public class OfflinePunishDataProvider implements Provider<OfflinePunishData> {
 
     @Override
     public List<String> provideSuggestions(String input, String lastArg, CoreCommandSender sender) {
-        return OctoCore.getInstance().getCommander().getArgumentProviders().get(Player.class).provideSuggestions(input, lastArg, sender);
+        return PlayerProvider.suggest(sender);
     }
 }

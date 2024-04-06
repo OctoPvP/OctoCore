@@ -18,9 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class MessageCommand {
-    @Command(name = "message", aliases = {"msg", "w", "m", "tell", "t"})
     @PlayerOnly
     @Cooldown(1)
+    @Command(name = "message", aliases = {"msg", "w", "m", "tell", "t"})
     public CommandResult execute(@Sender Player sender, @Name("player") @OnlineOnly(network = true) PlayerData target, @JoinStrings @Name("message") String message) {
         PlayerData senderData = PlayerManager.getInstance().getData(sender.getUniqueId());
         if (target == null || (target.isVanished() && target.getVanishPriority() > senderData.getVanishPriority())) {
