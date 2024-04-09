@@ -9,8 +9,8 @@ import net.octopvp.octocore.core.objects.PlayerData;
 import org.bukkit.entity.Player;
 
 public class DisplayNameCommand {
-    @Command(name = "whatsmydisplayname")
     @PlayerOnly
+    @Command(name = "whatsmydisplayname")
     public CommandResult execute(@Sender Player sender) {
         sender.sendMessage(sender.getDisplayName());
         PlayerData data = PlayerManager.getInstance().getData(sender);

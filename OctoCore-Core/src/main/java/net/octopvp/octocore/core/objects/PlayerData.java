@@ -94,6 +94,13 @@ public class PlayerData extends SimplePlayerData {
         return this;
     }
 
+    public SimplePlayerData loadIfNot() {
+        if (!loaded) {
+            load();
+        }
+        return this;
+    }
+
     public SimplePlayerData loadGrants() {
         return super.loadGrants(PlayerManager.getInstance().getProfileDocument(uuid));
     }
