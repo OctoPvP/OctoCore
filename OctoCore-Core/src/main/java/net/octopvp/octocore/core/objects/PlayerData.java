@@ -108,6 +108,7 @@ public class PlayerData extends SimplePlayerData {
     public void cache(Document data) {
         Document copy = new Document(data == null ? getData() : data);
         copy.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(getFinalNodeTree()));
+        copy.put("vanished", isVanished());
         DataCache.update(copy, uuid);
     }
 

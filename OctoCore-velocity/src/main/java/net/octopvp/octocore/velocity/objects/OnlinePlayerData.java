@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.redis.RedisManager;
+import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.perms.Node;
@@ -62,20 +63,14 @@ public class OnlinePlayerData {
         if (!OctoCoreCommon.getInstance().getRedisManager().isConnected())
             return;
 
-        try (Jedis jedis = RedisManager.getJedis()) {
-            String json = jedis.hget("player-data", uuid.toString());
-            if (json == null)
-                return;
-            Document document = Document.parse(json);
-            // Logger.debug(" - Document: " + json);
-            this.nodes = OctoCoreCommon.getInstance().getGson().fromJson(document.getString("calculated-nodes"),
-                    GsonType.NODE_MAP);
-            // Logger.debug(" - Nodes: ");
-            // PermissionManager.getInstance().printNodeMap(nodes);
-            this.vanished = document.getBoolean("joinVanished"); // used to be vanished but we've removed that from
-                                                                 // playerdata
-
+        Document data = DataCache.getData(uuid);
+        if (data == null) {
+            Logger.debug(" - No data found");
+            return;
         }
+        this.nodes = OctoCoreCommon.getInstance().getGson().fromJson(data.getString("calculated-nodes"),
+                GsonType.NODE_MAP);
+        this.vanished = data.getBoolean("vanished");
     }
 
     @Override
