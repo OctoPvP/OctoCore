@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
-import net.octopvp.octocore.common.redis.RedisManager;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.common.util.Logger;
@@ -13,7 +12,6 @@ import net.octopvp.octocore.common.util.perms.Node;
 import net.octopvp.octocore.common.util.perms.PermissionCheckResult;
 import net.octopvp.octocore.common.util.perms.PermissionManager;
 import org.bson.Document;
-import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,8 +68,10 @@ public class OnlinePlayerData {
         }
         this.nodes = OctoCoreCommon.getInstance().getGson().fromJson(data.getString("calculated-nodes"),
                 GsonType.NODE_MAP);
-        this.vanished = data.getBoolean("vanished");
-        this.joinVanished = data.getBoolean("joinVanished");
+        if (data.containsKey("vanished"))
+            this.vanished = data.getBoolean("vanished");
+        if (data.containsKey("joinVanished"))
+            this.joinVanished = data.getBoolean("joinVanished");
     }
 
     @Override
