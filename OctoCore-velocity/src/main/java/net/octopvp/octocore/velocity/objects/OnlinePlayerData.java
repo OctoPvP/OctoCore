@@ -27,7 +27,7 @@ public class OnlinePlayerData {
     private final UUID uuid;
     private Map<String, Node> nodes = new HashMap<>();
     private Map<String, PermissionCheckResult> cachedPermResults = new HashMap<>();
-    private boolean frozen = false, vanished = false;
+    private boolean frozen = false, vanished = false, joinVanished = false;
 
     public Optional<Boolean> hasPermission(String perm) {
         Logger.debug("Checking permission for " + uuid + ": " + perm);
@@ -71,6 +71,7 @@ public class OnlinePlayerData {
         this.nodes = OctoCoreCommon.getInstance().getGson().fromJson(data.getString("calculated-nodes"),
                 GsonType.NODE_MAP);
         this.vanished = data.getBoolean("vanished");
+        this.joinVanished = data.getBoolean("joinVanished");
     }
 
     @Override
