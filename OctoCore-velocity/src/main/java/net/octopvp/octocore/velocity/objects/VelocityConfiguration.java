@@ -9,12 +9,17 @@ import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
+import net.octopvp.octocore.common.util.Utilities;
+import net.octopvp.octocore.velocity.OctoCoreVelocity;
+import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
 //import net.octopvp.octocore.common.interfaces.manager.IDatabaseManager;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Getter
 @Data
@@ -35,6 +40,7 @@ public class VelocityConfiguration {
         private Protocol protocol = null;
         private ServerPing.Players players = null;
         private String favicon = "server-icon.png";
+        private boolean customPlayerCount = true; // our own player count, online minus vanished
 
         @Data
         public static class Protocol {
@@ -58,12 +64,17 @@ public class VelocityConfiguration {
         public ServerPing generatePing(ServerPing fallback) {
             Protocol protocol = getProtocol();
             Path faviconPath = new File(favicon).toPath();
+            ServerPing.Players players = this.players == null ? fallback.getPlayers().orElse(new ServerPing.Players(0,1337, List.of())) : this.players;
+            if (customPlayerCount) {
+                int vanished = OnlinePlayersManager.getDataMap().values().stream().filter(OnlinePlayerData::isVanished).mapToInt(data -> 1).sum();
+                players = new ServerPing.Players(Math.max(players.getOnline() - vanished, 0), players.getMax(), players.getSample());
+            }
             return new ServerPing(
                     protocol == null ? fallback.getVersion()
                             : new ServerPing.Version(
                                     protocol.protocol,
                                     protocol.version),
-                    players == null ? fallback.getPlayers().orElse(null) : players,
+                    players,
                     generateMotd(),
                     Files.exists(faviconPath) ? Favicon.create(faviconPath) : null);
         }
