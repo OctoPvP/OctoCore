@@ -66,7 +66,7 @@ public class VelocityConfiguration {
             Path faviconPath = new File(favicon).toPath();
             ServerPing.Players players = this.players == null ? fallback.getPlayers().orElse(new ServerPing.Players(0,1337, List.of())) : this.players;
             if (customPlayerCount) {
-                int vanished = OnlinePlayersManager.getDataMap().values().stream().filter(OnlinePlayerData::isJoinVanished).mapToInt(data -> 1).sum();
+                int vanished = OnlinePlayersManager.getDataMap().values().stream().filter(data -> data.isJoinVanished() || data.isVanished()).mapToInt(data -> 1).sum();
                 players = new ServerPing.Players(Math.max(players.getOnline() - vanished, 0), players.getMax(), players.getSample());
             }
             return new ServerPing(
