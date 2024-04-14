@@ -42,7 +42,7 @@ public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     public GuiItem tagsButton(Player player, PlayerData data, PlayerTag tag) {
-        final boolean[] playerTag = {data.getTag() != null && data.getTag().getId().toString().equalsIgnoreCase(tag.getId().toString())};
+        boolean equipped = data.getTag() != null && data.getTag().getId().equals(tag.getId());
         return ItemBuilder.from(tag.getMaterial())
                 .name(CC.AQUA + tag.getName())
                 .lore(
@@ -50,16 +50,15 @@ public class MyTagsMenu extends PaginatedMenu<PaginatedGui> {
                         CC.AQUA + "Tag: " + CC.WHITE + tag.getTag(),
                         CC.AQUA + "Description:"
                 ).addLore(ChatPaginator.wordWrap(tag.getDescription(), 30))
-                .addLore(CC.SEPARATOR, (playerTag[0] ? CC.RED + "Click to remove!" : CC.YELLOW + "Click to use!"))
+                .addLore(CC.SEPARATOR, (equipped ? CC.RED + "Click to remove!" : CC.YELLOW + "Click to use!"))
                 .asGuiItem(event -> {
                     SoundUtil.playPing(player);
-                    if (playerTag[0]) {
-                        playerTag[0] = false;
-                        PlayerManager.getInstance().getData(player.getUniqueId()).setTag(null).save();
-                        player.sendMessage(CC.GREEN + "Unequipped your tag!");
+                    if (equipped) {
+                        data.setTag(null);
+                        player.sendMessage(CC.RED + "Removed tag " + tag.getName() + "!");
                     } else {
-                        PlayerManager.getInstance().getData(player.getUniqueId()).setTag(tag).save();
-                        player.sendMessage(CC.GREEN + "Equipped your tag!");
+                        data.setTag(tag);
+                        player.sendMessage(CC.GREEN + "Equipped tag " + tag.getName() + "!");
                     }
                     gui.clearPageItems(false);
                     populateGui(gui, player);
