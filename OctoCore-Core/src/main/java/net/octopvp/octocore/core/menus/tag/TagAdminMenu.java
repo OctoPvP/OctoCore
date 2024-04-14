@@ -41,12 +41,12 @@ public class TagAdminMenu extends Menu<Gui> {
                         try {
                             // OfflinePlayer op = Bukkit.getOfflinePlayer(answer);
                             OfflineHelpers.OfflineInfo op = OfflineHelpers.getOfflineInfo(answer);
-                            PlayerData data = PlayerManager.getInstance().getOfflineData(op.getUniqueId());
+                            PlayerData data = PlayerManager.getInstance().getDataEvenIfOffline(op.getUniqueId(), false);
                             if (data == null) {
                                 event.getWhoClicked().sendMessage(CC.RED + "That player does not exist!");
                                 return Prompt.END_OF_CONVERSATION;
                             }
-                            data.load();
+                            data.loadIfNot();
 
                             new ManagePlayerTagsMenu(data).open((Player) event.getWhoClicked());
                             return Prompt.END_OF_CONVERSATION;

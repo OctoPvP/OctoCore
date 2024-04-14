@@ -302,17 +302,13 @@ public class PlayerData extends SimplePlayerData {
         return (customColor != null && isCustomColorEnabled() ? customColor : getHighestRank().getColor().toString());
     }
 
-    public boolean isOnline(String name) { // FIXME inverted this because its returning false even if they are online
-        if (Bukkit.getPlayer(uuid) != null) return true;
-        return OctoCore.getInstance().getServerManager().getConnectedServers().stream().filter(serverData -> serverData.getNames().stream().map(String::toLowerCase).collect(Collectors.toList()).contains(name.toLowerCase())).findFirst().orElse(null) != null;
-    }
-
     public boolean isOnlineThisServer() {
         return Bukkit.getPlayer(uuid) != null;
     }
 
     public boolean isOnline() {
-        return isOnline(name);
+        if (Bukkit.getPlayer(uuid) != null) return true;
+        return OctoCoreCommon.getInstance().getServerManager().isOnline(uuid);
     }
 
     public String getTagString() {
