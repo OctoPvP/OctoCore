@@ -7,6 +7,7 @@ plugins {
 repositories {
     mavenLocal()
     mavenCentral()
+    maven("https://repo.octopvp.net/public")
     maven {
         url = uri("https://repo.octopvp.net/repo")
         name = "octomc"
