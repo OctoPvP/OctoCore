@@ -83,3 +83,7 @@ description = "OctoCore Master"
 tasks.named("build") {
     dependsOn(":OctoCore-master:vaadinBuildFrontend")
 }
+
+tasks.named("resolveMainClassName") {
+    dependsOn(":OctoCore-master:buildProperties")
+}
