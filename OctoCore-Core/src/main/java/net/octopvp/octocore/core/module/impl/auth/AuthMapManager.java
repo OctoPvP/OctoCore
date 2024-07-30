@@ -1,6 +1,6 @@
 package net.octopvp.octocore.core.module.impl.auth;
 
-import net.octopvp.agile.builder.item.ItemBuilder;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
 import net.octopvp.octocore.common.util.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

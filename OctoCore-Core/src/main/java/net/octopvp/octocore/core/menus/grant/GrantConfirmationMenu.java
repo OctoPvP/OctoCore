@@ -1,11 +1,13 @@
 package net.octopvp.octocore.core.menus.grant;
 
 import com.cryptomorin.xseries.XMaterial;
+import dev.octomc.agile.menu.Menu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
 import lombok.AllArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.menu.Menu;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.common.object.builders.GrantBuilder;
 import net.octopvp.octocore.common.object.permissions.Grant;
@@ -33,24 +35,42 @@ public class GrantConfirmationMenu extends Menu<Gui> {
     public GuiItem infoButton(Player player) {
         GrantProcedure procedure = PlayerManager.getInstance().getData(player.getUniqueId()).getGrantProcedure();
         return ItemBuilder.from(Material.BEACON)
-                .name(CC.AQUA + "Are you sure?")
-                .lore(CC.SEPARATOR, CC.AQUA + "Player: " + CC.YELLOW + targetData.getName(), CC.AQUA + "Rank: " + CC.YELLOW + procedure.getRankName(), CC.AQUA + "Current Rank: " + CC.YELLOW + targetData.getHighestRank().getName(), CC.AQUA + "Duration: " + CC.YELLOW + procedure.getNiceDuration(), CC.AQUA + "Server: " + CC.YELLOW + procedure.getServer(), CC.SEPARATOR)
+                .name(Component.text("Are you sure?").color(NamedTextColor.AQUA))
+                .lore(
+                        Component.text(CC.SEPARATOR),
+                        Component.text("Player: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(targetData.getName()).color(NamedTextColor.YELLOW)),
+                        Component.text("Rank: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(procedure.getRankName()).color(NamedTextColor.YELLOW)),
+                        Component.text("Current Rank: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(targetData.getHighestRank().getName()).color(NamedTextColor.YELLOW)),
+                        Component.text("Duration: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(procedure.getNiceDuration()).color(NamedTextColor.YELLOW)),
+                        Component.text("Server: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(procedure.getServer()).color(NamedTextColor.YELLOW)),
+                        Component.text(CC.SEPARATOR)
+                )
                 .asGuiItem();
     }
 
     public GuiItem noButton(Player player) {
         return // ItemBuilder.from(Material.STAINED_CLAY)
                 // .durability(14)
-                ItemBuilder.from(XMaterial.RED_STAINED_GLASS_PANE)
-                        .name(CC.RED + CC.B + "No")
+                ItemBuilder.from(XMaterial.RED_STAINED_GLASS_PANE.parseItem())
+                        .name(Component.text("No").color(NamedTextColor.RED))
                         .asGuiItem(event -> player.closeInventory());
     }
 
     public GuiItem yesButton() { // slot 11
         return // ItemBuilder.from(Material.WOOL)
                 // .durability(13)
-                ItemBuilder.from(XMaterial.GREEN_STAINED_GLASS_PANE)
-                        .name(CC.GREEN + "Yes")
+                ItemBuilder.from(XMaterial.GREEN_STAINED_GLASS_PANE.parseItem())
+                        .name(Component.text("Yes").color(NamedTextColor.GREEN))
                         .asGuiItem(event -> {
                             Player player = (Player) event.getWhoClicked();
                             PlayerData senderData = PlayerManager.getInstance().getData(player);

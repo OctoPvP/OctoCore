@@ -1,12 +1,14 @@
 package net.octopvp.octocore.core.menus.grant;
 
 import com.cryptomorin.xseries.XMaterial;
+import dev.octomc.agile.menu.Menu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.menu.Menu;
-import net.octopvp.octocore.common.util.CC;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
@@ -28,8 +30,8 @@ public class DurationMenu extends Menu<Gui> {
 
     public GuiItem customDurationButton() {
         return ItemBuilder.from(XMaterial.WRITABLE_BOOK.parseMaterial() != null ? XMaterial.WRITABLE_BOOK.parseMaterial() : Material.BOOK)
-                .name(CC.AQUA + "Custom Duration")
-                .lore(CC.GREEN + "Click to set a custom duration.")
+                .name(Component.text("Custom Duration").color(NamedTextColor.AQUA))
+                .lore(Component.text("Click to set a custom duration.").color(NamedTextColor.GREEN))
                 .asGuiItem(event -> {
                     callback((Player) event.getWhoClicked());
                 });
@@ -37,8 +39,8 @@ public class DurationMenu extends Menu<Gui> {
 
     public GuiItem permanentButton() {
         return ItemBuilder.from(Material.BEDROCK)
-                .name(CC.AQUA + "Permanent")
-                .lore(CC.GREEN + "This will make the duration " + CC.UNDERLINE + "Permanent")
+                .name(Component.text("Permanent").color(NamedTextColor.AQUA))
+                .lore(Component.text("This will make the duration ").color(NamedTextColor.GREEN).append(Component.text("Permanent").decorate(TextDecoration.UNDERLINED)))
                 .asGuiItem(event -> {
                     PlayerData playerData = PlayerManager.getInstance().getData(event.getWhoClicked().getUniqueId());
                     if (playerData == null) {

@@ -1,12 +1,15 @@
 package net.octopvp.octocore.core.menus.grant;
 
 import com.cryptomorin.xseries.XMaterial;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.menu.PaginatedMenu;
+import dev.octomc.agile.menu.Menu;
+import dev.octomc.agile.menu.PaginatedMenu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.octopvp.octocore.common.object.permissions.Grant;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
@@ -123,8 +126,8 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
             lore.add("");
             lore.add(CC.YELLOW + "Click to revoke this grant!");
         }
-        return ItemBuilder.from(grant.isActive() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
-                .name(grant.isActive() ? CC.GREEN + grant.getRankName() : CC.RED + grant.getRankName())
+        return ItemBuilder.from((grant.isActive() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL).parseItem())
+                .name(Component.text(grant.getRankName()).color(grant.isActive() ? NamedTextColor.GREEN : NamedTextColor.RED))
                 .setLore(lore)
                 .asGuiItem(event -> {
                     Rank rank = grant.getRank();
@@ -151,10 +154,14 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
 
     @Override
     public GuiItem getFilterButton() {
-        return ItemBuilder.from(XMaterial.HOPPER)
-                .name(CC.GREEN + "Filter")
-                .lore(all ? CC.AQUA + "Currently Showing " + CC.U + "ALL" + CC.R + CC.AQUA + " active grants." : CC.AQUA + "Currently Showing " + CC.U + "Active Only" + CC.R + CC.AQUA + " grants.")
-                .lore("", CC.YELLOW + "Click to change to " + (all ? "active only" : "all") + "!")
+        return ItemBuilder.from(XMaterial.HOPPER.parseItem())
+                .name(Component.text("Filter").color(NamedTextColor.GREEN))
+                //.lore(all ? CC.AQUA + "Currently Showing " + CC.U + "ALL" + CC.R + CC.AQUA + " active grants." : CC.AQUA + "Currently Showing " + CC.U + "Active Only" + CC.R + CC.AQUA + " grants.")
+                //.lore("", CC.YELLOW + "Click to change to " + (all ? "active only" : "all") + "!")
+                .lore(Component.text("Currently showing").append(Component.text(all ? "ALL" : "Active Only").decorate(TextDecoration.UNDERLINED)).append(Component.text("grants.")).color(NamedTextColor.AQUA),
+                        Component.text(""),
+                        Component.text("Click to change to " + (all ? "active only" : "all") + "!").color(NamedTextColor.YELLOW)
+                )
                 .asGuiItem(event -> {
                     all = !all;
                     open((Player) event.getWhoClicked());
@@ -170,9 +177,12 @@ public class GrantsMenu extends PaginatedMenu<PaginatedGui> {
         } else
             this.targetData.getGrants().stream().sorted(GRANT_COMPARATOR).forEach(grant -> items.add(grantEntryButton(grant)));
         if (items.isEmpty()) {
-            items.add(ItemBuilder.from(XMaterial.BEDROCK)
-                    .name(CC.RED + "No grants!")
-                    .lore("", CC.RED + "This player does not", CC.RED + " have any grants!")
+            items.add(ItemBuilder.from(XMaterial.BEDROCK.parseItem())
+                    //.name(CC.RED + "No grants!")
+                    .name(Component.text("No grants!").color(NamedTextColor.RED))
+                    //.lore("", CC.RED + "This player does not", CC.RED + " have any grants!")
+                    .lore(Component.text("This player does not").color(NamedTextColor.RED),
+                            Component.text("have any grants!").color(NamedTextColor.RED))
                     .asGuiItem());
         }
         return items;

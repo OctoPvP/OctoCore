@@ -1,16 +1,16 @@
 package net.octopvp.octocore.core.menus.rank.create;
 
 import com.cryptomorin.xseries.XMaterial;
+import dev.octomc.agile.menu.Menu;
+import dev.octomc.agile.menu.PaginatedMenu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.object.builders.NodeBuilder;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.util.CC;
@@ -72,7 +72,7 @@ public class CreateRankManagePermissionsMenu extends PaginatedMenu<PaginatedGui>
     }
 
     public GuiItem permissionButton(Node node, Consumer<NodeBuilder> callback) {
-        return ItemBuilder.from(!node.isNegatedIgnoreScope() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL)
+        return ItemBuilder.from((!node.isNegatedIgnoreScope() ? XMaterial.LIME_WOOL : XMaterial.RED_WOOL).parseItem())
                 .name(
                         (node.isNegatedIgnoreScope() ? CC.RED : CC.GREEN) + node.getPermissionString()
                 ).lore(

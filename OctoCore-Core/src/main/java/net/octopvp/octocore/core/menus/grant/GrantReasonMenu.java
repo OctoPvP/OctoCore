@@ -1,13 +1,14 @@
 package net.octopvp.octocore.core.menus.grant;
 
 import com.cryptomorin.xseries.XMaterial;
+import dev.octomc.agile.menu.PaginatedMenu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.PaginatedMenu;
-import net.octopvp.octocore.common.util.CC;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.conversations.grant.GrantReasonConversation;
@@ -67,8 +68,8 @@ public class GrantReasonMenu extends PaginatedMenu<PaginatedGui> {
 
     public GuiItem otherReason() {
         return ItemBuilder.from(XMaterial.WRITABLE_BOOK.parseMaterial() != null ? XMaterial.WRITABLE_BOOK.parseMaterial() : Material.BOOK)
-                .name(CC.GREEN + "Other")
-                .lore(CC.AQUA + "Click to enter a custom reason.")
+                .name(Component.text("Other").color(NamedTextColor.AQUA))
+                .lore(Component.text("Click to enter a custom reason.").color(NamedTextColor.GREEN))
                 .asGuiItem(event -> {
                     Player player = (Player) event.getWhoClicked();
                     prompt(player);

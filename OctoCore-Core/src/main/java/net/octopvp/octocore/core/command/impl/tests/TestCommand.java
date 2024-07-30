@@ -1,17 +1,16 @@
 package net.octopvp.octocore.core.command.impl.tests;
 
+import dev.octomc.agile.menu.Menu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.menu.Menu;
 import net.octopvp.commander.annotation.*;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.builders.GrantBuilder;
 import net.octopvp.octocore.common.object.permissions.Grant;
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.manager.impl.RankManager;
@@ -92,7 +91,7 @@ public class TestCommand {
         @Override
         public void populateGui(Gui gui, Player player) {
             System.out.println("Populating");
-            gui.setItem(0, ItemBuilder.from(Material.PRISMARINE_CRYSTALS).name(CC.GREEN + "Test1").asGuiItem());
+            gui.setItem(0, ItemBuilder.from(Material.PRISMARINE_CRYSTALS).name(Component.text("Test1").color(NamedTextColor.GREEN)).asGuiItem());
             System.out.println("a1");
             Component component = Component.text("Test2")
                     .color(NamedTextColor.GREEN)

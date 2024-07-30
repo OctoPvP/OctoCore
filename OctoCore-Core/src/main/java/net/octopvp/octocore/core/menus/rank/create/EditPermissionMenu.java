@@ -1,11 +1,11 @@
 package net.octopvp.octocore.core.menus.rank.create;
 
 import com.cryptomorin.xseries.XMaterial;
+import dev.octomc.agile.menu.Menu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
 import lombok.SneakyThrows;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.menu.Menu;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.builders.NodeBuilder;
 import net.octopvp.octocore.common.util.CC;
@@ -109,7 +109,7 @@ public class EditPermissionMenu extends Menu<Gui> {
     }
 
     public GuiItem permissionButton() {
-        return ItemBuilder.from(XMaterial.REDSTONE_TORCH)
+        return ItemBuilder.from(XMaterial.REDSTONE_TORCH.parseMaterial())
                 .name(CC.AQUA + "Permission")
                 .lore(CC.SEPARATOR, CC.AQUA + "Permission: " + CC.YELLOW + nodeBuilder.getPermission(), CC.SEPARATOR, CC.YELLOW + "Click to set permission!")
                 .asGuiItem(event -> {
