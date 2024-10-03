@@ -1,3 +1,0 @@
-name: OctoCore
-version: ${project.version}
-main: net.octopvp.octocore.waterfall.OctoCoreWaterfall

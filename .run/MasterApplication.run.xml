@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="MasterApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="OctoPvP.OctoCore.OctoCore-master.main" />
+    <module name="OctoCore.OctoCore-master" />
     <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="net.octopvp.octocore.master.MasterApplication" />
     <option name="VM_PARAMETERS" value="-Dspring.profiles.active=dev --add-opens java.base/java.lang=ALL-UNNAMED -Ddev=true -javaagent:VaadinPatcher.jar" />
