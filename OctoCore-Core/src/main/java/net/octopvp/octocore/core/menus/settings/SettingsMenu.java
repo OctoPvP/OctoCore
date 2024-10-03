@@ -16,7 +16,6 @@ import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @RequiredArgsConstructor

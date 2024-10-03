@@ -1,14 +1,13 @@
 import org.gradle.api.file.FileSystemLocation
+import org.gradle.api.provider.Provider
+import org.gradle.api.provider.ProviderFactory
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.IOException
 import java.io.OutputStream
 import java.nio.charset.Charset
-import java.nio.file.Path
-import kotlin.io.path.*
-import org.gradle.api.provider.Provider
-import org.gradle.api.provider.ProviderFactory
 import java.nio.file.Files
-import java.io.File
+import java.nio.file.Path
 
 class Git(private val repo: Path, private val env: Map<String, String> = emptyMap()) {
     @Suppress("unused")

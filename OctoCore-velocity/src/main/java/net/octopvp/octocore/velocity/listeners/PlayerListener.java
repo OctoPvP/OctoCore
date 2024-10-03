@@ -1,7 +1,5 @@
 package net.octopvp.octocore.velocity.listeners;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -23,9 +21,6 @@ import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
 import net.octopvp.octocore.velocity.objects.OctoCorePermissionsProvider;
 import net.octopvp.octocore.velocity.objects.OnlinePlayerData;
 import org.bson.Document;
-import org.json.JSONObject;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @AllArgsConstructor
 public class PlayerListener {

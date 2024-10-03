@@ -2,7 +2,6 @@ package net.octopvp.octocore.core.command.impl.punishments;
 
 import com.mongodb.client.model.Filters;
 import net.octopvp.commander.annotation.*;
-import net.octopvp.commander.command.CommandInfo;
 import net.octopvp.octocore.common.StringUtils;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.punish.PunishmentType;

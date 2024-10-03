@@ -1,4 +1,5 @@
-<md:EntityDescriptor xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" ID="_efa13bb56bdac034eb821e6704e24832cc8beec04fd54a19326b9a1491cbe3e6" entityID="octoauth"><ds:Signature>
+<md:EntityDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+                     ID="_efa13bb56bdac034eb821e6704e24832cc8beec04fd54a19326b9a1491cbe3e6" entityID="octoauth"><ds:Signature>
 <ds:SignedInfo>
 <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>

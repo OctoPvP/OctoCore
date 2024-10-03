@@ -9,15 +9,11 @@ import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.octopvp.octocore.common.object.redis.JedisSettings;
-import net.octopvp.octocore.common.util.Utilities;
-import net.octopvp.octocore.velocity.OctoCoreVelocity;
 import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
-//import net.octopvp.octocore.common.interfaces.manager.IDatabaseManager;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

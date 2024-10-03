@@ -12,7 +12,6 @@ import net.octopvp.octocore.common.object.redis.packet.RedisPacket;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor

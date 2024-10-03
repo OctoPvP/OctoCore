@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.octopvp.octocore.common.mfa.impl.TOTPMFAProvider;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

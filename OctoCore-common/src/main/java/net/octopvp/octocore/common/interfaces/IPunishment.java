@@ -3,7 +3,6 @@ package net.octopvp.octocore.common.interfaces;
 import net.octopvp.octocore.common.object.punish.PunishmentType;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.common.util.DurationFormatUtils;
-import net.octopvp.octocore.common.util.Logger;
 
 import java.util.UUID;
 

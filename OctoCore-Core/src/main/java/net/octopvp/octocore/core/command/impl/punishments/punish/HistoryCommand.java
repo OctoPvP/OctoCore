@@ -7,7 +7,6 @@ import net.octopvp.commander.annotation.Sender;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.module.impl.punishments.menus.HistoryMenu;
-import net.octopvp.octocore.core.objects.OfflinePunishData;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.runnable.Tasks;
 import org.bukkit.entity.Player;

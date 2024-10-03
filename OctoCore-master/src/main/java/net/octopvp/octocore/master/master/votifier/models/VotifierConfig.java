@@ -3,7 +3,6 @@ package net.octopvp.octocore.master.master.votifier.models;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.master.master.OctoCoreMaster;
 
 import java.io.File;

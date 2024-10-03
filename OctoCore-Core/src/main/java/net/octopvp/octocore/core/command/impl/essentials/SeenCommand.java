@@ -11,7 +11,6 @@ import net.octopvp.octocore.core.command.CommandResult;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
 import org.bukkit.command.CommandSender;
 
-import java.util.Date;
 import java.util.UUID;
 
 public class SeenCommand {

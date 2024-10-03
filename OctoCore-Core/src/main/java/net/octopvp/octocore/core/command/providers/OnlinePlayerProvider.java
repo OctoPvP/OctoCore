@@ -8,7 +8,6 @@ import net.octopvp.commander.provider.Provider;
 import net.octopvp.commander.sender.CoreCommandSender;
 import net.octopvp.octocore.common.object.OnlinePlayer;
 import net.octopvp.octocore.core.OctoCore;
-import org.bukkit.entity.Player;
 
 import java.util.Deque;
 import java.util.List;

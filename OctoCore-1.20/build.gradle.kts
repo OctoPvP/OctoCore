@@ -2,7 +2,7 @@ plugins {
     id("net.octopvp.java-conventions")
     id("net.octopvp.server-conventions")
     id("io.freefair.lombok") version "6.5.1"
-    id("io.papermc.paperweight.userdev") version "1.4.0"
+    id("io.papermc.paperweight.userdev") version "1.7.3"
 }
 
 repositories {

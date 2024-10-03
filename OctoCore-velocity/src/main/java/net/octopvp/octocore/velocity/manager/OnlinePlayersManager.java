@@ -3,8 +3,8 @@ package net.octopvp.octocore.velocity.manager;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.octopvp.octocore.velocity.objects.OnlinePlayerData;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.velocity.objects.OnlinePlayerData;
 
 import java.util.Map;
 import java.util.UUID;
