@@ -8,5 +8,5 @@ repositories {
     gradlePluginPortal()
 }
 dependencies {
-    implementation("gradle.plugin.com.github.johnrengelman:shadow:7.1.2")
+    implementation("io.github.goooler.shadow:shadow-gradle-plugin:8.1.8")
 }

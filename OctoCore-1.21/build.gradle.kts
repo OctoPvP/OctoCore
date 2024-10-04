@@ -7,6 +7,7 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven {
         url = uri("https://repo.octopvp.net/repo")
         name = "octomc"
@@ -20,7 +21,8 @@ repositories {
 dependencies {
     implementation(project(":OctoCore-Core"))
     implementation(project(":OctoCore-common"))
-    compileOnly("io.papermc.paper:dev-bundle:1.21-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+
 }
 tasks {
     shadowJar {
