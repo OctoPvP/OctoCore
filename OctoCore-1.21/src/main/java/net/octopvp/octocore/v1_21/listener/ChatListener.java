@@ -1,4 +1,4 @@
-package net.octopvp.octocore.v1_20.listener;
+package net.octopvp.octocore.v1_21.listener;
 
 import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;

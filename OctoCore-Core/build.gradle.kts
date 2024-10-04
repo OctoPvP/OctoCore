@@ -29,6 +29,7 @@ dependencies {
     implementation("dev.samstevens.totp:totp:1.7.1")
     implementation("org.slf4j:slf4j-api:2.0.0-alpha1")
     implementation("net.octopvp:agile-gui:1.2.2") // TODO: shadowjar
+    //implementation("dev.octomc:agile-gui:1.3.0-hack") // stole from dev/digi :D
     implementation("org.reflections:reflections:0.10.2")
 
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
@@ -52,7 +53,7 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.3.0")
 
     implementation("com.github.cryptomorin:XSeries:9.3.1") { isTransitive = false }
-    implementation("fr.mrmicky:fastboard:2.1.0")
+    implementation("fr.mrmicky:fastboard:2.1.3")
 }
 
 var relocateBase = "net.octopvp.octocore.core.relocate."

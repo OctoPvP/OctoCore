@@ -1,4 +1,4 @@
-package net.octopvp.octocore.v1_20.listener;
+package net.octopvp.octocore.v1_21.listener;
 
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import net.kyori.adventure.text.Component;
@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.raid.RaidTriggerEvent;
 
-public class VanishListener_1_20 implements Listener {
+public class VanishListener_1_21 implements Listener {
     @EventHandler
     public void onMobLook(EntityPathfindEvent event) { // TODO backport this event to 1.8
         if (event.getEntity() instanceof Player player) {

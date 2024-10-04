@@ -1,8 +1,7 @@
 plugins {
     id("net.octopvp.java-conventions")
     id("net.octopvp.server-conventions")
-    id("io.freefair.lombok") version "6.5.1"
-    id("io.papermc.paperweight.userdev") version "1.7.3"
+    id("io.freefair.lombok") version "8.6"
 }
 
 repositories {
@@ -21,12 +20,9 @@ repositories {
 dependencies {
     implementation(project(":OctoCore-Core"))
     implementation(project(":OctoCore-common"))
-    paperweightDevBundle("net.octopvp.octospigot", "1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:dev-bundle:1.21-R0.1-SNAPSHOT")
 }
 tasks {
-    assemble {
-        dependsOn(reobfJar)
-    }
     shadowJar {
         archiveFileName.set("OctoCore-1.21.jar")
     }
