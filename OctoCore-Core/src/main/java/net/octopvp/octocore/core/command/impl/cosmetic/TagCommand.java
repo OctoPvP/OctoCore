@@ -7,7 +7,7 @@ import net.octopvp.octocore.core.menus.tag.MainTagMenu;
 import org.bukkit.entity.Player;
 
 public class TagCommand {
-    @Command(name = "tag", aliases = "tags")
+    @Command(name = "tags", aliases = "mytags")
     @PlayerOnly
     public void execute(@Sender Player sender) {
         new MainTagMenu().open(sender);
