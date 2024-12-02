@@ -1,14 +1,15 @@
 package net.octopvp.octocore.core.menus.grant;
 
+import dev.octomc.agile.menu.Menu;
+import dev.octomc.agile.menu.PaginatedMenu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.menu.PaginatedMenu;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.octopvp.octocore.common.object.ServerData;
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
 import net.octopvp.octocore.core.objects.GrantProcedureState;
@@ -27,8 +28,9 @@ public class GrantServerMenu extends PaginatedMenu<PaginatedGui> {
     private final Menu<?> previous;
 
     public GuiItem globalButton() {
-        return ItemBuilder.skull().name(CC.AQUA + "Global")
-                .lore(CC.GREEN + "Selecting this will make the rank server-wide")
+        return ItemBuilder.skull()
+                .name(Component.text("Global").color(NamedTextColor.AQUA))
+                .lore(Component.text("Selecting this will make the rank server-wide").color(NamedTextColor.GREEN))
                 .texture(Skulls.GLOBE_BASE_64)
                 .asGuiItem(event -> {
                     PlayerData playerData = PlayerManager.getInstance().getData(event.getWhoClicked().getUniqueId());
@@ -48,8 +50,8 @@ public class GrantServerMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     public GuiItem serverButton(final ServerData serverData) {
-        return ItemBuilder.from(Material.PAPER).name(serverData.getServerName())
-                .lore(CC.GREEN + "Click to select " + serverData.getServerName() + " as the server to grant the rank on.")
+        return ItemBuilder.from(Material.PAPER).name(Component.text(serverData.getServerName()))
+                .lore(Component.text("Click to select " + serverData.getServerName() + " as the server to grant the rank on.").color(NamedTextColor.GREEN))
                 .asGuiItem(event -> {
                     PlayerData playerData = PlayerManager.getInstance().getData(event.getWhoClicked().getUniqueId());
                     if (playerData == null) {

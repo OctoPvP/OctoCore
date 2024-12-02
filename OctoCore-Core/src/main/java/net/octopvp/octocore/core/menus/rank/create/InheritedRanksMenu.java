@@ -1,13 +1,13 @@
 package net.octopvp.octocore.core.menus.rank.create;
 
 import com.cryptomorin.xseries.XMaterial;
+import dev.octomc.agile.menu.Menu;
+import dev.octomc.agile.menu.PaginatedMenu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.SneakyThrows;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.object.builders.RankBuilder;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
@@ -43,7 +43,7 @@ public class InheritedRanksMenu extends PaginatedMenu<PaginatedGui> {
         // return ItemBuilder.from(Material.WOOL)
         // .durability((short) (rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())))\
         boolean wouldBeCircular = Rank.wouldHaveCircularInheritance(builder.getRank(), rankData) != null;
-        return ItemBuilder.from((rankData.isDefaultRank()) ? XMaterial.LIME_WOOL : WoolUtils.convertChatColorToWoolMaterial(rankData.getColor()))
+        return ItemBuilder.from(((rankData.isDefaultRank()) ? XMaterial.LIME_WOOL : WoolUtils.convertChatColorToWoolMaterial(rankData.getColor())).parseMaterial())
                 .name(rankData.getDisplayName())
                 .lore(
                         CC.SEPARATOR, CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(),

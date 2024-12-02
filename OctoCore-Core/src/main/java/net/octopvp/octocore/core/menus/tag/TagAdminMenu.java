@@ -1,9 +1,9 @@
 package net.octopvp.octocore.core.menus.tag;
 
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.menu.Menu;
+import dev.octomc.agile.menu.Menu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.conversations.QuestionConversation;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
@@ -20,22 +20,19 @@ public class TagAdminMenu extends Menu<Gui> {
     }
 
     public GuiItem manageTagsButton() {
-        return ItemBuilder.from(Material.CHEST).name(CC.AQUA + "Manage Tags").lore(CC.YELLOW + "Click to manage tags").asGuiItem()
-                .setAction(event -> {
+        return ItemBuilder.from(Material.CHEST).name(CC.AQUA + "Manage Tags").lore(CC.YELLOW + "Click to manage tags").asGuiItem(event -> {
                     new ManageTagsMenu(this).open((Player) event.getWhoClicked());
                 });
     }
 
     public GuiItem createTagButton() {
-        return ItemBuilder.from(Material.ANVIL).name(CC.GOLD + "Create Tag").lore(CC.YELLOW + "Click to create a tag.").asGuiItem()
-                .setAction(event -> {
+        return ItemBuilder.from(Material.ANVIL).name(CC.GOLD + "Create Tag").lore(CC.YELLOW + "Click to create a tag.").asGuiItem(event -> {
                     new ManageTagMenu((Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
                 });
     }
 
     public GuiItem managePlayerTagsButton() {
-        return ItemBuilder.from(Material.CHEST).name(CC.GREEN + "Manage Player Tags").lore(CC.YELLOW + "Click to manage a player's tags!").asGuiItem()
-                .setAction(event -> {
+        return ItemBuilder.from(Material.CHEST).name(CC.GREEN + "Manage Player Tags").lore(CC.YELLOW + "Click to manage a player's tags!").asGuiItem(event -> {
                     event.getWhoClicked().closeInventory();
                     new QuestionConversation(CC.GREEN + "Please enter the username of the player.", (answer) -> {
                         try {

@@ -1,11 +1,11 @@
 package net.octopvp.octocore.core.menus.tag;
 
+import dev.octomc.agile.menu.Menu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.Menu;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.database.redis.packets.player.TagUpdatePacket;
 import net.octopvp.octocore.core.manager.impl.PlayerManager;
@@ -24,8 +24,7 @@ public class ManagePlayerTagsMenu extends Menu<PaginatedGui> {
         return ItemBuilder.from(Material.EMERALD)
                 .name(CC.GREEN + "Add Tag")
                 .lore(CC.YELLOW + "Click to give this player a tag!")
-                .asGuiItem()
-                .click(event -> new GiveTagsMenu(data).open((Player) event.getWhoClicked()));
+                .asGuiItem(event -> new GiveTagsMenu(data).open((Player) event.getWhoClicked()));
     }
 
     public GuiItem tagButton(PlayerTag tag) {
@@ -39,8 +38,7 @@ public class ManagePlayerTagsMenu extends Menu<PaginatedGui> {
                         CC.SEPARATOR,
                         CC.YELLOW + "Shift-Right Click to remove this tag."
                 )
-                .asGuiItem()
-                .click(event -> {
+                .asGuiItem(event -> {
                     if (event.getClick() == ClickType.SHIFT_RIGHT) {
                         if (data.isOnline()) {
                             //new TagUpdatePacket(new JsonBuilder().addProperty("uuid", data.getUuid().toString()).addProperty("type", "REMOVE_TAG").addProperty("tagId", tag.getId().toString())).send();

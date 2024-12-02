@@ -1,11 +1,13 @@
 package net.octopvp.octocore.core.menus.grant;
 
 import com.cryptomorin.xseries.XMaterial;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.PaginatedMenu;
+import dev.octomc.agile.menu.PaginatedMenu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
@@ -43,12 +45,30 @@ public class AddGrantMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     public GuiItem rankButton(Rank rankData, PlayerData playerData) {
-        return ItemBuilder.from((rankData.isDefaultRank()) ? XMaterial.LIME_WOOL : WoolUtils.convertChatColorToWoolMaterial(rankData.getColor())) // ItemBuilder.from(Material.WOOL)
+        return ItemBuilder.from(((rankData.isDefaultRank()) ? XMaterial.LIME_WOOL : WoolUtils.convertChatColorToWoolMaterial(rankData.getColor())).parseItem()) // ItemBuilder.from(Material.WOOL)
                 // .durability((rankData.isDefaultRank() ? 4 : WoolUtils.convertChatColorToWoolData(rankData.getColor())))
-                .name(rankData.getDisplayName())
-                .lore(CC.SEPARATOR, CC.AQUA + "Weight" + CC.GRAY + ": " + CC.YELLOW + rankData.getWeight(), CC.AQUA + "Inherited: " + CC.YELLOW + StringUtils.join(rankData.getInheritedRanksName(), ", "), CC.AQUA + "Default: " + CC.YELLOW + rankData.isDefaultRank(),
-                        CC.AQUA + "Prefix: " + CC.YELLOW + rankData.getPrefix(), CC.AQUA + "Changeable Color: " + CC.YELLOW + rankData.isChangableMainColor(), CC.AQUA + "Purchasable: " + CC.YELLOW + rankData.isPurchasable(),
-                        CC.SEPARATOR
+                .name(Component.text(rankData.getDisplayName()))
+                .lore(
+                        Component.text(CC.SEPARATOR),
+                        Component.text("Weight: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(rankData.getWeight()).color(NamedTextColor.YELLOW)),
+                        Component.text("Inherited: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(StringUtils.join(rankData.getInheritedRanksName(), ", ")).color(NamedTextColor.YELLOW)),
+                        Component.text("Default: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(rankData.isDefaultRank()).color(NamedTextColor.YELLOW)),
+                        Component.text("Prefix: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(rankData.getPrefix()).color(NamedTextColor.YELLOW)),
+                        Component.text("Changeable Color: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(rankData.isChangableMainColor()).color(NamedTextColor.YELLOW)),
+                        Component.text("Purchasable: ")
+                                .color(NamedTextColor.AQUA)
+                                .append(Component.text(rankData.isPurchasable()).color(NamedTextColor.YELLOW)),
+                        Component.text(CC.SEPARATOR)
                 )
                 .asGuiItem(event -> {
                     if (rankData.isDefaultRank()) {
@@ -75,15 +95,18 @@ public class AddGrantMenu extends PaginatedMenu<PaginatedGui> {
 
     @Override
     public PaginatedGui createGui(Player player) {
-        return (PaginatedGui) Gui.paginated()
+        PaginatedGui gui = Gui.paginated()
                 .title("Select a rank!")
                 .rows(6)
-                .create()
-                .setCloseGuiAction(event -> {
-                    PlayerData playerData = PlayerManager.getInstance().getData(event.getPlayer().getUniqueId());
-                    if (playerData.getGrantProcedure() != null && playerData.getGrantProcedure().getGrantProcedureState() == GrantProcedureState.START) {
-                        playerData.setGrantProcedure(null);
-                    }
-                });
+                .create();
+        gui.setCloseGuiAction(event -> {
+            PlayerData playerData = PlayerManager.getInstance().getData(event.getPlayer().getUniqueId());
+            if (playerData.getGrantProcedure() != null && playerData.getGrantProcedure().getGrantProcedureState() == GrantProcedureState.START) {
+                playerData.setGrantProcedure(null);
+            }
+        });
+
+        return gui;
+
     }
 }

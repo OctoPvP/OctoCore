@@ -1,12 +1,13 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow")
+    id("io.github.goooler.shadow")
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
+    maven("https://repo.octopvp.net/public")
     maven {
         url = uri("https://repo.octopvp.net/repo")
         name = "octomc"

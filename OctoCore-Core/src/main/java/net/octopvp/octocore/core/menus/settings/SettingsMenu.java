@@ -1,11 +1,11 @@
 package net.octopvp.octocore.core.menus.settings;
 
 import com.cryptomorin.xseries.XMaterial;
+import dev.octomc.agile.menu.Menu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.menu.Menu;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
@@ -16,7 +16,6 @@ import net.octopvp.octocore.core.utils.msg.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @RequiredArgsConstructor
@@ -26,15 +25,17 @@ public class SettingsMenu extends Menu<Gui> {
 
     @Override
     public Gui createGui(Player player) {
-        return (Gui) Gui.gui()
+        Gui gui = Gui.gui()
                 .title("Settings")
                 .rows(3)
-                .create()
-                .setCloseGuiAction(event -> {
-                    if (changed) {
-                        data.save();
-                    }
-                });
+                .create();
+        gui.setCloseGuiAction(event -> {
+            if (changed) {
+                data.save();
+            }
+        });
+
+        return gui;
     }
 
 

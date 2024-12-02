@@ -1,12 +1,14 @@
 package net.octopvp.octocore.core.menus.rank;
 
+import dev.octomc.agile.menu.Menu;
+import dev.octomc.agile.menu.PaginatedMenu;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.menu.PaginatedMenu;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.common.util.CC;
@@ -57,8 +59,12 @@ public class ChooseServerScopeMenu extends PaginatedMenu<PaginatedGui> {
 
     public GuiItem serverButton(ServerData serverData) {
         return ItemBuilder.from(Material.PAPER)
-                .name(serverData.getServerName())
-                .lore(CC.SEPARATOR, CC.GREEN + "Click to select " + serverData.getServerName() + " as", CC.GREEN + "the server to grant the rank on.")
+                .name(Component.text(serverData.getServerName()))
+                //.lore(CC.SEPARATOR, CC.GREEN + "Click to select " + serverData.getServerName() + " as", CC.GREEN + "the server to grant the rank on.")
+                .lore(
+                        Component.text(CC.SEPARATOR),
+                        Component.text("Click to select " + serverData.getServerName() + " as the server to grant the rank on.").color(NamedTextColor.GREEN)
+                )
                 .asGuiItem(event -> {
                     SoundUtil.playPing((Player) event.getWhoClicked());
                     callback.accept(new ServerContext(serverData.getServerName()));
@@ -67,8 +73,10 @@ public class ChooseServerScopeMenu extends PaginatedMenu<PaginatedGui> {
 
     public GuiItem customButton() {
         return ItemBuilder.from(Material.SIGN)
-                .name(CC.AQUA + "Custom server")
-                .lore(CC.YELLOW + "Click to set a custom server scope.")
+                //.name(CC.AQUA + "Custom server")
+                .name(Component.text("Custom server").color(NamedTextColor.AQUA))
+                //.lore(CC.YELLOW + "Click to set a custom server scope.")
+                .lore(Component.text("Click to set a custom server scope.").color(NamedTextColor.YELLOW))
                 .asGuiItem(event -> {
                     promptScope((Player) event.getWhoClicked());
                 });
