@@ -29,7 +29,7 @@ public class TrollCommand {
         container.getFloat().write(0, 1.0f);
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(sender, container);
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return CommandResult.ERROR;
         }

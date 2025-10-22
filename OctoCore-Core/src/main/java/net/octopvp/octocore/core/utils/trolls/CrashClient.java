@@ -61,7 +61,7 @@ public class CrashClient implements Troll {
                     0x3a,
                     bytes
             );
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

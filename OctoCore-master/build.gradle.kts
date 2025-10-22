@@ -9,9 +9,9 @@ plugins {
     id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
     id("java")
-    id("com.vaadin") version "24.0.5"
+    id("com.vaadin") version "24.9.3"
     //id("net.octopvp.java-conventions") // Our default library config conflicts with spring boot
-    id("io.freefair.lombok") version "8.0.1"
+    id("io.freefair.lombok") version "9.0.0"
 }
 
 defaultTasks("clean", "build")
@@ -80,9 +80,14 @@ vaadin {
 //tasks.register("prepareKotlinBuildScriptModel"){}
 description = "OctoCore Master"
 
-tasks.named("build") {
-    dependsOn(":OctoCore-master:vaadinBuildFrontend")
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
+
+// tasks.named("build") {
+//     dependsOn(":OctoCore-master:vaadinBuildFrontend")
+// }
 
 tasks.named("resolveMainClassName") {
     dependsOn(":OctoCore-master:buildProperties")
