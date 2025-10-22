@@ -12,6 +12,9 @@ repositories {
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
     maven {
+        url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+    }
+    maven {
         url = uri("https://repo.octopvp.net/repo")
         name = "octomc"
         credentials {
@@ -24,9 +27,7 @@ repositories {
 dependencies {
     implementation("org.objenesis:objenesis:3.3")
     //implementation("org.slf4j:slf4j-log4j12:1.7.5")
-    compileOnly("io.github.waterfallmc:waterfall-chat:1.18-R0.1-SNAPSHOT")
     compileOnly("com.google.code.gson:gson:2.8.9")
-
     implementation("com.warrenstrange:googleauth:1.4.0")
     implementation("net.kyori:adventure-api:4.14.0")
     implementation("net.kyori:adventure-text-serializer-legacy:4.14.0")

@@ -3,16 +3,25 @@ package net.octopvp.octocore.common.object.punish;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TextComponent.Builder;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.IPlayerData;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
+import net.octopvp.octocore.common.util.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
@@ -24,8 +33,8 @@ public class Alt implements IPunishData {
 
     private String displayName;
 
-    public String getDisplayName() {
-        return this.getNameColor() + this.name;
+    public TextComponent getDisplayName() {
+        return Component.text(this.name);
     }
 
     public Alt updateDisplayName() {
@@ -33,7 +42,7 @@ public class Alt implements IPunishData {
         return this;
     }
 
-    public ChatColor getNameColor() {
+    public @NotNull ChatColor getNameColor() {
         if (punishData != null && punishData.isBlacklisted()) return ChatColor.DARK_RED;
         if (punishData != null && punishData.isBanned()) return ChatColor.DARK_RED;
 

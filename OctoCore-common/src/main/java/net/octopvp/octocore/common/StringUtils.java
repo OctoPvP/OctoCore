@@ -1,6 +1,7 @@
 package net.octopvp.octocore.common;
 
-import net.md_5.bungee.api.ChatColor;
+//import net.md_5.bungee.api.ChatColor;
+import net.octopvp.octocore.common.util.ChatColor;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
