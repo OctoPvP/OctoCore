@@ -10,6 +10,5 @@ include(":OctoCore-common")
 include(":OctoCore-Core")
 include(":OctoCore-velocity")
 include(":OctoCore-master")
-//include(":OctoCore-1.8")
-// will put back dont touch
+include(":OctoCore-1.8")
 include(":OctoCore-1.21")

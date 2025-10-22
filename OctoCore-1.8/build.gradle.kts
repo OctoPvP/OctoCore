@@ -7,7 +7,9 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
-    maven{url = uri("https://oss.sonatype.org/content/repositories/snapshots")}
+    maven {
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
     maven {
         url = uri("https://repo.octopvp.net/repo")
         name = "octomc"
@@ -21,7 +23,6 @@ dependencies {
     implementation(project(":OctoCore-Core"))
     implementation(project(":OctoCore-common"))
 
-    implementation(project(":OctoCore-common"))
     compileOnly("net.octopvp.octospigot:octospigot-api:1.8.8-R0.1-SNAPSHOT")
     compileOnly("net.octopvp.octospigot:octospigot-server:1.8.8-R0.1-SNAPSHOT")
 
