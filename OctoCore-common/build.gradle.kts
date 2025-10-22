@@ -1,6 +1,6 @@
 plugins {
     id("net.octopvp.java-conventions")
-    id("io.freefair.lombok") version "6.5.1"
+    id("io.freefair.lombok") version "9.0.0"
     id("maven-publish")
 }
 description = "OctoCore Commons"
@@ -9,7 +9,7 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven {
-        url = uri("https://papermc.io/repo/repository/maven-public/")
+        url = uri("https://repo.papermc.io/repository/maven-public/")
     }
     maven {
         url = uri("https://repo.octopvp.net/repo")
