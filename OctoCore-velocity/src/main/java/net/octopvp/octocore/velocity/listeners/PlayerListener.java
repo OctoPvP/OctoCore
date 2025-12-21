@@ -75,27 +75,31 @@ public class PlayerListener {
         Logger.debug("Setting up permissions for " + player.getUsername());
         plugin.getProxyServer().getScheduler()
                 .buildTask(plugin, () -> {
-                    // TODO load player data if needed. Need to implement mongodb first
-                    //
                     Logger.debug(" - Loading player data");
                     try {
-                        // Initialize your MongoClient here
-                        // get the username and password / host and port from the config
-                        // ...
-                        // use the getMongoClient() from VelocityServerImpl.java
-                        // MongoClient mongoClient = plugin.getMongoClient();
-
-                        // MongoClient mongoClient = MongoClients.create("");
+                        // 1. Get the Manager
                         IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
 
-                        // Get the database and collection
+                        // SAFETY CHECK: Is the manager null? (Did the DB fail to connect on startup?)
+                        if (databaseManager == null) {
+                            Logger.error("DatabaseManager is null! Database might not be connected.");
+                            continuation.resume(); // Let the player in, or disconnect them if DB is required
+                            return;
+                        }
+
                         MongoDatabase database = databaseManager.getDatabase();
+                        // is db null
+                        if (database == null) {
+                            Logger.error("MongoDatabase is null! Check your config/connection.");
+                            continuation.resume();
+                            return;
+                        }
                         MongoCollection<Document> collection = database.getCollection("pdata");
 
                         // Query for the player's UUID
-                        Document playerData = collection.find(Filters.eq("uuid", player.getUniqueId().toString()))
-                                .first();
-
+                        Document playerData = collection.find(Filters.eq("uuid", player
+                                .getUniqueId()
+                                .toString())).first();
                         if (playerData != null) {
                             // Player data found, process it as needed
                             Logger.debug("Player data loaded: " + playerData.toJson());
@@ -104,7 +108,8 @@ public class PlayerListener {
                             Logger.debug("No player data found for UUID: " + player.getUniqueId());
                         }
                     } catch (Exception ex) {
-                        Logger.error("Error loading player data", ex);
+                        Logger.error("Error loading player data", ex.getMessage());
+                        ex.printStackTrace();
                     }
 
                     Logger.debug(" - Setting provider");
