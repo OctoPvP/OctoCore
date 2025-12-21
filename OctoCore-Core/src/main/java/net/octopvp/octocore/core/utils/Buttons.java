@@ -1,8 +1,8 @@
 package net.octopvp.octocore.core.utils;
 
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.components.util.Legacy;
-import net.octopvp.agile.guis.GuiItem;
+import dev.octomc.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.components.util.Legacy;
+import dev.octomc.agile.guis.GuiItem;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DateUtils;
 import net.octopvp.octocore.core.OctoCore;

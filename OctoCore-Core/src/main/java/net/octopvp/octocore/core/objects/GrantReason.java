@@ -1,6 +1,6 @@
 package net.octopvp.octocore.core.objects;
 
-import net.octopvp.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.builder.item.ItemBuilder;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.utils.Skulls;
 import org.bukkit.inventory.ItemStack;

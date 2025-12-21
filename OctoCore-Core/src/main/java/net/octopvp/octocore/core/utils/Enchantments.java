@@ -3,324 +3,262 @@ package net.octopvp.octocore.core.utils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public final class Enchantments {
     private static final Map<String, Enchantment> ENCHANTMENTS = new HashMap<>();
-    private static final Map<String, Enchantment> ALIASENCHANTMENTS = new HashMap<>();
-    private static boolean isFlat;
+    private static final Map<String, Enchantment> ALIASES = new HashMap<>();
 
     static {
-        ENCHANTMENTS.put("alldamage", Enchantment.DAMAGE_ALL);
-        ALIASENCHANTMENTS.put("alldmg", Enchantment.DAMAGE_ALL);
-        ENCHANTMENTS.put("sharpness", Enchantment.DAMAGE_ALL);
-        ALIASENCHANTMENTS.put("sharp", Enchantment.DAMAGE_ALL);
-        ALIASENCHANTMENTS.put("dal", Enchantment.DAMAGE_ALL);
-
-        ENCHANTMENTS.put("ardmg", Enchantment.DAMAGE_ARTHROPODS);
-        ENCHANTMENTS.put("baneofarthropods", Enchantment.DAMAGE_ARTHROPODS);
-        ALIASENCHANTMENTS.put("baneofarthropod", Enchantment.DAMAGE_ARTHROPODS);
-        ALIASENCHANTMENTS.put("arthropod", Enchantment.DAMAGE_ARTHROPODS);
-        ALIASENCHANTMENTS.put("dar", Enchantment.DAMAGE_ARTHROPODS);
-
-        ENCHANTMENTS.put("undeaddamage", Enchantment.DAMAGE_UNDEAD);
-        ENCHANTMENTS.put("smite", Enchantment.DAMAGE_UNDEAD);
-        ALIASENCHANTMENTS.put("du", Enchantment.DAMAGE_UNDEAD);
-
-        ENCHANTMENTS.put("digspeed", Enchantment.DIG_SPEED);
-        ENCHANTMENTS.put("efficiency", Enchantment.DIG_SPEED);
-        ALIASENCHANTMENTS.put("minespeed", Enchantment.DIG_SPEED);
-        ALIASENCHANTMENTS.put("cutspeed", Enchantment.DIG_SPEED);
-        ALIASENCHANTMENTS.put("ds", Enchantment.DIG_SPEED);
-        ALIASENCHANTMENTS.put("eff", Enchantment.DIG_SPEED);
-
-        ENCHANTMENTS.put("durability", Enchantment.DURABILITY);
-        ALIASENCHANTMENTS.put("dura", Enchantment.DURABILITY);
-        ENCHANTMENTS.put("unbreaking", Enchantment.DURABILITY);
-        ALIASENCHANTMENTS.put("d", Enchantment.DURABILITY);
-
-        ENCHANTMENTS.put("thorns", Enchantment.THORNS);
-        ENCHANTMENTS.put("highcrit", Enchantment.THORNS);
-        ALIASENCHANTMENTS.put("thorn", Enchantment.THORNS);
-        ALIASENCHANTMENTS.put("highercrit", Enchantment.THORNS);
-        ALIASENCHANTMENTS.put("t", Enchantment.THORNS);
-
-        ENCHANTMENTS.put("fireaspect", Enchantment.FIRE_ASPECT);
-        ENCHANTMENTS.put("fire", Enchantment.FIRE_ASPECT);
-        ALIASENCHANTMENTS.put("meleefire", Enchantment.FIRE_ASPECT);
-        ALIASENCHANTMENTS.put("meleeflame", Enchantment.FIRE_ASPECT);
-        ALIASENCHANTMENTS.put("fa", Enchantment.FIRE_ASPECT);
-
-        ENCHANTMENTS.put("knockback", Enchantment.KNOCKBACK);
-        ALIASENCHANTMENTS.put("kback", Enchantment.KNOCKBACK);
-        ALIASENCHANTMENTS.put("kb", Enchantment.KNOCKBACK);
-        ALIASENCHANTMENTS.put("k", Enchantment.KNOCKBACK);
-
-        ALIASENCHANTMENTS.put("blockslootbonus", Enchantment.LOOT_BONUS_BLOCKS);
-        ENCHANTMENTS.put("fortune", Enchantment.LOOT_BONUS_BLOCKS);
-        ALIASENCHANTMENTS.put("fort", Enchantment.LOOT_BONUS_BLOCKS);
-        ALIASENCHANTMENTS.put("lbb", Enchantment.LOOT_BONUS_BLOCKS);
-
-        ALIASENCHANTMENTS.put("mobslootbonus", Enchantment.LOOT_BONUS_MOBS);
-        ENCHANTMENTS.put("mobloot", Enchantment.LOOT_BONUS_MOBS);
-        ENCHANTMENTS.put("looting", Enchantment.LOOT_BONUS_MOBS);
-        ALIASENCHANTMENTS.put("lbm", Enchantment.LOOT_BONUS_MOBS);
-
-        ALIASENCHANTMENTS.put("oxygen", Enchantment.OXYGEN);
-        ENCHANTMENTS.put("respiration", Enchantment.OXYGEN);
-        ALIASENCHANTMENTS.put("breathing", Enchantment.OXYGEN);
-        ENCHANTMENTS.put("breath", Enchantment.OXYGEN);
-        ALIASENCHANTMENTS.put("o", Enchantment.OXYGEN);
-
-        ENCHANTMENTS.put("protection", Enchantment.PROTECTION_ENVIRONMENTAL);
-        ALIASENCHANTMENTS.put("prot", Enchantment.PROTECTION_ENVIRONMENTAL);
-        ENCHANTMENTS.put("protect", Enchantment.PROTECTION_ENVIRONMENTAL);
-        ALIASENCHANTMENTS.put("p", Enchantment.PROTECTION_ENVIRONMENTAL);
-
-        ALIASENCHANTMENTS.put("explosionsprotection", Enchantment.PROTECTION_EXPLOSIONS);
-        ALIASENCHANTMENTS.put("explosionprotection", Enchantment.PROTECTION_EXPLOSIONS);
-        ALIASENCHANTMENTS.put("expprot", Enchantment.PROTECTION_EXPLOSIONS);
-        ALIASENCHANTMENTS.put("blastprotection", Enchantment.PROTECTION_EXPLOSIONS);
-        ALIASENCHANTMENTS.put("bprotection", Enchantment.PROTECTION_EXPLOSIONS);
-        ALIASENCHANTMENTS.put("bprotect", Enchantment.PROTECTION_EXPLOSIONS);
-        ENCHANTMENTS.put("blastprotect", Enchantment.PROTECTION_EXPLOSIONS);
-        ALIASENCHANTMENTS.put("pe", Enchantment.PROTECTION_EXPLOSIONS);
-
-        ALIASENCHANTMENTS.put("fallprotection", Enchantment.PROTECTION_FALL);
-        ENCHANTMENTS.put("fallprot", Enchantment.PROTECTION_FALL);
-        ENCHANTMENTS.put("featherfall", Enchantment.PROTECTION_FALL);
-        ALIASENCHANTMENTS.put("featherfalling", Enchantment.PROTECTION_FALL);
-        ALIASENCHANTMENTS.put("pfa", Enchantment.PROTECTION_FALL);
-
-        ALIASENCHANTMENTS.put("fireprotection", Enchantment.PROTECTION_FIRE);
-        ALIASENCHANTMENTS.put("flameprotection", Enchantment.PROTECTION_FIRE);
-        ENCHANTMENTS.put("fireprotect", Enchantment.PROTECTION_FIRE);
-        ALIASENCHANTMENTS.put("flameprotect", Enchantment.PROTECTION_FIRE);
-        ENCHANTMENTS.put("fireprot", Enchantment.PROTECTION_FIRE);
-        ALIASENCHANTMENTS.put("flameprot", Enchantment.PROTECTION_FIRE);
-        ALIASENCHANTMENTS.put("pf", Enchantment.PROTECTION_FIRE);
-
-        ENCHANTMENTS.put("projectileprotection", Enchantment.PROTECTION_PROJECTILE);
-        ENCHANTMENTS.put("projprot", Enchantment.PROTECTION_PROJECTILE);
-        ALIASENCHANTMENTS.put("pp", Enchantment.PROTECTION_PROJECTILE);
-
-        ENCHANTMENTS.put("silktouch", Enchantment.SILK_TOUCH);
-        ALIASENCHANTMENTS.put("softtouch", Enchantment.SILK_TOUCH);
-        ALIASENCHANTMENTS.put("st", Enchantment.SILK_TOUCH);
-
-        ENCHANTMENTS.put("waterworker", Enchantment.WATER_WORKER);
-        ENCHANTMENTS.put("aquaaffinity", Enchantment.WATER_WORKER);
-        ALIASENCHANTMENTS.put("watermine", Enchantment.WATER_WORKER);
-        ALIASENCHANTMENTS.put("ww", Enchantment.WATER_WORKER);
-
-        ALIASENCHANTMENTS.put("firearrow", Enchantment.ARROW_FIRE);
-        ENCHANTMENTS.put("flame", Enchantment.ARROW_FIRE);
-        ENCHANTMENTS.put("flamearrow", Enchantment.ARROW_FIRE);
-        ALIASENCHANTMENTS.put("af", Enchantment.ARROW_FIRE);
-
-        ENCHANTMENTS.put("arrowdamage", Enchantment.ARROW_DAMAGE);
-        ENCHANTMENTS.put("power", Enchantment.ARROW_DAMAGE);
-        ALIASENCHANTMENTS.put("arrowpower", Enchantment.ARROW_DAMAGE);
-        ALIASENCHANTMENTS.put("ad", Enchantment.ARROW_DAMAGE);
-
-        ENCHANTMENTS.put("arrowknockback", Enchantment.ARROW_KNOCKBACK);
-        ALIASENCHANTMENTS.put("arrowkb", Enchantment.ARROW_KNOCKBACK);
-        ENCHANTMENTS.put("punch", Enchantment.ARROW_KNOCKBACK);
-        ALIASENCHANTMENTS.put("arrowpunch", Enchantment.ARROW_KNOCKBACK);
-        ALIASENCHANTMENTS.put("ak", Enchantment.ARROW_KNOCKBACK);
-
-        ALIASENCHANTMENTS.put("infinitearrows", Enchantment.ARROW_INFINITE);
-        ENCHANTMENTS.put("infarrows", Enchantment.ARROW_INFINITE);
-        ENCHANTMENTS.put("infinity", Enchantment.ARROW_INFINITE);
-        ALIASENCHANTMENTS.put("infinite", Enchantment.ARROW_INFINITE);
-        ALIASENCHANTMENTS.put("unlimited", Enchantment.ARROW_INFINITE);
-        ALIASENCHANTMENTS.put("unlimitedarrows", Enchantment.ARROW_INFINITE);
-        ALIASENCHANTMENTS.put("ai", Enchantment.ARROW_INFINITE);
-
-        ENCHANTMENTS.put("luck", Enchantment.LUCK);
-        ALIASENCHANTMENTS.put("luckofsea", Enchantment.LUCK);
-        ALIASENCHANTMENTS.put("luckofseas", Enchantment.LUCK);
-        ALIASENCHANTMENTS.put("rodluck", Enchantment.LUCK);
-
-        ENCHANTMENTS.put("lure", Enchantment.LURE);
-        ALIASENCHANTMENTS.put("rodlure", Enchantment.LURE);
-
-        // 1.8
-        try {
-            final Enchantment depthStrider = Enchantment.getByName("DEPTH_STRIDER");
-            if (depthStrider != null) {
-                ENCHANTMENTS.put("depthstrider", depthStrider);
-                ALIASENCHANTMENTS.put("depth", depthStrider);
-                ALIASENCHANTMENTS.put("strider", depthStrider);
-            }
-        } catch (final IllegalArgumentException ignored) {
+        // ahngkjabngkjang
+        for (Enchantment enchantment : Enchantment.values()) {
+            String key = enchantment.getKey().getKey();
+            ENCHANTMENTS.put(key, enchantment);
+            ENCHANTMENTS.put(enchantment.getKey().toString(), enchantment);
         }
 
-        // 1.9
-        try {
-            final Enchantment frostWalker = Enchantment.getByName("FROST_WALKER");
-            if (frostWalker != null) {
-                ENCHANTMENTS.put("frostwalker", frostWalker);
-                ALIASENCHANTMENTS.put("frost", frostWalker);
-                ALIASENCHANTMENTS.put("walker", frostWalker);
-            }
+        // 2. REGISTER MANUAL ALIASES (Shortcuts)
+        // Damage / Sharpness
+        registerAlias("alldamage", "sharpness");
+        registerAlias("alldmg", "sharpness");
+        registerAlias("sharp", "sharpness");
+        registerAlias("dal", "sharpness");
 
-            final Enchantment mending = Enchantment.getByName("MENDING");
-            if (mending != null) {
-                ENCHANTMENTS.put("mending", mending);
-            }
-        } catch (final IllegalArgumentException ignored) {
-        }
+        // Arthropods
+        registerAlias("ardmg", "bane_of_arthropods");
+        registerAlias("baneofarthropod", "bane_of_arthropods");
+        registerAlias("arthropod", "bane_of_arthropods");
+        registerAlias("dar", "bane_of_arthropods");
 
-        // 1.11
-        try {
-            final Enchantment bindingCurse = Enchantment.getByName("BINDING_CURSE");
-            if (bindingCurse != null) {
-                ENCHANTMENTS.put("bindingcurse", bindingCurse);
-                ALIASENCHANTMENTS.put("bindcurse", bindingCurse);
-                ALIASENCHANTMENTS.put("binding", bindingCurse);
-                ALIASENCHANTMENTS.put("bind", bindingCurse);
-            }
-            final Enchantment vanishingCurse = Enchantment.getByName("VANISHING_CURSE");
-            if (vanishingCurse != null) {
-                ENCHANTMENTS.put("vanishingcurse", vanishingCurse);
-                ALIASENCHANTMENTS.put("vanishcurse", vanishingCurse);
-                ALIASENCHANTMENTS.put("vanishing", vanishingCurse);
-                ALIASENCHANTMENTS.put("vanish", vanishingCurse);
-            }
-            final Enchantment sweeping = Enchantment.getByName("SWEEPING_EDGE");
-            if (sweeping != null) {
-                ENCHANTMENTS.put("sweepingedge", sweeping);
-                ALIASENCHANTMENTS.put("sweepedge", sweeping);
-                ALIASENCHANTMENTS.put("sweeping", sweeping);
-            }
-        } catch (final IllegalArgumentException ignored) {
-        }
+        // Smite
+        registerAlias("undeaddamage", "smite");
+        registerAlias("du", "smite");
 
-        try { // 1.13
-            final Enchantment loyalty = Enchantment.getByName("LOYALTY");
-            if (loyalty != null) {
-                ENCHANTMENTS.put("loyalty", loyalty);
-                ALIASENCHANTMENTS.put("loyal", loyalty);
-                ALIASENCHANTMENTS.put("return", loyalty);
-            }
-            final Enchantment impaling = Enchantment.getByName("IMPALING");
-            if (impaling != null) {
-                ENCHANTMENTS.put("impaling", impaling);
-                ALIASENCHANTMENTS.put("impale", impaling);
-                ALIASENCHANTMENTS.put("oceandamage", impaling);
-                ALIASENCHANTMENTS.put("oceandmg", impaling);
-            }
-            final Enchantment riptide = Enchantment.getByName("RIPTIDE");
-            if (riptide != null) {
-                ENCHANTMENTS.put("riptide", riptide);
-                ALIASENCHANTMENTS.put("rip", riptide);
-                ALIASENCHANTMENTS.put("tide", riptide);
-                ALIASENCHANTMENTS.put("launch", riptide);
-            }
-            final Enchantment channelling = Enchantment.getByName("CHANNELING");
-            if (channelling != null) {
-                ENCHANTMENTS.put("channelling", channelling);
-                ALIASENCHANTMENTS.put("chanelling", channelling);
-                ALIASENCHANTMENTS.put("channeling", channelling);
-                ALIASENCHANTMENTS.put("chaneling", channelling);
-                ALIASENCHANTMENTS.put("channel", channelling);
-            }
-        } catch (final IllegalArgumentException ignored) {
-        }
+        // Efficiency
+        registerAlias("digspeed", "efficiency");
+        registerAlias("minespeed", "efficiency");
+        registerAlias("cutspeed", "efficiency");
+        registerAlias("ds", "efficiency");
+        registerAlias("eff", "efficiency");
 
-        try { // 1.14
-            final Enchantment multishot = Enchantment.getByName("MULTISHOT");
-            if (multishot != null) {
-                ENCHANTMENTS.put("multishot", multishot);
-                ALIASENCHANTMENTS.put("tripleshot", multishot);
-            }
-            final Enchantment quickCharge = Enchantment.getByName("QUICK_CHARGE");
-            if (quickCharge != null) {
-                ENCHANTMENTS.put("quickcharge", quickCharge);
-                ALIASENCHANTMENTS.put("quickdraw", quickCharge);
-                ALIASENCHANTMENTS.put("fastcharge", quickCharge);
-                ALIASENCHANTMENTS.put("fastdraw", quickCharge);
-            }
-            final Enchantment piercing = Enchantment.getByName("PIERCING");
-            if (piercing != null) {
-                ENCHANTMENTS.put("piercing", piercing);
-            }
-        } catch (final IllegalArgumentException ignored) {
-        }
+        // Durability / Unbreaking
+        registerAlias("durability", "unbreaking");
+        registerAlias("dura", "unbreaking");
+        registerAlias("d", "unbreaking");
 
-        try { // 1.16
-            final Enchantment soulspeed = Enchantment.getByName("SOUL_SPEED");
-            if (soulspeed != null) {
-                ENCHANTMENTS.put("soulspeed", soulspeed);
-                ALIASENCHANTMENTS.put("soilspeed", soulspeed);
-                ALIASENCHANTMENTS.put("sandspeed", soulspeed);
-            }
-        } catch (final IllegalArgumentException ignored) {
-        }
+        // Thorns
+        registerAlias("highcrit", "thorns");
+        registerAlias("thorn", "thorns");
+        registerAlias("highercrit", "thorns");
+        registerAlias("t", "thorns");
 
-        try { // 1.19
-            final Enchantment swiftSneak = Enchantment.getByName("SWIFT_SNEAK");
-            if (swiftSneak != null) {
-                ENCHANTMENTS.put("swiftsneak", swiftSneak);
-            }
-        } catch (final IllegalArgumentException ignored) {
-        }
+        // Fire Aspect
+        registerAlias("fire", "fire_aspect");
+        registerAlias("meleefire", "fire_aspect");
+        registerAlias("meleeflame", "fire_aspect");
+        registerAlias("fa", "fire_aspect");
 
-        try {
-            final Class<?> namespacedKeyClass = Class.forName("org.bukkit.NamespacedKey");
-            final Class<?> enchantmentClass = Class.forName("org.bukkit.enchantments.Enchantment");
-            enchantmentClass.getDeclaredMethod("getByKey", namespacedKeyClass);
-            isFlat = true;
-        } catch (final ClassNotFoundException | NoSuchMethodException e) {
-            isFlat = false;
-        }
+        // Knockback
+        registerAlias("kback", "knockback");
+        registerAlias("kb", "knockback");
+        registerAlias("k", "knockback");
+
+        // Fortune
+        registerAlias("blockslootbonus", "fortune");
+        registerAlias("fort", "fortune");
+        registerAlias("lbb", "fortune");
+
+        // Looting
+        registerAlias("mobslootbonus", "looting");
+        registerAlias("mobloot", "looting");
+        registerAlias("lbm", "looting");
+
+        // Respiration
+        registerAlias("oxygen", "respiration");
+        registerAlias("breathing", "respiration");
+        registerAlias("breath", "respiration");
+        registerAlias("o", "respiration");
+
+        // Protection
+        registerAlias("protection", "protection");
+        registerAlias("prot", "protection");
+        registerAlias("protect", "protection");
+        registerAlias("p", "protection");
+
+        // Blast Protection
+        registerAlias("explosionsprotection", "blast_protection");
+        registerAlias("explosionprotection", "blast_protection");
+        registerAlias("expprot", "blast_protection");
+        registerAlias("bprotection", "blast_protection");
+        registerAlias("bprotect", "blast_protection");
+        registerAlias("blastprotect", "blast_protection");
+        registerAlias("pe", "blast_protection");
+
+        // Feather Falling
+        registerAlias("fallprotection", "feather_falling");
+        registerAlias("fallprot", "feather_falling");
+        registerAlias("featherfall", "feather_falling");
+        registerAlias("pfa", "feather_falling");
+
+        // Fire Protection
+        registerAlias("fireprotection", "fire_protection");
+        registerAlias("flameprotection", "fire_protection");
+        registerAlias("fireprotect", "fire_protection");
+        registerAlias("flameprotect", "fire_protection");
+        registerAlias("fireprot", "fire_protection");
+        registerAlias("flameprot", "fire_protection");
+        registerAlias("pf", "fire_protection");
+
+        // Projectile Protection
+        registerAlias("projectileprotection", "projectile_protection");
+        registerAlias("projprot", "projectile_protection");
+        registerAlias("pp", "projectile_protection");
+
+        // Silk Touch
+        registerAlias("silktouch", "silk_touch");
+        registerAlias("softtouch", "silk_touch");
+        registerAlias("st", "silk_touch");
+
+        // Aqua Affinity
+        registerAlias("waterworker", "aqua_affinity");
+        registerAlias("watermine", "aqua_affinity");
+        registerAlias("ww", "aqua_affinity");
+
+        // Flame
+        registerAlias("firearrow", "flame");
+        registerAlias("flamearrow", "flame");
+        registerAlias("af", "flame");
+
+        // Power
+        registerAlias("arrowdamage", "power");
+        registerAlias("arrowpower", "power");
+        registerAlias("ad", "power");
+
+        // Punch
+        registerAlias("arrowknockback", "punch");
+        registerAlias("arrowkb", "punch");
+        registerAlias("arrowpunch", "punch");
+        registerAlias("ak", "punch");
+
+        // Infinity
+        registerAlias("infinitearrows", "infinity");
+        registerAlias("infarrows", "infinity");
+        registerAlias("infinite", "infinity");
+        registerAlias("unlimited", "infinity");
+        registerAlias("unlimitedarrows", "infinity");
+        registerAlias("ai", "infinity");
+
+        // Luck of the Sea
+        registerAlias("luck", "luck_of_the_sea");
+        registerAlias("rodluck", "luck_of_the_sea");
+
+        // Lure
+        registerAlias("rodlure", "lure");
+
+        // Depth Strider
+        registerAlias("depth", "depth_strider");
+        registerAlias("strider", "depth_strider");
+
+        // Frost Walker
+        registerAlias("frost", "frost_walker");
+        registerAlias("walker", "frost_walker");
+
+        // Curses & Sweeping
+        registerAlias("bindingcurse", "binding_curse");
+        registerAlias("bindcurse", "binding_curse");
+        registerAlias("bind", "binding_curse");
+        registerAlias("vanishingcurse", "vanishing_curse");
+        registerAlias("vanishcurse", "vanishing_curse");
+        registerAlias("vanish", "vanishing_curse");
+        registerAlias("sweepingedge", "sweeping_edge");
+        registerAlias("sweepedge", "sweeping_edge");
+        registerAlias("sweeping", "sweeping_edge");
+
+        // Trident
+        registerAlias("loyal", "loyalty");
+        registerAlias("return", "loyalty");
+        registerAlias("impale", "impaling");
+        registerAlias("oceandamage", "impaling");
+        registerAlias("oceandmg", "impaling");
+        registerAlias("rip", "riptide");
+        registerAlias("tide", "riptide");
+        registerAlias("launch", "riptide");
+        registerAlias("chanelling", "channeling");
+        registerAlias("channel", "channeling");
+
+        // Crossbow
+        registerAlias("tripleshot", "multishot");
+        registerAlias("quickdraw", "quick_charge");
+        registerAlias("fastcharge", "quick_charge");
+        registerAlias("fastdraw", "quick_charge");
+
+        // Soul Speed
+        registerAlias("soilspeed", "soul_speed");
+        registerAlias("sandspeed", "soul_speed");
     }
 
     private Enchantments() {
+        throw new UnsupportedOperationException("This class cannot be instantiated");
     }
 
-    public static Enchantment getByName(final String name) {
+    /**
+     * Gets an enchantment by name, alias, or NamespacedKey key.
+     *
+     * @param name The name to search for (e.g. "sharpness", "minecraft:sharpness", "alldmg")
+     * @return The found Enchantment, or null if invalid.
+     */
+    public static Enchantment getByName(String name) {
         if (name == null || name.isEmpty()) {
             return null;
         }
-        Enchantment enchantment = null;
-        if (isFlat) { // 1.13+ only
-            /*
-            try {
-                enchantment = Enchantment.getByKey(NamespacedKey.minecraft(name.toLowerCase()));
-            } catch (IllegalArgumentException ignored) {
-                // NamespacedKey throws IAE if key does not match regex
+
+        // 1. Normalize input (lowercase, remove spaces to match "fire_aspect" against "fire aspect")
+        String cleanName = name.toLowerCase(Locale.ENGLISH).replace(" ", "_");
+        String rawName = name.toLowerCase(Locale.ENGLISH);
+
+        // 2. Check exact cache (Dynamically loaded keys)
+        if (ENCHANTMENTS.containsKey(cleanName)) {
+            return ENCHANTMENTS.get(cleanName);
+        }
+
+        // 3. Check Aliases
+        if (ALIASES.containsKey(cleanName)) {
+            return ALIASES.get(cleanName);
+        }
+        if (ALIASES.containsKey(rawName)) {
+            return ALIASES.get(rawName);
+        }
+
+        try {
+            NamespacedKey key = NamespacedKey.minecraft(cleanName);
+            Enchantment enchantment = Enchantment.getByKey(key);
+            if (enchantment != null) {
+                return enchantment;
             }
-             */
-            try {
-                // use reflections to access getByKey method
-                NamespacedKey key = NamespacedKey.minecraft(name.toLowerCase());
-                Method method = Enchantment.class.getDeclaredMethod("getByKey", NamespacedKey.class);
-                enchantment = (Enchantment) method.invoke(null, key);
-            } catch (Exception e) {
-                // ignore
+        } catch (IllegalArgumentException ignored) {
+            // Invalid key format
+        }
+
+        for (Entry<String, Enchantment> entry : ENCHANTMENTS.entrySet()) {
+            if (entry.getKey().replace("_", "").equals(cleanName.replace("_", ""))) {
+                return entry.getValue();
             }
         }
 
-        if (enchantment == null) {
-            enchantment = Enchantment.getByName(name.toUpperCase());
+        return null;
+    }
+
+    /**
+     * Helper to register an alias to a valid Minecraft key.
+     * Prevents NullPointers if the server version doesn't support the enchantment yet.
+     */
+    private static void registerAlias(String alias, String minecraftKey) {
+        Enchantment target = ENCHANTMENTS.get(minecraftKey.toLowerCase(Locale.ENGLISH));
+        if (target != null) {
+            ALIASES.put(alias.toLowerCase(Locale.ENGLISH), target);
         }
-        if (enchantment == null) {
-            enchantment = Enchantment.getByName(name.toLowerCase());
-        }
-        if (enchantment == null) {
-            enchantment = Enchantment.getByName(name);
-        }
-        if (enchantment == null) {
-            enchantment = ENCHANTMENTS.get(name.toLowerCase(Locale.ENGLISH));
-        }
-        if (enchantment == null) {
-            enchantment = ALIASENCHANTMENTS.get(name.toLowerCase(Locale.ENGLISH));
-        }
-        return enchantment;
     }
 
     public static Set<Entry<String, Enchantment>> entrySet() {
@@ -332,29 +270,22 @@ public final class Enchantments {
     }
 
     public static void registerEnchantment(String name, Enchantment enchantment) {
-        if (ENCHANTMENTS.containsKey(name) || ALIASENCHANTMENTS.containsKey(name)) {
+        if (ENCHANTMENTS.containsKey(name) || ALIASES.containsKey(name)) {
             return;
         }
-
         ENCHANTMENTS.put(name, enchantment);
     }
 
     public static void registerAlias(String name, Enchantment enchantment) {
-        if (ENCHANTMENTS.containsKey(name) || ALIASENCHANTMENTS.containsKey(name) || !ENCHANTMENTS.containsValue(enchantment)) {
+        if (ENCHANTMENTS.containsKey(name) || ALIASES.containsKey(name)) {
             return;
         }
-
-        ALIASENCHANTMENTS.put(name, enchantment);
+        ALIASES.put(name, enchantment);
     }
 
     public static String[] getEnchantmentNames() {
-        List<String> enchantments = new ArrayList<>();
-        for (Entry<String, Enchantment> entry : ENCHANTMENTS.entrySet()) {
-            enchantments.add(entry.getKey());
-        }
-        for (Entry<String, Enchantment> entry : ALIASENCHANTMENTS.entrySet()) {
-            enchantments.add(entry.getKey());
-        }
-        return enchantments.toArray(new String[0]);
+        List<String> names = new ArrayList<>(ENCHANTMENTS.keySet());
+        names.addAll(ALIASES.keySet());
+        return names.toArray(new String[0]);
     }
 }

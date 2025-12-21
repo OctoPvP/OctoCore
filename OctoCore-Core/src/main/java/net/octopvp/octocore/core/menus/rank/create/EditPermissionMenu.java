@@ -2,10 +2,10 @@ package net.octopvp.octocore.core.menus.rank.create;
 
 import com.cryptomorin.xseries.XMaterial;
 import lombok.SneakyThrows;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.menu.Menu;
+import dev.octomc.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.guis.Gui;
+import dev.octomc.agile.guis.GuiItem;
+import dev.octomc.agile.menu.Menu;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.builders.NodeBuilder;
 import net.octopvp.octocore.common.util.CC;
@@ -60,7 +60,7 @@ public class EditPermissionMenu extends Menu<Gui> {
     }
 
     public GuiItem scopeButton() {
-        return ItemBuilder.from(Material.SIGN)
+        return ItemBuilder.from(Material.OAK_SIGN)
                 .name(CC.AQUA + "Scope")
                 .lore(CC.SEPARATOR, CC.AQUA + "Scope: " + CC.YELLOW + nodeBuilder.getScope().orElse(new ServerContext("Global")).getServersString(), CC.SEPARATOR, CC.YELLOW + "Click to set scope!")
                 .asGuiItem(event -> new ChooseServerScopeMenu((context) -> {

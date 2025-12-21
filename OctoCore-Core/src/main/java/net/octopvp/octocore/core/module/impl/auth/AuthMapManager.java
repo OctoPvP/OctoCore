@@ -1,6 +1,6 @@
 package net.octopvp.octocore.core.module.impl.auth;
 
-import net.octopvp.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.builder.item.ItemBuilder;
 import net.octopvp.octocore.common.util.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,6 +23,11 @@ public class AuthMapManager extends MapRenderer {
     public AuthMapManager(Player player, byte[] bytes) {
         this.player = player;
         this.bytes = bytes;
+    }
+
+    @Override
+    public boolean isExplorerMap() {
+        return false;
     }
 
     public void giveMap() {

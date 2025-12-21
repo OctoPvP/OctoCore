@@ -1,12 +1,12 @@
 package net.octopvp.octocore.core.menus.rank;
 
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.menu.PaginatedMenu;
+import dev.octomc.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.guis.Gui;
+import dev.octomc.agile.guis.GuiItem;
+import dev.octomc.agile.guis.PaginatedGui;
+import dev.octomc.agile.menu.Menu;
+import dev.octomc.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.object.ServerContext;
 import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.common.util.CC;
@@ -66,7 +66,7 @@ public class ChooseServerScopeMenu extends PaginatedMenu<PaginatedGui> {
     }
 
     public GuiItem customButton() {
-        return ItemBuilder.from(Material.SIGN)
+        return ItemBuilder.from(Material.OAK_SIGN)
                 .name(CC.AQUA + "Custom server")
                 .lore(CC.YELLOW + "Click to set a custom server scope.")
                 .asGuiItem(event -> {

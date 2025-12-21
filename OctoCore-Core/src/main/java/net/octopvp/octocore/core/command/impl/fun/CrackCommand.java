@@ -1,8 +1,8 @@
 package net.octopvp.octocore.core.command.impl.fun;
 
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.components.GuiType;
-import net.octopvp.agile.guis.Gui;
+import dev.octomc.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.components.GuiType;
+import dev.octomc.agile.guis.Gui;
 import net.octopvp.commander.annotation.Command;
 import net.octopvp.commander.annotation.Permission;
 import net.octopvp.commander.annotation.Sender;

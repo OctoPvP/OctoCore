@@ -3,6 +3,7 @@ package net.octopvp.octocore.core.objects;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -40,7 +41,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         this(other.getWorld().getName(), other.x1, other.y1, other.z1, other.x2, other.y2, other.z2);
     }
 
-    public Cuboid(final World world, final int x1, final int y1, final int z1, final int x2, final int y2, final int z2) {
+    public Cuboid(final World world, final int x1, final int y1, final int z1, final int x2, final int y2,
+            final int z2) {
         this.worldName = world.getName();
         this.x1 = Math.min(x1, x2);
         this.x2 = Math.max(x1, x2);
@@ -50,7 +52,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         this.z2 = Math.max(z1, z2);
     }
 
-    private Cuboid(final String worldName, final int x1, final int y1, final int z1, final int x2, final int y2, final int z2) {
+    private Cuboid(final String worldName, final int x1, final int y1, final int z1, final int x2, final int y2,
+            final int z2) {
         this.worldName = worldName;
         this.x1 = Math.min(x1, x2);
         this.x2 = Math.max(x1, x2);
@@ -103,7 +106,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         final int x1 = this.getUpperX() + 1;
         final int y1 = this.getUpperY() + 1;
         final int z1 = this.getUpperZ() + 1;
-        return new Location(this.getWorld(), this.getLowerX() + (x1 - this.getLowerX()) / 2.0, this.getLowerY() + (y1 - this.getLowerY()) / 2.0, this.getLowerZ() + (z1 - this.getLowerZ()) / 2.0);
+        return new Location(this.getWorld(), this.getLowerX() + (x1 - this.getLowerX()) / 2.0,
+                this.getLowerY() + (y1 - this.getLowerY()) / 2.0, this.getLowerZ() + (z1 - this.getLowerZ()) / 2.0);
     }
 
     public World getWorld() {
@@ -205,7 +209,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         Cuboid c = null;
         switch (dir) {
             case HORIZONTAL: {
-                c = this.expand(CuboidDirection.NORTH, amount).expand(CuboidDirection.SOUTH, amount).expand(CuboidDirection.EAST, amount).expand(CuboidDirection.WEST, amount);
+                c = this.expand(CuboidDirection.NORTH, amount).expand(CuboidDirection.SOUTH, amount)
+                        .expand(CuboidDirection.EAST, amount).expand(CuboidDirection.WEST, amount);
                 break;
             }
             case VERTICAL: {
@@ -236,7 +241,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     }
 
     public boolean contains(final Location l) {
-        return this.worldName.equals(l.getWorld().getName()) && this.contains(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+        return this.worldName.equals(l.getWorld().getName())
+                && this.contains(l.getBlockX(), l.getBlockY(), l.getBlockZ());
     }
 
     public boolean contains(final Entity e) {
@@ -244,7 +250,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     }
 
     public Cuboid grow(final int i) {
-        return this.expand(CuboidDirection.NORTH, i).expand(CuboidDirection.SOUTH, i).expand(CuboidDirection.EAST, i).expand(CuboidDirection.WEST, i);
+        return this.expand(CuboidDirection.NORTH, i).expand(CuboidDirection.SOUTH, i).expand(CuboidDirection.EAST, i)
+                .expand(CuboidDirection.WEST, i);
     }
 
     public int getVolume() {
@@ -264,44 +271,45 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     }
 
     public Cuboid contract() {
-        return this.contract(CuboidDirection.DOWN).contract(CuboidDirection.SOUTH).contract(CuboidDirection.EAST).contract(CuboidDirection.UP).contract(CuboidDirection.NORTH).contract(CuboidDirection.WEST);
+        return this.contract(CuboidDirection.DOWN).contract(CuboidDirection.SOUTH).contract(CuboidDirection.EAST)
+                .contract(CuboidDirection.UP).contract(CuboidDirection.NORTH).contract(CuboidDirection.WEST);
     }
 
     public Cuboid contract(final CuboidDirection dir) {
         Cuboid face = this.getFace(dir.opposite());
         switch (dir) {
             case DOWN: {
-                while (face.containsOnly(0) && face.getLowerY() > this.getLowerY()) {
+                while (face.containsOnly(Material.AIR) && face.getLowerY() > this.getLowerY()) {
                     face = face.shift(CuboidDirection.DOWN, 1);
                 }
                 return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x2, face.getUpperY(), this.z2);
             }
             case UP: {
-                while (face.containsOnly(0) && face.getUpperY() < this.getUpperY()) {
+                while (face.containsOnly(Material.AIR) && face.getUpperY() < this.getUpperY()) {
                     face = face.shift(CuboidDirection.UP, 1);
                 }
                 return new Cuboid(this.worldName, this.x1, face.getLowerY(), this.z1, this.x2, this.y2, this.z2);
             }
             case NORTH: {
-                while (face.containsOnly(0) && face.getLowerX() > this.getLowerX()) {
+                while (face.containsOnly(Material.AIR) && face.getLowerX() > this.getLowerX()) {
                     face = face.shift(CuboidDirection.NORTH, 1);
                 }
                 return new Cuboid(this.worldName, this.x1, this.y1, this.z1, face.getUpperX(), this.y2, this.z2);
             }
             case SOUTH: {
-                while (face.containsOnly(0) && face.getUpperX() < this.getUpperX()) {
+                while (face.containsOnly(Material.AIR) && face.getUpperX() < this.getUpperX()) {
                     face = face.shift(CuboidDirection.SOUTH, 1);
                 }
                 return new Cuboid(this.worldName, face.getLowerX(), this.y1, this.z1, this.x2, this.y2, this.z2);
             }
             case EAST: {
-                while (face.containsOnly(0) && face.getLowerZ() > this.getLowerZ()) {
+                while (face.containsOnly(Material.AIR) && face.getLowerZ() > this.getLowerZ()) {
                     face = face.shift(CuboidDirection.EAST, 1);
                 }
                 return new Cuboid(this.worldName, this.x1, this.y1, this.z1, this.x2, this.y2, face.getUpperZ());
             }
             case WEST: {
-                while (face.containsOnly(0) && face.getUpperZ() < this.getUpperZ()) {
+                while (face.containsOnly(Material.AIR) && face.getUpperZ() < this.getUpperZ()) {
                     face = face.shift(CuboidDirection.WEST, 1);
                 }
                 return new Cuboid(this.worldName, this.x1, this.y1, face.getLowerZ(), this.x2, this.y2, this.z2);
@@ -338,9 +346,9 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         }
     }
 
-    public boolean containsOnly(final int blockId) {
+    public boolean containsOnly(final org.bukkit.Material material) {
         for (final Block b : this) {
-            if (b.getTypeId() != blockId) {
+            if (b.getType() != material) {
                 return false;
             }
         }
@@ -394,7 +402,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 
     @Override
     public String toString() {
-        return "Cuboid: " + this.worldName + "," + this.x1 + "," + this.y1 + "," + this.z1 + "=>" + this.x2 + "," + this.y2 + "," + this.z2;
+        return "Cuboid: " + this.worldName + "," + this.x1 + "," + this.y1 + "," + this.z1 + "=>" + this.x2 + ","
+                + this.y2 + "," + this.z2;
     }
 
     public List<Block> getWalls() {
@@ -517,7 +526,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         private int y;
         private int z;
 
-        public CuboidIterator(final World w, final int x1, final int y1, final int z1, final int x2, final int y2, final int z2) {
+        public CuboidIterator(final World w, final int x1, final int y1, final int z1, final int x2, final int y2,
+                final int z2) {
             this.w = w;
             this.baseX = Math.min(x1, x2);
             this.baseY = Math.min(y1, y2);

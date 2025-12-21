@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
 }
 
 repositories {

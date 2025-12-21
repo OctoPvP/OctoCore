@@ -2,11 +2,11 @@ package net.octopvp.octocore.core.module.impl.punishments.menus.punishments;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.Menu;
-import net.octopvp.agile.menu.PaginatedMenu;
+import dev.octomc.agile.guis.Gui;
+import dev.octomc.agile.guis.GuiItem;
+import dev.octomc.agile.guis.PaginatedGui;
+import dev.octomc.agile.menu.Menu;
+import dev.octomc.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.interfaces.IPunishData;
 import net.octopvp.octocore.common.interfaces.IPunishment;
 import net.octopvp.octocore.common.object.punish.PunishmentType;

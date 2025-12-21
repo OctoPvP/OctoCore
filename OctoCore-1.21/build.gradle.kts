@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.WriteProperties
+
 plugins {
     id("net.octopvp.java-conventions")
     id("net.octopvp.server-conventions")
@@ -21,9 +23,11 @@ repositories {
 dependencies {
     implementation(project(":OctoCore-Core"))
     implementation(project(":OctoCore-common"))
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
 }
+
+
 tasks {
     shadowJar {
         archiveFileName.set("OctoCore-1.21.jar")
@@ -52,6 +56,10 @@ tasks {
     }
 }
 tasks.getByName("build").dependsOn("shadowJar")
+tasks.named<WriteProperties>("buildProperties") {
+    // saves the file in the build/generated folder
+    destinationFile = layout.buildDirectory.file("generated/build.properties")
+}
 java {
     // Configure the java toolchain. This allows gradle to auto-provision JDK 17 on systems that only have JDK 8 installed for example.
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))

@@ -2,10 +2,10 @@ package net.octopvp.octocore.core.menus.settings;
 
 import com.cryptomorin.xseries.XMaterial;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.menu.Menu;
+import dev.octomc.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.guis.Gui;
+import dev.octomc.agile.guis.GuiItem;
+import dev.octomc.agile.menu.Menu;
 import net.octopvp.octocore.common.object.WorldTime;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
@@ -25,15 +25,16 @@ public class SettingsMenu extends Menu<Gui> {
 
     @Override
     public Gui createGui(Player player) {
-        return (Gui) Gui.gui()
+        Gui gui = Gui.gui()
                 .title("Settings")
                 .rows(3)
-                .create()
-                .setCloseGuiAction(event -> {
-                    if (changed) {
-                        data.save();
-                    }
-                });
+                .create();
+        gui.setCloseGuiAction(event -> {
+            if (changed) {
+                data.save();
+            }
+        });
+        return gui;
     }
 
 

@@ -2,11 +2,11 @@ package net.octopvp.octocore.core.menus.grant;
 
 import com.cryptomorin.xseries.XMaterial;
 import lombok.RequiredArgsConstructor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.PaginatedMenu;
+import dev.octomc.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.guis.Gui;
+import dev.octomc.agile.guis.GuiItem;
+import dev.octomc.agile.guis.PaginatedGui;
+import dev.octomc.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.core.OctoCore;

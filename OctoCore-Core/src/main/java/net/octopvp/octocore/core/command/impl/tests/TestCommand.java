@@ -2,9 +2,9 @@ package net.octopvp.octocore.core.command.impl.tests;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.menu.Menu;
+import dev.octomc.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.guis.Gui;
+import dev.octomc.agile.menu.Menu;
 import net.octopvp.commander.annotation.*;
 import net.octopvp.commander.bukkit.annotation.PlayerOnly;
 import net.octopvp.octocore.common.object.Permissions;

@@ -34,14 +34,14 @@ public class JoinLeaveListener implements Listener {
         Tasks.runSync(() -> {
             player.setWalkSpeed(0.0F);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10000, 128, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000, 128, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 10000, 128, true, false));
         });
     }
 
     public static void unfreezePlayer(Player player) {
         Tasks.runSync(() -> {
             player.setWalkSpeed(0.2F);
-            player.removePotionEffect(PotionEffectType.JUMP);
+            player.removePotionEffect(PotionEffectType.JUMP_BOOST);
             player.removePotionEffect(PotionEffectType.SPEED);
         });
     }
@@ -134,20 +134,54 @@ public class JoinLeaveListener implements Listener {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
             return;
         }
-        PermissibleBase old = event.getPlayer().getPermissibleBase();
-        PermissibleBase newBase = new OctoPermissible(event.getPlayer(), event.getPlayer().getUniqueId(), old);
-        event.getPlayer().setPermissibleBase(newBase);
-        if (event.getPlayer().getPermissibleBase() instanceof OctoPermissible) {
+
+        // hack to get inject permissible work
+        try {
+            injectPermissible(event.getPlayer());
             Logger.debug("Successfully injected permissible!");
             data.loadPerms(event.getPlayer());
-        } else {
+        } catch (Exception e) {
             Logger.error("Could not inject permissible!");
-            //PlayerManager.captureSentryEvent("Could not inject permissible!", player);
+            e.printStackTrace();
         }
+        // PermissibleBase old = event.getPlayer().getPermissibleBase();
+        // PermissibleBase newBase = new OctoPermissible(event.getPlayer(), event.getPlayer().getUniqueId(), old);
+        // event.getPlayer().setPermissibleBase(newBase);
+        // if (event.getPlayer().getPermissibleBase() instanceof OctoPermissible) {
+        //     Logger.debug("Successfully injected permissible!");
+        //     data.loadPerms(event.getPlayer());
+        // } else {
+        //     Logger.error("Could not inject permissible!");
+        //     //PlayerManager.captureSentryEvent("Could not inject permissible!", player);
+        // }
         if (OctoCore.getInstance().getServerManager().isOnline(event.getPlayer().getUniqueId())) {
             data.setLastServerOn(OctoCore.getInstance().getServerManager().getOnlinePlayer(event.getPlayer().getUniqueId()).getServer());
         } else {
             data.setJoinAlert(true);
+        }
+    }
+
+    private void injectPermissible(Player player) throws Exception {
+        if (permField == null) {
+            Class<?> humanEntity = player.getClass();
+            // Walk up hierarchy to find CraftHumanEntity (where 'perm' is defined)
+            while (humanEntity != Object.class) {
+                try {
+                    permField = humanEntity.getDeclaredField("perm");
+                    permField.setAccessible(true);
+                    break;
+                } catch (NoSuchFieldException e) {
+                    humanEntity = humanEntity.getSuperclass();
+                }
+            }
+        }
+
+        if (permField != null) {
+            PermissibleBase old = (PermissibleBase) permField.get(player);
+            if (!(old instanceof OctoPermissible)) {
+                PermissibleBase newBase = new OctoPermissible(player, player.getUniqueId(), old);
+                permField.set(player, newBase);
+            }
         }
     }
 
@@ -156,6 +190,8 @@ public class JoinLeaveListener implements Listener {
         if (event.getPlayer() == null || !event.getPlayer().isOnline()) {
             return;
         }
+
+        // weird UUID is NULL error here
         PlayerData playerData = PlayerManager.getInstance().join(event.getPlayer());
 
         // TODO: Componentize this

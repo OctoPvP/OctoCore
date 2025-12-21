@@ -1,11 +1,11 @@
 package net.octopvp.octocore.core.menus.grant;
 
 import com.cryptomorin.xseries.XMaterial;
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.guis.PaginatedGui;
-import net.octopvp.agile.menu.PaginatedMenu;
+import dev.octomc.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.guis.Gui;
+import dev.octomc.agile.guis.GuiItem;
+import dev.octomc.agile.guis.PaginatedGui;
+import dev.octomc.agile.menu.PaginatedMenu;
 import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.object.permissions.Rank;
 import net.octopvp.octocore.common.util.CC;
@@ -75,15 +75,16 @@ public class AddGrantMenu extends PaginatedMenu<PaginatedGui> {
 
     @Override
     public PaginatedGui createGui(Player player) {
-        return (PaginatedGui) Gui.paginated()
+        PaginatedGui gui = Gui.paginated()
                 .title("Select a rank!")
                 .rows(6)
-                .create()
-                .setCloseGuiAction(event -> {
-                    PlayerData playerData = PlayerManager.getInstance().getData(event.getPlayer().getUniqueId());
-                    if (playerData.getGrantProcedure() != null && playerData.getGrantProcedure().getGrantProcedureState() == GrantProcedureState.START) {
-                        playerData.setGrantProcedure(null);
-                    }
-                });
+                .create();
+        gui.setCloseGuiAction(event -> {
+            PlayerData playerData = PlayerManager.getInstance().getData(event.getPlayer().getUniqueId());
+            if (playerData.getGrantProcedure() != null && playerData.getGrantProcedure().getGrantProcedureState() == GrantProcedureState.START) {
+                playerData.setGrantProcedure(null);
+            }
+        });
+        return gui;
     }
 }

@@ -50,6 +50,7 @@ import java.util.UUID;
 @Getter
 @SuppressWarnings("unused")
 public abstract class OctoCore extends JavaPlugin {
+    private Permission perms = null;
     @Getter
     private static final Settings settings = new Settings();
     private static final SetupModules setupModules = new SetupModules();
@@ -263,8 +264,14 @@ public abstract class OctoCore extends JavaPlugin {
     }
 
     private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        Permission perms = rsp.getProvider();
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        org.bukkit.plugin.RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        if (rsp == null) {
+            return false;
+        }
+        perms = rsp.getProvider();
         return perms != null;
     }
 

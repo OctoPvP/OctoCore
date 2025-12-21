@@ -1,9 +1,9 @@
 package net.octopvp.octocore.core.menus.tag;
 
-import net.octopvp.agile.builder.item.ItemBuilder;
-import net.octopvp.agile.guis.Gui;
-import net.octopvp.agile.guis.GuiItem;
-import net.octopvp.agile.menu.Menu;
+import dev.octomc.agile.builder.item.ItemBuilder;
+import dev.octomc.agile.guis.Gui;
+import dev.octomc.agile.guis.GuiItem;
+import dev.octomc.agile.menu.Menu;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.TagManager;
 import net.octopvp.octocore.core.objects.PlayerTagBuilder;
@@ -50,7 +50,7 @@ public class ManageTagMenu extends Menu<Gui> {
     }
 
     public GuiItem descButton() {
-        return ItemBuilder.from(Material.SIGN).name(CC.AQUA + "Tag description")
+        return ItemBuilder.from(Material.OAK_SIGN).name(CC.AQUA + "Tag description")
                 .lore(CC.SEPARATOR, "", CC.AQUA + "Description: " + CC.WHITE + builder.getDesc(), "", CC.SEPARATOR)
                 .asGuiItem(event -> {
                     event.getWhoClicked().closeInventory();
@@ -61,7 +61,7 @@ public class ManageTagMenu extends Menu<Gui> {
     }
 
     public GuiItem nameButton() {
-        return ItemBuilder.from(Material.SIGN).name(CC.AQUA + "Tag name")
+        return ItemBuilder.from(Material.OAK_SIGN).name(CC.AQUA + "Tag name")
                 .lore(CC.SEPARATOR, "", CC.AQUA + "Name: " + CC.WHITE + builder.getTagName(), "", CC.SEPARATOR)
                 .asGuiItem(event -> {
                     event.getWhoClicked().closeInventory();

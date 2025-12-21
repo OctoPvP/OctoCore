@@ -25,7 +25,8 @@ subprojects {
     tasks {
         // generate build.properties file in build/resources/main/build.properties
         val buildProperties = register("buildProperties", WriteProperties::class.java) {
-            outputFile = file("$buildDir/resources/main/build.properties")
+            //outputFile = file("$buildDir/resources/main/build.properties")
+            destinationFile = layout.buildDirectory.file("resources/main/build.properties")
             property("git.commit.id", gitHash)
             property("git.commit.id.abbrev", shortGitHash)
             property("git.commit.date", date)
