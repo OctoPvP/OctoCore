@@ -14,14 +14,6 @@ repositories {
     maven {
         url = uri("https://oss.sonatype.org/content/repositories/snapshots")
     }
-    maven {
-        url = uri("https://repo.octopvp.net/repo")
-        name = "octomc"
-        credentials {
-            username = findProperty("octomcUsername") as String
-            password = findProperty("octomcPassword") as String
-        }
-    }
 }
 
 dependencies {

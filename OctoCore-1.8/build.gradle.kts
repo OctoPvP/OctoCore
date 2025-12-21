@@ -10,21 +10,13 @@ repositories {
     maven {
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
-    maven {
-        url = uri("https://repo.octopvp.net/repo")
-        name = "octomc"
-        credentials {
-            username = findProperty("octomcUsername") as String
-            password = findProperty("octomcPassword") as String
-        }
-    }
 }
 dependencies {
     implementation(project(":OctoCore-Core"))
     implementation(project(":OctoCore-common"))
 
-    compileOnly("net.octopvp.octospigot:octospigot-api:1.8.8-R0.1-SNAPSHOT")
-    compileOnly("net.octopvp.octospigot:octospigot-server:1.8.8-R0.1-SNAPSHOT")
+    //compileOnly("net.octopvp.octospigot:octospigot-api:1.8.8-R0.1-SNAPSHOT")
+    //compileOnly("net.octopvp.octospigot:octospigot-server:1.8.8-R0.1-SNAPSHOT")
 
     implementation("net.kyori:adventure-text-minimessage:4.14.0")
     implementation("net.kyori:adventure-api:4.14.0")

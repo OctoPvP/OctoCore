@@ -13,18 +13,6 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven("https://repo.papermc.io/repository/maven-public/")
-
-    maven("https://repo.octopvp.net/public") {
-        name = "octomc-public"
-    }
-    
-    maven("https://repo.octopvp.net/repo") {
-        name = "octomc"
-        credentials {
-            username = findProperty("octomcUsername") as String
-            password = findProperty("octomcPassword") as String
-        }
-    }
 }
 
 dependencies {
@@ -114,18 +102,6 @@ publishing {
                 scm {
                     url.set("https://github.com/OctoPvP/OctoCore")
                 }
-            }
-        }
-    }
-    repositories {
-        maven("https://repo.octopvp.net/repo") {
-            name = "octomc"
-            credentials {
-                username = findProperty("octomcUsername") as String
-                password = findProperty("octomcPassword") as String
-            }
-            authentication {
-                create<BasicAuthentication>("basic")
             }
         }
     }

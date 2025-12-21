@@ -10,14 +10,6 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven {
-        url = uri("https://repo.octopvp.net/repo")
-        name = "octomc"
-        credentials {
-            username = findProperty("octomcUsername") as String
-            password = findProperty("octomcPassword") as String
-        }
-    }
 }
 
 dependencies {
