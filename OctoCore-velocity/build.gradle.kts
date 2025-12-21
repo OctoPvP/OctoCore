@@ -6,7 +6,10 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
-
+    maven {
+        name = "papermc"
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
 }
 
 dependencies {
