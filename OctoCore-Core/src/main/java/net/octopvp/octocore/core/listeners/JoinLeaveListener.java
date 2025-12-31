@@ -28,7 +28,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import java.lang.reflect.Field; // Don't forget this import!
+
 public class JoinLeaveListener implements Listener {
+    Field permField = null;
 
     public static void freezePlayer(Player player) {
         Tasks.runSync(() -> {
@@ -46,34 +49,42 @@ public class JoinLeaveListener implements Listener {
         });
     }
 
-
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
         if (OctoCore.isLoading()) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("The server hasn't started yet!").toString());
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+                    new DisconnectReason("The server hasn't started yet!").toString());
             return;
         }
         if (PlayerManager.getSaving().contains(event.getUniqueId())) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("Please wait a moment while we save your data from your previous session.").toString());
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+                    new DisconnectReason("Please wait a moment while we save your data from your previous session.")
+                            .toString());
             return;
         }
         if (Bukkit.getPlayer(event.getUniqueId()) != null) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("You are already online!").toString());
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+                    new DisconnectReason("You are already online!").toString());
             return;
         }
         // check geyser issue
         if (event.getName().startsWith("Unable to find user in our cache.")) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("Could not resolve your bedrock name! Please join test.geysermc.org before joining this server again.").toString());
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason(
+                    "Could not resolve your bedrock name! Please join test.geysermc.org before joining this server again.")
+                    .toString());
             return;
         }
         boolean kicked = event.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED;
         if (event.getLoginResult() == AsyncPlayerPreLoginEvent.Result.ALLOWED) {
-            if (kicked) return;
+            if (kicked)
+                return;
             long start = System.currentTimeMillis();
             Logger.info("Loading " + event.getName() + "'s data...");
             String name = event.getName();
             UUID uuid = event.getUniqueId();
-            MojangAPIUtil.INSTANCE.getNameCache().put(uuid, name); // Bukkit#getOfflinePlayer may be incomplete on servers w/o a player cache as getting via uuid doesnt do mojang lookups
+            MojangAPIUtil.INSTANCE.getNameCache().put(uuid, name); // Bukkit#getOfflinePlayer may be incomplete on
+                                                                   // servers w/o a player cache as getting via uuid
+                                                                   // doesnt do mojang lookups
             PlayerData playerData = PlayerManager.getInstance().createProfile(uuid, name);
 
             Map<UUID, PunishData> punishDataCache = new HashMap<>();
@@ -84,7 +95,8 @@ public class JoinLeaveListener implements Listener {
             Logger.info("Checking " + event.getName() + "'s punishments...");
             long startPunish = System.currentTimeMillis();
             if (PunishModule.checkPunishments(event, playerData, name, uuid)) {
-                Logger.info("Kicked " + event.getName() + " for having an active punishment. (" + (System.currentTimeMillis() - startPunish) + "ms)");
+                Logger.info("Kicked " + event.getName() + " for having an active punishment. ("
+                        + (System.currentTimeMillis() - startPunish) + "ms)");
                 PlayerManager.getInstance().getPlayerProfiles().remove(uuid);
                 return;
             }
@@ -96,7 +108,9 @@ public class JoinLeaveListener implements Listener {
             Logger.info("Cached " + event.getName() + "'s data in " + (System.currentTimeMillis() - startCache) + "ms");
 
             if (PlayerManager.getInstance().getData(event.getUniqueId()) == null) {
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
+                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, new DisconnectReason(
+                        "An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.")
+                        .toString());
             }
             Logger.info("Loaded " + event.getName() + "'s data in " + (System.currentTimeMillis() - start) + "ms");
         }
@@ -116,7 +130,8 @@ public class JoinLeaveListener implements Listener {
             if (data.isVanished()) {
                 e.setQuitMessage(null);
             } else {
-                e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, e.getPlayer(), true));
+                e.setQuitMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] "
+                        + data.getFormattedName(true, e.getPlayer(), true));
             }
         }
         unfreezePlayer(e.getPlayer());
@@ -131,7 +146,9 @@ public class JoinLeaveListener implements Listener {
     public void onLogin(PlayerLoginEvent event) {
         PlayerData data = PlayerManager.getInstance().getData(event.getPlayer());
         if (data == null) {
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason("An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.").toString());
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, new DisconnectReason(
+                    "An error occurred while loading your data.\nPlease contact an administrator if this keeps happening!.")
+                    .toString());
             return;
         }
 
@@ -145,17 +162,19 @@ public class JoinLeaveListener implements Listener {
             e.printStackTrace();
         }
         // PermissibleBase old = event.getPlayer().getPermissibleBase();
-        // PermissibleBase newBase = new OctoPermissible(event.getPlayer(), event.getPlayer().getUniqueId(), old);
+        // PermissibleBase newBase = new OctoPermissible(event.getPlayer(),
+        // event.getPlayer().getUniqueId(), old);
         // event.getPlayer().setPermissibleBase(newBase);
         // if (event.getPlayer().getPermissibleBase() instanceof OctoPermissible) {
-        //     Logger.debug("Successfully injected permissible!");
-        //     data.loadPerms(event.getPlayer());
+        // Logger.debug("Successfully injected permissible!");
+        // data.loadPerms(event.getPlayer());
         // } else {
-        //     Logger.error("Could not inject permissible!");
-        //     //PlayerManager.captureSentryEvent("Could not inject permissible!", player);
+        // Logger.error("Could not inject permissible!");
+        // //PlayerManager.captureSentryEvent("Could not inject permissible!", player);
         // }
         if (OctoCore.getInstance().getServerManager().isOnline(event.getPlayer().getUniqueId())) {
-            data.setLastServerOn(OctoCore.getInstance().getServerManager().getOnlinePlayer(event.getPlayer().getUniqueId()).getServer());
+            data.setLastServerOn(OctoCore.getInstance().getServerManager()
+                    .getOnlinePlayer(event.getPlayer().getUniqueId()).getServer());
         } else {
             data.setJoinAlert(true);
         }
@@ -201,27 +220,31 @@ public class JoinLeaveListener implements Listener {
             VanishManager.getInstance().vanish(event.getPlayer(), -1, true);
         } else {
             Logger.info("Not vanishing " + playerData.getName() + " on join.");
-            String joinMessage = CC.GRAY + "[" + CC.GREEN + "+" + CC.GRAY + "] " + playerData.getFormattedName(true, event.getPlayer(), true);
+            String joinMessage = CC.GRAY + "[" + CC.GREEN + "+" + CC.GRAY + "] "
+                    + playerData.getFormattedName(true, event.getPlayer(), true);
             event.setJoinMessage(joinMessage);
             VanishManager.getInstance().update(event.getPlayer());
         }
 
-
         /*
-        Tasks.runLater(() -> {
-            LunarClientAPI.getInstance().sendPacket(event.getPlayer(), new LCPacketServerUpdate("hypixel.net"));
-            Player player = event.getPlayer();
-            LunarClientAPI.getInstance().sendWaypoint(player, new LCWaypoint("Test", player.getLocation(), Color.AQUA.asRGB(), true, true));
-            ModSettings.ModSetting disabled = new ModSettings.ModSetting(false, new HashMap<>());
-            LunarClientAPI.getInstance().sendPacket(player, new LCPacketModSettings(
-                    new ModSettings()
-                            .addModSetting("Coordinates", disabled)
-                            .addModSetting("textHotKey", disabled)
-            ));
-            for (Player player1 : LunarClientAPI.getInstance().getPlayersRunningLunarClient()) {
-                player.sendMessage(CC.GREEN + player1.getName());
-            }
-        }, 40L);
+         * Tasks.runLater(() -> {
+         * LunarClientAPI.getInstance().sendPacket(event.getPlayer(), new
+         * LCPacketServerUpdate("hypixel.net"));
+         * Player player = event.getPlayer();
+         * LunarClientAPI.getInstance().sendWaypoint(player, new LCWaypoint("Test",
+         * player.getLocation(), Color.AQUA.asRGB(), true, true));
+         * ModSettings.ModSetting disabled = new ModSettings.ModSetting(false, new
+         * HashMap<>());
+         * LunarClientAPI.getInstance().sendPacket(player, new LCPacketModSettings(
+         * new ModSettings()
+         * .addModSetting("Coordinates", disabled)
+         * .addModSetting("textHotKey", disabled)
+         * ));
+         * for (Player player1 :
+         * LunarClientAPI.getInstance().getPlayersRunningLunarClient()) {
+         * player.sendMessage(CC.GREEN + player1.getName());
+         * }
+         * }, 40L);
          */
     }
 

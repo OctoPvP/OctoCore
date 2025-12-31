@@ -11,7 +11,7 @@ plugins {
     id("java")
     id("com.vaadin") version "24.9.3"
     //id("net.octopvp.java-conventions") // Our default library config conflicts with spring boot
-    id("io.freefair.lombok") version "9.0.0"
+    id("io.freefair.lombok") version "8.4"
 }
 
 defaultTasks("clean", "build")

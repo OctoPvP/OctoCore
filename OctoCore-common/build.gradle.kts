@@ -4,6 +4,8 @@ plugins {
     id("maven-publish")
 }
 description = "OctoCore Commons"
+group = "net.octopvp"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -43,5 +45,13 @@ tasks {
     }
     jar {
         archiveBaseName.set("OctoCore-common-no-deps")
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
     }
 }
