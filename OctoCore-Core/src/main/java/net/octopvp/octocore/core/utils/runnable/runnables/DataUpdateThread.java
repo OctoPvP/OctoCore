@@ -65,9 +65,10 @@ public class DataUpdateThread extends Thread {
                 Player player = Bukkit.getPlayer(playerData.getUuid());
                 if (player == null || player.getName() == null || player.getUniqueId() == null) continue;
                 playerData.setOp(player.isOp());
-                OnlinePlayer onlinePlayer = new OnlinePlayer(playerData.getUuid(), playerData.getName(), playerData.getLastKnownAddress(), OctoCore.getServerName(), playerData.isVanished(), VanishManager.getInstance().getVanishPriority(playerData));
-                onlinePlayers.add(onlinePlayer);
-                if (playerData.isVanished()) {
+                if (!playerData.isVanished()) {
+                    OnlinePlayer onlinePlayer = new OnlinePlayer(playerData.getUuid(), playerData.getName(), playerData.getLastKnownAddress(), OctoCore.getServerName(), false, VanishManager.getInstance().getVanishPriority(playerData));
+                    onlinePlayers.add(onlinePlayer);
+                } else {
                     Component actionBar = Component.text("You are vanished with a priority of ").color(NamedTextColor.GREEN)
                             .append(Component.text(VanishManager.getInstance().getVanishPriority(playerData)).color(NamedTextColor.YELLOW));
                     OctoCore.getInstance().getServerImplementation().sendActionBar(player, actionBar);

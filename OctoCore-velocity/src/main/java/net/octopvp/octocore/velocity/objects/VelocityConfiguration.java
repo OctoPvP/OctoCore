@@ -60,10 +60,14 @@ public class VelocityConfiguration {
         public ServerPing generatePing(ServerPing fallback) {
             Protocol protocol = getProtocol();
             Path faviconPath = new File(favicon).toPath();
-            ServerPing.Players players = this.players == null ? fallback.getPlayers().orElse(new ServerPing.Players(0,1337, List.of())) : this.players;
+            ServerPing.Players players = this.players == null ? fallback.getPlayers().orElse(new ServerPing.Players(0, 1337, List.of())) : this.players;
             if (customPlayerCount) {
-                int vanished = OnlinePlayersManager.getDataMap().values().stream().filter(data -> data.isJoinVanished() || data.isVanished()).mapToInt(data -> 1).sum();
-                players = new ServerPing.Players(Math.max(players.getOnline() - vanished, 0), players.getMax(), players.getSample());
+                // Calculate total players across all servers excluding vanished ones
+                int totalOnline = 0;
+                for (net.octopvp.octocore.common.object.ServerData server : net.octopvp.octocore.common.OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers()) {
+                    totalOnline += (int) server.getOnlinePlayers().stream().filter(p -> !p.isVanished()).count();
+                }
+                players = new ServerPing.Players(totalOnline, players.getMax(), players.getSample());
             }
             return new ServerPing(
                     protocol == null ? fallback.getVersion()

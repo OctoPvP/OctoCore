@@ -31,18 +31,23 @@ public class OnlinePlayersManager implements Runnable {
         });
 
         ArrayList<OnlinePlayer> onlinePlayers = new ArrayList<>();
-        OctoCoreVelocity.getInstance().getProxyServer().getAllPlayers().forEach(player -> {
+        int vanishedCount = 0;
+        for (Player player : OctoCoreVelocity.getInstance().getProxyServer().getAllPlayers()) {
             OnlinePlayerData data = dataMap.get(player.getUniqueId());
             boolean vanished = data != null && data.isVanished();
+            if (vanished) {
+                vanishedCount++;
+                continue;
+            }
             onlinePlayers.add(new OnlinePlayer(
                     player.getUniqueId(),
                     player.getUsername(),
                     player.getRemoteAddress().getAddress().getHostAddress(),
                     player.getCurrentServer().map(s -> s.getServerInfo().getName()).orElse("Unknown"),
-                    vanished,
+                    false, // vanished
                     0 // vanishPriority
             ));
-        });
+        }
 
         new ServerDataPacket(
                 OctoCoreCommon.getInstance().getServerName(),
@@ -57,9 +62,10 @@ public class OnlinePlayersManager implements Runnable {
         // Summary correlation
         Map<String, Integer> serverPlayerCounts = new HashMap<>();
         OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers().forEach(serverData -> {
-            serverPlayerCounts.put(serverData.getServerName(), serverData.getOnlinePlayers().size());
+            int nonVanishedCount = (int) serverData.getOnlinePlayers().stream().filter(p -> !p.isVanished()).count();
+            serverPlayerCounts.put(serverData.getServerName(), nonVanishedCount);
         });
-        int totalPlayers = OctoCoreVelocity.getInstance().getProxyServer().getPlayerCount();
+        int totalPlayers = OctoCoreVelocity.getInstance().getProxyServer().getPlayerCount() - vanishedCount;
         new NetworkSummaryPacket(totalPlayers, serverPlayerCounts, System.currentTimeMillis()).send();
     }
 }
