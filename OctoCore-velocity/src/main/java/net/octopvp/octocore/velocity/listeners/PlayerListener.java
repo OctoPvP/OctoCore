@@ -13,14 +13,21 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
+import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.manager.IDatabaseManager;
+import net.octopvp.octocore.common.object.Permissions;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.velocity.OctoCoreVelocity;
 import net.octopvp.octocore.velocity.VelocityServerImpl;
 import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
 import net.octopvp.octocore.velocity.objects.OctoCorePermissionsProvider;
 import net.octopvp.octocore.velocity.objects.OnlinePlayerData;
+import net.octopvp.octocore.velocity.redis.packet.impl.staff.StaffConnectPacket;
+import net.octopvp.octocore.velocity.redis.packet.impl.staff.StaffLeavePacket;
+import net.octopvp.octocore.velocity.redis.packet.impl.staff.StaffSwitchPacket;
 import org.bson.Document;
+
+import java.util.UUID;
 
 @AllArgsConstructor
 public class PlayerListener {
@@ -39,7 +46,10 @@ public class PlayerListener {
     @Subscribe
     public void onLeave(DisconnectEvent event) {
         Logger.debug("Player " + event.getPlayer().getUsername() + " left");
-        OnlinePlayersManager.getDataMap().remove(event.getPlayer().getUniqueId());
+        OnlinePlayerData data = OnlinePlayersManager.getDataMap().remove(event.getPlayer().getUniqueId());
+        if (data != null && data.hasPermission(Permissions.SEND_JOIN_MESSAGE).orElse(false)) {
+            new StaffLeavePacket(event.getPlayer().getUsername(), OctoCoreCommon.getInstance().getServerName(), 0, data.isVanished()).send();
+        }
     }
 
     @Subscribe
@@ -57,6 +67,10 @@ public class PlayerListener {
                         event.getPlayer().getUniqueId(),
                         new OnlinePlayerData(
                                 event.getPlayer().getUniqueId()));
+                data = OnlinePlayersManager.getDataMap().get(event.getPlayer().getUniqueId());
+            }
+            if (data.hasPermission(Permissions.SEND_SWITCH_MESSAGE).orElse(false)) {
+                new StaffSwitchPacket(event.getPlayer().getUsername(), previousServer.getServerInfo().getName(), event.getPlayer().getCurrentServer().get().getServerInfo().getName()).send();
             }
             data.getNodes().clear();
             data.getCachedPermResults().clear();
@@ -103,6 +117,13 @@ public class PlayerListener {
                         if (playerData != null) {
                             // Player data found, process it as needed
                             Logger.debug("Player data loaded: " + playerData.toJson());
+                            OnlinePlayerData data = OnlinePlayersManager.getDataMap().get(player.getUniqueId());
+                            if (data != null) {
+                                data.update();
+                                if (data.hasPermission(Permissions.SEND_JOIN_MESSAGE).orElse(false)) {
+                                    new StaffConnectPacket(player.getUsername(), OctoCoreCommon.getInstance().getServerName(), 0, data.isVanished()).send();
+                                }
+                            }
                         } else {
                             // No player data found for the given UUID
                             Logger.debug("No player data found for UUID: " + player.getUniqueId());

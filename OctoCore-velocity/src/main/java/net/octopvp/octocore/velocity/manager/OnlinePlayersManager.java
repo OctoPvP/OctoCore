@@ -3,9 +3,16 @@ package net.octopvp.octocore.velocity.manager;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.octopvp.octocore.common.OctoCoreCommon;
+import net.octopvp.octocore.common.object.OnlinePlayer;
+import net.octopvp.octocore.common.redis.packets.NetworkSummaryPacket;
+import net.octopvp.octocore.common.redis.packets.ServerDataPacket;
 import net.octopvp.octocore.common.util.Logger;
+import net.octopvp.octocore.velocity.OctoCoreVelocity;
 import net.octopvp.octocore.velocity.objects.OnlinePlayerData;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,5 +29,37 @@ public class OnlinePlayersManager implements Runnable {
             Logger.debug("Updating player data for " + uuid.toString());
             data.update();
         });
+
+        ArrayList<OnlinePlayer> onlinePlayers = new ArrayList<>();
+        OctoCoreVelocity.getInstance().getProxyServer().getAllPlayers().forEach(player -> {
+            OnlinePlayerData data = dataMap.get(player.getUniqueId());
+            boolean vanished = data != null && data.isVanished();
+            onlinePlayers.add(new OnlinePlayer(
+                    player.getUniqueId(),
+                    player.getUsername(),
+                    player.getRemoteAddress().getAddress().getHostAddress(),
+                    player.getCurrentServer().map(s -> s.getServerInfo().getName()).orElse("Unknown"),
+                    vanished,
+                    0 // vanishPriority
+            ));
+        });
+
+        new ServerDataPacket(
+                OctoCoreCommon.getInstance().getServerName(),
+                onlinePlayers,
+                OctoCoreVelocity.getInstance().getProxyServer().getConfiguration().getShowMaxPlayers(),
+                System.currentTimeMillis(),
+                false, // whitelisted
+                20.0, 20.0, 20.0, // tps
+                false // maintenance
+        ).send();
+
+        // Summary correlation
+        Map<String, Integer> serverPlayerCounts = new HashMap<>();
+        OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers().forEach(serverData -> {
+            serverPlayerCounts.put(serverData.getServerName(), serverData.getOnlinePlayers().size());
+        });
+        int totalPlayers = OctoCoreVelocity.getInstance().getProxyServer().getPlayerCount();
+        new NetworkSummaryPacket(totalPlayers, serverPlayerCounts, System.currentTimeMillis()).send();
     }
 }

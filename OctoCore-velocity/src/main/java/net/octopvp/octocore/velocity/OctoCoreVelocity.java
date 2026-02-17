@@ -6,6 +6,7 @@ import com.mongodb.client.MongoClient;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -19,6 +20,8 @@ import net.octopvp.octocore.velocity.listeners.PingListener;
 import net.octopvp.octocore.velocity.listeners.PlayerListener;
 import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
 import net.octopvp.octocore.velocity.objects.VelocityConfiguration;
+import net.octopvp.octocore.velocity.redis.packet.impl.ServerOfflinePacket;
+import net.octopvp.octocore.velocity.redis.packet.impl.ServerOnlinePacket;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -31,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 @Plugin(id = "octocore-velocity", name = "OctoCore-velocity", version = BuildConstants.VERSION)
 public class OctoCoreVelocity {
     @Getter
+    private static OctoCoreVelocity instance;
+    @Getter
     private static final Gson gson = OctoCoreCommon.getGsonBuilder().create();
 
     private Logger velocityLogger;
@@ -42,6 +47,7 @@ public class OctoCoreVelocity {
 
     @Inject
     public OctoCoreVelocity(Logger velocityLogger, ProxyServer proxyServer, @DataDirectory Path dataDirectory) {
+        instance = this;
         this.velocityLogger = velocityLogger;
         this.proxyServer = proxyServer;
         this.dataDirectory = dataDirectory;
@@ -78,6 +84,7 @@ public class OctoCoreVelocity {
         }
         OctoCoreCommon.getInstance().init(gson, new VelocityServerImpl(proxyServer, velocityLogger, mongoClient, serverImplementation, octoCoreVelocity));
         redisManager = new RedisManager(config.getRedis(), "net.octopvp.octocore.velocity.redis", null);
+        redisManager.getListenerManager().init("net.octopvp.octocore.common.redis.packets", null);
         Object[] listeners = {
                 new PingListener(this),
                 new PlayerListener(this, null)
@@ -92,6 +99,14 @@ public class OctoCoreVelocity {
         getProxyServer().getScheduler().buildTask(this, new OnlinePlayersManager())
                 .repeat(15, TimeUnit.SECONDS)
                 .schedule();
+        getProxyServer().getScheduler().buildTask(this, () -> new ServerOnlinePacket(OctoCoreCommon.getInstance().getServerName()).send())
+                .delay(1, TimeUnit.SECONDS)
+                .schedule();
         velocityLogger.info("OctoCore Velocity has loaded in " + (System.currentTimeMillis() - start) + "ms.");
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        new ServerOfflinePacket(OctoCoreCommon.getInstance().getServerName()).send();
     }
 }

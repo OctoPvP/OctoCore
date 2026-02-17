@@ -68,7 +68,7 @@ public class OctoPermissible extends PermissibleBase {
     public void recalculatePermissions() {
         if (this.uuid == null) {
             // Happens when player is loaded idk why Octocore cant see uuid
-            Logger.debug(this.uuid.toString());
+            //Logger.debug(this.uuid.toString());
             Logger.error("UUID is null!");
             return;
         }
