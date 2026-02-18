@@ -1,6 +1,7 @@
 
 package net.octopvp.octocore.velocity.manager;
 
+import com.velocitypowered.api.proxy.Player;
 import lombok.Getter;
 import lombok.Setter;
 import net.octopvp.octocore.common.OctoCoreCommon;
@@ -61,11 +62,13 @@ public class OnlinePlayersManager implements Runnable {
 
         // Summary correlation
         Map<String, Integer> serverPlayerCounts = new HashMap<>();
-        OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers().forEach(serverData -> {
+        String proxyName = OctoCoreCommon.getInstance().getServerName();
+        for (net.octopvp.octocore.common.object.ServerData serverData : OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers()) {
             int nonVanishedCount = (int) serverData.getOnlinePlayers().stream().filter(p -> !p.isVanished()).count();
             serverPlayerCounts.put(serverData.getServerName(), nonVanishedCount);
-        });
-        int totalPlayers = OctoCoreVelocity.getInstance().getProxyServer().getPlayerCount() - vanishedCount;
+        }
+        int totalPlayers = (int) OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getOnlinePlayers().stream().filter(p -> !p.isVanished()).count();
+
         new NetworkSummaryPacket(totalPlayers, serverPlayerCounts, System.currentTimeMillis()).send();
     }
 }

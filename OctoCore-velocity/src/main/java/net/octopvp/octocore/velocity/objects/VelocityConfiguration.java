@@ -63,10 +63,7 @@ public class VelocityConfiguration {
             ServerPing.Players players = this.players == null ? fallback.getPlayers().orElse(new ServerPing.Players(0, 1337, List.of())) : this.players;
             if (customPlayerCount) {
                 // Calculate total players across all servers excluding vanished ones
-                int totalOnline = 0;
-                for (net.octopvp.octocore.common.object.ServerData server : net.octopvp.octocore.common.OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers()) {
-                    totalOnline += (int) server.getOnlinePlayers().stream().filter(p -> !p.isVanished()).count();
-                }
+                int totalOnline = (int) net.octopvp.octocore.common.OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getOnlinePlayers().stream().filter(p -> !p.isVanished()).count();
                 players = new ServerPing.Players(totalOnline, players.getMax(), players.getSample());
             }
             return new ServerPing(

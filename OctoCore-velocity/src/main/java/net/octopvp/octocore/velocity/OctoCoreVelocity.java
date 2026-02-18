@@ -82,12 +82,13 @@ public class OctoCoreVelocity {
                 e.printStackTrace();
             }
         }
-        OctoCoreCommon.getInstance().init(gson, new VelocityServerImpl(proxyServer, velocityLogger, mongoClient, serverImplementation, octoCoreVelocity));
+        this.serverImplementation = new VelocityServerImpl(proxyServer, velocityLogger, mongoClient, null, octoCoreVelocity);
+        OctoCoreCommon.getInstance().init(gson, this.serverImplementation);
         redisManager = new RedisManager(config.getRedis(), "net.octopvp.octocore.velocity.redis", null);
         redisManager.getListenerManager().init("net.octopvp.octocore.common.redis.packets", null);
         Object[] listeners = {
                 new PingListener(this),
-                new PlayerListener(this, null)
+                new PlayerListener(this, (VelocityServerImpl) this.serverImplementation)
         };
         for (Object listener : listeners) {
             proxyServer.getEventManager().register(this, listener);
@@ -97,7 +98,7 @@ public class OctoCoreVelocity {
         // getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1,
         // TimeUnit.MINUTES);
         getProxyServer().getScheduler().buildTask(this, new OnlinePlayersManager())
-                .repeat(15, TimeUnit.SECONDS)
+                .repeat(10, TimeUnit.SECONDS)
                 .schedule();
         getProxyServer().getScheduler().buildTask(this, () -> new ServerOnlinePacket(OctoCoreCommon.getInstance().getServerName()).send())
                 .delay(1, TimeUnit.SECONDS)
