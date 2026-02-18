@@ -104,6 +104,10 @@ public class PlayerData extends SimplePlayerData {
         return super.loadGrants(PlayerManager.getInstance().getProfileDocument(uuid));
     }
 
+    public void cache() {
+        cache(null);
+    }
+
     public void cache(Document data) {
         Document copy = new Document(data == null ? getData() : data);
         copy.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(getFinalNodeTree()));

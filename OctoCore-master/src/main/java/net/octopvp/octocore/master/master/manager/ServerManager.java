@@ -9,9 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -62,7 +60,13 @@ public class ServerManager implements IServerManager {
 
     @Override
     public List<OnlinePlayer> getOnlinePlayers() {
-        return this.connectedServers.stream().map(ServerData::getOnlinePlayers).flatMap(List::stream).collect(Collectors.toList());
+        Map<UUID, OnlinePlayer> players = new HashMap<>();
+        for (ServerData connectedServer : connectedServers) {
+            for (OnlinePlayer onlinePlayer : connectedServer.getOnlinePlayers()) {
+                players.put(onlinePlayer.getUuid(), onlinePlayer);
+            }
+        }
+        return new ArrayList<>(players.values());
     }
 
     @Override

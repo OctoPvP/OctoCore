@@ -8,9 +8,7 @@ import net.octopvp.octocore.common.object.ServerData;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.manager.Manager;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -44,7 +42,13 @@ public class ServerManager extends Manager implements IServerManager {
 
     @Override
     public List<OnlinePlayer> getOnlinePlayers() {
-        return this.connectedServers.stream().map(ServerData::getOnlinePlayers).flatMap(List::stream).collect(Collectors.toList());
+        Map<UUID, OnlinePlayer> players = new HashMap<>();
+        for (ServerData connectedServer : connectedServers) {
+            for (OnlinePlayer onlinePlayer : connectedServer.getOnlinePlayers()) {
+                players.put(onlinePlayer.getUuid(), onlinePlayer);
+            }
+        }
+        return new ArrayList<>(players.values());
     }
 
     @Override

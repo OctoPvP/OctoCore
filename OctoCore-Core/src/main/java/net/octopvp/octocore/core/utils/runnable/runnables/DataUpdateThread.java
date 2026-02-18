@@ -65,17 +65,15 @@ public class DataUpdateThread extends Thread {
                 Player player = Bukkit.getPlayer(playerData.getUuid());
                 if (player == null || player.getName() == null || player.getUniqueId() == null) continue;
                 playerData.setOp(player.isOp());
-                if (!playerData.isVanished()) {
-                    OnlinePlayer onlinePlayer = new OnlinePlayer(playerData.getUuid(), playerData.getName(), playerData.getLastKnownAddress(), OctoCore.getServerName(), false, VanishManager.getInstance().getVanishPriority(playerData));
-                    onlinePlayers.add(onlinePlayer);
-                } else {
+                if (playerData.isVanished()) {
                     Component actionBar = Component.text("You are vanished with a priority of ").color(NamedTextColor.GREEN)
                             .append(Component.text(VanishManager.getInstance().getVanishPriority(playerData)).color(NamedTextColor.YELLOW));
                     OctoCore.getInstance().getServerImplementation().sendActionBar(player, actionBar);
+                } else {
+                    OnlinePlayer onlinePlayer = new OnlinePlayer(playerData.getUuid(), playerData.getName(), playerData.getLastKnownAddress(), OctoCore.getServerName(), false, VanishManager.getInstance().getVanishPriority(playerData));
+                    onlinePlayers.add(onlinePlayer);
                 }
-                Document document = playerData.getData();
-                document.put("calculated-nodes", OctoCoreCommon.getInstance().getGson().toJson(playerData.getFinalNodeTree()));
-                DataCache.update(document, playerData.getUuid());
+                playerData.cache();
             }
             double[] tps = Bukkit.getTPS();
             new ServerDataPacket(OctoCore.getServerName(), onlinePlayers, Bukkit.getMaxPlayers(), System.currentTimeMillis(), Bukkit.hasWhitelist(), tps[0], tps[1], tps[2], false).send();

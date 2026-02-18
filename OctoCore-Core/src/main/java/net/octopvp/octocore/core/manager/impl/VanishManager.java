@@ -128,6 +128,7 @@ public class VanishManager extends Manager implements Listener {
         if (priority <= 0) priority = getVanishPriority(data);
         vanished.put(player.getUniqueId(), priority);
         update(player);
+        data.cache();
         if (!silent) {
             Bukkit.broadcastMessage(CC.GRAY + "[" + CC.RED + "-" + CC.GRAY + "] " + data.getFormattedName(true, player, true)); // TODO have games hook into this to handle it
         }
@@ -136,8 +137,9 @@ public class VanishManager extends Manager implements Listener {
     public void unvanish(Player player, boolean silent) {
         vanished.remove(player.getUniqueId());
         update(player);
+        PlayerData data = PlayerManager.getInstance().getData(player);
+        if (data != null) data.cache();
         if (!silent) {
-            PlayerData data = PlayerManager.getInstance().getData(player);
             if (data == null) return;
             Bukkit.broadcastMessage(CC.GRAY + "[" + CC.GREEN + "+" + CC.GRAY + "] " + data.getFormattedName(true, player, true));
         }
