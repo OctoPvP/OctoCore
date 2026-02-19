@@ -4,6 +4,7 @@ before building OctoCore:
  * build Commander from source and push to local maven
 
 # OctoCore-velocity
+install this in the velocity proxy plugins folder. There should be only one velocity proxy - change the config with forced-hosts for dev servers
 The Velocity project handles the following Redis packets to maintain network state:
 
 ### Server Status
@@ -88,20 +89,55 @@ Shared chat channels for staff members.
 ```
 
 ### Network Summary
+
 Sent periodically by the Velocity proxy to correlate stats from all servers.
+
 - **Type**: `NETWORK_SUMMARY`
+
 - **Payload**:
+
 ```json
+
 {
+
   "type": "NETWORK_SUMMARY",
+
   "data": {
+
     "totalPlayers": 150,
+
     "serverPlayerCounts": {
+
       "hub": 20,
+
       "survival": 100,
+
       "creative": 30
+
     },
+
+    "serverPlayers": {
+
+      "hub": [
+
+        {"name": "Player1", "ip": "1.2.3.4"},
+
+        {"name": "Player2", "ip": "5.6.7.8"}
+
+      ],
+
+      "survival": [
+
+        {"name": "Player3", "ip": "9.10.11.12"}
+
+      ]
+
+    },
+
     "timestamp": 1771364909997
+
   }
+
 }
+
 ```

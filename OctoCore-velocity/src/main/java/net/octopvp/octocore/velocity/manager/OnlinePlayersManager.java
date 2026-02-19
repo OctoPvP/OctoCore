@@ -14,6 +14,7 @@ import net.octopvp.octocore.velocity.objects.OnlinePlayerData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -62,13 +63,20 @@ public class OnlinePlayersManager implements Runnable {
 
         // Summary correlation
         Map<String, Integer> serverPlayerCounts = new HashMap<>();
+        Map<String, List<NetworkSummaryPacket.PlayerSummary>> serverPlayers = new HashMap<>();
         String proxyName = OctoCoreCommon.getInstance().getServerName();
         for (net.octopvp.octocore.common.object.ServerData serverData : OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers()) {
             int nonVanishedCount = (int) serverData.getOnlinePlayers().stream().filter(p -> !p.isVanished()).count();
             serverPlayerCounts.put(serverData.getServerName(), nonVanishedCount);
+            List<NetworkSummaryPacket.PlayerSummary> players = new ArrayList<>();
+            for (OnlinePlayer onlinePlayer : serverData.getOnlinePlayers()) {
+                if (onlinePlayer.isVanished()) continue;
+                players.add(new NetworkSummaryPacket.PlayerSummary(onlinePlayer.getName(), onlinePlayer.getAddress()));
+            }
+            serverPlayers.put(serverData.getServerName(), players);
         }
         int totalPlayers = (int) OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getOnlinePlayers().stream().filter(p -> !p.isVanished()).count();
 
-        new NetworkSummaryPacket(totalPlayers, serverPlayerCounts, System.currentTimeMillis()).send();
+        new NetworkSummaryPacket(totalPlayers, serverPlayerCounts, serverPlayers, System.currentTimeMillis()).send();
     }
 }
