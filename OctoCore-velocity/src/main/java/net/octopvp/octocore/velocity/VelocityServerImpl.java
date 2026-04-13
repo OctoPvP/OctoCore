@@ -114,7 +114,7 @@ public class VelocityServerImpl implements ServerImplementation {
 
             @Override
             public MongoDatabase getDatabase() {
-                return mongoClient.getDatabase("octocore");
+                return mongoClient.getDatabase("OctoCore");
                 // throw new UnsupportedOperationException("Not implemented");
             }
         };

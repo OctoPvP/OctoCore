@@ -29,10 +29,84 @@ import org.bson.Document;
 
 import java.util.UUID;
 
+import com.mongodb.client.model.Updates;
+import com.velocitypowered.api.event.player.PlayerClientBrandEvent;
+import com.velocitypowered.api.event.player.PlayerModInfoEvent;
+import com.velocitypowered.api.event.player.PlayerSettingsChangedEvent;
+import com.google.gson.JsonObject;
+
 @AllArgsConstructor
 public class PlayerListener {
     private OctoCoreVelocity plugin;
     private final VelocityServerImpl velocityServerImpl;
+
+    @Subscribe
+    public void onPlayerSettingsChanged(PlayerSettingsChangedEvent event) {
+        Player player = event.getPlayer();
+        com.velocitypowered.api.proxy.player.PlayerSettings settings = player.getPlayerSettings();
+        JsonObject settingsJson = new JsonObject();
+        settingsJson.addProperty("locale", settings.getLocale() != null ? settings.getLocale().toString() : "unknown");
+        settingsJson.addProperty("viewDistance", settings.getViewDistance());
+        settingsJson.addProperty("chatMode", settings.getChatMode().name());
+        settingsJson.addProperty("mainHand", settings.getMainHand().name());
+        settingsJson.addProperty("hasChatColors", settings.hasChatColors());
+
+        plugin.getProxyServer().getScheduler().buildTask(plugin, () -> {
+            try {
+                IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
+                if (databaseManager != null && databaseManager.getDatabase() != null) {
+                    MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("pdata");
+                    collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), Updates.set("playerSettings", settingsJson.toString()));
+                }
+            } catch (Exception ex) {
+                Logger.error("Failed to save playerSettings for " + player.getUsername(), ex);
+            }
+        }).schedule();
+    }
+
+    @Subscribe
+    public void onPlayerModInfo(PlayerModInfoEvent event) {
+        Player player = event.getPlayer();
+        if (!event.getModInfo().getMods().isEmpty()) {
+            StringBuilder modsList = new StringBuilder();
+            event.getModInfo().getMods().forEach(mod -> {
+                modsList.append(mod.getId()).append(" (v").append(mod.getVersion()).append("), ");
+            });
+            String modsString = modsList.length() > 0 ? modsList.substring(0, modsList.length() - 2) : "None";
+            Logger.info("[Client Mods] " + player.getUsername() + " (" + player.getRemoteAddress() + ") connected with mods: " + modsString);
+
+            plugin.getProxyServer().getScheduler().buildTask(plugin, () -> {
+                try {
+                    IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
+                    if (databaseManager != null && databaseManager.getDatabase() != null) {
+                        MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("pdata");
+                        collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), Updates.set("clientMods", modsString));
+                    }
+                } catch (Exception ex) {
+                    Logger.error("Failed to save clientMods for " + player.getUsername(), ex);
+                }
+            }).schedule();
+        }
+    }
+
+    @Subscribe
+    public void onPlayerClientBrand(PlayerClientBrandEvent event) {
+        Player player = event.getPlayer();
+        String brand = event.getBrand();
+        Logger.info("[Client Brand] " + player.getUsername() + " (" + player.getRemoteAddress() + ") has connected using client brand: " + brand);
+
+        plugin.getProxyServer().getScheduler().buildTask(plugin, () -> {
+            try {
+                IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
+                if (databaseManager != null && databaseManager.getDatabase() != null) {
+                    MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("pdata");
+                    collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), Updates.set("clientBrand", brand));
+                }
+            } catch (Exception ex) {
+                Logger.error("Failed to save clientBrand for " + player.getUsername(), ex);
+            }
+        }).schedule();
+    }
 
     @Subscribe
     public void onJoin(LoginEvent event) {
@@ -41,6 +115,29 @@ public class PlayerListener {
                 event.getPlayer().getUniqueId(),
                 new OnlinePlayerData(
                         event.getPlayer().getUniqueId()));
+
+        Player player = event.getPlayer();
+        int protocolVersion = player.getProtocolVersion().getProtocol();
+        String virtualHost = player.getVirtualHost().isPresent() ? player.getVirtualHost().get().getHostString() : "unknown";
+        long ping = player.getPing();
+
+        plugin.getProxyServer().getScheduler().buildTask(plugin, () -> {
+            try {
+                IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
+                if (databaseManager != null && databaseManager.getDatabase() != null) {
+                    MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("pdata");
+                    collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), 
+                        Updates.combine(
+                            Updates.set("protocolVersion", protocolVersion),
+                            Updates.set("virtualHost", virtualHost),
+                            Updates.set("ping", ping)
+                        )
+                    );
+                }
+            } catch (Exception ex) {
+                Logger.error("Failed to save connection metadata for " + player.getUsername(), ex);
+            }
+        }).schedule();
     }
 
     @Subscribe

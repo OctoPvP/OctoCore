@@ -38,7 +38,10 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
     protected String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName;
     protected String lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default";
-    protected String lastAuthedIp = "", lastSeenIp = "", lastKnownAddress, lastServerOn = "Unknown";
+    protected String lastAuthedIp = "", lastSeenIp = "", lastKnownAddress, lastServerOn = "Unknown", clientBrand = "Unknown";
+    protected String clientMods = "None", virtualHost = "Unknown", playerSettings = "{}";
+    protected int protocolVersion = -1;
+    protected long ping = -1;
     protected List<String> metaDataList = new ArrayList<>();
     protected Map<String, String> metaData = new ConcurrentHashMap<>();
     protected UUID tagID = null, nickTagID = null, nickUUID;
@@ -131,6 +134,12 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
             this.nodes = gson.fromJson(document.getString("nodes"), GsonType.NODE_MAP);
             this.nodes.entrySet().removeIf(e -> e.getKey() == null || e.getValue() == null);
             this.lastKnownAddress = document.getString("address");
+            if (document.containsKey("clientBrand")) this.clientBrand = document.getString("clientBrand");
+            if (document.containsKey("clientMods")) this.clientMods = document.getString("clientMods");
+            if (document.containsKey("virtualHost")) this.virtualHost = document.getString("virtualHost");
+            if (document.containsKey("playerSettings")) this.playerSettings = document.getString("playerSettings");
+            if (document.containsKey("protocolVersion")) this.protocolVersion = document.getInteger("protocolVersion");
+            if (document.containsKey("ping")) this.ping = document.getLong("ping");
         }
 
         Object addressesObj = document.get("addresses");
@@ -224,6 +233,12 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
             document.put("address", lastKnownAddress);
             document.put("addresses", this.addresses);
             document.put("socialSpy", socialSpy);
+            document.put("clientBrand", clientBrand);
+            document.put("clientMods", clientMods);
+            document.put("virtualHost", virtualHost);
+            document.put("playerSettings", playerSettings);
+            document.put("protocolVersion", protocolVersion);
+            document.put("ping", ping);
 
             document.put("ignoreList", OctoCoreCommon.getInstance().getGson().toJson(this.messageSettings.getIgnoreList(), GsonType.STRING_UUID_MAP));
 
