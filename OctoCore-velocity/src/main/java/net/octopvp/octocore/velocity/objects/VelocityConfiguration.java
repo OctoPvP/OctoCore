@@ -21,6 +21,22 @@ import java.util.List;
 @Data
 public class VelocityConfiguration {
     private JedisSettings redis = new JedisSettings("localhost", 6379, "password", false);
+    private MongoSettings mongo = new MongoSettings();
+
+    @Data
+    public static class MongoSettings {
+        private String host = "localhost";
+        private int port = 27017;
+        private AuthSettings auth = new AuthSettings();
+
+        @Data
+        public static class AuthSettings {
+            private boolean enabled = false;
+            private String username = "username";
+            private String password = "password";
+            private String database = "admin";
+        }
+    }
     
     private HashMap<String, PingConfig> motds = new HashMap<>() {
         {
@@ -84,7 +100,23 @@ public class VelocityConfiguration {
     @SneakyThrows
     public static VelocityConfiguration load(Gson gson, File configFile) {
         String json = new String(Files.readAllBytes(configFile.toPath()));
-        return gson.fromJson(json, VelocityConfiguration.class);
+        VelocityConfiguration config = gson.fromJson(json, VelocityConfiguration.class);
+        boolean saveNeeded = false;
+        
+        if (config.getMongo() == null) {
+            config.setMongo(new MongoSettings());
+            saveNeeded = true;
+        }
+        if (config.getRedis() == null) {
+            config.setRedis(new JedisSettings("localhost", 6379, "password", false));
+            saveNeeded = true;
+        }
+        
+        if (saveNeeded) {
+            Files.write(configFile.toPath(), gson.toJson(config).getBytes());
+        }
+        
+        return config;
     }
 
 }

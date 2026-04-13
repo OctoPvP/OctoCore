@@ -82,6 +82,29 @@ public class OctoCoreVelocity {
                 e.printStackTrace();
             }
         }
+        
+        java.util.function.Function<com.mongodb.MongoClientSettings.Builder, com.mongodb.MongoClientSettings.Builder> mutator = b -> {
+            org.bson.codecs.configuration.CodecRegistry registry = org.bson.codecs.configuration.CodecRegistries.fromCodecs(new net.octopvp.octocore.common.mongo.codec.UUIDCodec());
+            org.bson.codecs.configuration.CodecRegistry defaultRegistry = com.mongodb.MongoClientSettings.getDefaultCodecRegistry();
+            return b.codecRegistry(org.bson.codecs.configuration.CodecRegistries.fromRegistries(registry, defaultRegistry));
+        };
+        com.mongodb.MongoCredential credentials;
+        if (config.getMongo().getAuth().isEnabled()) {
+            credentials = com.mongodb.MongoCredential.createCredential(config.getMongo().getAuth().getUsername(), config.getMongo().getAuth().getDatabase(), config.getMongo().getAuth().getPassword().toCharArray());
+            mongoClient = com.mongodb.client.MongoClients.create(
+                    mutator.apply(com.mongodb.MongoClientSettings.builder()
+                                    .applyToClusterSettings(builder ->
+                                            builder.hosts(java.util.Collections.singletonList(new com.mongodb.ServerAddress(config.getMongo().getHost(), config.getMongo().getPort()))))
+                                    .credential(credentials))
+                            .build());
+        } else {
+            mongoClient = com.mongodb.client.MongoClients.create(
+                    mutator.apply(com.mongodb.MongoClientSettings.builder()
+                            .applyToClusterSettings(builder ->
+                                    builder.hosts(java.util.Collections.singletonList(new com.mongodb.ServerAddress(config.getMongo().getHost(), config.getMongo().getPort()))))
+                    ).build());
+        }
+        
         this.serverImplementation = new VelocityServerImpl(proxyServer, velocityLogger, mongoClient, null, octoCoreVelocity);
         OctoCoreCommon.getInstance().init(gson, this.serverImplementation);
         redisManager = new RedisManager(config.getRedis(), "net.octopvp.octocore.velocity.redis", null);
