@@ -22,6 +22,11 @@ public abstract class BaseRPGItem implements CustomItem {
 
     @Override
     public List<String> getLore() {
+        return getLore(null);
+    }
+
+    @Override
+    public List<String> getLore(ItemStack item) {
         List<String> lore = new ArrayList<>();
         StringBuilder typeString = new StringBuilder();
         typeString.append(getItemType().name());
@@ -79,9 +84,11 @@ public abstract class BaseRPGItem implements CustomItem {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(getRarity().getColor() + getName());
-            meta.setLore(getLore());
             meta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, getId());
+            item.setItemMeta(meta); // Set meta before building lore
             
+            meta = item.getItemMeta();
+            meta.setLore(getLore(item));
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
             item.setItemMeta(meta);
         }

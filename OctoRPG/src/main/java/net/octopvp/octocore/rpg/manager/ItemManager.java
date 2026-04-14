@@ -48,6 +48,17 @@ public class ItemManager implements Listener {
         return customItems.get(id);
     }
 
+    public void rebuildLore(ItemStack item) {
+        CustomItem customItem = getCustomItem(item);
+        if (customItem == null) return;
+        
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        
+        meta.setLore(customItem.getLore(item));
+        item.setItemMeta(meta);
+    }
+
     @EventHandler
     public void onHit(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player player)) return;

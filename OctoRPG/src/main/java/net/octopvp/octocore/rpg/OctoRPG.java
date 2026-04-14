@@ -10,18 +10,33 @@ import net.octopvp.octocore.rpg.item.impl.Longsword;
 import net.octopvp.octocore.rpg.item.impl.Greatsword;
 import net.octopvp.octocore.rpg.item.impl.Dagger;
 import net.octopvp.octocore.rpg.item.impl.BattleAxe;
+import net.octopvp.octocore.rpg.manager.RPGPlayerManager;
+import net.octopvp.octocore.rpg.listener.DamageListener;
+import net.octopvp.octocore.rpg.listener.EnchantmentListener;
+import net.octopvp.octocore.rpg.listener.ProtocolListener;
+import net.octopvp.octocore.rpg.runnable.DataUpdateRunnable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class OctoRPG extends JavaPlugin {
 
     private static OctoRPG instance;
     private ItemManager itemManager;
+    private RPGPlayerManager playerManager;
+    private DataUpdateRunnable dataUpdateRunnable;
 
     @Override
     public void onEnable() {
         instance = this;
 
         this.itemManager = new ItemManager(this);
+        this.playerManager = new RPGPlayerManager(this);
+        new DamageListener(this);
+        new EnchantmentListener(this);
+        ProtocolListener.register(this);
+        
+        this.dataUpdateRunnable = new DataUpdateRunnable();
+        this.dataUpdateRunnable.runTaskTimer(this, 2L, 2L);
+
         this.itemManager.registerItem(new DirtSword());
         this.itemManager.registerItem(new Shortsword());
         this.itemManager.registerItem(new Longsword());
@@ -32,6 +47,7 @@ public class OctoRPG extends JavaPlugin {
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             final Commands commands = event.registrar();
             commands.register("rpgitem", "Gives an RPG custom item", new RPGItemCommand());
+            commands.register("rpgdebug", "Toggle RPG debug mode", new RPGDebugCommand());
         });
 
         getLogger().info("OctoRPG has been enabled (v" + getDescription().getVersion() + ")");

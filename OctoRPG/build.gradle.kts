@@ -17,6 +17,7 @@ repositories {
 dependencies {
     implementation(project(":OctoCore-common"))
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
     implementation(files("../libs/agile-gui-1.4.0.jar"))
 }
 

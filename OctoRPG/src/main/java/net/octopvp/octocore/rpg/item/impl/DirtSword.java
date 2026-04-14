@@ -60,10 +60,19 @@ public class DirtSword extends BaseRPGItem {
     }
 
     @Override
-    public List<String> getLore() {
-        List<String> lore = super.getLore();
-        lore.add(CC.WHITE + "Your Kills: " + CC.RED + "0");
+    public List<String> getLore(ItemStack item) {
+        List<String> lore = super.getLore(item);
+        int kills = 0;
+        if (item != null && item.hasItemMeta()) {
+            kills = item.getItemMeta().getPersistentDataContainer().getOrDefault(killsKey, PersistentDataType.INTEGER, 0);
+        }
+        lore.add(CC.WHITE + "Your Kills: " + CC.RED + kills);
         return lore;
+    }
+
+    @Override
+    public List<String> getLore() {
+        return getLore(null);
     }
 
     @Override

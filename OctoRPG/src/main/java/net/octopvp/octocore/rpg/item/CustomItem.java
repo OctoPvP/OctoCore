@@ -18,6 +18,10 @@ public interface CustomItem {
     Material getMaterial();
     java.util.List<String> getLore();
 
+    default java.util.List<String> getLore(ItemStack item) {
+        return getLore();
+    }
+
     String getDescription();
     Rarity getRarity();
     ItemType getItemType();
