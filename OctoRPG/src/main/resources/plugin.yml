@@ -3,9 +3,34 @@ version: 1.0.0
 main: net.octopvp.octocore.rpg.OctoRPG
 api-version: '1.21'
 authors: [Pylons]
-description: rpg plugin for OctoCore
-depend: [OctoCore-Core]
+description: Diary of an 8-Bit Warrior Plugin module for OctoCore
+depend:
+  - OctoCore-Core
+  - DecentHolograms
+  - ProtocolLib
+  - Citizens
+softdepend:
+  - Floodgate
 commands:
   rpgitem:
     description: Gives an RPG custom item
     permission: octorpg.admin
+permissions:
+  octorpg.item.weapons:
+    default: false
+  octorpg.item.armour:
+    default: false
+  octorpg.item.tools:
+    default: false
+  octorpg.item.blocks:
+    default: false
+  octorpg.item.food:
+    default: false
+  octorpg.item.all:
+    default: false
+  octorpg.item.custom:
+    default: false
+  octorpg.item.search:
+    default: false
+  octorpg.blacklist.bypass:
+    default: false

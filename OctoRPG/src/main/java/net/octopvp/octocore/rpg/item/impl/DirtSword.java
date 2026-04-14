@@ -93,7 +93,7 @@ public class DirtSword implements CustomItem {
         if (multiplier > 0) {
             event.setDamage(event.getDamage() * multiplier);
         } else {
-            event.setDamage(0.5); // Weak base damage if < 100 kills
+            event.setDamage(0.5);
         }
     }
 }

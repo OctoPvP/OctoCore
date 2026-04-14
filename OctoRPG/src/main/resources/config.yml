@@ -1,0 +1,9 @@
+database:
+  mongo:
+    host: localhost
+    port: 27017
+    auth:
+      enabled: false
+      username: ''
+      password: ''
+      db: ''

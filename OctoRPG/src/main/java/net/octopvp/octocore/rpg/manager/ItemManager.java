@@ -29,6 +29,10 @@ public class ItemManager implements Listener {
         customItems.put(item.getId(), item);
     }
 
+    public CustomItem getCustomItemById(String id) {
+        return customItems.get(id);
+    }
+
     public CustomItem getCustomItem(ItemStack itemStack) {
         if (itemStack == null || !itemStack.hasItemMeta()) return null;
         ItemMeta meta = itemStack.getItemMeta();
