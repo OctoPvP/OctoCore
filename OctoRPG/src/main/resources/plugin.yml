@@ -5,3 +5,7 @@ api-version: '1.21'
 authors: [Pylons]
 description: rpg plugin for OctoCore
 depend: [OctoCore-Core]
+commands:
+  rpgitem:
+    description: Gives an RPG custom item
+    permission: octorpg.admin
