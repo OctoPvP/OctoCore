@@ -1,18 +1,13 @@
 package net.octopvp.octocore.rpg.item.impl;
 
-import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.rpg.OctoRPG;
-import net.octopvp.octocore.rpg.item.CustomItem;
+import net.octopvp.octocore.rpg.item.BaseRPGItem;
+import net.octopvp.octocore.rpg.object.ItemType;
+import net.octopvp.octocore.rpg.object.Rarity;
+import net.octopvp.octocore.rpg.object.StatModifier;
+import net.octopvp.octocore.rpg.object.WeaponType;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
-import java.util.List;
-
-public class Greatsword implements CustomItem {
-    private final NamespacedKey idKey = new NamespacedKey(OctoRPG.getInstance(), "item_id");
+public class Greatsword extends BaseRPGItem {
 
     @Override
     public String getId() {
@@ -21,7 +16,7 @@ public class Greatsword implements CustomItem {
 
     @Override
     public String getName() {
-        return CC.translate("&fGreatsword");
+        return "Greatsword";
     }
 
     @Override
@@ -30,23 +25,30 @@ public class Greatsword implements CustomItem {
     }
 
     @Override
-    public List<String> getLore() {
-        return CC.translate(List.of(
-            "&7A heavy two-handed weapon.",
-            "&7Slow attack speed, high damage."
-        ));
+    public String getDescription() {
+        return "A massive sword that requires both hands to wield effectively.";
     }
 
     @Override
-    public ItemStack build() {
-        ItemStack item = new ItemStack(getMaterial());
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(getName());
-            meta.setLore(getLore());
-            meta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, getId());
-            item.setItemMeta(meta);
-        }
-        return item;
+    public Rarity getRarity() {
+        return Rarity.COMMON;
+    }
+
+    @Override
+    public ItemType getItemType() {
+        return ItemType.WEAPON;
+    }
+
+    @Override
+    public WeaponType getWeaponType() {
+        return WeaponType.SWORD;
+    }
+
+    @Override
+    public StatModifier getStatModifierWhenHolding() {
+        StatModifier mod = new StatModifier();
+        mod.setStrength(15);
+        mod.setAgility(-8);
+        return mod;
     }
 }

@@ -1,18 +1,14 @@
 package net.octopvp.octocore.rpg.item.impl;
 
 import net.octopvp.octocore.common.util.CC;
-import net.octopvp.octocore.rpg.OctoRPG;
-import net.octopvp.octocore.rpg.item.CustomItem;
+import net.octopvp.octocore.rpg.item.BaseRPGItem;
+import net.octopvp.octocore.rpg.object.ItemType;
+import net.octopvp.octocore.rpg.object.Rarity;
+import net.octopvp.octocore.rpg.object.StatModifier;
+import net.octopvp.octocore.rpg.object.WeaponType;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
-import java.util.List;
-
-public class BattleAxe implements CustomItem {
-    private final NamespacedKey idKey = new NamespacedKey(OctoRPG.getInstance(), "item_id");
+public class BattleAxe extends BaseRPGItem {
 
     @Override
     public String getId() {
@@ -21,7 +17,7 @@ public class BattleAxe implements CustomItem {
 
     @Override
     public String getName() {
-        return CC.translate("&fBattle Axe");
+        return "Battle Axe";
     }
 
     @Override
@@ -30,23 +26,30 @@ public class BattleAxe implements CustomItem {
     }
 
     @Override
-    public List<String> getLore() {
-        return CC.translate(List.of(
-            "&7A heavy hitting cleaver.",
-            "&7Very slow attack speed, massive damage."
-        ));
+    public String getDescription() {
+        return "A heavy hitting cleaver. Very slow attack speed, massive damage.";
     }
 
     @Override
-    public ItemStack build() {
-        ItemStack item = new ItemStack(getMaterial());
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(getName());
-            meta.setLore(getLore());
-            meta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, getId());
-            item.setItemMeta(meta);
-        }
-        return item;
+    public Rarity getRarity() {
+        return Rarity.COMMON;
+    }
+
+    @Override
+    public ItemType getItemType() {
+        return ItemType.WEAPON;
+    }
+
+    @Override
+    public WeaponType getWeaponType() {
+        return WeaponType.AXE;
+    }
+
+    @Override
+    public StatModifier getStatModifierWhenHolding() {
+        StatModifier mod = new StatModifier();
+        mod.setStrength(10);
+        mod.setAgility(-5);
+        return mod;
     }
 }

@@ -2,7 +2,10 @@ package net.octopvp.octocore.rpg.item.impl;
 
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.rpg.OctoRPG;
-import net.octopvp.octocore.rpg.item.CustomItem;
+import net.octopvp.octocore.rpg.item.BaseRPGItem;
+import net.octopvp.octocore.rpg.object.ItemType;
+import net.octopvp.octocore.rpg.object.Rarity;
+import net.octopvp.octocore.rpg.object.WeaponType;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -10,6 +13,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -17,8 +21,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DirtSword implements CustomItem {
-    private final NamespacedKey idKey = new NamespacedKey(OctoRPG.getInstance(), "item_id");
+public class DirtSword extends BaseRPGItem {
     private final NamespacedKey killsKey = new NamespacedKey(OctoRPG.getInstance(), "dirt_sword_kills");
 
     @Override
@@ -28,7 +31,7 @@ public class DirtSword implements CustomItem {
 
     @Override
     public String getName() {
-        return CC.translate("&6Dirt Sword");
+        return "Dirt Sword";
     }
 
     @Override
@@ -37,22 +40,37 @@ public class DirtSword implements CustomItem {
     }
 
     @Override
+    public String getDescription() {
+        return "An extremely weak training sword. Doubles your damage every 100 kills.";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.COMMON;
+    }
+
+    @Override
+    public ItemType getItemType() {
+        return ItemType.WEAPON;
+    }
+
+    @Override
+    public WeaponType getWeaponType() {
+        return WeaponType.SWORD;
+    }
+
+    @Override
     public List<String> getLore() {
-        return CC.translate(List.of(
-            "&7An extremely weak training sword.",
-            "&7Doubles your damage every 100 kills.",
-            "&fYour Kills: &c0"
-        ));
+        List<String> lore = super.getLore();
+        lore.add(CC.WHITE + "Your Kills: " + CC.RED + "0");
+        return lore;
     }
 
     @Override
     public ItemStack build() {
-        ItemStack item = new ItemStack(getMaterial());
+        ItemStack item = super.build();
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(getName());
-            meta.setLore(getLore());
-            meta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, getId());
             meta.getPersistentDataContainer().set(killsKey, PersistentDataType.INTEGER, 0);
             item.setItemMeta(meta);
         }
@@ -71,7 +89,7 @@ public class DirtSword implements CustomItem {
         if (meta.hasLore()) {
             for (String s : meta.getLore()) {
                 if (CC.strip(s).toLowerCase().contains("kills:")) {
-                    newLore.add(CC.translate("&fYour Kills: &c" + kills));
+                    newLore.add(CC.WHITE + "Your Kills: " + CC.RED + kills);
                 } else {
                     newLore.add(s);
                 }

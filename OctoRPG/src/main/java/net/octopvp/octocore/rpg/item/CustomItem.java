@@ -1,5 +1,9 @@
 package net.octopvp.octocore.rpg.item;
 
+import net.octopvp.octocore.rpg.object.ArmorType;
+import net.octopvp.octocore.rpg.object.ItemType;
+import net.octopvp.octocore.rpg.object.Rarity;
+import net.octopvp.octocore.rpg.object.WeaponType;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -13,6 +17,18 @@ public interface CustomItem {
     String getName();
     Material getMaterial();
     java.util.List<String> getLore();
+
+    String getDescription();
+    Rarity getRarity();
+    ItemType getItemType();
+
+    default WeaponType getWeaponType() {
+        return null;
+    }
+
+    default ArmorType getArmorType() {
+        return null;
+    }
     
     default void onHitEntity(Player player, Entity victim, EntityDamageByEntityEvent event, ItemStack item) {}
     default void onKillEntity(Player player, LivingEntity victim, EntityDeathEvent event, ItemStack item) {}
