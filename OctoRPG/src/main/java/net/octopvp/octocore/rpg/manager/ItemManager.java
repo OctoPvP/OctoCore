@@ -33,6 +33,10 @@ public class ItemManager implements Listener {
         return customItems.get(id);
     }
 
+    public Map<String, CustomItem> getCustomItems() {
+        return customItems;
+    }
+
     public CustomItem getCustomItem(ItemStack itemStack) {
         if (itemStack == null || !itemStack.hasItemMeta()) return null;
         ItemMeta meta = itemStack.getItemMeta();

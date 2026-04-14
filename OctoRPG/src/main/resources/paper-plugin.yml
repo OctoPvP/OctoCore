@@ -1,20 +1,24 @@
 name: OctoRPG
-version: 1.0.0
+version: 0.0.1
 main: net.octopvp.octocore.rpg.OctoRPG
+bootstrapper: net.octopvp.octocore.rpg.OctoRPGBootstrap
 api-version: '1.21'
 authors: [Pylons]
-description: Diary of an 8-Bit Warrior Plugin module for OctoCore
-depend:
-  - OctoCore-Core
-  - DecentHolograms
-  - ProtocolLib
-  - Citizens
-softdepend:
-  - Floodgate
-commands:
-  rpgitem:
-    description: Gives an RPG custom item
-    permission: octorpg.admin
+description: rpg plugin for OctoCore
+dependencies:
+  server:
+    OctoCore:
+      load: BEFORE
+      required: true
+    DecentHolograms:
+      load: BEFORE
+      required: true
+    ProtocolLib:
+      load: BEFORE
+      required: true
+    Citizens:
+      load: BEFORE
+      required: true
 permissions:
   octorpg.item.weapons:
     default: false

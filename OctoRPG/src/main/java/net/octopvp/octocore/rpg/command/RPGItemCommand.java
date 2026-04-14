@@ -1,31 +1,49 @@
 package net.octopvp.octocore.rpg.command;
 
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.octopvp.octocore.rpg.OctoRPG;
 import net.octopvp.octocore.rpg.item.CustomItem;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import net.octopvp.octocore.rpg.menu.MainItemsMenu;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class RPGItemCommand implements CommandExecutor {
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class RPGItemCommand implements BasicCommand {
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof Player player && player.isOp()) {
-            if (args.length == 0) {
-                player.sendMessage("Usage: /rpgitem <id>");
-                return true;
-            }
-            String id = args[0].toUpperCase();
-            CustomItem item = OctoRPG.getInstance().getItemManager().getCustomItemById(id);
-            if (item != null) {
-                player.getInventory().addItem(item.build());
-                player.sendMessage("You received a " + item.getName() + "!");
-            } else {
-                player.sendMessage("Item not found: " + id);
-            }
-            return true;
+    public void execute(@NotNull CommandSourceStack stack, @NotNull String[] args) {
+        if (!(stack.getSender() instanceof Player player)) {
+            stack.getSender().sendMessage("This command can only be used by players.");
+            return;
         }
-        return false;
+        if (!player.hasPermission("octorpg.admin")) {
+            player.sendMessage("No permission.");
+            return;
+        }
+        if (args.length == 0) {
+            new MainItemsMenu().open(player);
+            return;
+        }
+        String id = args[0].toUpperCase();
+        CustomItem item = OctoRPG.getInstance().getItemManager().getCustomItemById(id);
+        if (item != null) {
+            player.getInventory().addItem(item.build());
+            player.sendMessage("You received a " + item.getName() + "!");
+        } else {
+            player.sendMessage("Item not found: " + id);
+        }
+    }
+
+    @Override
+    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack stack, @NotNull String[] args) {
+        if (args.length <= 1) {
+            return OctoRPG.getInstance().getItemManager().getCustomItems().keySet().stream()
+                    .filter(id -> id.toLowerCase().startsWith(args.length == 0 ? "" : args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        return List.of();
     }
 }
