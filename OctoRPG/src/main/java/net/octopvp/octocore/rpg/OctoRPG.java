@@ -9,7 +9,7 @@ public class OctoRPG extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        getLogger().info("OctoRPG has been enabled! Ready to train some 8-Bit Warriors.");
+        getLogger().info("OctoRPG enabled");
     }
 
     @Override

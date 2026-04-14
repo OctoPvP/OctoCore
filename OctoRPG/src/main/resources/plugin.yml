@@ -2,6 +2,6 @@ name: OctoRPG
 version: 1.0.0
 main: net.octopvp.octocore.rpg.OctoRPG
 api-version: '1.21'
-authors: [OctoPvP]
-description: Diary of an 8-Bit Warrior Plugin module for OctoCore
+authors: [Pylons]
+description: rpg plugin for OctoCore
 depend: [OctoCore-Core]

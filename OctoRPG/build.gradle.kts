@@ -1,11 +1,12 @@
+import org.gradle.api.tasks.WriteProperties
+
 plugins {
     id("net.octopvp.java-conventions")
-    id("io.freefair.lombok") version "8.12.2"
+    id("net.octopvp.server-conventions")
+    id("io.freefair.lombok") version "8.6"
 }
 
-description = "OctoRPG - Diary of an 8-Bit Warrior Plugin"
-
-val targetJavaVersion = "21"
+description = "OctoRPG - rpg plugin for octocore"
 
 repositories {
     mavenCentral()
@@ -14,14 +15,33 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":OctoCore-Core"))
     implementation(project(":OctoCore-common"))
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
 }
 
 tasks {
-    compileJava {
-        sourceCompatibility = targetJavaVersion
-        targetCompatibility = targetJavaVersion
-        options.compilerArgs.add("-parameters")
+    shadowJar {
+        archiveFileName.set("OctoRPG.jar")
     }
+    compileJava {
+        options.encoding = Charsets.UTF_8.name()
+        options.release.set(21)
+    }
+    javadoc {
+        options.encoding = Charsets.UTF_8.name()
+    }
+    processResources {
+        filteringCharset = Charsets.UTF_8.name()
+    }
+    jar {
+        archiveClassifier.set("no_deps")
+        archiveVersion.set("")
+    }
+}
+
+tasks.getByName("build").dependsOn("shadowJar")
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
