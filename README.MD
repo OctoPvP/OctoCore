@@ -3,6 +3,9 @@ before building OctoCore:
  * load libs/ with `agile-gui, octospigot-api-1.21`
  * build Commander from source and push to local maven
 
+<details>
+<summary>OctoVelocity</summary>
+
 # OctoCore-velocity
 install this in the velocity proxy plugins folder. There should be only one velocity proxy - change the config with forced-hosts for dev servers
 The Velocity project handles the following Redis packets to maintain network state:
@@ -141,3 +144,4 @@ Sent periodically by the Velocity proxy to correlate stats from all servers.
 }
 
 ```
+</details>
