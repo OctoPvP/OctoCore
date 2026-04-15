@@ -2,6 +2,7 @@ package net.octopvp.octocore.rpg;
 
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import net.octopvp.octocore.rpg.command.RPGDebugCommand;
 import net.octopvp.octocore.rpg.command.RPGItemCommand;
 import net.octopvp.octocore.rpg.item.impl.DirtSword;
 import net.octopvp.octocore.rpg.manager.ItemManager;

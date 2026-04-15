@@ -70,10 +70,8 @@ public class RPGPlayerData {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return;
 
-        // Recalculate heavy stats only every 1 second (10 ticks * 2 ticks = 20 ticks)
-        if (tickCount++ % 10 == 0) {
-            recalculateStats(player);
-        }
+        // Recalculate stats every 0.1s for instant weapon switching
+        recalculateStats(player);
 
         // Light updates every 0.1s (2 ticks)
         if (stunned > 0) {

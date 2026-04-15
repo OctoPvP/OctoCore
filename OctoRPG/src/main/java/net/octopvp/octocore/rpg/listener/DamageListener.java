@@ -1,14 +1,25 @@
 package net.octopvp.octocore.rpg.listener;
 
+import eu.decentsoftware.holograms.api.DHAPI;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.rpg.OctoRPG;
 import net.octopvp.octocore.rpg.manager.RPGPlayerManager;
 import net.octopvp.octocore.rpg.object.RPGPlayerData;
 import net.octopvp.octocore.rpg.util.StatCalculator;
+import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DamageListener implements Listener {
 
@@ -16,7 +27,7 @@ public class DamageListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onAttack(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player player) {
             RPGPlayerData data = RPGPlayerManager.getInstance().getData(player.getUniqueId());
@@ -25,5 +36,31 @@ public class DamageListener implements Listener {
                 e.setDamage(newDamage);
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onDamageIndicator(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof LivingEntity victim) || e.getEntity() instanceof ArmorStand) {
+            return;
+        }
+
+        double damage = e.getFinalDamage();
+        if (damage <= 0) return;
+
+        Location loc = victim.getEyeLocation().add(
+                ThreadLocalRandom.current().nextDouble(-0.5, 0.5),
+                ThreadLocalRandom.current().nextDouble(0.2, 0.7),
+                ThreadLocalRandom.current().nextDouble(-0.5, 0.5)
+        );
+
+        String text = CC.translate("&c" + (int) Math.ceil(damage) + "❤");
+        String name = "damage_indicator_" + UUID.randomUUID().toString();
+        
+        DHAPI.createHologram(name, loc, List.of(text));
+        
+        // Remove hologram after 1 second (20 ticks)
+        OctoRPG.getInstance().getServer().getScheduler().runTaskLater(OctoRPG.getInstance(), () -> {
+            DHAPI.removeHologram(name);
+        }, 20L);
     }
 }

@@ -5,6 +5,7 @@ import net.octopvp.octocore.rpg.object.RPGPlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -47,5 +48,16 @@ public class RPGPlayerManager implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         dataMap.remove(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onHeldItemChange(PlayerItemHeldEvent event) {
+        RPGPlayerData data = getData(event.getPlayer());
+        if (data != null) {
+            // We run it next tick because the item in hand hasn't actually changed yet in the event
+            OctoRPG.getInstance().getServer().getScheduler().runTask(OctoRPG.getInstance(), () -> {
+                data.update();
+            });
+        }
     }
 }
