@@ -57,6 +57,7 @@ public class OctoRPG extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("OctoRPG has been disabled.");
+        getLogger().info("Equus paratur ad diem belli, sed victoria apud Dominum est.");
     }
 
     public static OctoRPG getInstance() {

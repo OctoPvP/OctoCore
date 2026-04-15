@@ -28,6 +28,22 @@ public abstract class BaseRPGItem implements CustomItem {
     @Override
     public List<String> getLore(ItemStack item) {
         List<String> lore = new ArrayList<>();
+
+        if (item != null && !item.getEnchantments().isEmpty()) {
+            StringBuilder enchants = new StringBuilder();
+            item.getEnchantments().forEach((enchantment, level) -> {
+                String name = org.apache.commons.lang3.StringUtils.capitalize(enchantment.getKey().getKey().replace("_", " "));
+                String color = net.octopvp.octocore.rpg.util.EnchantmentUtil.getRarity(enchantment).getColor();
+                enchants.append(color).append(name).append(" ").append(net.octopvp.octocore.rpg.util.RomanNumeralUtil.toRoman(level)).append(", ");
+            });
+            String enchantString = enchants.toString();
+            enchantString = enchantString.substring(0, enchantString.length() - 2);
+            for (String s : org.bukkit.util.ChatPaginator.wordWrap(enchantString, 30)) {
+                lore.add(s);
+            }
+            lore.add("");
+        }
+
         StringBuilder typeString = new StringBuilder();
         typeString.append(getItemType().name());
         if (getWeaponType() != null) {

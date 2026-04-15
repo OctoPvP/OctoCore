@@ -73,6 +73,14 @@ public class RPGPlayerData {
         // Recalculate stats every 0.1s for instant weapon switching
         recalculateStats(player);
 
+        // Periodically refresh lore of held item (every 0.5s or on change)
+        if (tickCount % 5 == 0) {
+            ItemStack inHand = player.getInventory().getItemInMainHand();
+            if (inHand != null && inHand.getType() != org.bukkit.Material.AIR) {
+                OctoRPG.getInstance().getItemManager().rebuildLore(inHand);
+            }
+        }
+
         // Light updates every 0.1s (2 ticks)
         if (stunned > 0) {
             stunned--; 
