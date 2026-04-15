@@ -59,6 +59,34 @@ public class ItemManager implements Listener {
         item.setItemMeta(meta);
     }
 
+    public boolean canAddEnchantment(ItemStack item, org.bukkit.enchantments.Enchantment newEnch) {
+        if (item == null || item.getType().isAir()) return false;
+        
+        int majorCount = 0;
+        int minorCount = 0;
+        
+        for (org.bukkit.enchantments.Enchantment ench : item.getEnchantments().keySet()) {
+            if (net.octopvp.octocore.rpg.util.EnchantmentUtil.isMajor(ench)) {
+                majorCount++;
+            } else {
+                minorCount++;
+            }
+        }
+        
+        boolean addingMajor = net.octopvp.octocore.rpg.util.EnchantmentUtil.isMajor(newEnch);
+        
+        // Don't count if we are just upgrading an existing enchant
+        if (item.containsEnchantment(newEnch)) {
+            return true;
+        }
+
+        if (addingMajor) {
+            return majorCount < 1; // Max 1 Major
+        } else {
+            return minorCount < 3; // Max 3 Minor
+        }
+    }
+
     @EventHandler
     public void onHit(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player player)) return;

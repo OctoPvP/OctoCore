@@ -50,6 +50,11 @@ public class RPGEnchantCommand implements BasicCommand {
             return;
         }
 
+        if (!OctoRPG.getInstance().getItemManager().canAddEnchantment(item, enchantment)) {
+            player.sendMessage(CC.RED + "This item has reached its enchantment limit for this type of enchantment!");
+            return;
+        }
+
         int level = 1;
         if (args.length >= 2) {
             try {

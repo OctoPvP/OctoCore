@@ -22,7 +22,27 @@ public class EnchantmentListener implements Listener {
     public void onAnvil(PrepareAnvilEvent event) {
         ItemStack result = event.getResult();
         if (result != null && result.getType() != Material.AIR) {
+            // Check if the combination added a new enchant that breaks the limit
+            // Note: This is a bit complex for PrepareAnvil because we don't know which one was added easily
+            // but we can check the final counts.
             plugin.getItemManager().rebuildLore(result);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onAnvilCheck(PrepareAnvilEvent event) {
+        ItemStack result = event.getResult();
+        if (result == null || result.getType().isAir()) return;
+        
+        int major = 0;
+        int minor = 0;
+        for (org.bukkit.enchantments.Enchantment ench : result.getEnchantments().keySet()) {
+            if (net.octopvp.octocore.rpg.util.EnchantmentUtil.isMajor(ench)) major++;
+            else minor++;
+        }
+        
+        if (major > 1 || minor > 3) {
+            event.setResult(null); // Block the creation of illegal items
         }
     }
 

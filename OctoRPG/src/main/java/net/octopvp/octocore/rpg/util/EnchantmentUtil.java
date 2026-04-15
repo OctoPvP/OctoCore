@@ -88,4 +88,9 @@ public class EnchantmentUtil {
         String key = enchantment.getKey().getKey().toLowerCase();
         return RARITY_MAP.getOrDefault(key, EnchantmentRarity.COMMON);
     }
+
+    public static boolean isMajor(Enchantment enchantment) {
+        EnchantmentRarity rarity = getRarity(enchantment);
+        return rarity == EnchantmentRarity.RARE || rarity == EnchantmentRarity.EPIC || rarity == EnchantmentRarity.LEGENDARY || rarity == EnchantmentRarity.MYTHIC;
+    }
 }
