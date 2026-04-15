@@ -17,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -35,6 +36,10 @@ public class DamageListener implements Listener {
                 double newDamage = StatCalculator.calculateDamage(data.getStrengthAfterCalc(), e.getDamage());
                 e.setDamage(newDamage);
             }
+
+            // Handle Custom Enchantments
+            ItemStack item = player.getInventory().getItemInMainHand();
+            OctoRPG.getInstance().getEnchantmentManager().handleHit(player, e.getEntity(), e, item);
         }
     }
 

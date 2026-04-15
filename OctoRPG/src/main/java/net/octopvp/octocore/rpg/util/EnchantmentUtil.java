@@ -60,11 +60,13 @@ public class EnchantmentUtil {
         register("brilliance", EnchantmentRarity.UNCOMMON);
         register("dragon_slayer", EnchantmentRarity.UNCOMMON);
         register("wither", EnchantmentRarity.UNCOMMON);
+        register("frostbolt", EnchantmentRarity.UNCOMMON);
 
         // Rare
         register("vorpal", EnchantmentRarity.RARE);
         register("vampire", EnchantmentRarity.RARE);
         register("seraph", EnchantmentRarity.RARE);
+        register("lifesteal", EnchantmentRarity.RARE);
 
         // Epic
         register("chains", EnchantmentRarity.EPIC);

@@ -3,7 +3,7 @@ import org.gradle.api.tasks.WriteProperties
 plugins {
     id("net.octopvp.java-conventions")
     id("net.octopvp.server-conventions")
-    id("io.freefair.lombok") version "8.6"
+    id("io.freefair.lombok") version "8.12.2"
 }
 
 description = "OctoRPG - rpg plugin for octocore"

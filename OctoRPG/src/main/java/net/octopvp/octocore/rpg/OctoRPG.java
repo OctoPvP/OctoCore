@@ -5,6 +5,7 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.octopvp.octocore.rpg.command.RPGDebugCommand;
 import net.octopvp.octocore.rpg.command.RPGEnchantCommand;
 import net.octopvp.octocore.rpg.command.RPGItemCommand;
+import net.octopvp.octocore.rpg.enchantment.EnchantmentManager;
 import net.octopvp.octocore.rpg.item.impl.DirtSword;
 import net.octopvp.octocore.rpg.manager.ItemManager;
 import net.octopvp.octocore.rpg.item.impl.Shortsword;
@@ -24,6 +25,7 @@ public class OctoRPG extends JavaPlugin {
     private static OctoRPG instance;
     private ItemManager itemManager;
     private RPGPlayerManager playerManager;
+    private EnchantmentManager enchantmentManager;
     private DataUpdateRunnable dataUpdateRunnable;
 
     @Override
@@ -32,6 +34,7 @@ public class OctoRPG extends JavaPlugin {
 
         this.itemManager = new ItemManager(this);
         this.playerManager = new RPGPlayerManager(this);
+        this.enchantmentManager = new EnchantmentManager(this);
         new DamageListener(this);
         new EnchantmentListener(this);
         ProtocolListener.register(this);
@@ -68,5 +71,9 @@ public class OctoRPG extends JavaPlugin {
 
     public ItemManager getItemManager() {
         return itemManager;
+    }
+
+    public EnchantmentManager getEnchantmentManager() {
+        return enchantmentManager;
     }
 }

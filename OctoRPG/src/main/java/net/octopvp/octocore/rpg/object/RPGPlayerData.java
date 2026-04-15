@@ -47,6 +47,10 @@ public class RPGPlayerData {
     private transient int extraHealthAfterCalc = 0;
     private transient int baseManaAfterCalc = 0;
 
+    public int getStrengthAfterCalc() {
+        return strengthAfterCalc;
+    }
+
     public RPGPlayerData(UUID uuid) {
         this.uuid = uuid;
     }

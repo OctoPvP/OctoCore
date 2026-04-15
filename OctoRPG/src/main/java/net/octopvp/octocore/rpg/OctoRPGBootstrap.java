@@ -48,7 +48,9 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 Map.entry("prosperity", "Prosperity"),
                 Map.entry("healing_water", "Healing Water"),
                 Map.entry("critical_resistance", "Critical Resistance"),
-                Map.entry("auto_shield", "Auto-Shield")
+                Map.entry("auto_shield", "Auto-Shield"),
+                Map.entry("frostbolt", "Frostbolt"),
+                Map.entry("lifesteal", "Lifesteal")
             );
 
             for (Map.Entry<String, String> entry : enchants.entrySet()) {
@@ -60,7 +62,7 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                         builder -> {
                             EnchantmentRegistryEntry.Builder enchantmentBuilder = (EnchantmentRegistryEntry.Builder) builder;
                             enchantmentBuilder.description(Component.text(name))
-                                .supportedItems(event.getOrCreateTag(ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON))
+                                .supportedItems(id.equals("frostbolt") ? event.getOrCreateTag(ItemTypeTagKeys.ENCHANTABLE_BOW) : event.getOrCreateTag(ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON))
                                 .anvilCost(1)
                                 .maxLevel(10)
                                 .weight(10)
