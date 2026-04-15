@@ -3,6 +3,7 @@ package net.octopvp.octocore.rpg;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.octopvp.octocore.rpg.command.RPGDebugCommand;
+import net.octopvp.octocore.rpg.command.RPGEnchantCommand;
 import net.octopvp.octocore.rpg.command.RPGItemCommand;
 import net.octopvp.octocore.rpg.item.impl.DirtSword;
 import net.octopvp.octocore.rpg.manager.ItemManager;
@@ -49,6 +50,7 @@ public class OctoRPG extends JavaPlugin {
             final Commands commands = event.registrar();
             commands.register("rpgitem", "Gives an RPG custom item", new RPGItemCommand());
             commands.register("rpgdebug", "Toggle RPG debug mode", new RPGDebugCommand());
+            commands.register("rpgenchant", "Apply an RPG enchantment", new RPGEnchantCommand());
         });
 
         getLogger().info("OctoRPG has been enabled (v" + getDescription().getVersion() + ")");
