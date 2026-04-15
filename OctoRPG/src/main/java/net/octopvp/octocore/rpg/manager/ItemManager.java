@@ -52,6 +52,18 @@ public class ItemManager implements Listener {
         CustomItem customItem = getCustomItem(item);
         if (customItem == null) return;
         
+        // Active Enforcement: Remove illegal enchantments
+        boolean changed = false;
+        for (org.bukkit.enchantments.Enchantment ench : new java.util.HashSet<>(item.getEnchantments().keySet())) {
+            if (ench.getKey().getNamespace().equals("octorpg")) {
+                net.octopvp.octocore.rpg.enchantment.EnchantmentEffect effect = OctoRPG.getInstance().getEnchantmentManager().getEffects().get(ench.getKey().getKey().toLowerCase());
+                if (effect != null && !effect.isCompatible(item)) {
+                    item.removeEnchantment(ench);
+                    changed = true;
+                }
+            }
+        }
+
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         

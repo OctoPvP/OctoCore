@@ -6,14 +6,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StatModifier {
-    private int
-            vitality = 0,
-            resilience = 0,
-            strength = 0,
-            agility = 0,
-            intelligence = 0,
-            karma = 0,
-            health = 0;
+    private int vitality = 0;
+    private int resilience = 0;
+    private int strength = 0;
+    private int agility = 0;
+    private int intelligence = 0;
+    private int karma = 0;
+    private int health = 0;
 
     private String info = "";
 

@@ -25,6 +25,10 @@ public class EnchantmentManager {
         effects.put(effect.getEnchantmentId().toLowerCase(), effect);
     }
 
+    public Map<String, EnchantmentEffect> getEffects() {
+        return effects;
+    }
+
     public void handleHit(Player player, Entity victim, EntityDamageByEntityEvent event, ItemStack item) {
         if (item == null || item.getType().isAir()) return;
         
