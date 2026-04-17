@@ -18,7 +18,10 @@ import net.octopvp.octocore.rpg.listener.DamageListener;
 import net.octopvp.octocore.rpg.listener.EnchantmentListener;
 import net.octopvp.octocore.rpg.listener.ProtocolListener;
 import net.octopvp.octocore.rpg.runnable.DataUpdateRunnable;
+import net.octopvp.octocore.common.util.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.UUID;
 
 public class OctoRPG extends JavaPlugin {
 
@@ -31,6 +34,15 @@ public class OctoRPG extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        new Logger(this.getLogger(), "[OctoRPG] ", (message, players) -> {
+            for (UUID uuid : players) {
+                org.bukkit.entity.Player player = org.bukkit.Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    player.sendMessage(message);
+                }
+            }
+        });
 
         this.itemManager = new ItemManager(this);
         this.playerManager = new RPGPlayerManager(this);
@@ -56,13 +68,13 @@ public class OctoRPG extends JavaPlugin {
             commands.register("rpgenchant", "Apply an RPG enchantment", new RPGEnchantCommand());
         });
 
-        getLogger().info("OctoRPG has been enabled (v" + getDescription().getVersion() + ")");
+        Logger.info("OctoRPG has been enabled (v" + getDescription().getVersion() + ")");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("OctoRPG has been disabled.");
-        getLogger().info("Equus paratur ad diem belli, sed victoria apud Dominum est.");
+        Logger.info("OctoRPG has been disabled.");
+        Logger.info("Equus paratur ad diem belli, sed victoria apud Dominum est.");
     }
 
     public static OctoRPG getInstance() {

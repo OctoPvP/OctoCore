@@ -60,7 +60,7 @@ public class OctoCoreVelocity {
     public void onProxyInitialization(ProxyInitializeEvent event) {
         long start = System.currentTimeMillis();
         new net.octopvp.octocore.common.util.Logger(null, // null so we fallback to the server impl callback
-                "[OctoCore] ", (message, players) -> {
+                "[OctoCore-velocity] ", (message, players) -> {
                     for (UUID player : players) {
                         proxyServer.getPlayer(player).ifPresent(p -> p.sendMessage(
                                 LegacyComponentSerializer.legacySection().deserialize(message)));

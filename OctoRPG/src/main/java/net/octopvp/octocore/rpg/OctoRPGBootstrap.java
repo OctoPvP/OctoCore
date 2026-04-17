@@ -7,10 +7,11 @@ import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.data.EnchantmentRegistryEntry;
 import io.papermc.paper.registry.event.RegistryEvents;
 import io.papermc.paper.registry.keys.tags.ItemTypeTagKeys;
+import io.papermc.paper.registry.tag.TagKey;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.Map;
 public class OctoRPGBootstrap implements PluginBootstrap {
     @Override
     public void bootstrap(@NotNull BootstrapContext context) {
-        context.getLifecycleManager().registerEventHandler(RegistryEvents.ENCHANTMENT.compose().newHandler(event -> {
+        context.getLifecycleManager().registerEventHandler(RegistryEvents.ENCHANTMENT.freeze().register(event -> {
             Map<String, String> enchants = Map.ofEntries(
                 // Major / Lost
                 Map.entry("fire_aspect", "Fire Aspect"),
@@ -50,26 +51,47 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 Map.entry("critical_resistance", "Critical Resistance"),
                 Map.entry("auto_shield", "Auto-Shield"),
                 Map.entry("frostbolt", "Frostbolt"),
-                Map.entry("lifesteal", "Lifesteal")
+                Map.entry("lifesteal", "Lifesteal"),
+
+                // Added from EnchantmentUtil / RPGCore
+                Map.entry("chains", "Chains"),
+                Map.entry("glide", "Glide"),
+                Map.entry("experienced", "Experienced"),
+                Map.entry("multipick", "Multipick"),
+                Map.entry("wings", "Wings"),
+                Map.entry("titanic_chains", "Titanic Chains"),
+                Map.entry("bleed", "Bleed"),
+                Map.entry("homing", "Homing"),
+                Map.entry("luminosity", "Luminosity"),
+                Map.entry("surefooted", "Surefooted")
             );
 
             for (Map.Entry<String, String> entry : enchants.entrySet()) {
                 String id = entry.getKey();
                 String name = entry.getValue();
                 
+                TagKey<ItemType> targetTag = ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON;
+                if (id.equals("frostbolt") || id.equals("homing")) {
+                    targetTag = ItemTypeTagKeys.ENCHANTABLE_BOW;
+                } else if (id.equals("multipick")) {
+                    targetTag = ItemTypeTagKeys.ENCHANTABLE_MINING;
+                } else if (id.equals("glide") || id.equals("wings")) {
+                    targetTag = ItemTypeTagKeys.ENCHANTABLE_CHEST_ARMOR;
+                } else if (id.equals("surefooted")) {
+                    targetTag = ItemTypeTagKeys.ENCHANTABLE_FOOTWEAR;
+                }
+
+                final TagKey<ItemType> finalTargetTag = targetTag;
                 event.registry().register(
                         TypedKey.create(RegistryKey.ENCHANTMENT, Key.key("octorpg", id)),
-                        builder -> {
-                            EnchantmentRegistryEntry.Builder enchantmentBuilder = (EnchantmentRegistryEntry.Builder) builder;
-                            enchantmentBuilder.description(Component.text(name))
-                                .supportedItems(id.equals("frostbolt") ? event.getOrCreateTag(ItemTypeTagKeys.ENCHANTABLE_BOW) : event.getOrCreateTag(ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON))
+                        builder -> builder.description(Component.text(name))
+                                .supportedItems(event.getOrCreateTag(finalTargetTag))
                                 .anvilCost(1)
                                 .maxLevel(10)
                                 .weight(10)
                                 .minimumCost(EnchantmentRegistryEntry.EnchantmentCost.of(1, 1))
                                 .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(1, 1))
-                                .activeSlots(EquipmentSlotGroup.ANY);
-                        }
+                                .activeSlots(EquipmentSlotGroup.ANY)
                 );
             }
         }));

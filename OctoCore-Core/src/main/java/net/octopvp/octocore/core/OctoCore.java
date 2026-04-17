@@ -146,7 +146,7 @@ public abstract class OctoCore extends JavaPlugin {
         serverName = getInstance().getConfig().getString("name");
         OctoCoreCommon.getInstance().init(gson, new BukkitServerImpl());
 
-        new Logger(Bukkit.getLogger(), prefix, (message, players) -> {
+        new Logger(Bukkit.getLogger(), "[OctoCore] ", (message, players) -> {
             for (UUID uuid : players) {
                 Player player = Bukkit.getPlayer(uuid);
                 if (player != null) {

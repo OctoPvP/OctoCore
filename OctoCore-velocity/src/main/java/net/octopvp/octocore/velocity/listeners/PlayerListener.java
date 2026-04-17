@@ -93,7 +93,7 @@ public class PlayerListener {
     public void onPlayerClientBrand(PlayerClientBrandEvent event) {
         Player player = event.getPlayer();
         String brand = event.getBrand();
-        Logger.info("[Client Brand] " + player.getUsername() + " (" + player.getRemoteAddress() + ") has connected using client brand: " + brand);
+        Logger.info("[OctoCore-velocity] " + player.getUsername() + " (" + player.getRemoteAddress() + ") has connected using client brand: " + brand);
 
         plugin.getProxyServer().getScheduler().buildTask(plugin, () -> {
             try {
