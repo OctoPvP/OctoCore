@@ -56,6 +56,9 @@ public class ProjectileListener implements Listener {
         for (Entity entity : nearby) {
             if (entity == shooter || !(entity instanceof LivingEntity) || entity.isDead()) continue;
             
+            // Do not target NPCs
+            if (entity.hasMetadata("NPC")) continue;
+            
             Vector toTarget = entity.getLocation().toVector().subtract(projectile.getLocation().toVector()).normalize();
             Vector direction = projectile.getVelocity().normalize();
             
