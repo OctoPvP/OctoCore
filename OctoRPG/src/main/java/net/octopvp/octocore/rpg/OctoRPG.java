@@ -9,6 +9,7 @@ import net.octopvp.octocore.rpg.command.RPGHelpCommand;
 import net.octopvp.octocore.rpg.command.RPGItemCommand;
 import net.octopvp.octocore.rpg.command.RPGQuestCommand;
 import net.octopvp.octocore.rpg.command.RPGStatsCommand;
+import net.octopvp.octocore.rpg.enchantment.EnchantmentDurabilityManager;
 import net.octopvp.octocore.rpg.enchantment.EnchantmentManager;
 import net.octopvp.octocore.rpg.item.impl.DirtSword;
 import net.octopvp.octocore.rpg.manager.ItemManager;
@@ -33,6 +34,7 @@ public class OctoRPG extends JavaPlugin {
     private ItemManager itemManager;
     private RPGPlayerManager playerManager;
     private EnchantmentManager enchantmentManager;
+    private EnchantmentDurabilityManager enchantmentDurabilityManager;
     private DataUpdateRunnable dataUpdateRunnable;
 
     @Override
@@ -52,6 +54,7 @@ public class OctoRPG extends JavaPlugin {
         this.itemManager = new ItemManager(this);
         this.playerManager = new RPGPlayerManager(this);
         this.enchantmentManager = new EnchantmentManager(this);
+        this.enchantmentDurabilityManager = new EnchantmentDurabilityManager(this);
         new DamageListener(this);
         new EnchantmentListener(this);
         ProtocolListener.register(this);
@@ -96,5 +99,9 @@ public class OctoRPG extends JavaPlugin {
 
     public EnchantmentManager getEnchantmentManager() {
         return enchantmentManager;
+    }
+
+    public EnchantmentDurabilityManager getEnchantmentDurabilityManager() {
+        return enchantmentDurabilityManager;
     }
 }

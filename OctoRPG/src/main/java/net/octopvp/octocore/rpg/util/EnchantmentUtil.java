@@ -53,6 +53,7 @@ public class EnchantmentUtil {
         register("accuracy", EnchantmentRarity.COMMON);
         register("balance", EnchantmentRarity.COMMON);
         register("comfort", EnchantmentRarity.COMMON);
+        register("volume", EnchantmentRarity.COMMON);
         register("lightness", EnchantmentRarity.COMMON);
 
         // Uncommon

@@ -63,7 +63,8 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 Map.entry("bleed", "Bleed"),
                 Map.entry("homing", "Homing"),
                 Map.entry("luminosity", "Luminosity"),
-                Map.entry("surefooted", "Surefooted")
+                Map.entry("surefooted", "Surefooted"),
+                Map.entry("volume", "Volume")
             );
 
             for (Map.Entry<String, String> entry : enchants.entrySet()) {
@@ -71,7 +72,11 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 String name = entry.getValue();
                 
                 TagKey<ItemType> targetTag = ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON;
-                if (id.equals("frostbolt") || id.equals("homing")) {
+                if (id.equals("comfort")) {
+                    targetTag = TagKey.create(RegistryKey.ITEM, Key.key("octorpg", "books_only"));
+                } else if (id.equals("volume")) {
+                    targetTag = TagKey.create(RegistryKey.ITEM, Key.key("minecraft", "potions"));
+                } else if (id.equals("frostbolt") || id.equals("homing")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_BOW;
                 } else if (id.equals("multipick")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_MINING;

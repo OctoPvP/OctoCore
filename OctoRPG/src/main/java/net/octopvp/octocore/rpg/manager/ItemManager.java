@@ -67,7 +67,9 @@ public class ItemManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         
-        meta.setLore(customItem.getLore(item));
+        java.util.List<String> lore = customItem.getLore(item);
+        lore.addAll(OctoRPG.getInstance().getEnchantmentDurabilityManager().getDurabilityLore(item));
+        meta.setLore(lore);
         item.setItemMeta(meta);
     }
 

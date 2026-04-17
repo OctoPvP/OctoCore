@@ -40,6 +40,7 @@ public class DamageListener implements Listener {
             // Handle Custom Enchantments
             ItemStack item = player.getInventory().getItemInMainHand();
             OctoRPG.getInstance().getEnchantmentManager().handleHit(player, e.getEntity(), e, item);
+            OctoRPG.getInstance().getEnchantmentDurabilityManager().handleUsage(item);
         }
     }
 
