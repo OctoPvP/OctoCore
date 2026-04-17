@@ -139,6 +139,12 @@ public class RPGPlayerData {
             }
         }
 
+        // Forcefully re-validate stats every 5 seconds (50 update ticks)
+        if (tickCount % 50 == 0) {
+            lastAppliedSpeed = -1;
+            lastAppliedMaxHealth = -1;
+        }
+
         // Mana Regeneration - Every 1 second (10 update ticks at 2L each)
         if (tickCount % 10 == 0) {
             int baseMana = StatCalculator.calculateMana(level, resilianceAfterCalc);
@@ -174,24 +180,45 @@ public class RPGPlayerData {
         int extraHealth = 0;
 
         List<StatModifier> finalModifiers = new ArrayList<>();
-        List<BaseRPGItem> doneItems = new ArrayList<>();
+        List<BaseRPGItem> doneInventoryItems = new ArrayList<>();
         
-        ItemStack[] contents = player.getInventory().getContents();
-        for (ItemStack item : contents) {
+        // 1. Scan entire inventory for "In Inventory" bonuses (unique per item type)
+        for (ItemStack item : player.getInventory().getContents()) {
             if (item == null) continue;
             CustomItem customItem = OctoRPG.getInstance().getItemManager().getCustomItem(item);
             if (customItem instanceof BaseRPGItem baseItem) {
                 StatModifier ininv = baseItem.getStatModifierWhenInInventory();
-                if (ininv != null && !doneItems.contains(baseItem)) {
+                if (ininv != null && !doneInventoryItems.contains(baseItem)) {
                     finalModifiers.add(ininv);
-                    doneItems.add(baseItem);
+                    doneInventoryItems.add(baseItem);
                 }
-                
-                ItemStack mainHand = player.getInventory().getItemInMainHand();
-                StatModifier holding = baseItem.getStatModifierWhenHolding();
-                if (holding != null && mainHand != null && mainHand.equals(item)) {
-                    finalModifiers.add(holding);
-                }
+            }
+        }
+
+        // 2. Scan equipped items for "Holding/Wearing" bonuses
+        // Main Hand
+        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        CustomItem mainCustom = OctoRPG.getInstance().getItemManager().getCustomItem(mainHand);
+        if (mainCustom instanceof BaseRPGItem baseItem) {
+            StatModifier mod = baseItem.getStatModifierWhenHolding();
+            if (mod != null) finalModifiers.add(mod);
+        }
+
+        // Off Hand
+        ItemStack offHand = player.getInventory().getItemInOffHand();
+        CustomItem offCustom = OctoRPG.getInstance().getItemManager().getCustomItem(offHand);
+        if (offCustom instanceof BaseRPGItem baseItem) {
+            StatModifier mod = baseItem.getStatModifierWhenHolding();
+            if (mod != null) finalModifiers.add(mod);
+        }
+
+        // Armor
+        for (ItemStack armor : player.getInventory().getArmorContents()) {
+            if (armor == null) continue;
+            CustomItem armorCustom = OctoRPG.getInstance().getItemManager().getCustomItem(armor);
+            if (armorCustom instanceof BaseRPGItem baseItem) {
+                StatModifier mod = baseItem.getStatModifierWhenHolding(); // "Holding" acts as "Wearing" for armor
+                if (mod != null) finalModifiers.add(mod);
             }
         }
 
@@ -216,22 +243,24 @@ public class RPGPlayerData {
     }
 
     private void applyEngineStats(Player player) {
+        double multiplier = StatCalculator.getLevelScaling(level);
+
         // Apply Max Health
         double targetMaxHealth = StatCalculator.calculateHealth(level, vitalityAfterCalc) + extraHealthAfterCalc;
-        if (targetMaxHealth != lastAppliedMaxHealth) {
+        if (Math.abs(targetMaxHealth - lastAppliedMaxHealth) > 0.01) {
             AttributeInstance maxHealth = player.getAttribute(Attribute.MAX_HEALTH);
             if (maxHealth != null) {
                 maxHealth.setBaseValue(targetMaxHealth);
-                if (debug) player.sendMessage(CC.translate("&7[&bRPG Debug&7] &fApplied Max Health: &a" + targetMaxHealth));
+                if (debug) player.sendMessage(CC.translate("&7[&bRPG Debug&7] &fApplied HP: &a" + String.format("%.1f", targetMaxHealth) + " &7(LVL Mult: " + String.format("%.2f", multiplier) + "x)"));
                 lastAppliedMaxHealth = targetMaxHealth;
             }
         }
 
         // Apply Walk Speed
         float targetSpeed = stunned > 0 ? 0 : StatCalculator.calculateSpeed(level, agilityAfterCalc);
-        if (targetSpeed != lastAppliedSpeed) {
+        if (Math.abs(targetSpeed - lastAppliedSpeed) > 0.001f) {
             player.setWalkSpeed(targetSpeed);
-            if (debug) player.sendMessage(CC.translate("&7[&bRPG Debug&7] &fApplied Walk Speed: &a" + targetSpeed + " &7(Agility: " + agilityAfterCalc + ")"));
+            if (debug) player.sendMessage(CC.translate("&7[&bRPG Debug&7] &fApplied Speed: &a" + String.format("%.3f", targetSpeed) + " &7(LVL Mult: " + String.format("%.2f", multiplier) + "x)"));
             lastAppliedSpeed = targetSpeed;
         }
     }

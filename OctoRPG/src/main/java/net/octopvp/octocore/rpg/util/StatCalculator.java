@@ -28,9 +28,11 @@ public class StatCalculator {
     }
 
     public static float calculateSpeed(int level, int agility) {
-        // Base 0.2 speed, increased by agility (0.5% per point) scaled by level
+        // (Base 0.2 + 0.001 per agility) * Level Scaling
+        // Level 100 (2.0x) with 0 agility = 0.4 speed (~11.2 m/s)
+        // Level 100 (2.0x) with 100 agility = 0.6 speed (~16.8 m/s)
         double scaling = getLevelScaling(level);
-        float speed = (float) (0.2 * (1 + (agility * 0.005 * scaling)));
+        float speed = (float) ((0.2 + (0.001 * agility)) * scaling);
         if (speed > 1.0f) speed = 1.0f;
         return speed;
     }
