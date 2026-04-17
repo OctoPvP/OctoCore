@@ -23,6 +23,7 @@ public class RPGDebugCommand implements BasicCommand {
         RPGPlayerData data = RPGPlayerManager.getInstance().getData(player);
         if (data != null) {
             data.setDebug(!data.isDebug());
+            RPGPlayerManager.getInstance().saveData(data);
             player.sendMessage(CC.translate("&7[&bRPG Debug&7] &fDebug mode " + (data.isDebug() ? "&aEnabled" : "&cDisabled")));
         }
     }

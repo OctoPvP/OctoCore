@@ -5,23 +5,41 @@ import net.octopvp.octocore.rpg.object.RPGPlayerData;
 import org.bukkit.entity.Player;
 
 public class StatCalculator {
+    /**
+     * Calculates the level scaling factor.
+     * Level 1 = 1.0 (100% efficiency)
+     * Level 50 = ~1.7x efficiency
+     * Level 100 = 2.0x efficiency
+     */
+    public static double getLevelScaling(int level) {
+        return 1.0 + (Math.sqrt(level) - 1) * 0.11;
+    }
+
     public static int calculateMana(int level, int resilience) {
-        return (int) ((20 + (2 * level)) * (1 + 0.01 * (resilience)));
+        // (Base 20 + 2 per resilience) * Level Scaling
+        double scaling = getLevelScaling(level);
+        return (int) ((20 + (2 * resilience)) * scaling);
     }
 
     public static double calculateHealth(int level, int vitality) {
-        return ((20 + (2 * level)) * (1 + 0.01 * (vitality)));
+        // (Base 20 + 2 per vitality) * Level Scaling
+        double scaling = getLevelScaling(level);
+        return (20 + (2 * vitality)) * scaling;
     }
 
     public static float calculateSpeed(int level, int agility) {
-        float speed = (float) (((20 + (2 * agility)) * (1 + 0.01 * (level))) / 100);
-        if (speed > 1)
-            speed = 1f;
+        // Base 0.2 speed, increased by agility (0.5% per point) scaled by level
+        double scaling = getLevelScaling(level);
+        float speed = (float) (0.2 * (1 + (agility * 0.005 * scaling)));
+        if (speed > 1.0f) speed = 1.0f;
         return speed;
     }
 
-    public static int calculateManaToRegen(int level, int baseMana) {
-        return (int) (baseMana * 0.05);
+    public static int calculateManaToRegen(int level, int intelligence, int baseMana) {
+        // Base 5% regen, increased by intelligence (2% per point) scaled by level
+        double scaling = getLevelScaling(level);
+        double regenPercent = 0.05 * (1 + (intelligence * 0.02 * scaling));
+        return (int) (baseMana * regenPercent);
     }
 
     public static int xpNeededForNextLevel(int level) {
@@ -31,14 +49,16 @@ public class StatCalculator {
     public static double calculateDamage(Player player, double damage) {
         RPGPlayerData data = RPGPlayerManager.getInstance().getData(player.getUniqueId());
         if (data == null) return damage;
-        return calculateDamage(data.getStrengthAfterCalc(), damage);
+        return calculateDamage(data.getLevel(), data.getStrengthAfterCalc(), damage);
     }
 
-    public static double calculateDamage(int strength, double damage) {
+    public static double calculateDamage(int level, int strength, double damage) {
         if (strength == Integer.MAX_VALUE)
             return Integer.MAX_VALUE;
-        double dblStr = strength + 0.0d;
-        return (5 + damage) * (1 + (dblStr / 100));
+        
+        // Base damage + weapon damage, increased by strength (1% per point) scaled by level
+        double scaling = getLevelScaling(level);
+        return (5 + damage) * (1 + (strength * 0.01 * scaling));
     }
 
     public int xpNeededForLevel(int n) {

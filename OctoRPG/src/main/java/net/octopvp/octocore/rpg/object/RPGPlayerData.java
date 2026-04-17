@@ -126,10 +126,12 @@ public class RPGPlayerData {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return;
 
+        tickCount++;
+
         // Recalculate stats every 0.1s for instant weapon switching
         recalculateStats(player);
 
-        // Periodically refresh lore of held item (every 0.5s or on change)
+        // Periodically refresh lore of held item (every 0.5s)
         if (tickCount % 5 == 0) {
             ItemStack inHand = player.getInventory().getItemInMainHand();
             if (inHand != null && inHand.getType() != org.bukkit.Material.AIR) {
@@ -137,7 +139,15 @@ public class RPGPlayerData {
             }
         }
 
-        // Light updates every 0.1s (2 ticks)
+        // Mana Regeneration - Every 1 second (10 update ticks at 2L each)
+        if (tickCount % 10 == 0) {
+            int baseMana = StatCalculator.calculateMana(level, resilianceAfterCalc);
+            int regen = StatCalculator.calculateManaToRegen(level, intelligenceAfterCalc, baseMana);
+            this.currentManaLeft = Math.min(currentManaLeft + regen, baseMana);
+            this.baseManaAfterCalc = baseMana;
+        }
+
+        // Stun logic
         if (stunned > 0) {
             stunned--; 
             if (stunned == 0) {
@@ -145,10 +155,15 @@ public class RPGPlayerData {
             }
         }
 
-        // Always apply speed/health to ensure immediate responsiveness to stun/unstun
+        // Always apply speed/health to ensure immediate responsiveness
         applyEngineStats(player);
     }
 
+    /**
+     * Aggregates base stats and item modifiers into 'AfterCalc' variables.
+     * These variables are transient and are NEVER saved to MongoDB.
+     * This prevents 'stat loops' where scaled values could be accidentally persisted.
+     */
     private void recalculateStats(Player player) {
         int vitality = baseVitality;
         int resilience = baseResilience;
@@ -197,11 +212,7 @@ public class RPGPlayerData {
         this.intelligenceAfterCalc = intelligence;
         this.karmaAfterCalc = karma;
         this.extraHealthAfterCalc = extraHealth;
-
-        int baseMana = StatCalculator.calculateMana(level, resilience);
-        int regen = StatCalculator.calculateManaToRegen(level, baseMana);
-        this.currentManaLeft = Math.min(currentManaLeft + regen, baseMana);
-        this.baseManaAfterCalc = baseMana;
+        this.baseManaAfterCalc = StatCalculator.calculateMana(level, resilianceAfterCalc);
     }
 
     private void applyEngineStats(Player player) {

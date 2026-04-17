@@ -1,6 +1,7 @@
 package net.octopvp.octocore.rpg.enchantment;
 
 import net.octopvp.octocore.rpg.OctoRPG;
+import net.octopvp.octocore.rpg.enchantment.effect.AccuracyEffect;
 import net.octopvp.octocore.rpg.enchantment.effect.FrostboltEffect;
 import net.octopvp.octocore.rpg.enchantment.effect.LifestealEffect;
 import org.bukkit.NamespacedKey;
@@ -19,6 +20,7 @@ public class EnchantmentManager {
     public EnchantmentManager(OctoRPG plugin) {
         registerEffect(new FrostboltEffect());
         registerEffect(new LifestealEffect());
+        registerEffect(new AccuracyEffect());
     }
 
     public void registerEffect(EnchantmentEffect effect) {
@@ -38,6 +40,20 @@ public class EnchantmentManager {
                 EnchantmentEffect effect = effects.get(key.getKey().toLowerCase());
                 if (effect != null && effect.isCompatible(item)) {
                     effect.onHitEntity(player, victim, event, item, level);
+                }
+            }
+        });
+    }
+
+    public void handleShoot(Player player, org.bukkit.event.entity.EntityShootBowEvent event, ItemStack item) {
+        if (item == null || item.getType().isAir()) return;
+
+        item.getEnchantments().forEach((enchantment, level) -> {
+            NamespacedKey key = enchantment.getKey();
+            if (key.getNamespace().equals("octorpg")) {
+                EnchantmentEffect effect = effects.get(key.getKey().toLowerCase());
+                if (effect != null && effect.isCompatible(item)) {
+                    effect.onShoot(player, event, item, level);
                 }
             }
         });

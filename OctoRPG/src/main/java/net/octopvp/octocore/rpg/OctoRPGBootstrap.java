@@ -72,11 +72,7 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 String name = entry.getValue();
                 
                 TagKey<ItemType> targetTag = ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON;
-                if (id.equals("comfort")) {
-                    targetTag = TagKey.create(RegistryKey.ITEM, Key.key("octorpg", "books_only"));
-                } else if (id.equals("volume")) {
-                    targetTag = TagKey.create(RegistryKey.ITEM, Key.key("minecraft", "potions"));
-                } else if (id.equals("frostbolt") || id.equals("homing")) {
+                if (id.equals("frostbolt") || id.equals("homing") || id.equals("accuracy")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_BOW;
                 } else if (id.equals("multipick")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_MINING;

@@ -37,6 +37,21 @@ public class EnchantmentListener implements Listener {
         int major = 0;
         int minor = 0;
         for (org.bukkit.enchantments.Enchantment ench : result.getEnchantments().keySet()) {
+            if (ench.getKey().getNamespace().equals("octorpg")) {
+                String id = ench.getKey().getKey();
+                if (id.equals("comfort")) {
+                    if (result.getType() != Material.ENCHANTED_BOOK) {
+                        event.setResult(null);
+                        return;
+                    }
+                }
+                if (id.equals("volume")) {
+                    if (!result.getType().name().contains("POTION")) {
+                        event.setResult(null);
+                        return;
+                    }
+                }
+            }
             if (net.octopvp.octocore.rpg.util.EnchantmentUtil.isMajor(ench)) major++;
             else minor++;
         }

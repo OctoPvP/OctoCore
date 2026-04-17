@@ -22,8 +22,8 @@ public class RPGStatsCommand implements BasicCommand {
             return;
         }
 
-        if (args.length < 3) {
-            stack.getSender().sendMessage(CC.RED + "Usage: /rpgstats <player> <stat> <value>");
+        if (args.length < 2) {
+            stack.getSender().sendMessage(CC.RED + "Usage: /rpgstats <player> <stat|clear> [value]");
             stack.getSender().sendMessage(CC.RED + "Stats: level, vitality, resilience, strength, agility, intelligence, karma, mana, xp, attribute_points, ability_points, skill_points, class_points, boags_eaten");
             return;
         }
@@ -40,7 +40,35 @@ public class RPGStatsCommand implements BasicCommand {
             return;
         }
 
-        String stat = args[1].toLowerCase();
+        String action = args[1].toLowerCase();
+
+        if (action.equals("clear")) {
+            data.setLevel(1);
+            data.setBaseVitality(0);
+            data.setBaseResilience(0);
+            data.setBaseStrength(0);
+            data.setBaseAgility(0);
+            data.setBaseIntelligence(0);
+            data.setBaseKarma(0);
+            data.setXp(0);
+            data.setAttributePoints(0);
+            data.setAbilityPoints(0);
+            data.setSkillPoints(0);
+            data.setClassPoints(0);
+            data.setBoagsEaten(0);
+            data.setCurrentManaLeft(0); // Will be recalculated in update
+            
+            data.update();
+            RPGPlayerManager.getInstance().saveData(data);
+            stack.getSender().sendMessage(CC.GREEN + "Reset all stats for " + target.getName() + " to base values.");
+            return;
+        }
+
+        if (args.length < 3) {
+            stack.getSender().sendMessage(CC.RED + "Usage: /rpgstats <player> <stat> <value>");
+            return;
+        }
+
         int value;
         try {
             value = Integer.parseInt(args[2]);
@@ -49,7 +77,7 @@ public class RPGStatsCommand implements BasicCommand {
             return;
         }
 
-        switch (stat) {
+        switch (action) {
             case "level" -> data.setLevel(value);
             case "vitality" -> data.setBaseVitality(value);
             case "resilience" -> data.setBaseResilience(value);
@@ -65,13 +93,14 @@ public class RPGStatsCommand implements BasicCommand {
             case "class_points" -> data.setClassPoints(value);
             case "boags_eaten" -> data.setBoagsEaten(value);
             default -> {
-                stack.getSender().sendMessage(CC.RED + "Unknown stat: " + stat);
+                stack.getSender().sendMessage(CC.RED + "Unknown stat or action: " + action);
                 return;
             }
         }
 
         data.update();
-        stack.getSender().sendMessage(CC.GREEN + "Set " + stat + " of " + target.getName() + " to " + value);
+        RPGPlayerManager.getInstance().saveData(data);
+        stack.getSender().sendMessage(CC.GREEN + "Set " + action + " of " + target.getName() + " to " + value);
     }
 
     @Override
@@ -82,7 +111,8 @@ public class RPGStatsCommand implements BasicCommand {
                     .collect(Collectors.toList());
         }
         if (args.length == 2) {
-            return Stream.of("level", "vitality", "resilience", "strength", "agility", "intelligence", "karma", "mana", "xp", "attribute_points", "ability_points", "skill_points", "class_points", "boags_eaten")
+            List<String> options = new java.util.ArrayList<>(List.of("level", "vitality", "resilience", "strength", "agility", "intelligence", "karma", "mana", "xp", "attribute_points", "ability_points", "skill_points", "class_points", "boags_eaten", "clear"));
+            return options.stream()
                     .filter(stat -> stat.startsWith(args[1].toLowerCase()))
                     .collect(Collectors.toList());
         }

@@ -33,7 +33,7 @@ public class DamageListener implements Listener {
         if (e.getDamager() instanceof Player player) {
             RPGPlayerData data = RPGPlayerManager.getInstance().getData(player.getUniqueId());
             if (data != null) {
-                double newDamage = StatCalculator.calculateDamage(data.getStrengthAfterCalc(), e.getDamage());
+                double newDamage = StatCalculator.calculateDamage(data.getLevel(), data.getStrengthAfterCalc(), e.getDamage());
                 e.setDamage(newDamage);
             }
 

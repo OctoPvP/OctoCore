@@ -12,5 +12,7 @@ public interface EnchantmentEffect {
         return true;
     }
 
-    default void onHitEntity(Player player, Entity victim, EntityDamageByEntityEvent event, ItemStack item, int level) {}
+    default void onHitEntity(Player player, org.bukkit.entity.Entity victim, org.bukkit.event.entity.EntityDamageByEntityEvent event, ItemStack item, int level) {}
+
+    default void onShoot(Player player, org.bukkit.event.entity.EntityShootBowEvent event, ItemStack item, int level) {}
 }

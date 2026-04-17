@@ -21,6 +21,7 @@ import net.octopvp.octocore.rpg.item.impl.BattleAxe;
 import net.octopvp.octocore.rpg.manager.RPGPlayerManager;
 import net.octopvp.octocore.rpg.listener.DamageListener;
 import net.octopvp.octocore.rpg.listener.EnchantmentListener;
+import net.octopvp.octocore.rpg.listener.ProjectileListener;
 import net.octopvp.octocore.rpg.listener.ProtocolListener;
 import net.octopvp.octocore.rpg.runnable.DataUpdateRunnable;
 import net.octopvp.octocore.common.util.Logger;
@@ -57,6 +58,7 @@ public class OctoRPG extends JavaPlugin {
         this.enchantmentDurabilityManager = new EnchantmentDurabilityManager(this);
         new DamageListener(this);
         new EnchantmentListener(this);
+        new ProjectileListener(this);
         ProtocolListener.register(this);
         
         this.dataUpdateRunnable = new DataUpdateRunnable();
