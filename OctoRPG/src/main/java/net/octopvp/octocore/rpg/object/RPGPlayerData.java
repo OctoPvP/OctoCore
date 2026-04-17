@@ -50,6 +50,38 @@ public class RPGPlayerData {
     private java.util.List<Long> completedQuests = new java.util.ArrayList<>();
     private java.util.Map<Long, Long> inProgressQuests = new java.util.HashMap<>();
 
+    public void addXp(int xp) {
+        this.xp += xp;
+        int needed = StatCalculator.xpNeededForNextLevel(level + 1);
+        if (this.xp >= needed) {
+            level++;
+            attributePoints += 3;
+            abilityPoints++;
+            classPoints++;
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                player.sendMessage(CC.translate("&6&lYou Leveled Up!"));
+                player.sendMessage(CC.translate("&7You are now level &b&l" + level + "&r&7!"));
+                player.playSound(player.getLocation(), org.bukkit.Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+            }
+        }
+    }
+
+    public boolean isQuestCompleted(long questId) {
+        return completedQuests.contains(questId);
+    }
+
+    public void setQuestCompleted(long questId) {
+        if (!completedQuests.contains(questId)) {
+            completedQuests.add(questId);
+        }
+        inProgressQuests.remove(questId);
+    }
+
+    public void startQuest(long questId) {
+        inProgressQuests.put(questId, System.currentTimeMillis());
+    }
+
     private transient int vitalityAfterCalc = 0;
     private transient int resilianceAfterCalc = 0;
     private transient int strengthAfterCalc = 0;

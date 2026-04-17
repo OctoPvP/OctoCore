@@ -54,6 +54,7 @@ public class OctoCoreVelocity {
     }
 
     private RedisManager redisManager;
+    @Getter
     private VelocityConfiguration config;
 
     @Subscribe

@@ -29,6 +29,7 @@ import org.bson.Document;
 
 import java.util.UUID;
 
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.velocitypowered.api.event.player.PlayerClientBrandEvent;
 import com.velocitypowered.api.event.player.PlayerModInfoEvent;
@@ -39,6 +40,7 @@ import com.google.gson.JsonObject;
 public class PlayerListener {
     private OctoCoreVelocity plugin;
     private final VelocityServerImpl velocityServerImpl;
+    private static final UpdateOptions UPSERT_OPTIONS = new UpdateOptions().upsert(true);
 
     @Subscribe
     public void onPlayerSettingsChanged(PlayerSettingsChangedEvent event) {
@@ -56,7 +58,13 @@ public class PlayerListener {
                 IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
                 if (databaseManager != null && databaseManager.getDatabase() != null) {
                     MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("vdata");
-                    collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), Updates.set("playerSettings", settingsJson.toString()));
+                    collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), 
+                        Updates.combine(
+                            Updates.set("name", player.getUsername()),
+                            Updates.set("playerSettings", settingsJson.toString())
+                        ), 
+                        UPSERT_OPTIONS
+                    );
                 }
             } catch (Exception ex) {
                 Logger.error("Failed to save playerSettings for " + player.getUsername(), ex);
@@ -80,7 +88,13 @@ public class PlayerListener {
                     IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
                     if (databaseManager != null && databaseManager.getDatabase() != null) {
                         MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("vdata");
-                        collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), Updates.set("clientMods", modsString));
+                        collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), 
+                            Updates.combine(
+                                Updates.set("name", player.getUsername()),
+                                Updates.set("clientMods", modsString)
+                            ), 
+                            UPSERT_OPTIONS
+                        );
                     }
                 } catch (Exception ex) {
                     Logger.error("Failed to save clientMods for " + player.getUsername(), ex);
@@ -100,7 +114,13 @@ public class PlayerListener {
                 IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
                 if (databaseManager != null && databaseManager.getDatabase() != null) {
                     MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("vdata");
-                    collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), Updates.set("clientBrand", brand));
+                    collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), 
+                        Updates.combine(
+                            Updates.set("name", player.getUsername()),
+                            Updates.set("clientBrand", brand)
+                        ), 
+                        UPSERT_OPTIONS
+                    );
                 }
             } catch (Exception ex) {
                 Logger.error("Failed to save clientBrand for " + player.getUsername(), ex);
@@ -128,10 +148,12 @@ public class PlayerListener {
                     MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("vdata");
                     collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), 
                         Updates.combine(
+                            Updates.set("name", player.getUsername()),
                             Updates.set("protocolVersion", protocolVersion),
                             Updates.set("virtualHost", virtualHost),
                             Updates.set("ping", ping)
-                        )
+                        ),
+                        UPSERT_OPTIONS
                     );
                 }
             } catch (Exception ex) {

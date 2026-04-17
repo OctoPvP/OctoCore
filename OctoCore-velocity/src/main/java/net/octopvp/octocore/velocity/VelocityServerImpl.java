@@ -114,8 +114,9 @@ public class VelocityServerImpl implements ServerImplementation {
 
             @Override
             public MongoDatabase getDatabase() {
-                return mongoClient.getDatabase("OctoCore");
-                // throw new UnsupportedOperationException("Not implemented");
+                String dbName = octoCoreVelocity.getConfig().getMongo().getAuth().getDatabase();
+                if (dbName == null || dbName.isEmpty()) dbName = "OctoCore";
+                return mongoClient.getDatabase(dbName);
             }
         };
     }
