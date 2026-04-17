@@ -4,6 +4,7 @@ database:
     port: 27017
     auth:
       enabled: false
-      username: ''
-      password: ''
-      db: ''
+      username: 
+      password: 
+      db: 
+npc:

@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":OctoCore-common"))
+    compileOnly(project(":OctoCore-common"))
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
     compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.11")
@@ -27,6 +27,9 @@ dependencies {
 tasks {
     shadowJar {
         archiveFileName.set("OctoRPG.jar")
+        //fix for bundling mongo with octocore and rpg
+        exclude("com/mongodb/**")
+        exclude("org/bson/**")
     }
     compileJava {
         options.encoding = Charsets.UTF_8.name()

@@ -13,12 +13,13 @@ import java.util.UUID;
 
 public class DataUpdateRunnable extends BukkitRunnable {
     private boolean tickPlayerData = false;
+    private int saveTicks = 0;
 
     @Override
     public void run() {
         tickPlayerData = !tickPlayerData;
-        Set<UUID> done = new HashSet<>();
-        
+        saveTicks++;
+
         RPGPlayerManager.getInstance().getDataMap().forEach((uuid, playerData) -> {
             if (tickPlayerData) {
                 playerData.update();
@@ -26,16 +27,15 @@ public class DataUpdateRunnable extends BukkitRunnable {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 playerData.updateActionBar(player);
-                done.add(uuid);
             }
         });
-        
-        /* Optional: Handle missing data kicks if needed
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (!done.contains(onlinePlayer.getUniqueId())) {
-                // Not loaded yet
-            }
+
+        // Save all data every 10 seconds (100 ticks since registered at 2L)
+        if (saveTicks >= 100) {
+            saveTicks = 0;
+            net.octopvp.octocore.rpg.OctoRPG.getInstance().getServer().getScheduler().runTaskAsynchronously(net.octopvp.octocore.rpg.OctoRPG.getInstance(), () -> {
+                RPGPlayerManager.getInstance().saveAll();
+            });
         }
-        */
     }
 }

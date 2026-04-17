@@ -10,7 +10,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
 
 public interface CustomItem {
     String getId();
@@ -18,7 +17,7 @@ public interface CustomItem {
     Material getMaterial();
     java.util.List<String> getLore();
 
-    default java.util.List<String> getLore(ItemStack item) {
+    default java.util.List<String> getLore(org.bukkit.inventory.ItemStack item) {
         return getLore();
     }
 
@@ -34,9 +33,9 @@ public interface CustomItem {
         return null;
     }
     
-    default void onHitEntity(Player player, Entity victim, EntityDamageByEntityEvent event, ItemStack item) {}
-    default void onKillEntity(Player player, LivingEntity victim, EntityDeathEvent event, ItemStack item) {}
-    default void onInteract(org.bukkit.event.player.PlayerInteractEvent event, ItemStack item) {}
+    default void onHitEntity(Player player, Entity victim, EntityDamageByEntityEvent event, org.bukkit.inventory.ItemStack item) {}
+    default void onKillEntity(Player player, LivingEntity victim, EntityDeathEvent event, org.bukkit.inventory.ItemStack item) {}
+    default void onInteract(org.bukkit.event.player.PlayerInteractEvent event, org.bukkit.inventory.ItemStack item) {}
     
-    ItemStack build();
+    org.bukkit.inventory.ItemStack build();
 }

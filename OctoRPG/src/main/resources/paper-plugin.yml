@@ -10,6 +10,7 @@ dependencies:
     OctoCore:
       load: BEFORE
       required: true
+      join-classpath: true
     DecentHolograms:
       load: BEFORE
       required: true

@@ -9,12 +9,10 @@ import net.octopvp.octocore.rpg.util.LoreUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseRPGItem implements CustomItem {
@@ -26,7 +24,7 @@ public abstract class BaseRPGItem implements CustomItem {
     }
 
     @Override
-    public List<String> getLore(ItemStack item) {
+    public List<String> getLore(org.bukkit.inventory.ItemStack item) {
         List<String> lore = new ArrayList<>();
 
         if (item != null && !item.getEnchantments().isEmpty()) {
@@ -95,8 +93,8 @@ public abstract class BaseRPGItem implements CustomItem {
     }
 
     @Override
-    public ItemStack build() {
-        ItemStack item = new ItemStack(getMaterial());
+    public org.bukkit.inventory.ItemStack build() {
+        org.bukkit.inventory.ItemStack item = new org.bukkit.inventory.ItemStack(getMaterial());
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(getRarity().getColor() + getName());

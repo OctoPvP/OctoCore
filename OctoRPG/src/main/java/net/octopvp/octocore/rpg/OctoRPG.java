@@ -2,9 +2,13 @@ package net.octopvp.octocore.rpg;
 
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import net.octopvp.octocore.rpg.command.RPGClearCommand;
 import net.octopvp.octocore.rpg.command.RPGDebugCommand;
 import net.octopvp.octocore.rpg.command.RPGEnchantCommand;
+import net.octopvp.octocore.rpg.command.RPGHelpCommand;
 import net.octopvp.octocore.rpg.command.RPGItemCommand;
+import net.octopvp.octocore.rpg.command.RPGQuestCommand;
+import net.octopvp.octocore.rpg.command.RPGStatsCommand;
 import net.octopvp.octocore.rpg.enchantment.EnchantmentManager;
 import net.octopvp.octocore.rpg.item.impl.DirtSword;
 import net.octopvp.octocore.rpg.manager.ItemManager;
@@ -34,8 +38,9 @@ public class OctoRPG extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        saveDefaultConfig();
 
-        new Logger(this.getLogger(), "[OctoRPG] ", (message, players) -> {
+        new Logger(this.getLogger(), "", (message, players) -> {
             for (UUID uuid : players) {
                 org.bukkit.entity.Player player = org.bukkit.Bukkit.getPlayer(uuid);
                 if (player != null) {
@@ -66,6 +71,10 @@ public class OctoRPG extends JavaPlugin {
             commands.register("rpgitem", "Gives an RPG custom item", new RPGItemCommand());
             commands.register("rpgdebug", "Toggle RPG debug mode", new RPGDebugCommand());
             commands.register("rpgenchant", "Apply an RPG enchantment", new RPGEnchantCommand());
+            commands.register("rpgstats", "Modify player RPG stats", new RPGStatsCommand());
+            commands.register("rpgclear", "Clear RPG items from inventory", new RPGClearCommand());
+            commands.register("rpgquest", "Manage player quests", new RPGQuestCommand());
+            commands.register("rpghelp", "Show RPG help", java.util.List.of("rpg"), new RPGHelpCommand());
         });
 
         Logger.info("OctoRPG has been enabled (v" + getDescription().getVersion() + ")");

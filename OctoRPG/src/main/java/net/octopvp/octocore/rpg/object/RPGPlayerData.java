@@ -38,6 +38,14 @@ public class RPGPlayerData {
     
     private int stunned = 0;
 
+    public void setStunned(int stunned) {
+        this.stunned = stunned;
+    }
+
+    public int getStunned() {
+        return stunned;
+    }
+
     private int attributePoints = 0;
     private int abilityPoints = 0;
     private int skillPoints = 0;
