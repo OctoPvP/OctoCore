@@ -5,6 +5,7 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.octopvp.octocore.rpg.command.RPGClearCommand;
 import net.octopvp.octocore.rpg.command.RPGDebugCommand;
 import net.octopvp.octocore.rpg.command.RPGEnchantCommand;
+import net.octopvp.octocore.rpg.command.RPGEffectCommand;
 import net.octopvp.octocore.rpg.command.RPGHelpCommand;
 import net.octopvp.octocore.rpg.command.RPGItemCommand;
 import net.octopvp.octocore.rpg.command.RPGQuestCommand;
@@ -21,6 +22,7 @@ import net.octopvp.octocore.rpg.item.impl.BattleAxe;
 import net.octopvp.octocore.rpg.manager.RPGPlayerManager;
 import net.octopvp.octocore.rpg.listener.DamageListener;
 import net.octopvp.octocore.rpg.listener.EnchantmentListener;
+import net.octopvp.octocore.rpg.listener.HealingListener;
 import net.octopvp.octocore.rpg.listener.ProjectileListener;
 import net.octopvp.octocore.rpg.listener.ProtocolListener;
 import net.octopvp.octocore.rpg.runnable.DataUpdateRunnable;
@@ -59,6 +61,7 @@ public class OctoRPG extends JavaPlugin {
         new DamageListener(this);
         new EnchantmentListener(this);
         new ProjectileListener(this);
+        new HealingListener(this);
         ProtocolListener.register(this);
         
         this.dataUpdateRunnable = new DataUpdateRunnable();
@@ -79,6 +82,7 @@ public class OctoRPG extends JavaPlugin {
             commands.register("rpgstats", "Modify player RPG stats", new RPGStatsCommand());
             commands.register("rpgclear", "Clear RPG items from inventory", new RPGClearCommand());
             commands.register("rpgquest", "Manage player quests", new RPGQuestCommand());
+            commands.register("rpgeffect", "Apply RPG status effects", new RPGEffectCommand());
             commands.register("rpghelp", "Show RPG help", java.util.List.of("rpg"), new RPGHelpCommand());
         });
 

@@ -98,6 +98,15 @@ public class RPGPlayerData {
     private transient int karmaAfterCalc = 0;
     private transient int extraHealthAfterCalc = 0;
     private transient int baseManaAfterCalc = 0;
+    private transient long blightUntil = 0;
+
+    public void applyBlight(int seconds) {
+        this.blightUntil = System.currentTimeMillis() + (seconds * 1000L);
+    }
+
+    public boolean hasBlight() {
+        return System.currentTimeMillis() < blightUntil;
+    }
 
     public int getStrengthAfterCalc() {
         return strengthAfterCalc;
@@ -137,12 +146,6 @@ public class RPGPlayerData {
             if (inHand != null && inHand.getType() != org.bukkit.Material.AIR) {
                 OctoRPG.getInstance().getItemManager().rebuildLore(inHand);
             }
-        }
-
-        // Forcefully re-validate stats every 5 seconds (50 update ticks)
-        if (tickCount % 50 == 0) {
-            lastAppliedSpeed = -1;
-            lastAppliedMaxHealth = -1;
         }
 
         // Mana Regeneration - Every 1 second (10 update ticks at 2L each)
@@ -247,20 +250,24 @@ public class RPGPlayerData {
 
         // Apply Max Health
         double targetMaxHealth = StatCalculator.calculateHealth(level, vitalityAfterCalc) + extraHealthAfterCalc;
-        if (Math.abs(targetMaxHealth - lastAppliedMaxHealth) > 0.01) {
-            AttributeInstance maxHealth = player.getAttribute(Attribute.MAX_HEALTH);
-            if (maxHealth != null) {
-                maxHealth.setBaseValue(targetMaxHealth);
-                if (debug) player.sendMessage(CC.translate("&7[&bRPG Debug&7] &fApplied HP: &a" + String.format("%.1f", targetMaxHealth) + " &7(LVL Mult: " + String.format("%.2f", multiplier) + "x)"));
+        AttributeInstance maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
+        if (maxHealthAttr != null) {
+            if (Math.abs(maxHealthAttr.getBaseValue() - targetMaxHealth) > 0.01) {
+                maxHealthAttr.setBaseValue(targetMaxHealth);
+                if (debug && Math.abs(targetMaxHealth - lastAppliedMaxHealth) > 0.01) {
+                    player.sendMessage(CC.translate("&7[&bRPG Debug&7] &fStats Updated -> HP: &a" + String.format("%.1f", targetMaxHealth) + " &7(LVL Mult: " + String.format("%.2f", multiplier) + "x)"));
+                }
                 lastAppliedMaxHealth = targetMaxHealth;
             }
         }
 
         // Apply Walk Speed
         float targetSpeed = stunned > 0 ? 0 : StatCalculator.calculateSpeed(level, agilityAfterCalc);
-        if (Math.abs(targetSpeed - lastAppliedSpeed) > 0.001f) {
+        if (Math.abs(player.getWalkSpeed() - targetSpeed) > 0.001f) {
             player.setWalkSpeed(targetSpeed);
-            if (debug) player.sendMessage(CC.translate("&7[&bRPG Debug&7] &fApplied Speed: &a" + String.format("%.3f", targetSpeed) + " &7(LVL Mult: " + String.format("%.2f", multiplier) + "x)"));
+            if (debug && Math.abs(targetSpeed - lastAppliedSpeed) > 0.001f) {
+                player.sendMessage(CC.translate("&7[&bRPG Debug&7] &fStats Updated -> Speed: &a" + String.format("%.3f", targetSpeed) + " &7(LVL Mult: " + String.format("%.2f", multiplier) + "x)"));
+            }
             lastAppliedSpeed = targetSpeed;
         }
     }
@@ -274,8 +281,15 @@ public class RPGPlayerData {
         
         boolean absorption = player.getAbsorptionAmount() > 0;
         
+        NamedTextColor healthColor = NamedTextColor.RED;
+        if (hasBlight()) {
+            healthColor = NamedTextColor.LIGHT_PURPLE;
+        } else if (absorption) {
+            healthColor = NamedTextColor.GOLD;
+        }
+        
         Component actionBar = Component.text(totalHealth + "/" + maxHealth + "❤")
-                .color(absorption ? NamedTextColor.GOLD : NamedTextColor.RED)
+                .color(healthColor)
                 .append(Component.text(" • ").color(NamedTextColor.GRAY))
                 .append(Component.text(currentManaLeft + "/" + baseManaAfterCalc + "❂").color(NamedTextColor.AQUA));
                 
