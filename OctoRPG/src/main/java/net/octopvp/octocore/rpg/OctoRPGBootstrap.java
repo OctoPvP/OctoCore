@@ -20,7 +20,7 @@ import java.util.Map;
 public class OctoRPGBootstrap implements PluginBootstrap {
     @Override
     public void bootstrap(@NotNull BootstrapContext context) {
-        context.getLifecycleManager().registerEventHandler(RegistryEvents.ENCHANTMENT.freeze().register(event -> {
+        context.getLifecycleManager().registerEventHandler(RegistryEvents.ENCHANTMENT.compose().newHandler(event -> {
             Map<String, String> enchants = Map.ofEntries(
                 // Major / Lost
                 Map.entry("fire_aspect", "Fire Aspect"),
@@ -78,7 +78,7 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 } else if (id.equals("glide") || id.equals("wings")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_CHEST_ARMOR;
                 } else if (id.equals("surefooted")) {
-                    targetTag = ItemTypeTagKeys.ENCHANTABLE_FOOTWEAR;
+                    targetTag = ItemTypeTagKeys.ENCHANTABLE_FOOT_ARMOR;
                 }
 
                 final TagKey<ItemType> finalTargetTag = targetTag;

@@ -55,7 +55,7 @@ public class PlayerListener {
             try {
                 IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
                 if (databaseManager != null && databaseManager.getDatabase() != null) {
-                    MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("pdata");
+                    MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("vdata");
                     collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), Updates.set("playerSettings", settingsJson.toString()));
                 }
             } catch (Exception ex) {
@@ -79,7 +79,7 @@ public class PlayerListener {
                 try {
                     IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
                     if (databaseManager != null && databaseManager.getDatabase() != null) {
-                        MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("pdata");
+                        MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("vdata");
                         collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), Updates.set("clientMods", modsString));
                     }
                 } catch (Exception ex) {
@@ -99,7 +99,7 @@ public class PlayerListener {
             try {
                 IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
                 if (databaseManager != null && databaseManager.getDatabase() != null) {
-                    MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("pdata");
+                    MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("vdata");
                     collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), Updates.set("clientBrand", brand));
                 }
             } catch (Exception ex) {
@@ -125,7 +125,7 @@ public class PlayerListener {
             try {
                 IDatabaseManager databaseManager = velocityServerImpl.getDatabaseManager();
                 if (databaseManager != null && databaseManager.getDatabase() != null) {
-                    MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("pdata");
+                    MongoCollection<Document> collection = databaseManager.getDatabase().getCollection("vdata");
                     collection.updateOne(Filters.eq("uuid", player.getUniqueId().toString()), 
                         Updates.combine(
                             Updates.set("protocolVersion", protocolVersion),
@@ -205,7 +205,7 @@ public class PlayerListener {
                             continuation.resume();
                             return;
                         }
-                        MongoCollection<Document> collection = database.getCollection("pdata");
+                        MongoCollection<Document> collection = database.getCollection("vdata");
 
                         // Query for the player's UUID
                         Document playerData = collection.find(Filters.eq("uuid", player

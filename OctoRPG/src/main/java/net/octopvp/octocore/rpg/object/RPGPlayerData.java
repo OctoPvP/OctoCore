@@ -38,6 +38,18 @@ public class RPGPlayerData {
     
     private int stunned = 0;
 
+    private int attributePoints = 0;
+    private int abilityPoints = 0;
+    private int skillPoints = 0;
+    private int classPoints = 0;
+    private int boagsEaten = 0;
+    private long xp = 0;
+    
+    private String baseClassName;
+    private java.util.HashMap<String, com.google.gson.JsonObject> classData = new java.util.HashMap<>();
+    private java.util.List<Long> completedQuests = new java.util.ArrayList<>();
+    private java.util.Map<Long, Long> inProgressQuests = new java.util.HashMap<>();
+
     private transient int vitalityAfterCalc = 0;
     private transient int resilianceAfterCalc = 0;
     private transient int strengthAfterCalc = 0;
