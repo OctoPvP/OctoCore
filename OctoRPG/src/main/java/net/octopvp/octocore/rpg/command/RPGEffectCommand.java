@@ -51,10 +51,22 @@ public class RPGEffectCommand implements BasicCommand {
             case "blight" -> {
                 data.applyBlight(seconds);
                 stack.getSender().sendMessage(CC.GREEN + "Applied BLIGHT to " + target.getName() + " for " + seconds + " seconds.");
+                if (stack.getSender() instanceof Player p) {
+                    RPGPlayerData senderData = RPGPlayerManager.getInstance().getData(p);
+                    if (senderData != null && senderData.isDebug()) {
+                        p.sendMessage(CC.translate("&7[&bRPG Debug&7] &fCommand Execution: Applied &dBLIGHT &fto &d" + target.getName()));
+                    }
+                }
             }
             case "stun" -> {
                 data.setStunned(seconds * 10); // Stun is currently in half-seconds/ticks in your code logic
                 stack.getSender().sendMessage(CC.GREEN + "Applied STUN to " + target.getName() + " for " + seconds + " seconds.");
+                if (stack.getSender() instanceof Player p) {
+                    RPGPlayerData senderData = RPGPlayerManager.getInstance().getData(p);
+                    if (senderData != null && senderData.isDebug()) {
+                        p.sendMessage(CC.translate("&7[&bRPG Debug&7] &fCommand Execution: Applied &eSTUN &fto &d" + target.getName()));
+                    }
+                }
             }
             default -> {
                 stack.getSender().sendMessage(CC.RED + "Unknown effect: " + effect);

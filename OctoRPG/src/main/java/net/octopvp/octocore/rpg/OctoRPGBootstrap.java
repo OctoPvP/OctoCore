@@ -64,13 +64,17 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 Map.entry("homing", "Homing"),
                 Map.entry("luminosity", "Luminosity"),
                 Map.entry("surefooted", "Surefooted"),
-                Map.entry("volume", "Volume")
+                Map.entry("volume", "Volume"),
+                Map.entry("bane", "Bane")
             );
 
             for (Map.Entry<String, String> entry : enchants.entrySet()) {
                 String id = entry.getKey();
                 String name = entry.getValue();
                 
+                int maxLvl = 10;
+                if (id.equals("bane")) maxLvl = 1;
+
                 TagKey<ItemType> targetTag = ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON;
                 if (id.equals("frostbolt") || id.equals("homing") || id.equals("accuracy")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_BOW;
@@ -83,12 +87,13 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 }
 
                 final TagKey<ItemType> finalTargetTag = targetTag;
+                final int finalMaxLvl = maxLvl;
                 event.registry().register(
                         TypedKey.create(RegistryKey.ENCHANTMENT, Key.key("octorpg", id)),
                         builder -> builder.description(Component.text(name))
                                 .supportedItems(event.getOrCreateTag(finalTargetTag))
                                 .anvilCost(1)
-                                .maxLevel(10)
+                                .maxLevel(finalMaxLvl)
                                 .weight(10)
                                 .minimumCost(EnchantmentRegistryEntry.EnchantmentCost.of(1, 1))
                                 .maximumCost(EnchantmentRegistryEntry.EnchantmentCost.of(1, 1))
