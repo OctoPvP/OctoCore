@@ -49,7 +49,7 @@ public class BoagItem extends BaseRPGItem {
     public void onConsume(PlayerItemConsumeEvent event, ItemStack item) {
         Player player = event.getPlayer();
         player.sendMessage(CC.translate("&2Ugh! That was disgusting!"));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 2, 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20 * 2, 1));
         
         RPGPlayerData data = RPGPlayerManager.getInstance().getData(player);
         if (data != null) {
