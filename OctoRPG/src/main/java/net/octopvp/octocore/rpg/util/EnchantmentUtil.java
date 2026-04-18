@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class EnchantmentUtil {
     private static final Map<String, EnchantmentRarity> RARITY_MAP = new HashMap<>();
+    private static final Map<String, String> DESCRIPTION_MAP = new HashMap<>();
 
     static {
         // Common
@@ -49,7 +50,7 @@ public class EnchantmentUtil {
         register("piercing", EnchantmentRarity.COMMON);
         register("quick_charge", EnchantmentRarity.COMMON);
         
-        // Custom / Aetheria based ones (using names from wiki search)
+        // Custom / Aetheria based ones
         register("accuracy", EnchantmentRarity.COMMON);
         register("balance", EnchantmentRarity.COMMON);
         register("comfort", EnchantmentRarity.COMMON);
@@ -81,10 +82,57 @@ public class EnchantmentUtil {
         register("wings", EnchantmentRarity.MYTHIC);
         register("titanic_chains", EnchantmentRarity.MYTHIC);
         register("plus", EnchantmentRarity.MYTHIC);
+
+        // Custom Descriptions (Max 20 chars)
+        describe("fire_aspect", "Burns enemies.");
+        describe("seraph", "Holy damage.");
+        describe("vampire", "Steal life.");
+        describe("flametongue", "Fire strikes.");
+        describe("frostbrand", "Freezing hits.");
+        describe("shock", "Lightning hit.");
+        describe("moonlight", "Lunar power.");
+        describe("accuracy", "Homing arrows.");
+        describe("balance", "Balanced hits.");
+        describe("comfort", "Soft & cozy.");
+        describe("lightness", "Move faster.");
+        describe("bane", "Blocks healing.");
+        describe("brilliance", "Blinds targets.");
+        describe("catscratch", "Fast swipes.");
+        describe("vorpal", "Decapitate chance.");
+        describe("dragon_slayer", "Slay dragons.");
+        describe("wither", "Wither rot.");
+        describe("inventory_expansion", "More space.");
+        describe("plus", "Extra stats.");
+        describe("prosperity", "More loot.");
+        describe("healing_water", "Heals in water.");
+        describe("critical_resistance", "Less crit dmg.");
+        describe("auto_shield", "Auto blocks.");
+        describe("frostbolt", "Frozen shot.");
+        describe("lifesteal", "Heals on hit.");
+        describe("chains", "Binds enemies.");
+        describe("glide", "Slow fall.");
+        describe("experienced", "More XP gain.");
+        describe("multipick", "Mines more.");
+        describe("wings", "Flight power.");
+        describe("titanic_chains", "Heavy binding.");
+        describe("bleed", "Enemy bleeds.");
+        describe("homing", "Seeking arrows.");
+        describe("luminosity", "Bright light.");
+        describe("surefooted", "No knockback.");
+        describe("volume", "Large potions.");
     }
 
     private static void register(String key, EnchantmentRarity rarity) {
         RARITY_MAP.put(key.toLowerCase(), rarity);
+    }
+
+    private static void describe(String key, String desc) {
+        DESCRIPTION_MAP.put(key.toLowerCase(), desc);
+    }
+
+    public static String getDescription(Enchantment enchantment) {
+        String key = enchantment.getKey().getKey().toLowerCase();
+        return DESCRIPTION_MAP.getOrDefault(key, "");
     }
 
     public static EnchantmentRarity getRarity(Enchantment enchantment) {

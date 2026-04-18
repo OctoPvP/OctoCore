@@ -32,19 +32,24 @@ public class AccuracyEffect implements EnchantmentEffect {
     @Override
     public void onShoot(Player player, EntityShootBowEvent event, ItemStack item, int level) {
         double chance = level * 0.05;
+        
+        RPGPlayerData data = RPGPlayerManager.getInstance().getData(player);
+        if (data != null && data.hasBadLuck()) {
+            chance *= 0.5; // 50% reduction in luck
+        }
+
         if (ThreadLocalRandom.current().nextDouble() < chance) {
             Entity projectile = event.getProjectile();
             if (projectile instanceof Projectile) {
                 projectile.getPersistentDataContainer().set(HOMING_KEY, PersistentDataType.INTEGER, 1);
                 
-                // Increase speed by 2 m/s (0.1 blocks per tick)
+                // Increase speed by 5 m/s (0.25 blocks per tick)
                 org.bukkit.util.Vector vel = projectile.getVelocity();
                 double speed = vel.length();
                 if (speed > 0) {
-                    projectile.setVelocity(vel.multiply((speed + 0.1) / speed));
+                    projectile.setVelocity(vel.multiply((speed + 0.25) / speed));
                 }
 
-                RPGPlayerData data = RPGPlayerManager.getInstance().getData(player);
                 if (data != null && data.isDebug()) {
                     projectile.getWorld().spawnParticle(org.bukkit.Particle.ENCHANTED_HIT, projectile.getLocation(), 5, 0.1, 0.1, 0.1, 0.02);
                 }

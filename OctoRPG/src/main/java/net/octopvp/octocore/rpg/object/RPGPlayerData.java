@@ -100,6 +100,8 @@ public class RPGPlayerData {
     private transient int baseManaAfterCalc = 0;
     private transient long blightUntil = 0;
     private transient org.bukkit.boss.BossBar blightBar;
+    private transient long badLuckUntil = 0;
+    private transient org.bukkit.boss.BossBar badLuckBar;
 
     public void applyBlight(int seconds) {
         this.blightUntil = System.currentTimeMillis() + (seconds * 1000L);
@@ -107,6 +109,15 @@ public class RPGPlayerData {
             updateBlightBar();
         } else {
             removeBlightBar();
+        }
+    }
+
+    public void applyBadLuck(int seconds) {
+        this.badLuckUntil = System.currentTimeMillis() + (seconds * 1000L);
+        if (seconds > 0) {
+            updateBadLuckBar();
+        } else {
+            removeBadLuckBar();
         }
     }
 
@@ -121,6 +132,17 @@ public class RPGPlayerData {
         blightBar.setVisible(true);
     }
 
+    private void updateBadLuckBar() {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
+        
+        if (badLuckBar == null) {
+            badLuckBar = Bukkit.createBossBar(CC.translate("&8&lBAD LUCK &7- &fFortune Fades..."), org.bukkit.boss.BarColor.WHITE, org.bukkit.boss.BarStyle.SOLID);
+            badLuckBar.addPlayer(player);
+        }
+        badLuckBar.setVisible(true);
+    }
+
     private void removeBlightBar() {
         if (blightBar != null) {
             blightBar.removeAll();
@@ -128,10 +150,25 @@ public class RPGPlayerData {
         }
     }
 
+    private void removeBadLuckBar() {
+        if (badLuckBar != null) {
+            badLuckBar.removeAll();
+            badLuckBar = null;
+        }
+    }
+
     public boolean hasBlight() {
         boolean active = System.currentTimeMillis() < blightUntil;
         if (!active && blightBar != null) {
             removeBlightBar();
+        }
+        return active;
+    }
+
+    public boolean hasBadLuck() {
+        boolean active = System.currentTimeMillis() < badLuckUntil;
+        if (!active && badLuckBar != null) {
+            removeBadLuckBar();
         }
         return active;
     }
@@ -312,6 +349,8 @@ public class RPGPlayerData {
         NamedTextColor healthColor = NamedTextColor.RED;
         if (hasBlight()) {
             healthColor = NamedTextColor.LIGHT_PURPLE;
+        } else if (hasBadLuck()) {
+            healthColor = NamedTextColor.DARK_GRAY;
         } else if (absorption) {
             healthColor = NamedTextColor.GOLD;
         }

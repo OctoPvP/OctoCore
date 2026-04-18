@@ -1,5 +1,6 @@
 package net.octopvp.octocore.rpg.manager;
 
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.rpg.OctoRPG;
 import net.octopvp.octocore.rpg.item.CustomItem;
 import org.bukkit.NamespacedKey;
@@ -68,6 +69,23 @@ public class ItemManager implements Listener {
         if (meta == null) return;
         
         java.util.List<String> lore = customItem.getLore(item);
+
+        // Add Enchantment Descriptions
+        boolean headerAdded = false;
+        for (org.bukkit.enchantments.Enchantment ench : item.getEnchantments().keySet()) {
+            String desc = net.octopvp.octocore.rpg.util.EnchantmentUtil.getDescription(ench);
+            if (!desc.isEmpty()) {
+                if (!headerAdded) {
+                    lore.add("");
+                    lore.add(CC.translate("&b&lEnchantments:"));
+                    headerAdded = true;
+                }
+                String name = ench.getKey().getKey();
+                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase().replace("_", " ");
+                lore.add(CC.translate(" &7" + name + ": &f" + desc));
+            }
+        }
+
         lore.addAll(OctoRPG.getInstance().getEnchantmentDurabilityManager().getDurabilityLore(item));
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -129,6 +147,15 @@ public class ItemManager implements Listener {
         CustomItem customItem = getCustomItem(item);
         if (customItem != null) {
             customItem.onInteract(event, item);
+        }
+    }
+
+    @EventHandler
+    public void onConsume(org.bukkit.event.player.PlayerItemConsumeEvent event) {
+        ItemStack item = event.getItem();
+        CustomItem customItem = getCustomItem(item);
+        if (customItem != null) {
+            customItem.onConsume(event, item);
         }
     }
 }

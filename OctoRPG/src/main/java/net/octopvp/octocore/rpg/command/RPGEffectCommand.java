@@ -68,6 +68,16 @@ public class RPGEffectCommand implements BasicCommand {
                     }
                 }
             }
+            case "badluck" -> {
+                data.applyBadLuck(seconds);
+                stack.getSender().sendMessage(CC.GREEN + "Applied BAD LUCK to " + target.getName() + " for " + seconds + " seconds.");
+                if (stack.getSender() instanceof Player p) {
+                    RPGPlayerData senderData = RPGPlayerManager.getInstance().getData(p);
+                    if (senderData != null && senderData.isDebug()) {
+                        p.sendMessage(CC.translate("&7[&bRPG Debug&7] &fCommand Execution: Applied &8BAD LUCK &fto &d" + target.getName()));
+                    }
+                }
+            }
             default -> {
                 stack.getSender().sendMessage(CC.RED + "Unknown effect: " + effect);
             }
@@ -82,7 +92,7 @@ public class RPGEffectCommand implements BasicCommand {
                     .collect(Collectors.toList());
         }
         if (args.length == 2) {
-            return List.of("blight", "stun").stream()
+            return List.of("blight", "stun", "badluck").stream()
                     .filter(s -> s.startsWith(args[1].toLowerCase()))
                     .collect(Collectors.toList());
         }

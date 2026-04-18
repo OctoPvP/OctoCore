@@ -36,6 +36,7 @@ public interface CustomItem {
     default void onHitEntity(Player player, Entity victim, EntityDamageByEntityEvent event, org.bukkit.inventory.ItemStack item) {}
     default void onKillEntity(Player player, LivingEntity victim, EntityDeathEvent event, org.bukkit.inventory.ItemStack item) {}
     default void onInteract(org.bukkit.event.player.PlayerInteractEvent event, org.bukkit.inventory.ItemStack item) {}
+    default void onConsume(org.bukkit.event.player.PlayerItemConsumeEvent event, org.bukkit.inventory.ItemStack item) {}
     
     org.bukkit.inventory.ItemStack build();
 }

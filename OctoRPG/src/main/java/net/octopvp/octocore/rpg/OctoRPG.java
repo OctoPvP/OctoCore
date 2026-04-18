@@ -19,6 +19,7 @@ import net.octopvp.octocore.rpg.item.impl.Longsword;
 import net.octopvp.octocore.rpg.item.impl.Greatsword;
 import net.octopvp.octocore.rpg.item.impl.Dagger;
 import net.octopvp.octocore.rpg.item.impl.BattleAxe;
+import net.octopvp.octocore.rpg.item.impl.BoagItem;
 import net.octopvp.octocore.rpg.manager.RPGPlayerManager;
 import net.octopvp.octocore.rpg.listener.DamageListener;
 import net.octopvp.octocore.rpg.listener.EnchantmentListener;
@@ -73,6 +74,7 @@ public class OctoRPG extends JavaPlugin {
         this.itemManager.registerItem(new Greatsword());
         this.itemManager.registerItem(new Dagger());
         this.itemManager.registerItem(new BattleAxe());
+        this.itemManager.registerItem(new BoagItem());
 
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             final Commands commands = event.registrar();

@@ -38,7 +38,7 @@ punish:
     #allow alts on this server
     allow-alts: true
 settings:
-  auto-respawn: true
+  auto-respawn: false
   world-name: world
   spawn:
     x: 0

@@ -46,6 +46,14 @@ public class DamageListener implements Listener {
             // Critical: Forcefully clear Blight and UI elements to prevent respawn lockout
             data.applyBlight(0);
         }
+
+        // Kick the player after death
+        OctoRPG.getInstance().getServer().getScheduler().runTaskLater(OctoRPG.getInstance(), () -> {
+            if (player.isOnline()) {
+                player.kick(net.kyori.adventure.text.Component.text("You have fallen in battle.")
+                        .color(net.kyori.adventure.text.format.NamedTextColor.RED));
+            }
+        }, 1L);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
