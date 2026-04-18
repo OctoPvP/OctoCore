@@ -73,6 +73,7 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 
                 int maxLvl = 10;
                 if (id.equals("bane")) maxLvl = 1;
+                else if (id.equals("brilliance")) maxLvl = 4;
 
                 TagKey<ItemType> targetTag = ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON;
                 if (id.equals("frostbolt") || id.equals("homing") || id.equals("accuracy")) {

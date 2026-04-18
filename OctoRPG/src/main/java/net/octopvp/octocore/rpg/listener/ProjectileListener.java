@@ -83,6 +83,8 @@ public class ProjectileListener implements Listener {
                 RPGPlayerData data = RPGPlayerManager.getInstance().getData(player);
                 if (data != null && data.isDebug()) {
                     projectile.getWorld().spawnParticle(org.bukkit.Particle.CRIT, projectile.getLocation(), 1, 0, 0, 0, 0);
+                    // Add redstone trail for trajectory
+                    projectile.getWorld().spawnParticle(org.bukkit.Particle.DUST, projectile.getLocation(), 1, 0, 0, 0, 0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.RED, 1.0f));
                 }
             }
         }

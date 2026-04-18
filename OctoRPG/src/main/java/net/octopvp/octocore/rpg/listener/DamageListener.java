@@ -17,6 +17,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+
 import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +29,23 @@ public class DamageListener implements Listener {
 
     public DamageListener(OctoRPG plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onDeathMessage(PlayerDeathEvent e) {
+        Player player = e.getEntity();
+        RPGPlayerData data = RPGPlayerManager.getInstance().getData(player.getUniqueId());
+        if (data != null && data.hasBlight()) {
+            net.kyori.adventure.text.Component current = e.deathMessage();
+            if (current != null) {
+                e.deathMessage(current.append(net.kyori.adventure.text.Component.text("\n")
+                        .append(net.kyori.adventure.text.Component.text("They were consumed by the Blight. Their soul withered into nothingness.")
+                                .color(net.kyori.adventure.text.format.NamedTextColor.LIGHT_PURPLE))));
+            }
+            
+            // Critical: Forcefully clear Blight and UI elements to prevent respawn lockout
+            data.applyBlight(0);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

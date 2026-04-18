@@ -24,7 +24,6 @@ public class HealingListener implements Listener {
             RPGPlayerData data = RPGPlayerManager.getInstance().getData(player.getUniqueId());
             if (data != null && data.hasBlight()) {
                 blighted = true;
-                player.sendActionBar(CC.translate("&d&lBLIGHTED &7- &cHealing Blocked!"));
             }
         } else if (livingEntity.hasMetadata("rpg_blight")) {
             long expiry = livingEntity.getMetadata("rpg_blight").get(0).asLong();

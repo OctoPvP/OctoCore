@@ -110,6 +110,10 @@ public class RPGPlayerManager implements Listener {
             if (data == null) {
                 data = new RPGPlayerData(uuid);
             }
+            
+            // Ensure clean state on join
+            data.setStunned(0);
+            data.applyBlight(0);
 
             final RPGPlayerData finalData = data;
             OctoRPG.getInstance().getServer().getScheduler().runTask(OctoRPG.getInstance(), () -> {

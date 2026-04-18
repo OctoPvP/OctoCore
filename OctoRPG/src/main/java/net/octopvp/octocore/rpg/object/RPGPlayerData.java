@@ -99,13 +99,41 @@ public class RPGPlayerData {
     private transient int extraHealthAfterCalc = 0;
     private transient int baseManaAfterCalc = 0;
     private transient long blightUntil = 0;
+    private transient org.bukkit.boss.BossBar blightBar;
 
     public void applyBlight(int seconds) {
         this.blightUntil = System.currentTimeMillis() + (seconds * 1000L);
+        if (seconds > 0) {
+            updateBlightBar();
+        } else {
+            removeBlightBar();
+        }
+    }
+
+    private void updateBlightBar() {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) return;
+        
+        if (blightBar == null) {
+            blightBar = Bukkit.createBossBar(CC.translate("&d&lBLIGHTED &7- &cHealing Blocked!"), org.bukkit.boss.BarColor.PURPLE, org.bukkit.boss.BarStyle.SOLID);
+            blightBar.addPlayer(player);
+        }
+        blightBar.setVisible(true);
+    }
+
+    private void removeBlightBar() {
+        if (blightBar != null) {
+            blightBar.removeAll();
+            blightBar = null;
+        }
     }
 
     public boolean hasBlight() {
-        return System.currentTimeMillis() < blightUntil;
+        boolean active = System.currentTimeMillis() < blightUntil;
+        if (!active && blightBar != null) {
+            removeBlightBar();
+        }
+        return active;
     }
 
     public int getStrengthAfterCalc() {
@@ -133,7 +161,7 @@ public class RPGPlayerData {
 
     public void update() {
         Player player = Bukkit.getPlayer(uuid);
-        if (player == null) return;
+        if (player == null || player.isDead()) return;
 
         tickCount++;
 
