@@ -82,6 +82,11 @@ public class DamageListener implements Listener {
         }
 
         if (player != null) {
+            // Disable Vanilla Critical Strikes
+            if (e.isCritical()) {
+                e.setDamage(e.getDamage() / 1.5);
+            }
+
             RPGPlayerData data = RPGPlayerManager.getInstance().getData(player.getUniqueId());
             if (data != null) {
                 double newDamage = StatCalculator.calculateDamage(data.getLevel(), data.getStrengthAfterCalc(), e.getDamage());

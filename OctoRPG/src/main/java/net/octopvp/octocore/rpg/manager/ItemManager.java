@@ -84,11 +84,7 @@ public class ItemManager implements Listener {
                     if (!headerAdded) {
                         lore.add("");
                         lore.add(CC.translate("&b&lEnchantments:"));
-                        if (!shift) {
-                            lore.add(CC.translate(" &8(Hold SHIFT for info)"));
-                        }
-                        headerAdded = true;
-                    }
+                        headerAdded = true;                    }
                     if (shift) {
                         String name = ench.getKey().getKey();
                         name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase().replace("_", " ");

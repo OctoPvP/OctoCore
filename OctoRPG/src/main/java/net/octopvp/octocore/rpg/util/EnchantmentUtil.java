@@ -56,6 +56,7 @@ public class EnchantmentUtil {
         register("comfort", EnchantmentRarity.COMMON);
         register("volume", EnchantmentRarity.COMMON);
         register("lightness", EnchantmentRarity.COMMON);
+        register("critical_strike", EnchantmentRarity.COMMON);
 
         // Uncommon
         register("bane", EnchantmentRarity.UNCOMMON);
@@ -96,6 +97,7 @@ public class EnchantmentUtil {
         describe("balance", "Balanced hits.");
         describe("comfort", "Soft & cozy.");
         describe("lightness", "Move faster.");
+        describe("critical_strike", "Increases damage when dealing critical hits, Amount depends on power level(+1 damage per level).");
         describe("bane", "Blocks healing.");
         describe("brilliance", "Blinds targets.");
         describe("catscratch", "Increases the power level of any debuffs currently affecting the target by +1 / LVL");

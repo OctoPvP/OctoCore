@@ -23,7 +23,8 @@ public class SettingsMenu extends Menu<Gui> {
         RPGPlayerData data = RPGPlayerManager.getInstance().getData(player);
         if (data == null) return;
 
-        gui.setItem(13, ItemBuilder.from(Material.ENCHANTED_BOOK)
+        Material icon = data.isShowEnchantments() ? Material.ENCHANTED_BOOK : Material.BOOK;
+        gui.setItem(13, ItemBuilder.from(icon)
                 .name(CC.translate("&bShow Enchantment Descriptions"))
                 .lore(
                         "",

@@ -22,6 +22,7 @@ public class EnchantmentManager {
         registerEffect(new BaneEffect());
         registerEffect(new BrillianceEffect());
         registerEffect(new CatscratchEffect());
+        registerEffect(new CriticalStrikeEffect());
     }
 
     public void registerEffect(EnchantmentEffect effect) {

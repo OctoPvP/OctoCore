@@ -38,6 +38,7 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 Map.entry("lightness", "Lightness"),
                 Map.entry("brilliance", "Brilliance"),
                 Map.entry("catscratch", "Catscratch"),
+                Map.entry("critical_strike", "Critical Strike"),
                 Map.entry("vorpal", "Vorpal"),
                 Map.entry("dragon_slayer", "Dragon Slayer"),
                 Map.entry("wither", "Wither"),
@@ -76,7 +77,9 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 else if (id.equals("brilliance")) maxLvl = 4;
 
                 TagKey<ItemType> targetTag = ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON;
-                if (id.equals("frostbolt") || id.equals("homing") || id.equals("accuracy")) {
+                if (id.equals("catscratch")) {
+                    targetTag = ItemTypeTagKeys.ENCHANTABLE_WEAPON;
+                } else if (id.equals("frostbolt") || id.equals("homing") || id.equals("accuracy")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_BOW;
                 } else if (id.equals("multipick")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_MINING;

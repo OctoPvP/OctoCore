@@ -15,7 +15,7 @@ public class ProtocolListener {
             public void onPacketSending(PacketEvent event) {
                 if (event.getPacketType() == PacketType.Play.Server.WORLD_PARTICLES) {
                     Particle particle = event.getPacket().getNewParticles().read(0).getParticle();
-                    if (particle == Particle.DAMAGE_INDICATOR) {
+                    if (particle == Particle.DAMAGE_INDICATOR || particle == Particle.CRIT || particle == Particle.ENCHANTED_HIT) {
                         event.setCancelled(true);
                     }
                 }
