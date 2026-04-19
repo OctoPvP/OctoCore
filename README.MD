@@ -7,7 +7,26 @@ before building OctoCore:
  * build Commander from source and push to local maven
 
 Building:
-  `gradlew.bat OctoCore-Core:build
+  `gradlew.bat OctoCore-Core:build`
+
+<details>
+<summary>OctoRPG</summary>
+
+# OctoRPG
+OctoRPG is a RPG for aetheria on the OctoCore network that implements custom items, stat-based attribute scaling, and a custom enchantment system based on the books.
+
+### Custom Enchantments
+*   **Frostbolt:** A ranged enchantment for Bows and Crossbows that has a chance to immobilize targets on hit.
+*   **Lifesteal:** A melee enchantment for Swords and Greatswords that heals the wielder by draining health from their victims.
+*   **Accuracy:** a bow enchantment that has a chance to home arrows to your target
+*   **Bane:** Inflicts the "Blight" status effect, which temporarily reduces all healing the target receives for. 
+*   **Brilliance:** Each strike has a 25% / LVL of Blinding the target for 1s 
+*   **Catscratch:** Increases the power level of any debuffs currently affecting the target by +1 / LVL 
+*   **Critical Strike:** Increases damage when dealing critical hits, Amount depends on power level (+1 damage per level). 
+*   **Defender:** Whenever you use the Parry or Guard ability, your armor is increased temporarily. 
+*   **Distill:** A potion enchantment that enhances the potion's strength by +5% / LVL.
+
+</details>
 
 <details>
 <summary>OctoVelocity</summary>
