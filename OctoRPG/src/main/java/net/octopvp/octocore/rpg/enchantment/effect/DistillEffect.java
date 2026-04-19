@@ -83,6 +83,7 @@ public class DistillEffect implements EnchantmentEffect {
         
         // 4. Update the item meta - Minecraft will now apply these modified effects when the event finishes
         item.setItemMeta(meta);
+        //TODO set the potion to awkward that way we dont get a double heal
         
         player.sendMessage(CC.translate("&7[&bRPG&7] &aDistill (+" + (int)(5 * level) + "% strength) enhanced your potion!"));
     }
