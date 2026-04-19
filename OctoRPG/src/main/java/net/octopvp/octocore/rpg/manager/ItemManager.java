@@ -76,7 +76,6 @@ public class ItemManager implements Listener {
         RPGPlayerData data = player == null ? null : RPGPlayerManager.getInstance().getData(player.getUniqueId());
         if (data != null && data.isShowEnchantments()) {
             boolean headerAdded = false;
-            boolean shift = player.isSneaking();
 
             for (org.bukkit.enchantments.Enchantment ench : item.getEnchantments().keySet()) {
                 String desc = net.octopvp.octocore.rpg.util.EnchantmentUtil.getDescription(ench);
@@ -85,14 +84,13 @@ public class ItemManager implements Listener {
                         lore.add("");
                         lore.add(CC.translate("&b&lEnchantments:"));
                         headerAdded = true;                    }
-                    if (shift) {
-                        String name = ench.getKey().getKey();
-                        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase().replace("_", " ");
-                        lore.add(CC.translate(" &7" + name + ":"));
-                        for (String wrapped : wrap(desc, 35)) {
-                            lore.add(CC.translate("  &f" + wrapped));
-                        }
-                    }                }
+                    String name = ench.getKey().getKey();
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase().replace("_", " ");
+                    lore.add(CC.translate(" &7" + name + ":"));
+                    for (String wrapped : wrap(desc, 35)) {
+                        lore.add(CC.translate("  &f" + wrapped));
+                    }
+                }
             }
         }
 
