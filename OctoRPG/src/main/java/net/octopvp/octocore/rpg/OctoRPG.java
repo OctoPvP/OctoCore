@@ -52,6 +52,7 @@ public class OctoRPG extends JavaPlugin {
     private DataUpdateRunnable dataUpdateRunnable;
 
     public OctoRPG() {
+        instance = this;
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             final Commands commands = event.registrar();
             commands.register("rpgitem", "Gives an RPG custom item", new RPGItemCommand());
@@ -70,9 +71,10 @@ public class OctoRPG extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance = this;
+        // instance = this; // Already set in constructor
         saveDefaultConfig();
-
+        
+        // ... (rest of onEnable remains same)
         new Logger(this.getLogger(), "", (message, players) -> {
             for (UUID uuid : players) {
                 org.bukkit.entity.Player player = org.bukkit.Bukkit.getPlayer(uuid);
@@ -123,10 +125,11 @@ public class OctoRPG extends JavaPlugin {
     }
 
     public void reload() {
-        org.bukkit.Bukkit.getScheduler().runTask(this, () -> {
-            org.bukkit.plugin.PluginManager pm = org.bukkit.Bukkit.getPluginManager();
-            pm.disablePlugin(this);
-            pm.enablePlugin(this);
+        reloadConfig();
+        // Refresh scoreboards for everyone
+        org.bukkit.Bukkit.getOnlinePlayers().forEach(player -> {
+            ScoreboardModule.getInstance().removeScoreboard(player);
+            ScoreboardModule.getInstance().setPlayerScoreboard(player, new RPGScoreboardHandler());
         });
     }
 
@@ -139,13 +142,15 @@ public class OctoRPG extends JavaPlugin {
             playerManager.saveAll();
         }
         
-        // Unregister all listeners to prevent duplicates on reload
+        // Unregister all listeners to prevent duplicates
         org.bukkit.event.HandlerList.unregisterAll(this);
         
-        // Clear scoreboards
-        org.bukkit.Bukkit.getOnlinePlayers().forEach(player -> {
-            ScoreboardModule.getInstance().setPlayerScoreboard(player, null);
-        });
+        // Clear scoreboards safely
+        if (ScoreboardModule.getInstance() != null) {
+            org.bukkit.Bukkit.getOnlinePlayers().forEach(player -> {
+                ScoreboardModule.getInstance().removeScoreboard(player);
+            });
+        }
 
         Logger.info("OctoRPG has been disabled.");
         Logger.info("Equus paratur ad diem belli, sed victoria apud Dominum est.");

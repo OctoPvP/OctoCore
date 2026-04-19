@@ -34,14 +34,24 @@ public final class ScoreboardModule implements Module, Listener {
     };
 
     public void setPlayerScoreboard(Player player, ScoreboardHandler<?> handler) {
+        if (handler == null) {
+            removeScoreboard(player);
+            return;
+        }
         FastBoardWrapper<?> existing = scoreboardMap.remove(player.getUniqueId());
         if (existing != null) {
             existing.getFastBoard().delete();
         }
-        if (handler == null) return;
         
         FastBoardWrapper<?> board = new FastBoardWrapper<>(handler.instantiateBoard(player), handler);
         scoreboardMap.put(player.getUniqueId(), board);
+    }
+
+    public void removeScoreboard(Player player) {
+        FastBoardWrapper<?> existing = scoreboardMap.remove(player.getUniqueId());
+        if (existing != null) {
+            existing.getFastBoard().delete();
+        }
     }
 
     @Override
