@@ -57,6 +57,7 @@ public class EnchantmentUtil {
         register("volume", EnchantmentRarity.COMMON);
         register("lightness", EnchantmentRarity.COMMON);
         register("critical_strike", EnchantmentRarity.COMMON);
+        register("distill", EnchantmentRarity.COMMON);
 
         // Uncommon
         register("bane", EnchantmentRarity.UNCOMMON);
@@ -125,6 +126,7 @@ public class EnchantmentUtil {
         describe("luminosity", "Bright light.");
         describe("surefooted", "No knockback.");
         describe("volume", "Large potions.");
+        describe("distill", "A flask enchantment that enhances the potion's strength by +5% / LVL.");
     }
 
     private static void register(String key, EnchantmentRarity rarity) {

@@ -17,4 +17,6 @@ public interface EnchantmentEffect {
     default void onShoot(Player player, org.bukkit.event.entity.EntityShootBowEvent event, ItemStack item, int level) {}
 
     default void onAbilityUse(Player player, String abilityId, ItemStack item, int level) {}
+
+    default void onConsume(org.bukkit.event.player.PlayerItemConsumeEvent event, ItemStack item, int level) {}
 }

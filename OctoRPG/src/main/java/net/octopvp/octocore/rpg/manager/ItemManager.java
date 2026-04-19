@@ -179,6 +179,10 @@ public class ItemManager implements Listener {
     @EventHandler
     public void onConsume(org.bukkit.event.player.PlayerItemConsumeEvent event) {
         ItemStack item = event.getItem();
+        
+        // Handle Custom Enchantments
+        OctoRPG.getInstance().getEnchantmentManager().handleConsume(event, item);
+
         CustomItem customItem = getCustomItem(item);
         if (customItem != null) {
             customItem.onConsume(event, item);

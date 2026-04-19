@@ -24,6 +24,7 @@ public class EnchantmentManager {
         registerEffect(new CatscratchEffect());
         registerEffect(new CriticalStrikeEffect());
         registerEffect(new DefenderEffect());
+        registerEffect(new DistillEffect());
     }
 
     public void registerEffect(EnchantmentEffect effect) {
@@ -43,6 +44,20 @@ public class EnchantmentManager {
                 EnchantmentEffect effect = effects.get(key.getKey().toLowerCase());
                 if (effect != null && effect.isCompatible(item)) {
                     effect.onAbilityUse(player, abilityId, item, level);
+                }
+            }
+        });
+    }
+
+    public void handleConsume(org.bukkit.event.player.PlayerItemConsumeEvent event, ItemStack item) {
+        if (item == null || item.getType().isAir()) return;
+
+        item.getEnchantments().forEach((enchantment, level) -> {
+            NamespacedKey key = enchantment.getKey();
+            if (key.getNamespace().equals("octorpg")) {
+                EnchantmentEffect effect = effects.get(key.getKey().toLowerCase());
+                if (effect != null && effect.isCompatible(item)) {
+                    effect.onConsume(event, item, level);
                 }
             }
         });
