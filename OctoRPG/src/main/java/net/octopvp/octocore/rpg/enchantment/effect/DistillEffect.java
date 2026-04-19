@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,24 +34,28 @@ public class DistillEffect implements EnchantmentEffect {
         Player player = event.getPlayer();
         RPGPlayerData data = RPGPlayerManager.getInstance().getData(player.getUniqueId());
         
-        // 1. Collect all effects (Base + Custom)
-        List<PotionEffect> allEffects = new ArrayList<>(meta.getCustomEffects());
+        // 1. Collect all original effects (Base + Custom)
+        List<PotionEffect> originalEffects = new ArrayList<>(meta.getCustomEffects());
         if (meta.getBasePotionType() != null) {
-            allEffects.addAll(meta.getBasePotionType().getPotionEffects());
+            originalEffects.addAll(meta.getBasePotionType().getPotionEffects());
         }
 
-        if (allEffects.isEmpty()) return;
+        if (originalEffects.isEmpty()) return;
 
         double multiplier = 1.0 + (0.05 * level); // +5% per level
         boolean debug = data != null && data.isDebug();
 
-        for (PotionEffect effect : allEffects) {
-            // interpretation: 'strength' = amplifier.
-            // Amplifier is 0-indexed (0 = Level I, 1 = Level II).
+        // 2. Clear base potion and custom effects so they don't apply twice
+        meta.clearCustomEffects();
+        try {
+            // Set to AWKWARD so it has no base effects of its own
+            meta.setBasePotionType(PotionType.AWKWARD);
+        } catch (Exception ignored) {}
+
+        // 3. Add boosted effects back as custom effects
+        for (PotionEffect effect : originalEffects) {
             int oldAmp = effect.getAmplifier();
             int newAmplifier = (int) Math.round(((oldAmp + 1) * multiplier)) - 1;
-            
-            // Ensure it actually increased if level is high enough, or at least stayed same
             newAmplifier = Math.max(newAmplifier, oldAmp);
 
             PotionEffect boosted = new PotionEffect(
@@ -61,7 +66,7 @@ public class DistillEffect implements EnchantmentEffect {
                     effect.hasParticles(),
                     effect.hasIcon()
             );
-            player.addPotionEffect(boosted, true);
+            meta.addCustomEffect(boosted, true);
 
             // Debug Log
             if (debug) {
@@ -75,6 +80,9 @@ public class DistillEffect implements EnchantmentEffect {
                 }
             }
         }
+        
+        // 4. Update the item meta - Minecraft will now apply these modified effects when the event finishes
+        item.setItemMeta(meta);
         
         player.sendMessage(CC.translate("&7[&bRPG&7] &aDistill (+" + (int)(5 * level) + "% strength) enhanced your potion!"));
     }
