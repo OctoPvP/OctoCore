@@ -27,6 +27,7 @@ dependencies {
     compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.11")
     compileOnly("net.citizensnpcs:citizens-main:2.0.35-SNAPSHOT")
     compileOnly("net.byteflux:libby-bukkit:1.3.1")
+    compileOnly("fr.mrmicky:fastboard:2.1.5")
     implementation(files("../libs/agile-gui-1.4.0.jar"))
 }
 

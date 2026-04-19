@@ -25,7 +25,9 @@ import net.octopvp.octocore.rpg.item.impl.BoagItem;
 import net.octopvp.octocore.rpg.manager.RPGPlayerManager;
 import net.octopvp.octocore.rpg.npc.CitizensProvider;
 import net.octopvp.octocore.rpg.npc.NPCManager;
+import net.octopvp.octocore.rpg.scoreboard.RPGScoreboardHandler;
 import net.octopvp.octocore.rpg.tab.RPGTabHandler;
+import net.octopvp.octocore.core.module.impl.scoreboard.ScoreboardModule;
 import net.octopvp.octocore.rpg.listener.DamageListener;
 import net.octopvp.octocore.rpg.listener.EnchantmentListener;
 import net.octopvp.octocore.rpg.listener.HealingListener;
@@ -107,6 +109,11 @@ public class OctoRPG extends JavaPlugin {
         this.npcManager.registerTypesInPackage("net.octopvp.octocore.rpg.npc.impl");
 
         RPGTabHandler.init();
+
+        ScoreboardModule.getInstance().setJoinHandler(player -> {
+            ScoreboardModule.getInstance().setPlayerScoreboard(player, new RPGScoreboardHandler());
+        });
+        org.bukkit.Bukkit.getOnlinePlayers().forEach(player -> ScoreboardModule.getInstance().setPlayerScoreboard(player, new RPGScoreboardHandler()));
 
         Logger.info("OctoRPG has been enabled (v" + getDescription().getVersion() + ")");
     }

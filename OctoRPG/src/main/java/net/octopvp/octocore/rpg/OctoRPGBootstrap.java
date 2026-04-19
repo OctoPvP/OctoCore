@@ -38,6 +38,7 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 Map.entry("lightness", "Lightness"),
                 Map.entry("brilliance", "Brilliance"),
                 Map.entry("catscratch", "Catscratch"),
+                Map.entry("defender", "Defender"),
                 Map.entry("critical_strike", "Critical Strike"),
                 Map.entry("vorpal", "Vorpal"),
                 Map.entry("dragon_slayer", "Dragon Slayer"),

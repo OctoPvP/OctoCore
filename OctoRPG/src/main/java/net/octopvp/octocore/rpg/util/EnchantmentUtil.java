@@ -65,6 +65,7 @@ public class EnchantmentUtil {
         register("wither", EnchantmentRarity.UNCOMMON);
         register("frostbolt", EnchantmentRarity.UNCOMMON);
         register("catscratch", EnchantmentRarity.UNCOMMON);
+        register("defender", EnchantmentRarity.UNCOMMON);
 
         // Rare
         register("vorpal", EnchantmentRarity.RARE);
@@ -101,6 +102,7 @@ public class EnchantmentUtil {
         describe("bane", "Blocks healing.");
         describe("brilliance", "Blinds targets.");
         describe("catscratch", "Increases the power level of any debuffs currently affecting the target by +1 / LVL");
+        describe("defender", "Whenever you use the Parry or Guard ability, your armor is increased temporarily.");
         describe("vorpal", "Decapitate chance.");
         describe("dragon_slayer", "Slay dragons.");
         describe("wither", "Wither rot.");

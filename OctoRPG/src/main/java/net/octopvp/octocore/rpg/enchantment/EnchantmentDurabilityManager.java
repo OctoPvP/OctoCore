@@ -3,6 +3,7 @@ package net.octopvp.octocore.rpg.enchantment;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.rpg.OctoRPG;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -35,8 +36,12 @@ public class EnchantmentDurabilityManager {
         for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
             Enchantment ench = entry.getKey();
             if (!ench.getKey().getNamespace().equals("octorpg")) continue;
-
+            
             String keyStr = ench.getKey().getKey().toLowerCase();
+            
+            // SKIP: Defender only loses durability on ability use, not standard hits
+            if (keyStr.equals("defender")) continue;
+
             NamespacedKey specificKey = new NamespacedKey(plugin, "uses_" + keyStr);
             
             int uses = pdc.getOrDefault(specificKey, PersistentDataType.INTEGER, DEFAULT_MAX_USES);
@@ -46,6 +51,11 @@ public class EnchantmentDurabilityManager {
                 meta.removeEnchant(ench);
                 pdc.remove(specificKey);
                 changed = true;
+
+                String enchantName = ench.getKey().getKey();
+                enchantName = enchantName.substring(0, 1).toUpperCase() + enchantName.substring(1).toLowerCase().replace("_", " ");
+                player.sendMessage(CC.translate("&cYour " + enchantName + " enchantment has broken!"));
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
             } else {
                 pdc.set(specificKey, PersistentDataType.INTEGER, uses);
                 changed = true;
@@ -56,6 +66,34 @@ public class EnchantmentDurabilityManager {
             item.setItemMeta(meta);
             plugin.getItemManager().rebuildLore(player, item);
         }
+    }
+
+    public void handleSingleUsage(Player player, ItemStack item, Enchantment enchantment) {
+        if (item == null || item.getType().isAir() || !item.hasItemMeta()) return;
+
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        
+        String keyStr = enchantment.getKey().getKey().toLowerCase();
+        NamespacedKey specificKey = new NamespacedKey(plugin, "uses_" + keyStr);
+        
+        int uses = pdc.getOrDefault(specificKey, PersistentDataType.INTEGER, DEFAULT_MAX_USES);
+        uses--;
+
+        if (uses <= 0) {
+            meta.removeEnchant(enchantment);
+            pdc.remove(specificKey);
+            
+            String enchantName = enchantment.getKey().getKey();
+            enchantName = enchantName.substring(0, 1).toUpperCase() + enchantName.substring(1).toLowerCase().replace("_", " ");
+            player.sendMessage(CC.translate("&cYour " + enchantName + " enchantment has broken!"));
+            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
+        } else {
+            pdc.set(specificKey, PersistentDataType.INTEGER, uses);
+        }
+
+        item.setItemMeta(meta);
+        plugin.getItemManager().rebuildLore(player, item);
     }
 
     public List<String> getDurabilityLore(ItemStack item) {

@@ -23,6 +23,7 @@ public class EnchantmentManager {
         registerEffect(new BrillianceEffect());
         registerEffect(new CatscratchEffect());
         registerEffect(new CriticalStrikeEffect());
+        registerEffect(new DefenderEffect());
     }
 
     public void registerEffect(EnchantmentEffect effect) {
@@ -31,6 +32,20 @@ public class EnchantmentManager {
 
     public Map<String, EnchantmentEffect> getEffects() {
         return effects;
+    }
+
+    public void handleAbility(Player player, String abilityId, ItemStack item) {
+        if (item == null || item.getType().isAir()) return;
+
+        item.getEnchantments().forEach((enchantment, level) -> {
+            NamespacedKey key = enchantment.getKey();
+            if (key.getNamespace().equals("octorpg")) {
+                EnchantmentEffect effect = effects.get(key.getKey().toLowerCase());
+                if (effect != null && effect.isCompatible(item)) {
+                    effect.onAbilityUse(player, abilityId, item, level);
+                }
+            }
+        });
     }
 
     public void handleHit(Player player, Entity victim, EntityDamageByEntityEvent event, ItemStack item) {
