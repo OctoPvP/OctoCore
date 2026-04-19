@@ -3,6 +3,8 @@ package net.octopvp.octocore.rpg.manager;
 import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.rpg.OctoRPG;
 import net.octopvp.octocore.rpg.item.CustomItem;
+import net.octopvp.octocore.rpg.manager.RPGPlayerManager;
+import net.octopvp.octocore.rpg.object.RPGPlayerData;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,7 +51,7 @@ public class ItemManager implements Listener {
         return customItems.get(id);
     }
 
-    public void rebuildLore(ItemStack item) {
+    public void rebuildLore(Player player, ItemStack item) {
         CustomItem customItem = getCustomItem(item);
         if (customItem == null) return;
         
@@ -71,24 +73,54 @@ public class ItemManager implements Listener {
         java.util.List<String> lore = customItem.getLore(item);
 
         // Add Enchantment Descriptions
-        boolean headerAdded = false;
-        for (org.bukkit.enchantments.Enchantment ench : item.getEnchantments().keySet()) {
-            String desc = net.octopvp.octocore.rpg.util.EnchantmentUtil.getDescription(ench);
-            if (!desc.isEmpty()) {
-                if (!headerAdded) {
-                    lore.add("");
-                    lore.add(CC.translate("&b&lEnchantments:"));
-                    headerAdded = true;
-                }
-                String name = ench.getKey().getKey();
-                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase().replace("_", " ");
-                lore.add(CC.translate(" &7" + name + ": &f" + desc));
+        RPGPlayerData data = player == null ? null : RPGPlayerManager.getInstance().getData(player.getUniqueId());
+        if (data != null && data.isShowEnchantments()) {
+            boolean headerAdded = false;
+            boolean shift = player.isSneaking();
+
+            for (org.bukkit.enchantments.Enchantment ench : item.getEnchantments().keySet()) {
+                String desc = net.octopvp.octocore.rpg.util.EnchantmentUtil.getDescription(ench);
+                if (!desc.isEmpty()) {
+                    if (!headerAdded) {
+                        lore.add("");
+                        lore.add(CC.translate("&b&lEnchantments:"));
+                        if (!shift) {
+                            lore.add(CC.translate(" &8(Hold SHIFT for info)"));
+                        }
+                        headerAdded = true;
+                    }
+                    if (shift) {
+                        String name = ench.getKey().getKey();
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase().replace("_", " ");
+                        lore.add(CC.translate(" &7" + name + ":"));
+                        for (String wrapped : wrap(desc, 35)) {
+                            lore.add(CC.translate("  &f" + wrapped));
+                        }
+                    }                }
             }
         }
 
         lore.addAll(OctoRPG.getInstance().getEnchantmentDurabilityManager().getDurabilityLore(item));
         meta.setLore(lore);
         item.setItemMeta(meta);
+    }
+
+    private java.util.List<String> wrap(String text, int limit) {
+        java.util.List<String> result = new java.util.ArrayList<>();
+        String[] words = text.split(" ");
+        StringBuilder line = new StringBuilder();
+
+        for (String word : words) {
+            if (line.length() + word.length() > limit) {
+                result.add(line.toString().trim());
+                line = new StringBuilder();
+            }
+            line.append(word).append(" ");
+        }
+        if (line.length() > 0) {
+            result.add(line.toString().trim());
+        }
+        return result;
     }
 
     public boolean canAddEnchantment(ItemStack item, org.bukkit.enchantments.Enchantment newEnch) {

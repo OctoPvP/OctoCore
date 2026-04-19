@@ -4,6 +4,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.rpg.OctoRPG;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -23,7 +24,7 @@ public class EnchantmentDurabilityManager {
         this.usesKey = new NamespacedKey(plugin, "enchantment_uses");
     }
 
-    public void handleUsage(ItemStack item) {
+    public void handleUsage(Player player, ItemStack item) {
         if (item == null || item.getType().isAir() || !item.hasItemMeta()) return;
 
         ItemMeta meta = item.getItemMeta();
@@ -53,7 +54,7 @@ public class EnchantmentDurabilityManager {
 
         if (changed) {
             item.setItemMeta(meta);
-            plugin.getItemManager().rebuildLore(item);
+            plugin.getItemManager().rebuildLore(player, item);
         }
     }
 

@@ -2,6 +2,7 @@ package net.octopvp.octocore.rpg.listener;
 
 import net.octopvp.octocore.rpg.OctoRPG;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,10 +23,9 @@ public class EnchantmentListener implements Listener {
     public void onAnvil(PrepareAnvilEvent event) {
         ItemStack result = event.getResult();
         if (result != null && result.getType() != Material.AIR) {
-            // Check if the combination added a new enchant that breaks the limit
-            // Note: This is a bit complex for PrepareAnvil because we don't know which one was added easily
-            // but we can check the final counts.
-            plugin.getItemManager().rebuildLore(result);
+            if (event.getView().getPlayer() instanceof Player player) {
+                plugin.getItemManager().rebuildLore(player, result);
+            }
         }
     }
 
@@ -63,20 +63,20 @@ public class EnchantmentListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+
         // Handle anvil result collection
         if (event.getInventory().getType() == InventoryType.ANVIL && event.getRawSlot() == 2) {
             ItemStack result = event.getCurrentItem();
             if (result != null && result.getType() != Material.AIR) {
-                plugin.getItemManager().rebuildLore(result);
+                plugin.getItemManager().rebuildLore(player, result);
             }
         }
         
-        // Potential handle for custom enchantment plugins that apply enchants via drag-and-drop
-        // We delay it by 1 tick to allow the enchant to be applied first
         if (event.getCursor() != null && event.getCursor().getType() != Material.AIR && event.getCurrentItem() != null) {
             ItemStack target = event.getCurrentItem();
             plugin.getServer().getScheduler().runTask(plugin, () -> {
-                plugin.getItemManager().rebuildLore(target);
+                plugin.getItemManager().rebuildLore(player, target);
             });
         }
     }

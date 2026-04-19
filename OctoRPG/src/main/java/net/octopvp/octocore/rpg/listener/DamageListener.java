@@ -58,7 +58,30 @@ public class DamageListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onAttack(EntityDamageByEntityEvent e) {
-        if (e.getDamager() instanceof Player player) {
+        Player player = null;
+        ItemStack item = null;
+
+        if (e.getDamager() instanceof Player p) {
+            player = p;
+            item = p.getInventory().getItemInMainHand();
+        } else if (e.getDamager() instanceof org.bukkit.entity.Projectile projectile && projectile.getShooter() instanceof Player p) {
+            player = p;
+            // Get the item used to fire the projectile if possible
+            if (projectile instanceof org.bukkit.entity.AbstractArrow arrow) {
+                item = arrow.getItemStack(); // For arrows that carry enchantment info
+                // If it doesn't have it, we might need another way to track the bow used
+            }
+            // Better way for bows: the bow is usually not on the arrow.
+            // But we can check what the player is currently holding if it's a bow/crossbow
+            if (item == null || item.getType().isAir()) {
+                ItemStack main = p.getInventory().getItemInMainHand();
+                if (main.getType() == org.bukkit.Material.BOW || main.getType() == org.bukkit.Material.CROSSBOW) {
+                    item = main;
+                }
+            }
+        }
+
+        if (player != null) {
             RPGPlayerData data = RPGPlayerManager.getInstance().getData(player.getUniqueId());
             if (data != null) {
                 double newDamage = StatCalculator.calculateDamage(data.getLevel(), data.getStrengthAfterCalc(), e.getDamage());
@@ -66,9 +89,10 @@ public class DamageListener implements Listener {
             }
 
             // Handle Custom Enchantments
-            ItemStack item = player.getInventory().getItemInMainHand();
-            OctoRPG.getInstance().getEnchantmentManager().handleHit(player, e.getEntity(), e, item);
-            OctoRPG.getInstance().getEnchantmentDurabilityManager().handleUsage(item);
+            if (item != null) {
+                OctoRPG.getInstance().getEnchantmentManager().handleHit(player, e.getEntity(), e, item);
+                OctoRPG.getInstance().getEnchantmentDurabilityManager().handleUsage(player, item);
+            }
         }
     }
 

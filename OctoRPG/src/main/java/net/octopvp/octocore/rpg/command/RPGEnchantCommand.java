@@ -66,7 +66,7 @@ public class RPGEnchantCommand implements BasicCommand {
         }
 
         item.addUnsafeEnchantment(enchantment, level);
-        OctoRPG.getInstance().getItemManager().rebuildLore(item);
+        OctoRPG.getInstance().getItemManager().rebuildLore(player, item);
         player.sendMessage(CC.GREEN + "Applied " + enchantment.getKey().getKey() + " " + level + " to item.");
     }
 

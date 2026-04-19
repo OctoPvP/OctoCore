@@ -1,11 +1,7 @@
 package net.octopvp.octocore.rpg.enchantment;
 
 import net.octopvp.octocore.rpg.OctoRPG;
-import net.octopvp.octocore.rpg.enchantment.effect.AccuracyEffect;
-import net.octopvp.octocore.rpg.enchantment.effect.BaneEffect;
-import net.octopvp.octocore.rpg.enchantment.effect.BrillianceEffect;
-import net.octopvp.octocore.rpg.enchantment.effect.FrostboltEffect;
-import net.octopvp.octocore.rpg.enchantment.effect.LifestealEffect;
+import net.octopvp.octocore.rpg.enchantment.effect.*;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -25,6 +21,7 @@ public class EnchantmentManager {
         registerEffect(new AccuracyEffect());
         registerEffect(new BaneEffect());
         registerEffect(new BrillianceEffect());
+        registerEffect(new CatscratchEffect());
     }
 
     public void registerEffect(EnchantmentEffect effect) {

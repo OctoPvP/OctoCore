@@ -63,6 +63,7 @@ public class EnchantmentUtil {
         register("dragon_slayer", EnchantmentRarity.UNCOMMON);
         register("wither", EnchantmentRarity.UNCOMMON);
         register("frostbolt", EnchantmentRarity.UNCOMMON);
+        register("catscratch", EnchantmentRarity.UNCOMMON);
 
         // Rare
         register("vorpal", EnchantmentRarity.RARE);
@@ -97,7 +98,7 @@ public class EnchantmentUtil {
         describe("lightness", "Move faster.");
         describe("bane", "Blocks healing.");
         describe("brilliance", "Blinds targets.");
-        describe("catscratch", "Fast swipes.");
+        describe("catscratch", "Increases the power level of any debuffs currently affecting the target by +1 / LVL");
         describe("vorpal", "Decapitate chance.");
         describe("dragon_slayer", "Slay dragons.");
         describe("wither", "Wither rot.");

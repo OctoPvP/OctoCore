@@ -10,6 +10,7 @@ import net.octopvp.octocore.rpg.command.RPGHelpCommand;
 import net.octopvp.octocore.rpg.command.RPGItemCommand;
 import net.octopvp.octocore.rpg.command.RPGQuestCommand;
 import net.octopvp.octocore.rpg.command.RPGNPCCommand;
+import net.octopvp.octocore.rpg.command.RPGSettingsCommand;
 import net.octopvp.octocore.rpg.command.RPGStatsCommand;
 import net.octopvp.octocore.rpg.enchantment.EnchantmentDurabilityManager;
 import net.octopvp.octocore.rpg.enchantment.EnchantmentManager;
@@ -96,6 +97,7 @@ public class OctoRPG extends JavaPlugin {
             commands.register("rpgquest", "Manage player quests", new RPGQuestCommand());
             commands.register("rpgeffect", "Apply RPG status effects", new RPGEffectCommand());
             commands.register("rpgnpc", "Manage RPG NPCs", new RPGNPCCommand());
+            commands.register("rpgsettings", "Open RPG settings menu", new RPGSettingsCommand());
             commands.register("rpghelp", "Show RPG help", java.util.List.of("rpg"), new RPGHelpCommand());
         });
 

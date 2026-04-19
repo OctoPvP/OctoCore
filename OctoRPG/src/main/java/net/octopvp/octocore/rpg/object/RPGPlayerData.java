@@ -195,6 +195,7 @@ public class RPGPlayerData {
     private transient float lastAppliedSpeed = -1;
     private transient double lastAppliedMaxHealth = -1;
     private boolean debug = false;
+    private boolean showEnchantments = true;
 
     public void update() {
         Player player = Bukkit.getPlayer(uuid);
@@ -209,7 +210,7 @@ public class RPGPlayerData {
         if (tickCount % 5 == 0) {
             ItemStack inHand = player.getInventory().getItemInMainHand();
             if (inHand != null && inHand.getType() != org.bukkit.Material.AIR) {
-                OctoRPG.getInstance().getItemManager().rebuildLore(inHand);
+                OctoRPG.getInstance().getItemManager().rebuildLore(player, inHand);
             }
         }
 
