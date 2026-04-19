@@ -18,6 +18,10 @@ public class FindCommand {
                 .<CommandSource>literal("gfind")
                 .requires(source -> source.hasPermission("octocore.staff"))
                 .then(RequiredArgumentBuilder.<CommandSource, String>argument("player", StringArgumentType.word())
+                        .suggests((context, builder) -> {
+                            server.getAllPlayers().forEach(player -> builder.suggest(player.getUsername()));
+                            return builder.buildFuture();
+                        })
                         .executes(context -> {
                             String targetName = context.getArgument("player", String.class);
                             OnlinePlayer player = OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getOnlinePlayer(targetName);

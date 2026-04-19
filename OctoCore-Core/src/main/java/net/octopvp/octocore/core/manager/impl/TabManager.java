@@ -10,7 +10,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 public class TabManager extends Manager {
+    @Getter
+    private static final List<Function<Player, String>> footerExtensions = new ArrayList<>();
+
     @Getter
     @Setter
     private String header, footer;
@@ -23,7 +30,22 @@ public class TabManager extends Manager {
     }
 
     public void setHeaderFooter(Player player, String header, String footer) {
-        OctoCore.getInstance().getServerImplementation().setTabHeaderFooter(player, AdventureUtils.format(header), AdventureUtils.format(footer));
+        StringBuilder finalFooter = new StringBuilder(footer);
+        for (Function<Player, String> extension : footerExtensions) {
+            String append = extension.apply(player);
+            if (append != null && !append.isEmpty()) {
+                finalFooter.append("\n").append(append);
+            }
+        }
+        OctoCore.getInstance().getServerImplementation().setTabHeaderFooter(player, AdventureUtils.format(header), AdventureUtils.format(finalFooter.toString()));
+    }
+
+    public void updateTab(Player player) {
+        setHeaderFooter(player, header, footer);
+    }
+
+    public void resetTab(Player player) {
+        OctoCore.getInstance().getServerImplementation().setTabHeaderFooter(player, AdventureUtils.format(""), AdventureUtils.format(""));
     }
 
     @Override

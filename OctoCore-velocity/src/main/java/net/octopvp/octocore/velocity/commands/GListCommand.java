@@ -19,11 +19,13 @@ public class GListCommand {
                 .requires(source -> source.hasPermission("octocore.staff"))
                 .executes(context -> {
                     Collection<ServerData> servers = OctoCoreCommon.getInstance().getServerImplementation().getServerManager().getConnectedServers();
-                    int total = 0;
+                    int total = server.getPlayerCount();
                     context.getSource().sendMessage(Component.text("Network Players:", NamedTextColor.GOLD));
                     for (ServerData serverData : servers) {
+                        if (serverData.getServerName().equalsIgnoreCase("Velocity") || serverData.getServerName().equalsIgnoreCase(OctoCoreCommon.getInstance().getServerName())) {
+                            continue;
+                        }
                         int count = serverData.getOnlinePlayers().size();
-                        total += count;
                         context.getSource().sendMessage(Component.text(" - " + serverData.getServerName() + ": ", NamedTextColor.YELLOW)
                                 .append(Component.text(count, NamedTextColor.GREEN)));
                     }

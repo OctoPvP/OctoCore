@@ -213,6 +213,9 @@ public class JoinLeaveListener implements Listener {
         // weird UUID is NULL error here
         PlayerData playerData = PlayerManager.getInstance().join(event.getPlayer());
 
+        OctoCore.getInstance().getTabManager().resetTab(event.getPlayer());
+        OctoCore.getInstance().getTabManager().updateTab(event.getPlayer());
+
         // TODO: Componentize this
         if (playerData.isJoinVanished()) {
             Logger.info("Vanishing " + playerData.getName() + " on join.");

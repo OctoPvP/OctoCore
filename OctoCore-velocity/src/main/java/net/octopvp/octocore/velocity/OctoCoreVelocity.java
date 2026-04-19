@@ -117,13 +117,13 @@ public class OctoCoreVelocity {
         for (Object listener : listeners) {
             proxyServer.getEventManager().register(this, listener);
         }
-        BrigadierCommand hasPermCommand = HasPermCommand.createCommand(proxyServer);
-        proxyServer.getCommandManager().register(hasPermCommand);
-        proxyServer.getCommandManager().register(GListCommand.createCommand(proxyServer));
-        proxyServer.getCommandManager().register(FindCommand.createCommand(proxyServer));
-        proxyServer.getCommandManager().register(AlertCommand.createCommand(proxyServer));
-        proxyServer.getCommandManager().register(SendCommand.createCommand(proxyServer));
-        proxyServer.getCommandManager().register(HubCommand.createCommand(proxyServer));
+        registerCommand("proxyhasperm", HasPermCommand.createCommand(proxyServer));
+        registerCommand("glist", GListCommand.createCommand(proxyServer));
+        registerCommand("gfind", FindCommand.createCommand(proxyServer));
+        registerCommand("galert", AlertCommand.createCommand(proxyServer));
+        registerCommand("send", SendCommand.createCommand(proxyServer));
+        registerCommand("ghub", HubCommand.createCommand(proxyServer));
+
         // getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1,
         // TimeUnit.MINUTES);
         getProxyServer().getScheduler().buildTask(this, new OnlinePlayersManager())
@@ -133,6 +133,14 @@ public class OctoCoreVelocity {
                 .delay(1, TimeUnit.SECONDS)
                 .schedule();
         velocityLogger.info("OctoCore Velocity has loaded in " + (System.currentTimeMillis() - start) + "ms.");
+    }
+
+    private void registerCommand(String name, BrigadierCommand command) {
+        proxyServer.getCommandManager().register(command);
+        proxyServer.getCommandManager().register(
+                proxyServer.getCommandManager().metaBuilder("octovelocity:" + name).build(),
+                command
+        );
     }
 
     @Subscribe

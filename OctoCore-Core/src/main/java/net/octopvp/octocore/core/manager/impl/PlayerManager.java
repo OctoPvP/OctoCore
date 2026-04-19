@@ -14,6 +14,7 @@ import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.common.util.DataCache;
 import net.octopvp.octocore.common.util.GsonType;
 import net.octopvp.octocore.core.OctoCore;
+import static net.octopvp.octocore.common.util.DocumentUtils.getLong;
 import net.octopvp.octocore.core.manager.Manager;
 import net.octopvp.octocore.core.objects.PlayerData;
 import net.octopvp.octocore.core.utils.OfflineHelpers;
@@ -217,6 +218,6 @@ public class PlayerManager extends Manager implements IPlayerManager {
         Document document = getProfileDocument(uuid);
         if (document == null)
             return -1;
-        return document.getLong("lastLogin");
+        return getLong(document, "lastLogin");
     }
 }

@@ -28,15 +28,16 @@ public class OnlinePlayerData {
     private boolean frozen = false, vanished = false, joinVanished = false;
 
     public Optional<Boolean> hasPermission(String perm) {
-        Logger.debug("Checking permission for " + uuid + ": " + perm);
+        String permission = perm.toLowerCase();
+        Logger.debug("Checking permission for " + uuid + ": " + permission);
         PermissionCheckResult result;
-        if (cachedPermResults.containsKey(perm.toLowerCase())) {
-            Logger.debug(" - Cached: " + cachedPermResults.get(perm.toLowerCase()));
-            return cachedPermResults.get(perm).getAsTristate();
+        if (cachedPermResults.containsKey(permission)) {
+            Logger.debug(" - Cached: " + cachedPermResults.get(permission));
+            return cachedPermResults.get(permission).getAsTristate();
         }
-        result = PermissionManager.getInstance().checkPermission(perm, nodes);
+        result = PermissionManager.getInstance().checkPermission(permission, nodes);
         Logger.debug(" - Result: " + result);
-        cachedPermResults.put(perm.toLowerCase(), result);
+        cachedPermResults.put(permission, result);
         return result.getAsTristate();
     }
 

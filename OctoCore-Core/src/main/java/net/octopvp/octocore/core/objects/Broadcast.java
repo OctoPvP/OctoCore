@@ -1,7 +1,7 @@
 package net.octopvp.octocore.core.objects;
 
 import lombok.Getter;
-import net.octopvp.octocore.core.database.redis.packets.server.GlobalBroadcastPacket;
+import net.octopvp.octocore.common.redis.packets.GlobalBroadcastPacket;
 
 import java.util.HashMap;
 import java.util.Map;

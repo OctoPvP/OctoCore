@@ -35,7 +35,7 @@ import static net.octopvp.octocore.common.util.DocumentUtils.*;
 public class SimplePlayerData implements IPlayerData, IPunishData {
     protected UUID uuid;
     protected double dataVersion = 0.0;
-    protected long lastLoaded, lastLogin, xp = 0, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
+    protected long lastLoaded, lastLogin, firstJoin = System.currentTimeMillis(), lastSave = System.currentTimeMillis(), lastSeen = -1;
     protected String nick, customColor, lastKnownName = "<unknown>", nickPrefix, nickColor, name = lastKnownName;
     protected String lowerName = name.toLowerCase(), server, authSecret, lastSeenServer = "Unknown", rankName = "default";
     protected String lastAuthedIp = "", lastSeenIp = "", lastKnownAddress, lastServerOn = "Unknown", clientBrand = "Unknown";
@@ -45,8 +45,7 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
     protected List<String> metaDataList = new ArrayList<>();
     protected Map<String, String> metaData = new ConcurrentHashMap<>();
     protected UUID tagID = null, nickTagID = null, nickUUID;
-    protected long playTime = 0, // seconds
-            coins;
+    protected long playTime = 0; // seconds
     protected HashSet<UUID> allowedTagsID = new HashSet<>();
     protected boolean nameColorBold = false, nameColorItalic = false, staffChatAlerts = true, adminChatAlerts = true;
     protected boolean reportAlerts = true, staffChat = false, adminChat = false, build = false;
@@ -96,12 +95,9 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
             this.joinVanished = document.getBoolean("joinVanished");
             this.customColorEnabled = document.getBoolean("customColorEnabled");
             this.customColor = document.getString("customColor");
-            this.coins = getInt(document, "coins");
             this.lastLoaded = getLong(document, "lastLoaded");
             this.lastLogin = getLong(document, "lastLogin");
-            this.xp = getLong(document, "xp");
             this.firstJoin = getLong(document, "firstJoin");
-            this.lastSave = getLong(document, "lastSave");
             this.nick = document.getString("nick");
             this.lastKnownName = document.getString("lastKnownName");
             this.nickPrefix = document.getString("nickPrefix");
@@ -138,8 +134,8 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
             if (document.containsKey("clientMods")) this.clientMods = document.getString("clientMods");
             if (document.containsKey("virtualHost")) this.virtualHost = document.getString("virtualHost");
             if (document.containsKey("playerSettings")) this.playerSettings = document.getString("playerSettings");
-            if (document.containsKey("protocolVersion")) this.protocolVersion = document.getInteger("protocolVersion");
-            if (document.containsKey("ping")) this.ping = document.getLong("ping");
+            if (document.containsKey("protocolVersion")) this.protocolVersion = getInt(document, "protocolVersion");
+            if (document.containsKey("ping")) this.ping = getLong(document, "ping");
         }
 
         Object addressesObj = document.get("addresses");
@@ -195,10 +191,8 @@ public class SimplePlayerData implements IPlayerData, IPunishData {
             document.put("joinVanished", joinVanished);
             document.put("customColorEnabled", customColorEnabled);
             document.put("customColor", customColor);
-            document.put("coins", coins);
             document.put("lastLoaded", lastLoaded);
             document.put("lastLogin", lastLogin);
-            document.put("xp", xp);
             document.put("firstJoin", firstJoin);
             document.put("lastSave", lastSave);
             document.put("nick", nick);

@@ -20,7 +20,18 @@ public class SendCommand {
                 .<CommandSource>literal("send")
                 .requires(source -> source.hasPermission("octocore.admin"))
                 .then(RequiredArgumentBuilder.<CommandSource, String>argument("target", StringArgumentType.word())
+                        .suggests((context, builder) -> {
+                            builder.suggest("all");
+                            builder.suggest("current");
+                            builder.suggest("*");
+                            server.getAllPlayers().forEach(player -> builder.suggest(player.getUsername()));
+                            return builder.buildFuture();
+                        })
                         .then(RequiredArgumentBuilder.<CommandSource, String>argument("server", StringArgumentType.word())
+                                .suggests((context, builder) -> {
+                                    server.getAllServers().forEach(s -> builder.suggest(s.getServerInfo().getName()));
+                                    return builder.buildFuture();
+                                })
                                 .executes(context -> {
                                     String targetName = context.getArgument("target", String.class);
                                     String serverName = context.getArgument("server", String.class);

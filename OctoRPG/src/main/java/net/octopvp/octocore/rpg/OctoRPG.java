@@ -9,6 +9,7 @@ import net.octopvp.octocore.rpg.command.RPGEffectCommand;
 import net.octopvp.octocore.rpg.command.RPGHelpCommand;
 import net.octopvp.octocore.rpg.command.RPGItemCommand;
 import net.octopvp.octocore.rpg.command.RPGQuestCommand;
+import net.octopvp.octocore.rpg.command.RPGNPCCommand;
 import net.octopvp.octocore.rpg.command.RPGStatsCommand;
 import net.octopvp.octocore.rpg.enchantment.EnchantmentDurabilityManager;
 import net.octopvp.octocore.rpg.enchantment.EnchantmentManager;
@@ -21,12 +22,17 @@ import net.octopvp.octocore.rpg.item.impl.Dagger;
 import net.octopvp.octocore.rpg.item.impl.BattleAxe;
 import net.octopvp.octocore.rpg.item.impl.BoagItem;
 import net.octopvp.octocore.rpg.manager.RPGPlayerManager;
+import net.octopvp.octocore.rpg.npc.CitizensProvider;
+import net.octopvp.octocore.rpg.npc.NPCManager;
+import net.octopvp.octocore.rpg.tab.RPGTabHandler;
 import net.octopvp.octocore.rpg.listener.DamageListener;
 import net.octopvp.octocore.rpg.listener.EnchantmentListener;
+import net.octopvp.octocore.rpg.listener.JoinListener;
 import net.octopvp.octocore.rpg.listener.HealingListener;
 import net.octopvp.octocore.rpg.listener.ProjectileListener;
 import net.octopvp.octocore.rpg.listener.ProtocolListener;
 import net.octopvp.octocore.rpg.runnable.DataUpdateRunnable;
+import net.octopvp.octocore.rpg.util.runnable.Tasks;
 import net.octopvp.octocore.common.util.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -37,6 +43,7 @@ public class OctoRPG extends JavaPlugin {
     private static OctoRPG instance;
     private ItemManager itemManager;
     private RPGPlayerManager playerManager;
+    private NPCManager npcManager;
     private EnchantmentManager enchantmentManager;
     private EnchantmentDurabilityManager enchantmentDurabilityManager;
     private DataUpdateRunnable dataUpdateRunnable;
@@ -55,14 +62,19 @@ public class OctoRPG extends JavaPlugin {
             }
         });
 
+        Logger.info("Starting OctoRPG");
+        Tasks.init(this);
+
         this.itemManager = new ItemManager(this);
         this.playerManager = new RPGPlayerManager(this);
+        this.npcManager = new NPCManager();
         this.enchantmentManager = new EnchantmentManager(this);
         this.enchantmentDurabilityManager = new EnchantmentDurabilityManager(this);
         new DamageListener(this);
         new EnchantmentListener(this);
         new ProjectileListener(this);
         new HealingListener(this);
+        new JoinListener(this);
         ProtocolListener.register(this);
         
         this.dataUpdateRunnable = new DataUpdateRunnable();
@@ -85,8 +97,16 @@ public class OctoRPG extends JavaPlugin {
             commands.register("rpgclear", "Clear RPG items from inventory", new RPGClearCommand());
             commands.register("rpgquest", "Manage player quests", new RPGQuestCommand());
             commands.register("rpgeffect", "Apply RPG status effects", new RPGEffectCommand());
+            commands.register("rpgnpc", "Manage RPG NPCs", new RPGNPCCommand());
             commands.register("rpghelp", "Show RPG help", java.util.List.of("rpg"), new RPGHelpCommand());
         });
+
+        CitizensProvider provider = new CitizensProvider();
+        this.npcManager.setProvider(provider);
+        getServer().getPluginManager().registerEvents(provider, this);
+        this.npcManager.registerTypesInPackage("net.octopvp.octocore.rpg.npc.impl");
+
+        RPGTabHandler.init();
 
         Logger.info("OctoRPG has been enabled (v" + getDescription().getVersion() + ")");
     }
@@ -103,6 +123,10 @@ public class OctoRPG extends JavaPlugin {
 
     public ItemManager getItemManager() {
         return itemManager;
+    }
+
+    public NPCManager getNpcManager() {
+        return npcManager;
     }
 
     public EnchantmentManager getEnchantmentManager() {

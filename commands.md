@@ -1,6 +1,6 @@
 # OctoCore Commands
 
-This document lists the commands available across the OctoCore network, including Essentials, Staff, Punishments, and RPG-specific commands.
+This document lists the commands available across the OctoCore network, including Essentials, Staff, and Punishment commands.
 
 ## Essentials
 *   **/ping** - Pong! Check your latency. Special message if ping is exactly 56ms.
@@ -72,16 +72,6 @@ This document lists the commands available across the OctoCore network, includin
 *   **/kaboom [player]** - Launch a player (or everyone) into the air with lightning effects.
 *   **/demomenu [player|all|*]** - Force the "Demo Version" screen to appear for a player.
 *   **/crack** - "Let there be crack!" Opens a special GUI with "Raw" and "Processed" crack items.
-
-## OctoRPG
-*   **/rpgitem [id]** - Open the RPG items menu or give yourself a specific custom RPG item by ID.
-*   **/rpgenchant <enchant> [level]** - Apply RPG-specific enchantments to the item in your hand.
-*   **/rpgdebug** - Toggle RPG debug mode to see real-time attribute and damage calculations.
-*   **/rpgstats <player> <stat|clear> [value]** - View/modify RPG stats (Vitality, Strength, etc.) or clear all stats.
-*   **/rpgclear [player]** - Remove all RPG-related items from a player's inventory.
-*   **/rpgquest <player> <reset|complete> [questId]** - Manage, reset, or force-complete player quest progress.
-*   **/rpgeffect <player> <effect> [duration]** - Apply custom RPG status effects (Blight, Stun, Bad Luck).
-*   **/rpghelp** - Display a help menu for RPG-specific commands.
 
 ## Development & Testing
 *   **/listservers** - List all connected servers in the network and their player counts.

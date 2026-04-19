@@ -10,17 +10,6 @@ Building:
   `gradlew.bat OctoCore-Core:build
 
 <details>
-<summary>OctoRPG</summary>
-
-# OctoRPG
-OctoRPG is a RPG for aetheria on the OctoCore network that implements custom items, stat-based attribute scaling, and a custom enchantment system based on the books.
-
-### Custom Enchantments
-*   **Frostbolt:** A ranged enchantment for Bows and Crossbows that has a chance to immobilize targets on hit.
-*   **Lifesteal:** A melee enchantment for Swords and Greatswords that heals the wielder by draining health from their victims.
-</details>
-
-<details>
 <summary>OctoVelocity</summary>
 
 # OctoCore-velocity
