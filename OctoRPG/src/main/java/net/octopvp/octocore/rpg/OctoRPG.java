@@ -27,7 +27,6 @@ import net.octopvp.octocore.rpg.npc.NPCManager;
 import net.octopvp.octocore.rpg.tab.RPGTabHandler;
 import net.octopvp.octocore.rpg.listener.DamageListener;
 import net.octopvp.octocore.rpg.listener.EnchantmentListener;
-import net.octopvp.octocore.rpg.listener.JoinListener;
 import net.octopvp.octocore.rpg.listener.HealingListener;
 import net.octopvp.octocore.rpg.listener.ProjectileListener;
 import net.octopvp.octocore.rpg.listener.ProtocolListener;
@@ -74,7 +73,6 @@ public class OctoRPG extends JavaPlugin {
         new EnchantmentListener(this);
         new ProjectileListener(this);
         new HealingListener(this);
-        new JoinListener(this);
         ProtocolListener.register(this);
         
         this.dataUpdateRunnable = new DataUpdateRunnable();

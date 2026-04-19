@@ -1,6 +1,5 @@
 package net.octopvp.octocore.rpg.tab;
 
-import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.manager.impl.TabManager;
 import net.octopvp.octocore.rpg.manager.RPGPlayerManager;
 import net.octopvp.octocore.rpg.object.RPGPlayerData;
@@ -10,6 +9,14 @@ public class RPGTabHandler {
     public static void init() {
         // Register this RPG stats provider to OctoCore's generic tab extension API
         TabManager.getFooterExtensions().add(RPGTabHandler::getStatsFooter);
+    }
+
+    public static void updateAll() {
+        // No manual update needed, OctoCore's TabUpdateRunnable handles it
+    }
+
+    public static void updateTab(Player player) {
+        // No manual update needed, OctoCore's TabUpdateRunnable handles it
     }
 
     private static String getStatsFooter(Player player) {

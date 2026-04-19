@@ -15,11 +15,13 @@ import java.util.UUID;
 public class DataUpdateRunnable extends BukkitRunnable {
     private boolean tickPlayerData = false;
     private int saveTicks = 0;
+    private int tabTicks = 0;
 
     @Override
     public void run() {
         tickPlayerData = !tickPlayerData;
         saveTicks++;
+        tabTicks++;
 
         RPGPlayerManager.getInstance().getDataMap().forEach((uuid, playerData) -> {
             if (tickPlayerData) {
@@ -30,6 +32,11 @@ public class DataUpdateRunnable extends BukkitRunnable {
                 playerData.updateActionBar(player);
             }
         });
+
+        if (tabTicks >= 40) {
+            tabTicks = 0;
+            RPGTabHandler.updateAll();
+        }
 
         // Save all data every 10 seconds (100 ticks since registered at 2L)
         if (saveTicks >= 100) {
