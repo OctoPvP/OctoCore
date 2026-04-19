@@ -20,9 +20,10 @@ public class HealingListener implements Listener {
         if (!(event.getEntity() instanceof org.bukkit.entity.LivingEntity livingEntity)) return;
 
         boolean blighted = false;
+        RPGPlayerData playerData = null;
         if (livingEntity instanceof Player player) {
-            RPGPlayerData data = RPGPlayerManager.getInstance().getData(player.getUniqueId());
-            if (data != null && data.hasBlight()) {
+            playerData = RPGPlayerManager.getInstance().getData(player.getUniqueId());
+            if (playerData != null && playerData.hasBlight()) {
                 blighted = true;
             }
         } else if (livingEntity.hasMetadata("rpg_blight")) {
@@ -37,6 +38,18 @@ public class HealingListener implements Listener {
         if (blighted) {
             event.setCancelled(true);
             livingEntity.getWorld().spawnParticle(org.bukkit.Particle.ENTITY_EFFECT, livingEntity.getLocation().add(0, 1, 0), 3, 0.2, 0.2, 0.2, 0.05, org.bukkit.Color.PURPLE);
+            
+            if (playerData != null && playerData.isDebug()) {
+                ((Player)livingEntity).sendMessage(CC.translate("&7[&bRPG Debug&7] &cHealing Blocked! &7(Blight active)"));
+            }
+            return;
+        }
+
+        // Debug Log for successful healing
+        if (playerData != null && playerData.isDebug()) {
+            double amount = event.getAmount();
+            String reason = event.getRegainReason().name();
+            ((Player)livingEntity).sendMessage(CC.translate("&7[&bRPG Debug&7] &aHealed: &f+" + String.format("%.1f", amount) + " HP &7(Reason: " + reason + ")"));
         }
     }
 }

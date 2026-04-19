@@ -9,6 +9,7 @@ import net.octopvp.octocore.rpg.command.RPGEffectCommand;
 import net.octopvp.octocore.rpg.command.RPGHelpCommand;
 import net.octopvp.octocore.rpg.command.RPGItemCommand;
 import net.octopvp.octocore.rpg.command.RPGQuestCommand;
+import net.octopvp.octocore.rpg.command.RPGReloadCommand;
 import net.octopvp.octocore.rpg.command.RPGNPCCommand;
 import net.octopvp.octocore.rpg.command.RPGSettingsCommand;
 import net.octopvp.octocore.rpg.command.RPGStatsCommand;
@@ -100,6 +101,7 @@ public class OctoRPG extends JavaPlugin {
             commands.register("rpgeffect", "Apply RPG status effects", new RPGEffectCommand());
             commands.register("rpgnpc", "Manage RPG NPCs", new RPGNPCCommand());
             commands.register("rpgsettings", "Open RPG settings menu", new RPGSettingsCommand());
+            commands.register("rpgreload", "Reload the RPG plugin", new RPGReloadCommand());
             commands.register("rpghelp", "Show RPG help", java.util.List.of("rpg"), new RPGHelpCommand());
         });
 
@@ -116,6 +118,12 @@ public class OctoRPG extends JavaPlugin {
         org.bukkit.Bukkit.getOnlinePlayers().forEach(player -> ScoreboardModule.getInstance().setPlayerScoreboard(player, new RPGScoreboardHandler()));
 
         Logger.info("OctoRPG has been enabled (v" + getDescription().getVersion() + ")");
+    }
+
+    public void reload() {
+        reloadConfig();
+        // Refresh scoreboards for everyone
+        org.bukkit.Bukkit.getOnlinePlayers().forEach(player -> ScoreboardModule.getInstance().setPlayerScoreboard(player, new RPGScoreboardHandler()));
     }
 
     @Override
