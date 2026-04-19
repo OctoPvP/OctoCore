@@ -19,6 +19,24 @@ OctoRPG is a RPG for aetheria on the OctoCore network that implements custom ite
 
 # OctoCore-velocity
 install this in the velocity proxy plugins folder. There should be only one velocity proxy - change the config with forced-hosts for dev servers
+
+Database info is posted to 'vdata' in the mongoDB
+```json
+{
+  "_id": {
+    "$oid": "<ID>"
+  },
+  "uuid": "<UUID>",
+  "name": "<NAME>",
+  "ping": {
+    "$numberLong": "<PING>"
+  },
+  "protocolVersion": <MC VERSION>,
+  "virtualHost": "<HOST USED TO CONNECT>",
+  "clientBrand": "<CLIENT NAME / BRAND>",
+  "playerSettings": "{\"locale\":\"en_US\",\"viewDistance\":32,\"chatMode\":\"SHOWN\",\"mainHand\":\"RIGHT\",\"hasChatColors\":true}"
+}
+
 The Velocity project handles the following Redis packets to maintain network state:
 
 ### Server Status
