@@ -36,6 +36,7 @@ Database info is posted to 'vdata' in the mongoDB
   "clientBrand": "<CLIENT NAME / BRAND>",
   "playerSettings": "{\"locale\":\"en_US\",\"viewDistance\":32,\"chatMode\":\"SHOWN\",\"mainHand\":\"RIGHT\",\"hasChatColors\":true}"
 }
+```
 
 The Velocity project handles the following Redis packets to maintain network state:
 
