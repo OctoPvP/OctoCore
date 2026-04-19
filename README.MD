@@ -1,4 +1,7 @@
-# OctoCore-1.21
+# OctoCore
+
+[View Commands List](commands.md)
+
 before building OctoCore: 
  * load libs/ with `agile-gui, octospigot-api-1.21`
  * build Commander from source and push to local maven
