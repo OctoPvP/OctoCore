@@ -15,7 +15,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.octopvp.octocore.common.OctoCoreCommon;
 import net.octopvp.octocore.common.interfaces.ServerImplementation;
 import net.octopvp.octocore.common.redis.RedisManager;
-import net.octopvp.octocore.velocity.commands.HasPermCommand;
+import net.octopvp.octocore.velocity.commands.*;
 import net.octopvp.octocore.velocity.listeners.PingListener;
 import net.octopvp.octocore.velocity.listeners.PlayerListener;
 import net.octopvp.octocore.velocity.manager.OnlinePlayersManager;
@@ -61,7 +61,7 @@ public class OctoCoreVelocity {
     public void onProxyInitialization(ProxyInitializeEvent event) {
         long start = System.currentTimeMillis();
         new net.octopvp.octocore.common.util.Logger(null, // null so we fallback to the server impl callback
-                "[OctoCore-velocity] ", (message, players) -> {
+                "", (message, players) -> {
                     for (UUID player : players) {
                         proxyServer.getPlayer(player).ifPresent(p -> p.sendMessage(
                                 LegacyComponentSerializer.legacySection().deserialize(message)));
@@ -119,6 +119,11 @@ public class OctoCoreVelocity {
         }
         BrigadierCommand hasPermCommand = HasPermCommand.createCommand(proxyServer);
         proxyServer.getCommandManager().register(hasPermCommand);
+        proxyServer.getCommandManager().register(GListCommand.createCommand(proxyServer));
+        proxyServer.getCommandManager().register(FindCommand.createCommand(proxyServer));
+        proxyServer.getCommandManager().register(AlertCommand.createCommand(proxyServer));
+        proxyServer.getCommandManager().register(SendCommand.createCommand(proxyServer));
+        proxyServer.getCommandManager().register(HubCommand.createCommand(proxyServer));
         // getProxy().getScheduler().schedule(this, OnlinePlayersManager::update, 1, 1,
         // TimeUnit.MINUTES);
         getProxyServer().getScheduler().buildTask(this, new OnlinePlayersManager())

@@ -25,21 +25,24 @@ public class Logger {
     }
 
     public static void info(Object str, Object... placeholders) {
+        String msg = (prefix == null || prefix.isEmpty()) ? str.toString() : prefix + " " + str;
         if (instance != null && instance.actualLogger != null)
-            instance.actualLogger.info(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
-        else OctoCoreCommon.getInstance().getServerImplementation().logInfo(prefix + " " + str, placeholders);
+            instance.actualLogger.info(StringUtils.replacePlaceholders(msg, placeholders));
+        else OctoCoreCommon.getInstance().getServerImplementation().logInfo(msg, placeholders);
     }
 
     public static void warn(Object str, Object... placeholders) {
+        String msg = (prefix == null || prefix.isEmpty()) ? str.toString() : prefix + " " + str;
         if (instance != null && instance.actualLogger != null)
-            instance.actualLogger.warning(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
-        else OctoCoreCommon.getInstance().getServerImplementation().logWarn(prefix + " " + str, placeholders);
+            instance.actualLogger.warning(StringUtils.replacePlaceholders(msg, placeholders));
+        else OctoCoreCommon.getInstance().getServerImplementation().logWarn(msg, placeholders);
     }
 
     public static void error(Object str, Object... placeholders) {
+        String msg = (prefix == null || prefix.isEmpty()) ? str.toString() : prefix + " " + str;
         if (instance != null && instance.actualLogger != null)
-            instance.actualLogger.severe(StringUtils.replacePlaceholders(prefix + " " + str, placeholders));
-        else OctoCoreCommon.getInstance().getServerImplementation().logError(prefix + " " + str, placeholders);
+            instance.actualLogger.severe(StringUtils.replacePlaceholders(msg, placeholders));
+        else OctoCoreCommon.getInstance().getServerImplementation().logError(msg, placeholders);
     }
 
     public static void debug(Object str, Object... placeholders) {

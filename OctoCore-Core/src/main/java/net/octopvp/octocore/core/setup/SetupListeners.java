@@ -1,5 +1,8 @@
 package net.octopvp.octocore.core.setup;
 
+import net.octopvp.octocore.common.redis.packets.GlobalBroadcastPacket;
+import net.octopvp.octocore.common.redis.packets.GlobalCommandPacket;
+import net.octopvp.octocore.common.util.CC;
 import net.octopvp.octocore.core.OctoCore;
 import net.octopvp.octocore.core.listeners.ChatListener;
 import net.octopvp.octocore.core.listeners.DeathListener;
@@ -16,6 +19,14 @@ public class SetupListeners implements Setup {
     public void setup(OctoCore plugin) {
         PluginManager plm = Bukkit.getPluginManager();
         for (Listener listener : listeners) plm.registerEvents(listener, plugin);
+
+        GlobalBroadcastPacket.setImplementation(message -> {
+            Bukkit.broadcastMessage(CC.translate(message));
+        });
+
+        GlobalCommandPacket.setImplementation(command -> {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        });
     }
 
     @Override

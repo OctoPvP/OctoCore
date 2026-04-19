@@ -92,3 +92,11 @@ This document lists the commands available across the OctoCore network, includin
 *   **/debug** - Toggle general debug mode for the plugin.
 *   **/createownerrank** - Shortcut to create an "Owner" rank for testing.
 *   **/useoldpermissible** - Toggle between the new and old permission handling systems.
+
+## Velocity Proxy Commands
+*   **/proxyhasperm <permission>** - Check your permission value specifically on the Velocity proxy server.
+*   **/glist** - View a global list of players across all connected servers.
+*   **/gfind <player>** - Find which server a specific player is currently connected to.
+*   **/galert <message>** - Broadcast a network-wide message to all players.
+*   **/send <target|all|current> <server>** - Send a specific player, everyone, or everyone on your current server to another server.
+*   **/ghub** - Send yourself to the hub or lobby server. Aliases: `/lobby`.

@@ -81,7 +81,7 @@ public class PlayerListener {
                 modsList.append(mod.getId()).append(" (v").append(mod.getVersion()).append("), ");
             });
             String modsString = modsList.length() > 0 ? modsList.substring(0, modsList.length() - 2) : "None";
-            Logger.info("[Client Mods] " + player.getUsername() + " (" + player.getRemoteAddress() + ") connected with mods: " + modsString);
+            Logger.info("Client Mods: " + player.getUsername() + " (" + player.getRemoteAddress() + ") connected with mods: " + modsString);
 
             plugin.getProxyServer().getScheduler().buildTask(plugin, () -> {
                 try {
@@ -107,7 +107,7 @@ public class PlayerListener {
     public void onPlayerClientBrand(PlayerClientBrandEvent event) {
         Player player = event.getPlayer();
         String brand = event.getBrand();
-        Logger.info("[OctoCore-velocity] " + player.getUsername() + " (" + player.getRemoteAddress() + ") has connected using client brand: " + brand);
+        Logger.info(player.getUsername() + " (" + player.getRemoteAddress() + ") has connected using client brand: " + brand);
 
         plugin.getProxyServer().getScheduler().buildTask(plugin, () -> {
             try {
