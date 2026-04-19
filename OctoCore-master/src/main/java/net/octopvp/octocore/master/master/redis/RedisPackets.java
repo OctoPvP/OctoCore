@@ -1,5 +1,6 @@
 package net.octopvp.octocore.master.master.redis;
 
+import net.octopvp.octocore.common.redis.packets.ServerCrashPacket;
 import net.octopvp.octocore.common.redis.packets.ServerDataPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ public class RedisPackets {
                     .getLogger(ServerDataPacket.class);
             if (!connectedServer.isSafelyStopped()) { //removed because of time
                 logger.info(connectedServer.getServerName() + " removed because it crashed(?)");
+                new ServerCrashPacket(connectedServer.getServerName(), "Server timed out (heartbeat lost) without a safe shutdown signal.").send();
             } else {
                 logger.info(connectedServer.getServerName() + " removed because it was safely stopped.");
             }

@@ -1,7 +1,9 @@
 package net.octopvp.octocore.core.utils.errorhandling;
 
+import net.octopvp.octocore.common.redis.packets.ServerCrashPacket;
 import net.octopvp.octocore.common.util.Logger;
 import net.octopvp.octocore.common.util.Utilities;
+import net.octopvp.octocore.core.OctoCore;
 
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
@@ -37,6 +39,13 @@ public class ErrorHandling {
             toHasteBin.append(format).append("\n\n--------\n\n");
         });
         toHasteBin.append("\n\n---------------------------------------");
+        
+        try {
+            new ServerCrashPacket(OctoCore.getServerName(), toHasteBin.toString()).send();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         String hastebinLink;
         try {
             hastebinLink = new Hastebin().post(toHasteBin.toString(), false).get();
