@@ -51,6 +51,23 @@ public class OctoRPG extends JavaPlugin {
     private EnchantmentDurabilityManager enchantmentDurabilityManager;
     private DataUpdateRunnable dataUpdateRunnable;
 
+    public OctoRPG() {
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
+            final Commands commands = event.registrar();
+            commands.register("rpgitem", "Gives an RPG custom item", new RPGItemCommand());
+            commands.register("rpgdebug", "Toggle RPG debug mode", new RPGDebugCommand());
+            commands.register("rpgenchant", "Apply an RPG enchantment", new RPGEnchantCommand());
+            commands.register("rpgstats", "Modify player RPG stats", new RPGStatsCommand());
+            commands.register("rpgclear", "Clear RPG items from inventory", new RPGClearCommand());
+            commands.register("rpgquest", "Manage player quests", new RPGQuestCommand());
+            commands.register("rpgeffect", "Apply RPG status effects", new RPGEffectCommand());
+            commands.register("rpgnpc", "Manage RPG NPCs", new RPGNPCCommand());
+            commands.register("rpgsettings", "Open RPG settings menu", new RPGSettingsCommand());
+            commands.register("rpgreload", "Reload the RPG plugin", new RPGReloadCommand());
+            commands.register("rpghelp", "Show RPG help", java.util.List.of("rpg"), new RPGHelpCommand());
+        });
+    }
+
     @Override
     public void onEnable() {
         instance = this;
@@ -90,21 +107,6 @@ public class OctoRPG extends JavaPlugin {
         this.itemManager.registerItem(new BattleAxe());
         this.itemManager.registerItem(new BoagItem());
 
-        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-            final Commands commands = event.registrar();
-            commands.register("rpgitem", "Gives an RPG custom item", new RPGItemCommand());
-            commands.register("rpgdebug", "Toggle RPG debug mode", new RPGDebugCommand());
-            commands.register("rpgenchant", "Apply an RPG enchantment", new RPGEnchantCommand());
-            commands.register("rpgstats", "Modify player RPG stats", new RPGStatsCommand());
-            commands.register("rpgclear", "Clear RPG items from inventory", new RPGClearCommand());
-            commands.register("rpgquest", "Manage player quests", new RPGQuestCommand());
-            commands.register("rpgeffect", "Apply RPG status effects", new RPGEffectCommand());
-            commands.register("rpgnpc", "Manage RPG NPCs", new RPGNPCCommand());
-            commands.register("rpgsettings", "Open RPG settings menu", new RPGSettingsCommand());
-            commands.register("rpgreload", "Reload the RPG plugin", new RPGReloadCommand());
-            commands.register("rpghelp", "Show RPG help", java.util.List.of("rpg"), new RPGHelpCommand());
-        });
-
         CitizensProvider provider = new CitizensProvider();
         this.npcManager.setProvider(provider);
         getServer().getPluginManager().registerEvents(provider, this);
@@ -121,13 +123,30 @@ public class OctoRPG extends JavaPlugin {
     }
 
     public void reload() {
-        reloadConfig();
-        // Refresh scoreboards for everyone
-        org.bukkit.Bukkit.getOnlinePlayers().forEach(player -> ScoreboardModule.getInstance().setPlayerScoreboard(player, new RPGScoreboardHandler()));
+        org.bukkit.Bukkit.getScheduler().runTask(this, () -> {
+            org.bukkit.plugin.PluginManager pm = org.bukkit.Bukkit.getPluginManager();
+            pm.disablePlugin(this);
+            pm.enablePlugin(this);
+        });
     }
 
     @Override
     public void onDisable() {
+        if (dataUpdateRunnable != null) {
+            dataUpdateRunnable.cancel();
+        }
+        if (playerManager != null) {
+            playerManager.saveAll();
+        }
+        
+        // Unregister all listeners to prevent duplicates on reload
+        org.bukkit.event.HandlerList.unregisterAll(this);
+        
+        // Clear scoreboards
+        org.bukkit.Bukkit.getOnlinePlayers().forEach(player -> {
+            ScoreboardModule.getInstance().setPlayerScoreboard(player, null);
+        });
+
         Logger.info("OctoRPG has been disabled.");
         Logger.info("Equus paratur ad diem belli, sed victoria apud Dominum est.");
     }

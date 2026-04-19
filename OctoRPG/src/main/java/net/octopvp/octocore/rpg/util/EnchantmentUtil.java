@@ -73,6 +73,7 @@ public class EnchantmentUtil {
         register("vampire", EnchantmentRarity.RARE);
         register("seraph", EnchantmentRarity.RARE);
         register("lifesteal", EnchantmentRarity.RARE);
+        register("flask", EnchantmentRarity.RARE);
 
         // Epic
         register("chains", EnchantmentRarity.EPIC);
@@ -126,6 +127,7 @@ public class EnchantmentUtil {
         describe("luminosity", "Bright light.");
         describe("surefooted", "No knockback.");
         describe("volume", "Large potions.");
+        describe("flask", "Allows the potion to be consumed multiple times.");
         describe("distill", "A flask enchantment that enhances the potion's strength by +5% / LVL.");
     }
 

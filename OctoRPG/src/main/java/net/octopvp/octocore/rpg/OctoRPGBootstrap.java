@@ -67,6 +67,7 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 Map.entry("surefooted", "Surefooted"),
                 Map.entry("volume", "Volume"),
                 Map.entry("distill", "Distill"),
+                Map.entry("flask", "Flask"),
                 Map.entry("bane", "Bane")
             );
 
@@ -77,7 +78,7 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                 int maxLvl = 10;
                 if (id.equals("bane")) maxLvl = 1;
                 else if (id.equals("brilliance")) maxLvl = 4;
-                else if (id.equals("distill") || id.equals("catscratch")) maxLvl = 5;
+                else if (id.equals("distill") || id.equals("catscratch") || id.equals("flask")) maxLvl = 5;
 
                 TagKey<ItemType> targetTag = ItemTypeTagKeys.ENCHANTABLE_SHARP_WEAPON;
                 if (id.equals("catscratch")) {
@@ -90,7 +91,7 @@ public class OctoRPGBootstrap implements PluginBootstrap {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_CHEST_ARMOR;
                 } else if (id.equals("surefooted")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_FOOT_ARMOR;
-                } else if (id.equals("volume") || id.equals("distill")) {
+                } else if (id.equals("volume") || id.equals("distill") || id.equals("flask")) {
                     targetTag = ItemTypeTagKeys.ENCHANTABLE_VANISHING; // Use a broad tag for potions
                 }
 

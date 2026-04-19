@@ -45,7 +45,7 @@ public class EnchantmentListener implements Listener {
                         return;
                     }
                 }
-                if (id.equals("volume") || id.equals("distill")) {
+                if (id.equals("volume") || id.equals("distill") || id.equals("flask")) {
                     if (!result.getType().name().contains("POTION")) {
                         event.setResult(null);
                         return;

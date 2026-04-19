@@ -25,6 +25,7 @@ public class EnchantmentManager {
         registerEffect(new CriticalStrikeEffect());
         registerEffect(new DefenderEffect());
         registerEffect(new DistillEffect());
+        registerEffect(new FlaskEffect());
     }
 
     public void registerEffect(EnchantmentEffect effect) {

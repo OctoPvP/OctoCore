@@ -38,6 +38,8 @@ public final class ScoreboardModule implements Module, Listener {
         if (existing != null) {
             existing.getFastBoard().delete();
         }
+        if (handler == null) return;
+        
         FastBoardWrapper<?> board = new FastBoardWrapper<>(handler.instantiateBoard(player), handler);
         scoreboardMap.put(player.getUniqueId(), board);
     }
