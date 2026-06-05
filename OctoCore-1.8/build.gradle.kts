@@ -4,15 +4,20 @@ plugins {
     id("io.freefair.lombok") version "6.5.1"
 }
 
+val octomcUsername = findProperty("octomcUsername") as String?
+val octomcPassword = findProperty("octomcPassword") as String?
+
 repositories {
     mavenCentral()
     mavenLocal()
     maven {
         url = uri("https://repo.octopvp.net/repo")
         name = "octomc"
-        credentials {
-            username = findProperty("octomcUsername") as String
-            password = findProperty("octomcPassword") as String
+        if (octomcUsername != null && octomcPassword != null) {
+            credentials {
+                username = octomcUsername
+                password = octomcPassword
+            }
         }
     }
 }

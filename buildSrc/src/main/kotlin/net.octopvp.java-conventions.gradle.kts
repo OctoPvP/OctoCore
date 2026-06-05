@@ -4,6 +4,9 @@ plugins {
     id("io.github.goooler.shadow")
 }
 
+val octomcUsername = findProperty("octomcUsername") as String?
+val octomcPassword = findProperty("octomcPassword") as String?
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -11,9 +14,11 @@ repositories {
     maven {
         url = uri("https://repo.octopvp.net/repo")
         name = "octomc"
-        credentials {
-            username = findProperty("octomcUsername") as String
-            password = findProperty("octomcPassword") as String
+        if (octomcUsername != null && octomcPassword != null) {
+            credentials {
+                username = octomcUsername
+                password = octomcPassword
+            }
         }
     }
     maven {
